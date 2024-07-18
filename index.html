@@ -3,55 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Practice Website</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Homepage</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-        .banner {
-            background-color: #007bff;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .banner h1 {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
         }
-        .banner p {
-            margin: 5px 0 0;
-        }
         .container {
-            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 600px;
+            justify-content: center;
+        }
+        .box {
+            width: 200px;
+            height: 150px;
+            margin: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
 <body>
-    <div class="banner">
-        <h1>Level 1</h1>
-        <p>Difficulty Level: Intermediate | Task Name: Implementing Modern Web Elements</p>
+	<div class="input-container">
+        <label for="user-input">Select a course to start practice</label>
     </div>
-    <div class="container text-center">
-        <h2>Welcome to Our Practice Website</h2>
-        <p>Click on the buttons below to learn more:</p>
-        <div class="btn-group" role="group">
-            <a href="https://www.java.com" class="btn btn-primary btn-link" role="button">Java</a>
-            <a href="https://www.selenium.dev" class="btn btn-secondary btn-link" role="button">Selenium</a>
-            <a href="https://www.api.com" class="btn btn-success btn-link" role="button">API</a>
-            <a href="https://www.testng.org" class="btn btn-danger btn-link" role="button">TestNG</a>
-            <a href="https://cucumber.io/docs/gherkin" class="btn btn-warning btn-link" role="button">Gherkins</a>
-        </div>
-        <div class="seo-buttons mt-4">
-            <a href="#home" class="btn btn-outline-info">Home</a>
-            <a href="#help" class="btn btn-outline-info">Help</a>
-            <a href="#contact" class="btn btn-outline-info">Contact</a>
-        </div>
+    <div class="container">
+        <a href="ProgrammingHome.html" class="box" style="background-color: rgb(255, 0, 0);">Programming</a>
+        <a href="AutomationHome.html" class="box" style="background-color: rgb(0, 255, 0);">Automation</a>
+        <a href="APIHome.html" class="box" style="background-color: rgb(0, 0, 255);">API</a>
+        <a href="https://example.com" class="box" style="background-color: rgb(255, 255, 0);">Box 4</a>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                // Set initial random background color
+                setRandomColor(box);
+
+                // Change color on hover
+                box.addEventListener('mouseover', () => {
+                    setRandomColor(box);
+                });
+            });
+        });
+
+        function setRandomColor(element) {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            element.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+    </script>
 </body>
 </html>
