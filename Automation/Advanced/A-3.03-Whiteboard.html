@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whiteboard</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            width: 40vw;
+            height: 40vh;
+        }
+        .controls {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<label for="user-input">Write Your Name, Draw a line, Rectangle, Circle in below whiteboard. Each in a different color</label>
+    <div class="controls">
+        <label for="colorPicker">Color:</label>
+        <input type="color" id="colorPicker" value="#000000">
+        <label for="shapeSelector">Shape:</label>
+        <select id="shapeSelector">
+            <option value="freehand">Freehand</option>
+            <option value="line">Line</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="circle">Circle</option>
+        </select>
+        <button onclick="clearCanvas()">Clear</button>
+    </div>
+    <canvas id="whiteboard"></canvas>
+    <script>
+        const canvas = document.getElementById('whiteboard');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        let startX, startY;
+        let currentColor = '#000000';
+        let currentShape = 'freehand';
+        let shapes = [];
+
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            currentColor = e.target.value;
+        });
+
+        document.getElementById('shapeSelector').addEventListener('change', (e) => {
+            currentShape = e.target.value;
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            startX = e.offsetX;
+            startY = e.offsetY;
+            if (currentShape === 'freehand') {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!drawing) return;
+
+            if (currentShape === 'freehand') {
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.strokeStyle = currentColor;
+                ctx.stroke();
+            } else {
+                redraw();
+                const endX = e.offsetX;
+                const endY = e.offsetY;
+                ctx.strokeStyle = currentColor;
+                ctx.fillStyle = currentColor;
+
+                if (currentShape === 'line') {
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                } else if (currentShape === 'rectangle') {
+                    const width = endX - startX;
+                    const height = endY - startY;
+                    ctx.strokeRect(startX, startY, width, height);
+                } else if (currentShape === 'circle') {
+                    const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                    ctx.beginPath();
+                    ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (drawing) {
+                const endX = e.offsetX;
+                const endY = e.offsetY;
+                ctx.strokeStyle = currentColor;
+                ctx.fillStyle = currentColor;
+                let shape = {type: currentShape, color: currentColor, startX, startY, endX, endY};
+
+                if (currentShape === 'freehand') {
+                    shapes.push(shape);
+                } else if (currentShape === 'line') {
+                    shape = {...shape, endX, endY};
+                    shapes.push(shape);
+                } else if (currentShape === 'rectangle') {
+                    const width = endX - startX;
+                    const height = endY - startY;
+                    shape = {...shape, width, height};
+                    shapes.push(shape);
+                } else if (currentShape === 'circle') {
+                    const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                    shape = {...shape, radius};
+                    shapes.push(shape);
+                }
+            }
+            drawing = false;
+        });
+
+        canvas.addEventListener('mouseout', () => {
+            drawing = false;
+        });
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            shapes = [];
+        }
+
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let shape of shapes) {
+                ctx.strokeStyle = shape.color;
+                ctx.fillStyle = shape.color;
+                if (shape.type === 'freehand') {
+                    ctx.beginPath();
+                    ctx.moveTo(shape.startX, shape.startY);
+                    ctx.lineTo(shape.endX, shape.endY);
+                    ctx.stroke();
+                } else if (shape.type === 'line') {
+                    ctx.beginPath();
+                    ctx.moveTo(shape.startX, shape.startY);
+                    ctx.lineTo(shape.endX, shape.endY);
+                    ctx.stroke();
+                } else if (shape.type === 'rectangle') {
+                    ctx.strokeRect(shape.startX, shape.startY, shape.width, shape.height);
+                } else if (shape.type === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(shape.startX, shape.startY, shape.radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Resize the canvas to the current dimensions
+        function resizeCanvas() {
+            const width = window.innerWidth * 0.4;
+            const height = window.innerHeight * 0.4;
+            canvas.width = width;
+            canvas.height = height;
+            redraw();
+        }
+
+        // Resize the canvas initially
+        resizeCanvas();
+
+        // Resize the canvas whenever the window is resized
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>

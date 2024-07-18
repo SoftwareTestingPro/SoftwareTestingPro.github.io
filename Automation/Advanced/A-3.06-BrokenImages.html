@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Flag Display</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .images-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .image-container {
+            width: 150px;
+            height: 100px;
+            margin: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 5px;
+        }
+
+        .input-container {
+            text-align: center;
+        }
+
+        .input-container label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .input-container input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="images-container" id="images-container"></div>
+    <div class="input-container">
+        <label for="user-input">Count broken Images and input in below field</label>
+        <input type="text" id="user-input" name="user-input" placeholder="Type something...">
+    </div>
+    
+    <script>
+        const flagUrls = [
+            'https://flagcdn.com/w320/us.png',  // USA
+            'https://flagcdn.com/w320/ca.png',  // Canada
+            'https://flagcdn.com/w320/mx.png',  // Mexico
+            'https://flagcdn.com/w320/fr.png',  // France
+            'https://flagcdn.com/w320/de.png',  // Germany
+            'https://flagcdn.com/w320/jp.png',  // Japan
+            'https://flagcdn.com/w320/gb.png',  // United Kingdom
+            'https://flagcdn.com/w320/in.png',  // India
+            'https://flagcdn.com/w320/br.png',  // Brazil
+            'https://flagcdn.com/w320/ru.png'   // Russia
+        ];
+
+        const brokenImageUrl = 'broken_image_path.jpg';
+        const totalImages = 6;
+        const imagesContainer = document.getElementById('images-container');
+
+        for (let i = 0; i < totalImages; i++) {
+            const imgContainer = document.createElement('div');
+            imgContainer.className = 'image-container';
+
+            const img = document.createElement('img');
+            if (Math.random() > 0.5) {
+                img.src = flagUrls[Math.floor(Math.random() * flagUrls.length)];
+            } else {
+                img.src = brokenImageUrl;
+            }
+
+            img.alt = 'Country Flag';
+            imgContainer.appendChild(img);
+            imagesContainer.appendChild(imgContainer);
+        }
+    </script>
+</body>
+</html>

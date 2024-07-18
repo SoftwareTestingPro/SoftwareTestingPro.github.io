@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Railway Reservation Seat Availability</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        caption {
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .radio-cell {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>Railway Reservation Seat Availability</caption>
+        <tr>
+            <th>Select</th>
+            <th>Train Number</th>
+            <th>Train Name</th>
+            <th>Seat Availability</th>
+        </tr>
+        <tr>
+            <td class="radio-cell"><input type="radio" name="train"></td>
+            <td>12345</td>
+            <td>Express A</td>
+            <td id="seat1"></td>
+        </tr>
+        <tr>
+            <td class="radio-cell"><input type="radio" name="train"></td>
+            <td>12346</td>
+            <td>Express B</td>
+            <td id="seat2"></td>
+        </tr>
+        <tr>
+            <td class="radio-cell"><input type="radio" name="train"></td>
+            <td>12347</td>
+            <td>Express C</td>
+            <td id="seat3"></td>
+        </tr>
+        <tr>
+            <td class="radio-cell"><input type="radio" name="train"></td>
+            <td>12348</td>
+            <td>Express D</td>
+            <td id="seat4"></td>
+        </tr>
+        <tr>
+            <td class="radio-cell"><input type="radio" name="train"></td>
+            <td>12349</td>
+            <td>Express E</td>
+            <td id="seat5"></td>
+        </tr>
+    </table>
+
+    <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomAvailability() {
+            const statuses = ["Available", "Waiting", "RAC"];
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            const randomValue = getRandomInt(1, 100);
+            return `${randomStatus}: ${randomValue}`;
+        }
+
+        document.getElementById('seat1').textContent = getRandomAvailability();
+        document.getElementById('seat2').textContent = getRandomAvailability();
+        document.getElementById('seat3').textContent = getRandomAvailability();
+        document.getElementById('seat4').textContent = getRandomAvailability();
+        document.getElementById('seat5').textContent = getRandomAvailability();
+    </script>
+</body>
+</html>

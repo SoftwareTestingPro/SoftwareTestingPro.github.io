@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-container {
+            width: 300px;
+            margin: 20px 0;
+        }
+
+        .slider {
+            width: 100%;
+        }
+
+        .slider-value {
+            font-size: 24px;
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select a Value</h1>
+        <div class="slider-container">
+            <input type="range" min="1" max="10" value="5" class="slider" id="valueSlider">
+            <div class="slider-value" id="sliderValue">5</div>
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('valueSlider');
+        const sliderValue = document.getElementById('sliderValue');
+
+        slider.addEventListener('input', function() {
+            sliderValue.textContent = this.value;
+        });
+    </script>
+</body>
+</html>

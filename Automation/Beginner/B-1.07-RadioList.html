@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Largest Countries in Asia</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-check {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h2>Select Radio button corresponding to INDIA</h2>
+            <form id="countryForm">
+                <!-- The radio buttons will be inserted here by JavaScript -->
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const countries = [
+                { id: 'china', name: 'China' },
+                { id: 'india', name: 'India' },
+                { id: 'kazakhstan', name: 'Kazakhstan' },
+                { id: 'saudiArabia', name: 'Saudi Arabia' },
+                { id: 'iran', name: 'Iran' },
+                { id: 'mongolia', name: 'Mongolia' },
+                { id: 'indonesia', name: 'Indonesia' },
+                { id: 'pakistan', name: 'Pakistan' },
+                { id: 'turkey', name: 'Turkey' },
+                { id: 'myanmar', name: 'Myanmar' }
+            ];
+
+            // Shuffle the countries array
+            countries.sort(() => Math.random() - 0.5);
+
+            // Generate the radio buttons
+            const form = document.getElementById('countryForm');
+            countries.forEach(country => {
+                const div = document.createElement('div');
+                div.className = 'form-check';
+
+                const input = document.createElement('input');
+                input.className = 'form-check-input';
+                input.type = 'radio';
+                input.name = 'country';
+                input.id = country.id;
+                input.value = country.name;
+
+                const label = document.createElement('label');
+                label.className = 'form-check-label';
+                label.htmlFor = country.id;
+                label.innerText = country.name;
+
+                div.appendChild(input);
+                div.appendChild(label);
+                form.appendChild(div);
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

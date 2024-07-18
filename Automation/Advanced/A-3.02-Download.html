@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download File</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        a.download-link {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a.download-link:hover {
+            background-color: #0056b3;
+        }
+
+        .input-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .input-container label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .input-container input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="https://sample-videos.com/zip/100mb.zip" class="download-link" download>Click here to download  100 MB file</a>
+        <div class="input-container">
+            <label for="user-input">Calculate seconds taken to download the file:</label>
+            <input type="text" id="user-input" name="user-input" placeholder="Type something...">
+        </div>
+    </div>
+</body>
+</html>

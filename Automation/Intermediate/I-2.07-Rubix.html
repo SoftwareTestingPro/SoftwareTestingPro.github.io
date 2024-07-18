@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Rubik's Cube</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        #cube {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 2px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+        }
+
+        #randomizeButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="cube"></div>
+    <button id="randomizeButton">Randomize Colors</button>
+
+    <script>
+        const cube = document.getElementById('cube');
+        const randomizeButton = document.getElementById('randomizeButton');
+        const SIZE = 3;
+
+        function createCube() {
+            for (let i = 0; i < SIZE * SIZE; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cube.appendChild(cell);
+            }
+        }
+
+        function randomizeColors() {
+            const cells = document.querySelectorAll('.cell');
+            const randomColor = () => {
+                return `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+            };
+
+            const baseColor = randomColor();
+            let differentColor = randomColor();
+
+            while (differentColor === baseColor) {
+                differentColor = randomColor();
+            }
+
+            cells.forEach(cell => {
+                cell.style.backgroundColor = baseColor;
+            });
+
+            const randomCellIndex = Math.floor(Math.random() * cells.length);
+            cells[randomCellIndex].style.backgroundColor = differentColor;
+        }
+
+        randomizeButton.addEventListener('click', randomizeColors);
+
+        createCube();
+        randomizeColors();
+    </script>
+</body>
+</html>

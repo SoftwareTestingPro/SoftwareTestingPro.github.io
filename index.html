@@ -3,176 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whiteboard</title>
+    <title>Practice Website</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .banner {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .banner h1 {
             margin: 0;
-            background-color: #f0f0f0;
         }
-        canvas {
-            border: 1px solid #000;
-            background-color: #fff;
-            width: 40vw;
-            height: 40vh;
+        .banner p {
+            margin: 5px 0 0;
         }
-        .controls {
-            margin-bottom: 10px;
+        .container {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="controls">
-        <label for="colorPicker">Color:</label>
-        <input type="color" id="colorPicker" value="#000000">
-        <label for="shapeSelector">Shape:</label>
-        <select id="shapeSelector">
-            <option value="freehand">Freehand</option>
-            <option value="line">Line</option>
-            <option value="rectangle">Rectangle</option>
-            <option value="circle">Circle</option>
-        </select>
-        <button onclick="clearCanvas()">Clear</button>
+    <div class="banner">
+        <h1>Level 1</h1>
+        <p>Difficulty Level: Intermediate | Task Name: Implementing Modern Web Elements</p>
     </div>
-    <canvas id="whiteboard"></canvas>
-    <script>
-        const canvas = document.getElementById('whiteboard');
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
-        let startX, startY;
-        let currentColor = '#000000';
-        let currentShape = 'freehand';
-        let shapes = [];
+    <div class="container text-center">
+        <h2>Welcome to Our Practice Website</h2>
+        <p>Click on the buttons below to learn more:</p>
+        <div class="btn-group" role="group">
+            <a href="https://www.java.com" class="btn btn-primary btn-link" role="button">Java</a>
+            <a href="https://www.selenium.dev" class="btn btn-secondary btn-link" role="button">Selenium</a>
+            <a href="https://www.api.com" class="btn btn-success btn-link" role="button">API</a>
+            <a href="https://www.testng.org" class="btn btn-danger btn-link" role="button">TestNG</a>
+            <a href="https://cucumber.io/docs/gherkin" class="btn btn-warning btn-link" role="button">Gherkins</a>
+        </div>
+        <div class="seo-buttons mt-4">
+            <a href="#home" class="btn btn-outline-info">Home</a>
+            <a href="#help" class="btn btn-outline-info">Help</a>
+            <a href="#contact" class="btn btn-outline-info">Contact</a>
+        </div>
+    </div>
 
-        document.getElementById('colorPicker').addEventListener('input', (e) => {
-            currentColor = e.target.value;
-        });
-
-        document.getElementById('shapeSelector').addEventListener('change', (e) => {
-            currentShape = e.target.value;
-        });
-
-        canvas.addEventListener('mousedown', (e) => {
-            drawing = true;
-            startX = e.offsetX;
-            startY = e.offsetY;
-            if (currentShape === 'freehand') {
-                ctx.beginPath();
-                ctx.moveTo(startX, startY);
-            }
-        });
-
-        canvas.addEventListener('mousemove', (e) => {
-            if (!drawing) return;
-
-            if (currentShape === 'freehand') {
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.strokeStyle = currentColor;
-                ctx.stroke();
-            } else {
-                redraw();
-                const endX = e.offsetX;
-                const endY = e.offsetY;
-                ctx.strokeStyle = currentColor;
-                ctx.fillStyle = currentColor;
-
-                if (currentShape === 'line') {
-                    ctx.beginPath();
-                    ctx.moveTo(startX, startY);
-                    ctx.lineTo(endX, endY);
-                    ctx.stroke();
-                } else if (currentShape === 'rectangle') {
-                    const width = endX - startX;
-                    const height = endY - startY;
-                    ctx.strokeRect(startX, startY, width, height);
-                } else if (currentShape === 'circle') {
-                    const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-                    ctx.beginPath();
-                    ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
-                    ctx.stroke();
-                }
-            }
-        });
-
-        canvas.addEventListener('mouseup', (e) => {
-            if (drawing) {
-                const endX = e.offsetX;
-                const endY = e.offsetY;
-                ctx.strokeStyle = currentColor;
-                ctx.fillStyle = currentColor;
-                let shape = {type: currentShape, color: currentColor, startX, startY, endX, endY};
-
-                if (currentShape === 'freehand') {
-                    shapes.push(shape);
-                } else if (currentShape === 'line') {
-                    shape = {...shape, endX, endY};
-                    shapes.push(shape);
-                } else if (currentShape === 'rectangle') {
-                    const width = endX - startX;
-                    const height = endY - startY;
-                    shape = {...shape, width, height};
-                    shapes.push(shape);
-                } else if (currentShape === 'circle') {
-                    const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-                    shape = {...shape, radius};
-                    shapes.push(shape);
-                }
-            }
-            drawing = false;
-        });
-
-        canvas.addEventListener('mouseout', () => {
-            drawing = false;
-        });
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            shapes = [];
-        }
-
-        function redraw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let shape of shapes) {
-                ctx.strokeStyle = shape.color;
-                ctx.fillStyle = shape.color;
-                if (shape.type === 'freehand') {
-                    ctx.beginPath();
-                    ctx.moveTo(shape.startX, shape.startY);
-                    ctx.lineTo(shape.endX, shape.endY);
-                    ctx.stroke();
-                } else if (shape.type === 'line') {
-                    ctx.beginPath();
-                    ctx.moveTo(shape.startX, shape.startY);
-                    ctx.lineTo(shape.endX, shape.endY);
-                    ctx.stroke();
-                } else if (shape.type === 'rectangle') {
-                    ctx.strokeRect(shape.startX, shape.startY, shape.width, shape.height);
-                } else if (shape.type === 'circle') {
-                    ctx.beginPath();
-                    ctx.arc(shape.startX, shape.startY, shape.radius, 0, 2 * Math.PI);
-                    ctx.stroke();
-                }
-            }
-        }
-
-        // Resize the canvas to the current dimensions
-        function resizeCanvas() {
-            const width = window.innerWidth * 0.4;
-            const height = window.innerHeight * 0.4;
-            canvas.width = width;
-            canvas.height = height;
-            redraw();
-        }
-
-        // Resize the canvas initially
-        resizeCanvas();
-
-        // Resize the canvas whenever the window is resized
-        window.addEventListener('resize', resizeCanvas);
-    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Button Example</title>
+    <style>
+        .container-box {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .colorful-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .colorful-button:hover {
+            background-color: #4CAF50;
+        }
+        .colorful-button:active {
+            background-color: #007BFF;
+        }
+        .input-buttons {
+            margin-top: 20px;
+        }
+        .input-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .input-buttons button:hover {
+            background-color: #007BFF;
+        }
+		.input-container {
+            text-align: center;
+        }
+
+        .input-container label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .input-container input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="container-box">
+            <h3>Perform actions on below button as asked</h2>
+            <button class="colorful-button" id="colorButton">Colorful Button</button>
+            <div class="input-container">
+        <label for="user-input">Perform mouseover and enter color hex code:</label>
+        <input type="text" id="user-input" name="user-input" placeholder="Type something...">
+		<label for="user-input">Perform click and hold and enter color hex code:</label>
+        <input type="text" id="user-input" name="user-input" placeholder="Type something...">
+		<label for="user-input">Perform click and enter color hex code:</label>
+        <input type="text" id="user-input" name="user-input" placeholder="Type something...">
+    </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const colorButton = document.getElementById('colorButton');
+
+            colorButton.addEventListener('mousedown', () => {
+                colorButton.style.backgroundColor = '#007BFF';
+            });
+
+            colorButton.addEventListener('mouseup', () => {
+                colorButton.style.backgroundColor = '#4CAF50';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Fields Example</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container-box {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .full-height {
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex justify-content-center align-items-center full-height">
+        <div class="container-box">
+            <h4>Fetch text from 1st Input field and enter in 2nd Input Field</h4>
+            <div class="form-group">
+                <label for="inputField1">First Input Field (Random Value):</label>
+                <input type="text" class="form-control" id="inputField1" readonly>
+            </div>
+            <div class="form-group">
+                <label for="inputField2">Second Input Field (Blank):</label>
+                <input type="text" class="form-control" id="inputField2">
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputField1 = document.getElementById('inputField1');
+            inputField1.value = Math.random().toString(36).substring(3);
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

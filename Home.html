@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 600px;
+            justify-content: center;
+        }
+        .box {
+            width: 200px;
+            height: 150px;
+            margin: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+	<div class="input-container">
+        <label for="user-input">Select a course to start practice</label>
+    </div>
+    <div class="container">
+        <a href="ProgrammingHome.html" class="box" style="background-color: rgb(255, 0, 0);">Programming</a>
+        <a href="AutomationHome.html" class="box" style="background-color: rgb(0, 255, 0);">Automation</a>
+        <a href="APIHome.html" class="box" style="background-color: rgb(0, 0, 255);">API</a>
+        <a href="https://example.com" class="box" style="background-color: rgb(255, 255, 0);">Box 4</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                // Set initial random background color
+                setRandomColor(box);
+
+                // Change color on hover
+                box.addEventListener('mouseover', () => {
+                    setRandomColor(box);
+                });
+            });
+        });
+
+        function setRandomColor(element) {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            element.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+    </script>
+</body>
+</html>

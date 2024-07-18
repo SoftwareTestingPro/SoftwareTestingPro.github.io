@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple HTML5 Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .calendar {
+            width: 300px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .calendar-table th,
+        .calendar-table td {
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+        .calendar-table th {
+            background-color: #f0f0f0;
+        }
+        .calendar-table td {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar" id="calendar"></div>
+	<div class="additional-info">
+        <label for="label1">Date on 1st Friday is: </label>
+        <input type="text" id="label1" name="label1"><br><br>
+        <label for="label2">Day name on 17th is: </label>
+        <input type="text" id="label2" name="label2"><br><br>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+
+            // Get current date
+            var today = new Date();
+
+            // Set random month and year for display
+            var randomMonth = Math.floor(Math.random() * 12); // Random month (0-11)
+            var randomYear = 2022 + Math.floor(Math.random() * 10); // Random year (2022-2031)
+
+            // Create calendar header
+            var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            var monthName = months[randomMonth];
+            var year = randomYear;
+
+            var header = '<div class="calendar-header">' + monthName + ' ' + year + '</div>';
+
+            // Create calendar table
+            var calendar = '<table class="calendar-table">';
+            calendar += '<thead>';
+            calendar += '<tr>';
+            calendar += '<th>Sun</th>';
+            calendar += '<th>Mon</th>';
+            calendar += '<th>Tue</th>';
+            calendar += '<th>Wed</th>';
+            calendar += '<th>Thu</th>';
+            calendar += '<th>Fri</th>';
+            calendar += '<th>Sat</th>';
+            calendar += '</tr>';
+            calendar += '</thead>';
+            calendar += '<tbody>';
+
+            // Get the first day of the month
+            var firstDay = new Date(year, randomMonth, 1);
+            // Calculate the starting day index (0: Sunday, 1: Monday, ..., 6: Saturday)
+            var startIndex = firstDay.getDay();
+            // Adjust start index to start from Sunday
+            startIndex = (startIndex === 0) ? 7 : startIndex;
+
+            // Get the number of days in the month
+            var daysInMonth = new Date(year, randomMonth + 1, 0).getDate();
+
+            // Calculate the number of rows needed
+            var numRows = Math.ceil((daysInMonth + startIndex) / 7);
+
+            // Create rows and cells for the calendar
+            var day = 1;
+            for (var i = 0; i < numRows; i++) {
+                calendar += '<tr>';
+                for (var j = 0; j < 7; j++) {
+                    if (i === 0 && j < startIndex) {
+                        calendar += '<td></td>'; // Empty cell before the start day
+                    } else if (day <= daysInMonth) {
+                        calendar += '<td>' + day + '</td>';
+                        day++;
+                    } else {
+                        calendar += '<td></td>'; // Empty cell after the last day
+                    }
+                }
+                calendar += '</tr>';
+            }
+
+            calendar += '</tbody>';
+            calendar += '</table>';
+
+            // Display the calendar
+            calendarEl.innerHTML = header + calendar;
+			
+			
+        });
+    </script>
+</body>
+</html>
