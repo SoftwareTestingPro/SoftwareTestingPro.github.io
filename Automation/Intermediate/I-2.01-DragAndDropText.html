@@ -3,72 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draggable Text</title>
+    <title>Drag and Drop Example</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
-            position: relative;
+            background-color: #f0f0f0;
         }
-
-        #draggableText {
-            margin-bottom: 20px;
-            cursor: pointer;
-            position: absolute;
-        }
-
-        #dropBox {
-            width: 200px;
+        .container {
+            width: 300px;
             height: 200px;
             border: 2px dashed #007BFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            margin: 0 20px;
             position: relative;
+        }
+        .draggable {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: move;
+            text-align: center;
+            width: 100px;
+            margin: 0 auto;
+            user-select: none;
+        }
+        .dropzone {
+            border: 2px dashed #28A745;
+        }
+        .success-message {
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div id="draggableText" draggable="true">Drag me to the box</div>
-    <div id="dropBox">Drop here</div>
+    <div class="container" id="container1">
+        <div class="draggable" id="draggableText" draggable="true">Drag Me</div>
+    </div>
+    <div class="container dropzone" id="container2">
+        Drop Here
+    </div>
 
     <script>
         const draggableText = document.getElementById('draggableText');
-        const dropBox = document.getElementById('dropBox');
+        const container2 = document.getElementById('container2');
 
         draggableText.addEventListener('dragstart', (event) => {
-            event.dataTransfer.setData('text/plain', draggableText.innerText);
-            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', event.target.id);
         });
 
-        draggableText.addEventListener('dragend', (event) => {
-            draggableText.style.left = `${event.pageX}px`;
-            draggableText.style.top = `${event.pageY}px`;
-        });
-
-        dropBox.addEventListener('dragover', (event) => {
+        container2.addEventListener('dragover', (event) => {
             event.preventDefault();
-            event.dataTransfer.dropEffect = 'move';
         });
 
-        dropBox.addEventListener('drop', (event) => {
+        container2.addEventListener('drop', (event) => {
             event.preventDefault();
             const data = event.dataTransfer.getData('text/plain');
-            dropBox.innerText = data;
-            draggableText.style.display = 'none';
-        });
+            const draggedElement = document.getElementById(data);
 
-        document.addEventListener('drag', (event) => {
-            if (event.pageX && event.pageY) {
-                draggableText.style.left = `${event.pageX}px`;
-                draggableText.style.top = `${event.pageY}px`;
-            }
+            // Append the dragged element to the drop zone
+            container2.appendChild(draggedElement);
+            
+            // Create and append success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Success! The text has been dropped.';
+            container2.appendChild(successMessage);
         });
     </script>
 </body>

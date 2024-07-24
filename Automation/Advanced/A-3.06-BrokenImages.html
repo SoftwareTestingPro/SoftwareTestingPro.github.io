@@ -83,7 +83,15 @@
             'https://flagcdn.com/w320/ru.png'   // Russia
         ];
 
-        const brokenImageUrl = 'broken_image_path.jpg';
+        const brokenImageUrls = [
+            'https://flagcdn.com/w320/ab.png',  // Invalid
+            'https://flagcdn.com/w320/ci.png',  // Invalid
+            'https://flagcdn.com/w320/rp.png',  // Invalid
+            'https://flagcdn.com/w320/rm.png',  // Invalid
+            'https://flagcdn.com/w320/qp.png',  // Invalid
+            'https://flagcdn.com/w320/zi.png'   // Invalid
+        ];
+
         const totalImages = 6;
         const imagesContainer = document.getElementById('images-container');
 
@@ -95,7 +103,7 @@
             if (Math.random() > 0.5) {
                 img.src = flagUrls[Math.floor(Math.random() * flagUrls.length)];
             } else {
-                img.src = brokenImageUrl;
+                img.src = brokenImageUrls[Math.floor(Math.random() * brokenImageUrls.length)];
             }
 
             img.alt = 'Country Flag';

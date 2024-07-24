@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Input Example</title>
+    <title>Modern Text Input Example</title>
     <style>
         body {
             display: flex;
@@ -11,46 +11,105 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            flex-direction: column; /* Ensures vertical alignment */
         }
 
         .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
             text-align: center;
+            margin-bottom: 20px; /* Space for the buttons below */
         }
 
         label {
             display: block;
-            margin-bottom: 10px;
-            font-size: 18px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #333;
         }
 
         input[type="text"] {
             width: calc(100% - 22px);
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+            outline: none;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: calc(100% - 40px); /* Adjust width to account for padding */
+            max-width: 400px;
+            margin: 0 auto; /* Center the button container */
+        }
+
+        .button-container button {
+            flex: 1;
             padding: 10px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            margin: 0 5px; /* Space between the buttons */
+        }
+
+        .button-container .prev {
+            background-color: #6c757d;
+        }
+
+        .button-container .next {
+            background-color: #007BFF;
+        }
+
+        .button-container button:hover {
+            opacity: 0.8;
+        }
+
+        .button-container .prev:hover {
+            background-color: #5a6268;
+        }
+
+        .button-container .next:hover {
+            background-color: #0056b3;
+        }
+
+        .placeholder {
+            color: #888;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <label for="user-input">Enter your name:</label>
-        <input type="text" id="user-input" name="user-input" placeholder="Type something...">
-		<label></label>
-		<label></label>
-        <label for="user-input">Enter your age:</label>
-        <input type="text" id="user-input" maxlength="2" value="Please enter your age" name="user-input" >
-		<label></label>
-		<label></label>
-		<label for="user-input">Enter "text within double quotes" in below Input Field</label>
-        <input type="text" class="form-control" id="inputField" placeholder="Type something...">
+        <label for="user-input-name">Enter your name:</label>
+        <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
+        
+        <label for="user-input-age">Enter your age:</label>
+        <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Type your age..." value="">
+
+        <label for="text-input">Enter "text within double quotes" in the input field:</label>
+        <input type="text" id="text-input" class="form-control" placeholder="Type something...">
+    </div>
+
+    <div class="button-container">
+        <button class="prev">Previous</button>
+        <button class="next">Next</button>
     </div>
 </body>
 </html>
