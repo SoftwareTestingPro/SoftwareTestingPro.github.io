@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore various practice courses including Programming, Automation, and API. Click on the boxes to start learning.">
+    <meta name="keywords" content="Programming, Automation, API, Practice Courses, Learning">
+    <meta name="author" content="Your Name">
     <title>Homepage</title>
     <style>
         body {
@@ -13,6 +16,15 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+        }
+        .input-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-container label {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: block;
         }
         .container {
             display: flex;
@@ -31,20 +43,48 @@
             font-size: 18px;
             font-weight: bold;
             color: #fff;
+            text-decoration: none;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .box:hover {
+            filter: brightness(0.9);
+        }
+        .box span {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-	<div class="input-container">
-        <label for="user-input">Select a course to start practice</label>
+    <div class="input-container">
+        <label for="user-input">Select a course to start practice:</label>
     </div>
     <div class="container">
-        <a href="ProgrammingHome.html" class="box" style="background-color: rgb(255, 0, 0);">Programming</a>
-        <a href="AutomationHome.html" class="box" style="background-color: rgb(0, 255, 0);">Automation</a>
-        <a href="APIHome.html" class="box" style="background-color: rgb(0, 0, 255);">API</a>
-        <a href="https://example.com" class="box" style="background-color: rgb(255, 255, 0);">Box 4</a>
+        <a href="ProgrammingHome.html" class="box" aria-label="Navigate to Programming Home" title="Programming Home">
+            Programming
+            <span>Explore Programming</span>
+        </a>
+        <a href="AutomationHome.html" class="box" aria-label="Navigate to Automation Home" title="Automation Home">
+            Automation
+            <span>Learn Automation</span>
+        </a>
+        <a href="APIHome.html" class="box" aria-label="Navigate to API Home" title="API Home">
+            API
+            <span>Discover API</span>
+        </a>
+        <a href="https://example.com" class="box" aria-label="Visit Example.com" title="Visit Example.com">
+            Box 4
+            <span>Visit Example</span>
+        </a>
     </div>
 
     <script>
