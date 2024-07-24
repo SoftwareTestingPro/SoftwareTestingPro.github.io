@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Life Quote</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        .box label {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+        .box input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .box button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .box button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <label for="userInput">Click below button to fetch a quote and enter quote in below input field</label>
+        <div class="container">
+            <button onclick="openQuoteWindow()">Get a Random Life Quote</button>
+        </div>
+        <input type="text" id="userInput" name="userInput">
+    </div>
+
+    <script>
+        function openQuoteWindow() {
+            const quotes = [
+                "Life is what happens when you're busy making other plans. – John Lennon",
+                "The purpose of our lives is to be happy. – Dalai Lama",
+                "Get busy living or get busy dying. – Stephen King",
+                "You only live once, but if you do it right, once is enough. – Mae West",
+                "Many of life’s failures are people who did not realize how close they were to success when they gave up. – Thomas A. Edison"
+            ];
+
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            const quoteWindow = window.open("", "quoteWindow", "width=400,height=200");
+            quoteWindow.document.write(`<p style="font-family: Arial, sans-serif; font-size: 1.2em; margin: 20px;">${randomQuote}</p>`);
+        }
+    </script>
+</body>
+</html>

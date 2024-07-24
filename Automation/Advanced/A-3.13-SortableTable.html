@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable and Filterable Employee Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+            cursor: pointer;
+        }
+        th.sortable:hover {
+            background-color: #ddd;
+        }
+        .filter-input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee Database</h1>
+    <input type="text" id="searchName" class="filter-input" placeholder="Filter by Name">
+    <input type="text" id="searchDept" class="filter-input" placeholder="Filter by Department">
+    <input type="text" id="searchPosition" class="filter-input" placeholder="Filter by Position">
+    <input type="text" id="searchSalary" class="filter-input" placeholder="Filter by Salary">
+
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th class="sortable" onclick="sortTable(0)">Name</th>
+                <th class="sortable" onclick="sortTable(1)">Department</th>
+                <th class="sortable" onclick="sortTable(2)">Position</th>
+                <th class="sortable" onclick="sortTable(3)">Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>John Doe</td>
+                <td>Engineering</td>
+                <td>Software Engineer</td>
+                <td>$120,000</td>
+            </tr>
+            <tr>
+                <td>Jane Smith</td>
+                <td>Marketing</td>
+                <td>Marketing Manager</td>
+                <td>$95,000</td>
+            </tr>
+            <tr>
+                <td>Emily Johnson</td>
+                <td>HR</td>
+                <td>HR Specialist</td>
+                <td>$80,000</td>
+            </tr>
+            <tr>
+                <td>Michael Brown</td>
+                <td>Sales</td>
+                <td>Sales Associate</td>
+                <td>$70,000</td>
+            </tr>
+            <tr>
+                <td>Lisa White</td>
+                <td>Engineering</td>
+                <td>Data Scientist</td>
+                <td>$110,000</td>
+            </tr>
+            <tr>
+                <td>Chris Green</td>
+                <td>Marketing</td>
+                <td>Marketing Assistant</td>
+                <td>$65,000</td>
+            </tr>
+            <tr>
+                <td>Olivia Davis</td>
+                <td>HR</td>
+                <td>Recruiter</td>
+                <td>$85,000</td>
+            </tr>
+            <tr>
+                <td>James Wilson</td>
+                <td>Sales</td>
+                <td>Sales Manager</td>
+                <td>$105,000</td>
+            </tr>
+            <tr>
+                <td>Alice Brown</td>
+                <td>Engineering</td>
+                <td>System Analyst</td>
+                <td>$95,000</td>
+            </tr>
+            <tr>
+                <td>David Martin</td>
+                <td>Marketing</td>
+                <td>SEO Specialist</td>
+                <td>$90,000</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        // Function to sort table
+        function sortTable(columnIndex) {
+            const table = document.getElementById('employeeTable');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            const isAscending = table.querySelectorAll('th')[columnIndex].classList.toggle('asc');
+            
+            rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].innerText;
+                const bText = b.cells[columnIndex].innerText;
+                
+                if (columnIndex === 3) { // Salary column
+                    return isAscending ? parseFloat(aText.replace(/[\$,]/g, '')) - parseFloat(bText.replace(/[\$,]/g, '')) 
+                                       : parseFloat(bText.replace(/[\$,]/g, '')) - parseFloat(aText.replace(/[\$,]/g, ''));
+                } else {
+                    return isAscending ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                }
+            });
+
+            rows.forEach(row => table.querySelector('tbody').appendChild(row));
+        }
+
+        // Function to filter table
+        function filterTable() {
+            const nameFilter = document.getElementById('searchName').value.toLowerCase();
+            const deptFilter = document.getElementById('searchDept').value.toLowerCase();
+            const positionFilter = document.getElementById('searchPosition').value.toLowerCase();
+            const salaryFilter = document.getElementById('searchSalary').value.toLowerCase();
+
+            const rows = document.querySelectorAll('#employeeTable tbody tr');
+            
+            rows.forEach(row => {
+                const cells = row.getElementsByTagName('td');
+                const name = cells[0].innerText.toLowerCase();
+                const dept = cells[1].innerText.toLowerCase();
+                const position = cells[2].innerText.toLowerCase();
+                const salary = cells[3].innerText.toLowerCase();
+
+                const isVisible = (name.includes(nameFilter) || nameFilter === '') &&
+                                  (dept.includes(deptFilter) || deptFilter === '') &&
+                                  (position.includes(positionFilter) || positionFilter === '') &&
+                                  (salary.includes(salaryFilter) || salaryFilter === '');
+
+                row.style.display = isVisible ? '' : 'none';
+            });
+        }
+
+        // Add event listeners to filter inputs
+        document.getElementById('searchName').addEventListener('input', filterTable);
+        document.getElementById('searchDept').addEventListener('input', filterTable);
+        document.getElementById('searchPosition').addEventListener('input', filterTable);
+        document.getElementById('searchSalary').addEventListener('input', filterTable);
+
+        // Initial filter call
+        filterTable();
+    </script>
+</body>
+</html>

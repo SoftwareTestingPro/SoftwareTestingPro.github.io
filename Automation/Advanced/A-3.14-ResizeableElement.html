@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resizable Element</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .size-display {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #333;
+        }
+        .success-message {
+            display: none;
+            margin-top: 10px;
+            font-size: 1em;
+            color: green;
+        }
+        .container {
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+        .resizable {
+            background-color: #e0e0e0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+            height: 200px;
+            resize: both;
+            overflow: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="size-display" id="sizeDisplay">
+        Size: 200px x 200px
+    </div>
+    <div class="container" id="container">
+        <div class="resizable" id="resizable">
+            Resize this element to 256px x 256px by dragging the corner! Validate the success message
+        </div>
+    </div>
+    <div class="success-message" id="successMessage">
+        Success! The element size is 256px x 256px.
+    </div>
+
+    <script>
+        const resizable = document.getElementById('resizable');
+        const sizeDisplay = document.getElementById('sizeDisplay');
+        const container = document.getElementById('container');
+        const successMessage = document.getElementById('successMessage');
+
+        function updateSizeDisplay() {
+            const width = resizable.clientWidth;
+            const height = resizable.clientHeight;
+            sizeDisplay.textContent = `Size: ${width}px x ${height}px`;
+
+            // Update container size
+            container.style.width = `${width + 24}px`; // 20px padding + 2px border * 2 (left/right) = 24px
+            container.style.height = `${height + 24}px`; // 20px padding + 2px border * 2 (top/bottom) = 24px
+
+            // Display success message if size is 256px x 256px
+            if (width === 256 && height === 256) {
+                successMessage.style.display = 'block';
+            } else {
+                successMessage.style.display = 'none';
+            }
+        }
+
+        new ResizeObserver(updateSizeDisplay).observe(resizable);
+
+        window.addEventListener('load', updateSizeDisplay);
+    </script>
+</body>
+</html>

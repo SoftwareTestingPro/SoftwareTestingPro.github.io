@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Alert</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        .input-group {
+            margin-top: 20px;
+            text-align: left;
+        }
+        label {
+            font-size: 1em;
+            color: #333;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        a.button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        a.button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="#" class="button" id="alertButton">Generate Alert</a>
+        <div class="input-group">
+            <label for="inputField">Click on above button to generate an alert, and enter the duration(in seconds) it took to display:</label>
+            <input type="text" id="inputField" name="inputField">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('alertButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            const randomTime = Math.floor(Math.random() * 26) + 5; // Random time between 5 and 30 seconds
+            setTimeout(() => {
+                alert('This is a alert displayed anytime between 5 and 30 seconds!');
+            }, randomTime * 1000);
+        });
+    </script>
+</body>
+</html>
