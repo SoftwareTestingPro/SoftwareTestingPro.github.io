@@ -9,10 +9,13 @@
             margin: 0;
             overflow: hidden;
             background-color: #87CEEB;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         canvas {
-            display: block;
-            margin: 0 auto;
             background-color: #87CEEB;
         }
         .message {
@@ -24,11 +27,18 @@
             color: #4caf50;
             display: none;
         }
+        .label {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #000;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
     <div class="message" id="congratulationMessage">Congratulations! You reached the top platform!</div>
+    <h3 class="label">Use the spacebar and arrow keys to reach to top platform and verify congratulations message.</h3>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
