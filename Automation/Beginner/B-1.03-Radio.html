@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Gender</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+        .radio-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .radio-group label {
+            font-size: 1em;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 10px;
+        }
+        .success-message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Your Gender</h1>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="gender" value="male">
+                Male
+            </label>
+            <label>
+                <input type="radio" name="gender" value="female">
+                Female
+            </label>
+            <label>
+                <input type="radio" name="gender" value="other">
+                Other
+            </label>
+            <label>
+                <input type="radio" name="gender" value="preferNotToSay">
+                Prefer not to say
+            </label>
+        </div>
+        <div class="success-message" id="successMessage">
+            You have successfully selected a gender.
+        </div>
+    </div>
+
+    <script>
+        const radioButtons = document.querySelectorAll('input[name="gender"]');
+        const successMessage = document.getElementById('successMessage');
+
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                successMessage.style.display = 'block'; // Show success message
+            });
+        });
+    </script>
+</body>
+</html>

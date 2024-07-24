@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Hobbies</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+        .checkbox-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .checkbox-group label {
+            font-size: 1em;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .success-message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Your Hobbies</h1>
+        <p>Choose your hobbies from the list below:</p>
+        
+        <div class="checkbox-group">
+            <label>
+                <input type="checkbox" name="hobbies" value="reading">
+                Reading
+            </label>
+            <label>
+                <input type="checkbox" name="hobbies" value="travelling">
+                Travelling
+            </label>
+            <label>
+                <input type="checkbox" name="hobbies" value="cooking">
+                Cooking
+            </label>
+            <label>
+                <input type="checkbox" name="hobbies" value="sports">
+                Sports
+            </label>
+            <label>
+                <input type="checkbox" name="hobbies" value="music">
+                Music
+            </label>
+            <label>
+                <input type="checkbox" name="hobbies" value="gaming">
+                Gaming
+            </label>
+            <label>
+                <input type="checkbox" name="hobbies" value="gardening">
+                Gardening
+            </label>
+            <label>
+                <input type="checkbox" name="hobbies" value="photography">
+                Photography
+            </label>
+        </div>
+        <div class="success-message" id="successMessage">
+            You have selected <span id="hobbyCount">0</span> hobbies.
+        </div>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll('input[name="hobbies"]');
+        const successMessage = document.getElementById('successMessage');
+        const hobbyCount = document.getElementById('hobbyCount');
+
+        function updateHobbyCount() {
+            const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            if (selectedCount > 0) {
+                successMessage.style.display = 'block';
+                hobbyCount.textContent = selectedCount;
+            } else {
+                successMessage.style.display = 'none';
+            }
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateHobbyCount);
+        });
+
+        // Initialize the count on page load
+        updateHobbyCount();
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Current Date</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #333;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            width: calc(100% - 22px); /* Account for padding and border */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .success-message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Match the Current Date</h1>
+        <label for="dateInput">Enter today's date (YYYY-MM-DD):</label>
+        <input type="text" id="dateInput" placeholder="Enter date here">
+        <div class="success-message" id="successMessage">
+            Success! The date matches.
+        </div>
+    </div>
+
+    <script>
+        const inputField = document.getElementById('dateInput');
+        const successMessage = document.getElementById('successMessage');
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+        inputField.addEventListener('input', () => {
+            if (inputField.value.trim() === today) {
+                successMessage.style.display = 'block';
+            } else {
+                successMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
