@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Different Alerts</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .alert-button {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .confirm-button {
+            background-color: #28A745;
+            color: white;
+        }
+
+        .prompt-button {
+            background-color: #FFC107;
+            color: white;
+        }
+
+        .custom-button {
+            background-color: #DC3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <button class="button alert-button" onclick="showAlert()">Show Alert</button>
+    <button class="button confirm-button" onclick="showConfirm()">Show Confirm</button>
+    <button class="button prompt-button" onclick="showPrompt()">Show Prompt</button>
+    <button class="button custom-button" onclick="showCustomAlert()">Show Custom Alert</button>
+
+    <script>
+        function showAlert() {
+            alert('This is a standard alert!');
+        }
+
+        function showConfirm() {
+            const result = confirm('Do you confirm this action?');
+            if (result) {
+                alert('You confirmed the action.');
+            } else {
+                alert('You canceled the action.');
+            }
+        }
+
+        function showPrompt() {
+            const result = prompt('Please enter your name:', 'Your name here');
+            if (result !== null) {
+                alert('Hello, ' + result + '!');
+            } else {
+                alert('You canceled the prompt.');
+            }
+        }
+
+        function showCustomAlert() {
+            const customAlert = document.createElement('div');
+            customAlert.style.position = 'fixed';
+            customAlert.style.top = '50%';
+            customAlert.style.left = '50%';
+            customAlert.style.transform = 'translate(-50%, -50%)';
+            customAlert.style.padding = '20px';
+            customAlert.style.backgroundColor = '#f8d7da';
+            customAlert.style.color = '#721c24';
+            customAlert.style.border = '1px solid #f5c6cb';
+            customAlert.style.borderRadius = '5px';
+            customAlert.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+            customAlert.innerHTML = `
+                <strong>Custom Alert!</strong>
+                <p>This is a custom alert box.</p>
+                <button onclick="this.parentElement.remove()">Close</button>
+            `;
+            document.body.appendChild(customAlert);
+        }
+    </script>
+</body>
+</html>

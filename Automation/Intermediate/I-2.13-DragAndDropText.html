@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Text</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+
+        #draggableText {
+            margin-bottom: 20px;
+            cursor: pointer;
+            position: absolute;
+        }
+
+        #dropBox {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #007BFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div id="draggableText" draggable="true">Drag me to the box</div>
+    <div id="dropBox">Drop here</div>
+
+    <script>
+        const draggableText = document.getElementById('draggableText');
+        const dropBox = document.getElementById('dropBox');
+
+        draggableText.addEventListener('dragstart', (event) => {
+            event.dataTransfer.setData('text/plain', draggableText.innerText);
+            event.dataTransfer.effectAllowed = 'move';
+        });
+
+        draggableText.addEventListener('dragend', (event) => {
+            draggableText.style.left = `${event.pageX}px`;
+            draggableText.style.top = `${event.pageY}px`;
+        });
+
+        dropBox.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        });
+
+        dropBox.addEventListener('drop', (event) => {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text/plain');
+            dropBox.innerText = data;
+            draggableText.style.display = 'none';
+        });
+
+        document.addEventListener('drag', (event) => {
+            if (event.pageX && event.pageY) {
+                draggableText.style.left = `${event.pageX}px`;
+                draggableText.style.top = `${event.pageY}px`;
+            }
+        });
+    </script>
+</body>
+</html>
