@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .file-path {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+        .success-message {
+            margin-top: 10px;
+            font-size: 16px;
+            color: green;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload a File</h2>
+        <input type="file" id="fileUpload">
+        <div class="file-path" id="filePath"></div>
+        <div class="success-message" id="successMessage">File uploaded successfully!</div>
+    </div>
+    <script>
+        document.getElementById('fileUpload').addEventListener('change', function(event) {
+            const filePath = document.getElementById('filePath');
+            const successMessage = document.getElementById('successMessage');
+            const file = event.target.files[0];
+
+            if (file) {
+                filePath.textContent = `File Path: ${file.name}`;
+                successMessage.style.display = 'block';
+            } else {
+                filePath.textContent = '';
+                successMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

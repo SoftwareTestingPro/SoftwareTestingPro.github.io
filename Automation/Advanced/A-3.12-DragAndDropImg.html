@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Image</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        #draggableImage {
+            width: 200px;
+            cursor: move;
+        }
+        #dropBox {
+            width: 300px;
+            height: 300px;
+            border: 2px dashed #aaa;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            background-color: white;
+            position: relative;
+        }
+        #dropBox.over {
+            border-color: #00f;
+            background-color: #e0e0ff;
+        }
+        #dropBoxText {
+            position: absolute;
+        }
+        #successMessage {
+            margin-top: 10px;
+            font-size: 16px;
+            color: green;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Drag and Drop the Image</h2>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Taj-Mahal.jpg/1200px-Taj-Mahal.jpg" id="draggableImage" draggable="true">
+        <div id="dropBox">
+            <span id="dropBoxText">Drop Here</span>
+        </div>
+        <div id="successMessage">Image dropped successfully!</div>
+    </div>
+    <script>
+        const draggableImage = document.getElementById('draggableImage');
+        const dropBox = document.getElementById('dropBox');
+        const dropBoxText = document.getElementById('dropBoxText');
+        const successMessage = document.getElementById('successMessage');
+
+        draggableImage.addEventListener('dragstart', function(event) {
+            event.dataTransfer.setData('text/plain', event.target.id);
+        });
+
+        dropBox.addEventListener('dragover', function(event) {
+            event.preventDefault();
+            dropBox.classList.add('over');
+        });
+
+        dropBox.addEventListener('dragleave', function(event) {
+            dropBox.classList.remove('over');
+        });
+
+        dropBox.addEventListener('drop', function(event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text');
+            const draggedElement = document.getElementById(data);
+            dropBox.appendChild(draggedElement);
+            dropBox.classList.remove('over');
+            dropBoxText.style.display = 'none';
+            successMessage.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
