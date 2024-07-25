@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A page displaying thumbnails with dynamic ISBN data, a loading spinner, and an input field.">
+    <title>Thumbnails with ISBN Data</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .loading {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 10;
+            top: 0;
+            left: 0;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .thumbnails-label {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .thumbnail {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 150px;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #ddd; /* Outline border for image */
+            position: relative;
+            opacity: 1;
+            transition: opacity 2s ease, transform 2s ease; /* For fade and move effect */
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .isbn {
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .input-container {
+            margin-top: 20px;
+        }
+
+        .input-container input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 150px; /* Width for 15 characters */
+            box-sizing: border-box;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .failure {
+            color: red;
+        }
+
+        .interactive-message {
+            font-size: 16px;
+            font-weight: normal;
+            margin-top: 10px;
+        }
+
+        @keyframes disappear {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loading">
+            <div class="spinner"></div>
+        </div>
+        
+        <div class="thumbnails-label">Thumbnails with ISBN Data</div>
+        
+        <div class="thumbnails" id="thumbnailContainer">
+            <!-- Initial thumbnails with image and ISBN data -->
+            <div class="thumbnail">
+                <img src="https://picsum.photos/150/150?random=1" alt="Thumbnail 1">
+                <div class="isbn">ISBN: 978-3-1234-5678-9</div>
+            </div>
+            <div class="thumbnail">
+                <img src="https://picsum.photos/150/150?random=2" alt="Thumbnail 2">
+                <div class="isbn">ISBN: 978-1-2345-6789-0</div>
+            </div>
+            <div class="thumbnail">
+                <img src="https://picsum.photos/150/150?random=3" alt="Thumbnail 3">
+                <div class="isbn">ISBN: 978-0-1234-5678-9</div>
+            </div>
+            <div class="thumbnail">
+                <img src="https://picsum.photos/150/150?random=4" alt="Thumbnail 4">
+                <div class="isbn">ISBN: 978-4-5678-9012-3</div>
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="user-input" name="user-input" placeholder="Type something...">
+        </div>
+        
+        <div class="message" id="resultMessage"></div>
+        <div class="interactive-message" id="interactiveMessage"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const thumbnailContainer = document.getElementById('thumbnailContainer');
+            const loadingScreen = document.querySelector('.loading');
+            const userInput = document.getElementById('user-input');
+            const resultMessage = document.getElementById('resultMessage');
+            const interactiveMessage = document.getElementById('interactiveMessage');
+            
+            // Function to generate random ISBN
+            function generateRandomISBN() {
+                return `978-3-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9 + 1)}`;
+            }
+
+            // Function to generate random image URL
+            function generateRandomImageURL() {
+                const randomId = Math.floor(Math.random() * 1000 + 1);
+                return `https://picsum.photos/id/${randomId}/150/150`;
+            }
+
+            // Function to handle image loading and fallback
+            function handleImageLoad(img) {
+                img.onerror = () => img.src = 'fallback-image.jpg'; // Fallback on error
+            }
+
+            // Function to create thumbnails
+            function createThumbnails() {
+                const thumbnails = document.querySelectorAll('.thumbnail');
+                thumbnails.forEach((thumbnail, index) => {
+                    const img = thumbnail.querySelector('img');
+                    const isbn = thumbnail.querySelector('.isbn');
+                    
+                    img.src = generateRandomImageURL();
+                    handleImageLoad(img); // Ensure fallback on error
+                    isbn.textContent = `ISBN: ${generateRandomISBN()}`;
+                });
+            }
+
+            // Check user input against ISBN from the second thumbnail
+            function checkInputAgainstISBN() {
+                const secondThumbnailISBN = document.querySelectorAll('.thumbnail')[1].querySelector('.isbn').textContent.split(': ')[1];
+                const userEnteredText = userInput.value.trim().toLowerCase();
+                const correctISBN = secondThumbnailISBN.toLowerCase(); // Dynamic correct ISBN for comparison
+                
+                if (userEnteredText === correctISBN) {
+                    resultMessage.textContent = 'Success! ISBN matches.';
+                    resultMessage.className = 'message success';
+                } else {
+                    resultMessage.textContent = 'Failure! ISBN does not match.';
+                    resultMessage.className = 'message failure';
+                }
+
+                interactiveMessage.textContent = `Expected ISBN: ${correctISBN} | Actual: ${userEnteredText}`;
+            }
+
+            // Show content after random time between 5 and 60 seconds
+            const loadingDuration = Math.random() * 55000 + 5000; // Random time between 5 and 60 seconds
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                createThumbnails();
+                userInput.addEventListener('input', checkInputAgainstISBN);
+
+                // Add ghostly disappear effect
+                setTimeout(() => {
+                    const thumbnails = document.querySelectorAll('.thumbnail');
+                    thumbnails.forEach(thumbnail => {
+                        thumbnail.style.animation = 'disappear 2s ease forwards';
+                    });
+                }, 3000); // 3 seconds after loading completes
+            }, loadingDuration);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .icon-button {
+            font-size: 40px;
+            color: #007BFF;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .icon-button:hover {
+            color: #0056b3;
+        }
+
+        .label {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .input-container {
+            margin-top: 15px;
+        }
+
+        .input-container input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .failure {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-box">
+        <span class="label">Click icon to play audio</span>
+        <i class="fas fa-play icon-button" id="iconButton"></i>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Input what you heard...">
+        </div>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const iconButton = document.getElementById('iconButton');
+            const utterance = new SpeechSynthesisUtterance("The recording has been started");
+            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.toLowerCase().includes('female'));
+            const userInput = document.getElementById('userInput');
+            const message = document.getElementById('message');
+
+            let isPlaying = false;
+
+            iconButton.addEventListener('click', () => {
+                if (!isPlaying) {
+                    iconButton.classList.remove('fa-play');
+                    iconButton.classList.add('fa-stop');
+                    speechSynthesis.speak(utterance);
+                    isPlaying = true;
+
+                    utterance.onend = () => {
+                        iconButton.classList.remove('fa-stop');
+                        iconButton.classList.add('fa-play');
+                        isPlaying = false;
+                    };
+                } else {
+                    speechSynthesis.cancel();
+                    iconButton.classList.remove('fa-stop');
+                    iconButton.classList.add('fa-play');
+                    isPlaying = false;
+                }
+            });
+
+            userInput.addEventListener('input', () => {
+                const inputText = userInput.value.trim().toLowerCase();
+                const correctText = "the recording has been started";
+
+                if (inputText === correctText) {
+                    message.textContent = "Success! Speech to Text matches.";
+                    message.className = 'message success';
+                } else {
+                    message.textContent = "Failure! Speech to Text does not match.";
+                    message.className = 'message failure';
+                }
+                message.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

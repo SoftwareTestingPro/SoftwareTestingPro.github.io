@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple HTML5 page with a container box, displaying an image and an input field below, with validation messages based on user input.">
+    <title>Random Image Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .container-box label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        .container-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            border: 5px solid #333; /* Outline border added here */
+        }
+
+        .container-box input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 25ch; /* Set width to approximately 25 characters */
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        .message {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .success-message {
+            color: #155724; /* Green color */
+            border: 1px solid #c3e6cb;
+            background-color: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .failure-message {
+            color: #721c24; /* Red color */
+            border: 1px solid #f5c6cb;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-box">
+        <label for="user-input">Fetch displayed text from below image:</label>
+        <img src="../../img/shopping.jpg" alt="Image" id="Image">
+        <input type="text" id="user-input" name="user-input" placeholder="Enter fetched text here...">
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userInput = document.getElementById('user-input');
+            const message = document.getElementById('message');
+
+            userInput.addEventListener('input', () => {
+                const value = userInput.value.toLowerCase();
+
+                if (value === 'amazon') {
+                    message.textContent = 'Success! You entered "amazon".';
+                    message.className = 'message success-message';
+                } else if (value.trim() === '') {
+                    message.textContent = ''; // Clear message when input is empty
+                    message.className = 'message';
+                } else {
+                    message.textContent = 'Failure! The entered text does not match.';
+                    message.className = 'message failure-message';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
