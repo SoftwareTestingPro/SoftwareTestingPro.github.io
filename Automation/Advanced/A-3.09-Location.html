@@ -3,7 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get User Location</title>
+    <meta name="description" content="Use this page to access your geolocation and get information about your current location, including country, city, and principal subdivision.">
+    <meta name="keywords" content="geolocation, location access, reverse geocoding, geolocation API, country information">
+    <meta name="author" content="Sushil Singh">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Geo Location">
+    <meta property="og:description" content="Use this page to access your geolocation and get information about your current location, including country, city, and principal subdivision.">
+    <meta property="og:image" content="URL_TO_IMAGE">
+    <meta property="og:url" content="URL_OF_THIS_PAGE">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Geo Location">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Geo Location">
+    <meta name="twitter:description" content="Use this page to access your geolocation and get information about your current location, including country, city, and principal subdivision.">
+    <meta name="twitter:image" content="URL_TO_IMAGE">
+    <title>Geo Location</title>
     <style>
         body {
             display: flex;
@@ -43,11 +57,16 @@
         #location-info {
             margin-top: 20px;
         }
+
+        h2 {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <button onclick="getLocation()">Click here to access my location</button>
+        <h3>Click on below button to see your current location</h3>
+        <button onclick="getLocation()">Click Here</button>
         <div id="location-info"></div>
     </div>
 

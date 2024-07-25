@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Flag Display</title>
+    <meta name="description" content="Interactive page to count broken images among randomly displayed country flags.">
+    <meta name="keywords" content="QR Code, Image Validation, Broken Images, Country Flags">
+    <meta name="author" content="Sushil Singh">
+    <title>Broken Images</title>
     <style>
         body {
             display: flex;
@@ -60,14 +63,29 @@
             width: calc(100% - 22px);
             box-sizing: border-box;
         }
+
+        .success-message {
+            color: green;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .failure-message {
+            color: red;
+            font-size: 18px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="images-container" id="images-container"></div>
-    <div class="input-container">
-        <label for="user-input">Count broken Images and input in below field</label>
-        <input type="text" id="user-input" name="user-input" placeholder="Type something...">
-    </div>
+    <main class="container">
+        <section class="images-container" id="images-container" aria-live="polite"></section>
+        <section class="input-container">
+            <label for="user-input">Count broken images and input in the field below</label>
+            <input type="text" id="user-input" name="user-input" placeholder="Enter the number of broken images">
+            <div id="message" aria-live="polite"></div>
+        </section>
+    </main>
     
     <script>
         const flagUrls = [
@@ -95,21 +113,43 @@
         const totalImages = 6;
         const imagesContainer = document.getElementById('images-container');
 
-        for (let i = 0; i < totalImages; i++) {
+        let brokenImageCount = 0;
+
+        function createImage(src) {
             const imgContainer = document.createElement('div');
             imgContainer.className = 'image-container';
 
             const img = document.createElement('img');
-            if (Math.random() > 0.5) {
-                img.src = flagUrls[Math.floor(Math.random() * flagUrls.length)];
-            } else {
-                img.src = brokenImageUrls[Math.floor(Math.random() * brokenImageUrls.length)];
-            }
-
+            img.src = src;
             img.alt = 'Country Flag';
+            img.onerror = () => {
+                brokenImageCount++;
+            };
+
             imgContainer.appendChild(img);
             imagesContainer.appendChild(imgContainer);
         }
+
+        for (let i = 0; i < totalImages; i++) {
+            if (Math.random() > 0.5) {
+                createImage(flagUrls[Math.floor(Math.random() * flagUrls.length)]);
+            } else {
+                createImage(brokenImageUrls[Math.floor(Math.random() * brokenImageUrls.length)]);
+            }
+        }
+
+        document.getElementById('user-input').addEventListener('input', function() {
+            const userInput = parseInt(this.value, 10);
+            const message = document.getElementById('message');
+
+            if (userInput === brokenImageCount) {
+                message.textContent = 'Success! You entered the correct value.';
+                message.className = 'success-message';
+            } else {
+                message.textContent = 'Failure! Incorrect value entered.';
+                message.className = 'failure-message';
+            }
+        });
     </script>
 </body>
 </html>

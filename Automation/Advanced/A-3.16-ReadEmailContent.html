@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email OTP Verification</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #333;
+        }
+        input[type="email"], input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            width: calc(100% - 22px);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .failure {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .otp-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email OTP Verification</h1>
+        <label for="emailInput">Enter your email address:</label>
+        <input type="email" id="emailInput" placeholder="Enter your email">
+        <button id="submitEmail">Submit</button>
+
+        <div class="otp-input" id="otpSection">
+            <label for="otpInput">Enter the OTP sent to your email:</label>
+            <input type="text" id="otpInput" placeholder="Enter OTP">
+            <button id="submitOTP">Verify OTP</button>
+        </div>
+
+        <div class="message success" id="successMessage">
+            Success! The OTP matches. ✅
+        </div>
+        <div class="message failure" id="failureMessage">
+            Incorrect OTP. Please try again. ❌
+        </div>
+    </div>
+
+    <script>
+        let generatedOTP = '';
+
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+        }
+
+        document.getElementById('submitEmail').addEventListener('click', () => {
+            const email = document.getElementById('emailInput').value;
+            if (email) {
+                generatedOTP = generateOTP();
+                // Simulate sending email
+                console.log(`Sending OTP ${generatedOTP} to ${email}`);
+                
+                // Show OTP input field
+                document.getElementById('otpSection').style.display = 'block';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        });
+
+        document.getElementById('submitOTP').addEventListener('click', () => {
+            const enteredOTP = document.getElementById('otpInput').value;
+            if (enteredOTP === generatedOTP) {
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('failureMessage').style.display = 'none';
+            } else {
+                document.getElementById('successMessage').style.display = 'none';
+                document.getElementById('failureMessage').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

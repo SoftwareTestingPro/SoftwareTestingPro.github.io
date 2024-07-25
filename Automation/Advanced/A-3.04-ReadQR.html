@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code</title>
+    <meta name="description" content="Decode the QR Code and enter the value in the text field below to see if you are correct.">
+    <meta name="keywords" content="QR Code, decode, input field, success message">
+    <meta name="author" content="Your Name">
+    <title>QR Code Decoder</title>
     <style>
         body {
             display: flex;
@@ -14,9 +17,14 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
-        .text-above {
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
             text-align: center;
-            margin-bottom: 10px;
         }
         .image-container {
             position: relative;
@@ -50,37 +58,14 @@
         .image-container:hover .image-overlay {
             opacity: 1;
         }
-        .popup-content {
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            max-width: 80%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-        }
-        .popup-content p {
-            margin-bottom: 10px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-        }
-		.input-container {
+        .input-container {
             text-align: center;
         }
-
         .input-container label {
             font-size: 18px;
             margin-bottom: 10px;
             display: block;
         }
-
         .input-container input[type="text"] {
             padding: 10px;
             font-size: 16px;
@@ -89,15 +74,43 @@
             width: calc(100% - 22px);
             box-sizing: border-box;
         }
+        .success-message {
+            color: green;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .failure-message {
+            color: red;
+            font-size: 18px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-	<div class="input-container">
-        <label for="user-input">Decode this QR Code and enter value in below text field</label>
-        <input type="text" id="user-input" name="user-input" placeholder="Type something...">
-    </div>
-    <div class="image-container">
-        <img id="qr" src="../../img/qr.jpg" alt="QR Code">        
-    </div>
+    <main class="container">
+        <section class="image-container">
+            <img id="qr" src="../../img/qr.jpg" alt="QR Code">        
+        </section>
+        <section class="input-container">
+            <label for="user-input">Decode this QR Code and enter the value in the text field below</label>
+            <input type="text" id="user-input" name="user-input" placeholder="Type something...">
+            <div id="message" class="success-message" aria-live="polite"></div>
+        </section>
+    </main>
+    <script>
+        document.getElementById('user-input').addEventListener('input', function() {
+            const correctValue = 'Congratulations... finally you did it'; // Replace with the actual decoded value
+            const userInput = this.value;
+            const message = document.getElementById('message');
+
+            if (userInput === correctValue) {
+                message.textContent = 'Success! You entered the correct value.';
+                message.className = 'success-message';
+            } else {
+                message.textContent = 'Failure! Incorrect value entered.';
+                message.className = 'failure-message';
+            }
+        });
+    </script>
 </body>
 </html>
