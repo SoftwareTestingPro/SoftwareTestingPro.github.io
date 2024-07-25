@@ -49,50 +49,12 @@
             box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
             outline: none;
         }
-
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            width: calc(100% - 40px); /* Adjust width to account for padding */
-            max-width: 400px;
-            margin: 0 auto; /* Center the button container */
-        }
-
-        .button-container button {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            margin: 0 5px; /* Space between the buttons */
-        }
-
-        .button-container .prev {
-            background-color: #6c757d;
-        }
-
-        .button-container .next {
-            background-color: #007BFF;
-        }
-
-        .button-container button:hover {
-            opacity: 0.8;
-        }
-
-        .button-container .prev:hover {
-            background-color: #5a6268;
-        }
-
-        .button-container .next:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
     <div class="container">
+		<h3>Please Fill Out the Following Information</h3>
+		<h3>All checkboxes should highlight Green</h3>
         <label for="user-input-name">Enter your name:</label>
         <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
         
@@ -101,11 +63,6 @@
 
         <label for="text-input">Enter "text within double quotes" in the input field:</label>
         <input type="text" id="text-input" class="form-control" placeholder="Type something...">
-    </div>
-
-    <div class="button-container">
-        <button class="prev">Previous</button>
-        <button class="next">Next</button>
     </div>
 
     <script>

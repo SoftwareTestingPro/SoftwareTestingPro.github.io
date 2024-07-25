@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Largest Countries in Asia</title>
+    <title>Radio List</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
@@ -25,31 +25,45 @@
         .alert {
             display: none;
         }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-failure {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        label {
+            cursor: default; /* Ensures the label text isn't clickable */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="container-box">
-            <h2>Select Radio button corresponding to INDIA</h2>
+            <h4>Select radio button for India</h4>
             <form id="countryForm">
                 <!-- The radio buttons will be inserted here by JavaScript -->
             </form>
             <div id="selectedCountry" class="mt-3"></div>
+            <div id="successMessage" class="alert alert-success mt-3">
+                Success! You selected India. ✅
+            </div>
+            <div id="failureMessage" class="alert alert-failure mt-3">
+                Failure! Please select India. ❌
+            </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const countries = [
-                { id: 'china', name: 'China' },
-                { id: 'india', name: 'India' },
-                { id: 'kazakhstan', name: 'Kazakhstan' },
-                { id: 'saudiArabia', name: 'Saudi Arabia' },
-                { id: 'iran', name: 'Iran' },
-                { id: 'mongolia', name: 'Mongolia' },
-                { id: 'indonesia', name: 'Indonesia' },
-                { id: 'pakistan', name: 'Pakistan' },
-                { id: 'turkey', name: 'Turkey' },
-                { id: 'myanmar', name: 'Myanmar' }
+                { label: 'China', id: 'random1', value: 'xyz1' },
+                { label: 'India', id: 'random2', value: 'xyz2' },
+                { label: 'Kazakhstan', id: 'random3', value: 'xyz3' },
+                { label: 'Saudi Arabia', id: 'random4', value: 'xyz4' },
+                { label: 'Iran', id: 'random5', value: 'xyz5' }
             ];
 
             // Shuffle the countries array
@@ -66,25 +80,47 @@
                 input.type = 'radio';
                 input.name = 'country';
                 input.id = country.id;
-                input.value = country.name;
+                input.value = country.value;
 
                 const label = document.createElement('label');
                 label.className = 'form-check-label';
                 label.htmlFor = country.id;
-                label.innerText = country.name;
+                label.innerText = country.label;
 
                 div.appendChild(input);
                 div.appendChild(label);
                 form.appendChild(div);
             });
 
-            // Display selected country
+            // Display selected option and messages
             form.addEventListener('change', () => {
-                const selectedCountry = document.querySelector('input[name="country"]:checked').value;
+                const selectedRadio = document.querySelector('input[name="country"]:checked');
                 const selectedCountryDiv = document.getElementById('selectedCountry');
-                selectedCountryDiv.textContent = `Selected Country: ${selectedCountry}`;
-                selectedCountryDiv.className = 'alert alert-info';
-                selectedCountryDiv.style.display = 'block';
+                const successMessage = document.getElementById('successMessage');
+                const failureMessage = document.getElementById('failureMessage');
+
+                if (selectedRadio) {
+                    const selectedLabel = document.querySelector(`label[for="${selectedRadio.id}"]`).innerText;
+                    selectedCountryDiv.textContent = `Selected Country: ${selectedLabel}`;
+                    selectedCountryDiv.className = 'alert alert-info';
+                    selectedCountryDiv.style.display = 'block';
+
+                    if (selectedRadio.value === 'xyz2') { // Random value for India
+                        successMessage.style.display = 'block';
+                        failureMessage.style.display = 'none';
+                    } else {
+                        successMessage.style.display = 'none';
+                        failureMessage.style.display = 'block';
+                    }
+                }
+            });
+
+            // Ensure clicking on the label does not select the radio button
+            document.querySelectorAll('label').forEach(label => {
+                label.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
             });
         });
     </script>

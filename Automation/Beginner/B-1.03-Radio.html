@@ -13,7 +13,6 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            flex-direction: column; /* Ensures vertical alignment */
         }
 
         .container {
@@ -24,7 +23,6 @@
             width: 80%;
             max-width: 400px;
             text-align: center;
-            margin-bottom: 20px; /* Space for the buttons below */
         }
 
         h1 {
@@ -59,46 +57,6 @@
             border-radius: 5px;
             font-size: 1em;
         }
-
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            width: calc(100% - 40px); /* Adjust width to account for padding */
-            max-width: 400px;
-            margin: 0 auto; /* Center the button container */
-        }
-
-        .button-container button {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            margin: 0 5px; /* Space between the buttons */
-        }
-
-        .button-container .prev {
-            background-color: #6c757d;
-        }
-
-        .button-container .next {
-            background-color: #007BFF;
-        }
-
-        .button-container button:hover {
-            opacity: 0.8;
-        }
-
-        .button-container .prev:hover {
-            background-color: #5a6268;
-        }
-
-        .button-container .next:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
@@ -126,12 +84,6 @@
             <!-- Message will be updated by JavaScript -->
         </div>
     </div>
-
-    <div class="button-container">
-        <button class="prev">Previous</button>
-        <button class="next">Next</button>
-    </div>
-
     <script>
         const radioButtons = document.querySelectorAll('input[name="gender"]');
         const successMessage = document.getElementById('successMessage');
