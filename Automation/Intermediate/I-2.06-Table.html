@@ -9,6 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -42,53 +43,122 @@
             font-size: 24px;
             font-weight: bold;
         }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .failure {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <table>
-        <caption>Employee Data</caption>
-        <tr>
-            <th>Employee ID</th>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Position</th>
-            <th>Email</th>
-        </tr>
-        <tr>
-            <td>001</td>
-            <td>John Doe</td>
-            <td>Engineering</td>
-            <td>Software Engineer</td>
-            <td>john.doe@example.com</td>
-        </tr>
-        <tr>
-            <td>002</td>
-            <td>Jane Smith</td>
-            <td>Marketing</td>
-            <td>Marketing Manager</td>
-            <td>jane.smith@example.com</td>
-        </tr>
-        <tr>
-            <td>003</td>
-            <td>Emily Johnson</td>
-            <td>Human Resources</td>
-            <td>HR Specialist</td>
-            <td>emily.johnson@example.com</td>
-        </tr>
-        <tr>
-            <td>004</td>
-            <td>Michael Brown</td>
-            <td>Sales</td>
-            <td>Sales Representative</td>
-            <td>michael.brown@example.com</td>
-        </tr>
-        <tr>
-            <td>005</td>
-            <td>Linda Wilson</td>
-            <td>Finance</td>
-            <td>Financial Analyst</td>
-            <td>linda.wilson@example.com</td>
-        </tr>
+    <table id="employeeTable">
+        <caption>Select the employee with highest salary and verify message</caption>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Salary (INR)</th>
+            </tr>
+        </thead>
+        <tbody id="employeeBody">
+            <!-- Data will be inserted here dynamically -->
+        </tbody>
     </table>
+    <div id="message" class="message"></div>
+
+    <script>
+        function generateUniqueNames() {
+            const names = [
+                'Aarav Sharma', 'Vivaan Patel', 'Aditya Kumar', 'Vihaan Singh', 
+                'Arjun Mehta', 'Reyansh Gupta', 'Sai Patel', 'Ayaan Joshi', 
+                'Ishaan Rao', 'Kartik Jain', 'Kabir Verma', 'Rohan Agarwal'
+            ];
+            const usedNames = new Set();
+            while (usedNames.size < 10) {
+                const randomIndex = Math.floor(Math.random() * names.length);
+                usedNames.add(names[randomIndex]);
+            }
+            return Array.from(usedNames);
+        }
+
+        function generateUniqueSalaries(count) {
+            const salaries = [];
+            while (salaries.length < count) {
+                let newSalary = Math.floor(Math.random() * (100000 - 50000 + 1)) + 50000;
+                if (!salaries.includes(newSalary)) {
+                    salaries.push(newSalary);
+                }
+            }
+            return salaries;
+        }
+
+        function generateRandomEmployees() {
+            const numberOfRows = Math.floor(Math.random() * (10 - 4 + 1)) + 4;
+            const names = generateUniqueNames();
+            const positions = ['Software Engineer', 'Marketing Manager', 'HR Specialist', 'Sales Representative', 'Financial Analyst'];
+            const salaries = generateUniqueSalaries(numberOfRows);
+
+            const employees = names.slice(0, numberOfRows).map((name, index) => ({
+                name,
+                position: positions[Math.floor(Math.random() * positions.length)],
+                salary: salaries[index]
+            }));
+
+            return employees;
+        }
+
+        function populateTable() {
+            const employees = generateRandomEmployees();
+            const tableBody = document.getElementById('employeeBody');
+            let highestSalary = 0;
+            let highestSalaryIndex = -1;
+
+            tableBody.innerHTML = ''; // Clear existing data
+
+            employees.forEach((employee, index) => {
+                if (employee.salary > highestSalary) {
+                    highestSalary = employee.salary;
+                    highestSalaryIndex = index;
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${employee.name}</td>
+                    <td>${employee.position}</td>
+                    <td>${employee.salary.toLocaleString('en-IN')} INR</td>
+                `;
+                row.addEventListener('click', () => {
+                    const messageDiv = document.getElementById('message');
+                    if (index === highestSalaryIndex) {
+                        messageDiv.innerHTML = `<div class="success">Congratulations! You clicked on the person with the highest salary.</div>`;
+                    } else {
+                        messageDiv.innerHTML = `<div class="failure">Sorry! The person you clicked does not have the highest salary.</div>`;
+                    }
+                });
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate table on page load
+        document.addEventListener('DOMContentLoaded', populateTable);
+    </script>
 </body>
 </html>

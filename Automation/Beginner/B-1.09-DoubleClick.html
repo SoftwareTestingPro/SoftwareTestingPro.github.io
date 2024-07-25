@@ -13,6 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden; /* Prevent scrollbars from appearing due to flying emojis */
         }
         .container {
             background-color: #fff;
@@ -20,6 +21,14 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
+            position: relative;
+            width: 60%; /* Adjust width as needed */
+            max-width: 500px; /* Ensure the container doesn't get too large */
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #333;
         }
         button {
             padding: 10px 20px;
@@ -37,32 +46,97 @@
         button:active {
             transform: scale(0.98);
         }
-        .success-message {
+        .success-message, .failure-message {
             display: none;
             margin-top: 20px;
             padding: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            position: absolute;
+            width: calc(100% - 40px); /* Adjust width to fit inside the container */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .success-message {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            font-size: 1em;
+        }
+        .failure-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .emoji {
+            position: absolute;
+            font-size: 24px;
+            animation: fly 3s linear;
+        }
+        @keyframes fly {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-100vh) scale(0.5);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <button id="successButton">Double Click Me</button>
+        <h3>Double click the below button</h3>
+        <button id="clickButton" type="button">Click Me</button>
         <div class="success-message" id="successMessage">
             Success! You double-clicked the button.
+        </div>
+        <div class="failure-message" id="failureMessage">
+            Ha Ha! You single-clicked the button.
         </div>
     </div>
 
     <script>
-        const button = document.getElementById('successButton');
+        const clickButton = document.getElementById('clickButton');
         const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
-        button.addEventListener('dblclick', () => {
+        let clickTimeout;
+
+        clickButton.addEventListener('click', () => {
+            // Show failure message for single click
+            failureMessage.style.display = 'block';
+            successMessage.style.display = 'none'; // Hide success message
+
+            // Add laughing emojis flying across the screen
+            for (let i = 0; i < 30; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji';
+                emoji.textContent = '😂';
+                emoji.style.left = `${Math.random() * 100}vw`;
+                emoji.style.top = `${Math.random() * 100}vh`;
+                emoji.style.fontSize = `${Math.random() * 50 + 20}px`; // Random size between 20px and 70px
+                document.body.appendChild(emoji);
+
+                // Remove emoji after animation ends
+                emoji.addEventListener('animationend', () => {
+                    emoji.remove();
+                });
+            }
+
+            // Handle double-click logic
+            clearTimeout(clickTimeout);
+            clickTimeout = setTimeout(() => {
+                // If not double-clicked, show failure message
+                failureMessage.style.display = 'block';
+                successMessage.style.display = 'none'; // Hide success message
+            }, 250);
+        });
+
+        clickButton.addEventListener('dblclick', () => {
+            clearTimeout(clickTimeout);
             successMessage.style.display = 'block';
+            failureMessage.style.display = 'none'; // Hide failure message
         });
     </script>
 </body>

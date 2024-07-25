@@ -3,95 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Button in Frame with Popup</title>
+    <title>Button within a Frame</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f9fc;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
         }
+
+        .container {
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #333;
+        }
+
         .frame {
-            border: 2px solid #ccc;
-            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: #fff;
+            display: inline-block;
         }
+
         .button {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: white;
-            background-color: #4caf50;
+            padding: 12px 24px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
+
         .button:hover {
-            background-color: #388e3c;
+            background-color: #0056b3;
+            transform: scale(1.05);
         }
-        .popup {
-            display: none;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            z-index: 1000;
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
         }
-        .popup .close {
-            cursor: pointer;
-            color: #aaa;
-            float: right;
-            font-size: 20px;
-            margin-top: -10px;
-        }
-        .popup .close:hover {
-            color: black;
-        }
-        .overlay {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
+
+        .success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    <div class="frame">
-        <button class="button" id="action-button">Click Me</button>
-    </div>
-    <div class="overlay" id="overlay"></div>
-    <div class="popup" id="popup">
-        <span class="close" id="close">&times;</span>
-        <p>This is a popup message!</p>
+    <div class="container">
+        <div class="header">Click the below button</div>
+        <div class="frame">
+            <button class="button" id="action-button" type="button">Click Me</button>
+        </div>
+        <div id="message" class="message"></div>
     </div>
     <script>
         document.getElementById('action-button').addEventListener('click', function() {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('popup').style.display = 'block';
-        });
-
-        document.getElementById('close').addEventListener('click', function() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('popup').style.display = 'none';
-        });
-
-        document.getElementById('overlay').addEventListener('click', function() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('popup').style.display = 'none';
+            document.getElementById('message').innerHTML = `<div class="success">Success! You clicked the button within a frame.</div>`;
         });
     </script>
 </body>
