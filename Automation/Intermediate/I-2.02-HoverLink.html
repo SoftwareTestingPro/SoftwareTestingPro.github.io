@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Specific Country Flag Image with Popup</title>
+    <title>Mouse hover and click a link</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             display: flex;
@@ -13,6 +14,14 @@
             margin: 0;
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
+        }
+        .container-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 60%;
+            text-align: center;
         }
         .text-above {
             text-align: center;
@@ -50,59 +59,38 @@
         .image-container:hover .image-overlay {
             opacity: 1;
         }
-        .popup-content {
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            max-width: 80%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .alert {
             display: none;
-        }
-        .popup-content p {
-            margin-bottom: 10px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="text-above">
-        <h3>Mouse hover over image and click on the link</h3>
-    </div>
-
-    <div class="image-container">
-        <img id="flagImage" src="https://img1.hscicdn.com/image/upload/f_auto,t_ds_square_w_640,q_50/lsci/db/PICTURES/CMS/316400/316486.png" alt="Sachin Tendulkar">
-        <div class="image-overlay">
-            <a href="#" style="color:white;" onclick="openPopup()">Who am I ?</a>
+    <div class="container-box">
+        <div class="text-above">
+            <h4>Mouse hover over image and click on the link</h4>
         </div>
+
+        <div class="image-container">
+            <img id="flagImage" src="https://img1.hscicdn.com/image/upload/f_auto,t_ds_square_w_640,q_50/lsci/db/PICTURES/CMS/316400/316486.png" alt="Sachin Tendulkar">
+            <div class="image-overlay">
+                <a href="#" style="color:white;" onclick="displaySuccessMessage(event)">Who am I?</a>
+            </div>
+        </div>
+
+        <div class="alert alert-success mt-3" id="successMessage"></div>
     </div>
 
-    <div class="popup-content" id="popup">
-        <span class="close-btn" onclick="closePopup()">&times;</span>
-        <h2>HTML5 Popup Content</h2>
-        <p>This is your HTML5 popup content. You can add any text or HTML content here.</p>
-        <p><a href="#" onclick="closePopup()">Close</a></p>
-    </div>
-
-    <!-- JavaScript -->
     <script>
-        // Function to open the popup
-        function openPopup() {
-            document.getElementById('popup').style.display = 'block';
-        }
-
-        // Function to close the popup
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
+        function displaySuccessMessage(event) {
+            event.preventDefault();
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = 'This is Sachin Tendulkar, an Indian cricketer.';
+            successMessage.style.display = 'block';
         }
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

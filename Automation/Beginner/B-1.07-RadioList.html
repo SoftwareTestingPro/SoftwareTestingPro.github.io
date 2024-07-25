@@ -12,18 +12,29 @@
             align-items: center;
             height: 100vh;
         }
+        .container-box {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
         .form-check {
             margin-bottom: 1rem;
+        }
+        .alert {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div>
+        <div class="container-box">
             <h2>Select Radio button corresponding to INDIA</h2>
             <form id="countryForm">
                 <!-- The radio buttons will be inserted here by JavaScript -->
             </form>
+            <div id="selectedCountry" class="mt-3"></div>
         </div>
     </div>
     <script>
@@ -54,14 +65,26 @@
                 input.className = 'form-check-input';
                 input.type = 'radio';
                 input.name = 'country';
+                input.id = country.id;
+                input.value = country.name;
 
                 const label = document.createElement('label');
                 label.className = 'form-check-label';
+                label.htmlFor = country.id;
                 label.innerText = country.name;
 
                 div.appendChild(input);
                 div.appendChild(label);
                 form.appendChild(div);
+            });
+
+            // Display selected country
+            form.addEventListener('change', () => {
+                const selectedCountry = document.querySelector('input[name="country"]:checked').value;
+                const selectedCountryDiv = document.getElementById('selectedCountry');
+                selectedCountryDiv.textContent = `Selected Country: ${selectedCountry}`;
+                selectedCountryDiv.className = 'alert alert-info';
+                selectedCountryDiv.style.display = 'block';
             });
         });
     </script>

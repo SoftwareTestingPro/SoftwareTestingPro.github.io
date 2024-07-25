@@ -3,124 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple HTML5 Calendar</title>
+    <title>Modern Calendar</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
         }
-        .calendar {
-            width: 300px;
+        .calendar-container {
             background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            width: 60%;
+            max-width: 600px;
+            text-align: center;
         }
         .calendar-header {
-            text-align: center;
-            margin-bottom: 10px;
+            font-size: 1.5em;
+            margin-bottom: 20px;
         }
         .calendar-table {
             width: 100%;
             border-collapse: collapse;
         }
-        .calendar-table th,
-        .calendar-table td {
+        .calendar-table th, .calendar-table td {
             text-align: center;
-            padding: 5px;
-            border: 1px solid #ccc;
+            padding: 10px;
+            border: 1px solid #ddd;
         }
         .calendar-table th {
-            background-color: #f0f0f0;
+            background-color: #f8f9fa;
         }
         .calendar-table td {
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .calendar-table td:hover {
+            background-color: #e9ecef;
+        }
+        .selected {
+            background-color: #28a745;
+            color: white;
+        }
+        .info-message {
+            margin-top: 20px;
+            font-size: 1em;
+        }
+        .tick-cross {
+            font-size: 1.5em;
+            margin-left: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="calendar" id="calendar"></div>
-	<div class="additional-info">
-        <label for="label1">Date on 1st Friday is: </label>
-        <input type="text" id="label1" name="label1"><br><br>
-        <label for="label2">Day name on 17th is: </label>
-        <input type="text" id="label2" name="label2"><br><br>
+    <div class="calendar-container">
+        <div id="calendar"></div>
+        <div class="info-message">
+            <span id="message1">Click the date on the first Wednesday <span id="result1" class="tick-cross"
+        </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
+            var message1 = document.getElementById('message1');
+            var result1 = document.getElementById('result1');
 
-            // Get current date
             var today = new Date();
-
-            // Set random month and year for display
-            var randomMonth = Math.floor(Math.random() * 12); // Random month (0-11)
-            var randomYear = 2022 + Math.floor(Math.random() * 10); // Random year (2022-2031)
-
-            // Create calendar header
+            var randomMonth = Math.floor(Math.random() * 12);
+            var randomYear = 2022 + Math.floor(Math.random() * 10);
             var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             var monthName = months[randomMonth];
             var year = randomYear;
 
             var header = '<div class="calendar-header">' + monthName + ' ' + year + '</div>';
-
-            // Create calendar table
             var calendar = '<table class="calendar-table">';
-            calendar += '<thead>';
-            calendar += '<tr>';
-            calendar += '<th>Sun</th>';
-            calendar += '<th>Mon</th>';
-            calendar += '<th>Tue</th>';
-            calendar += '<th>Wed</th>';
-            calendar += '<th>Thu</th>';
-            calendar += '<th>Fri</th>';
-            calendar += '<th>Sat</th>';
-            calendar += '</tr>';
-            calendar += '</thead>';
-            calendar += '<tbody>';
+            calendar += '<thead><tr>';
+            calendar += '<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>';
+            calendar += '</tr></thead><tbody>';
 
-            // Get the first day of the month
             var firstDay = new Date(year, randomMonth, 1);
-            // Calculate the starting day index (0: Sunday, 1: Monday, ..., 6: Saturday)
-            var startIndex = firstDay.getDay();
-            // Adjust start index to start from Sunday
-            startIndex = (startIndex === 0) ? 7 : startIndex;
-
-            // Get the number of days in the month
+            var startIndex = (firstDay.getDay() === 0) ? 7 : firstDay.getDay();
             var daysInMonth = new Date(year, randomMonth + 1, 0).getDate();
-
-            // Calculate the number of rows needed
-            var numRows = Math.ceil((daysInMonth + startIndex) / 7);
-
-            // Create rows and cells for the calendar
+            var numRows = Math.ceil((daysInMonth + startIndex - 1) / 7);
             var day = 1;
+            var firstWednesdayDate = null;
+            var day15 = 15;
+
             for (var i = 0; i < numRows; i++) {
                 calendar += '<tr>';
                 for (var j = 0; j < 7; j++) {
-                    if (i === 0 && j < startIndex) {
-                        calendar += '<td></td>'; // Empty cell before the start day
+                    if (i === 0 && j < startIndex - 1) {
+                        calendar += '<td></td>';
                     } else if (day <= daysInMonth) {
-                        calendar += '<td>' + day + '</td>';
+                        var dateStr = day < 10 ? '0' + day : day;
+                        var fullDate = dateStr + '/' + (randomMonth + 1) + '/' + year;
+                        var cellContent = day;
+                        if (j === 3 && !firstWednesdayDate) { // Wednesday
+                            firstWednesdayDate = day;
+                        }
+                        calendar += `<td data-date="${fullDate}" class="calendar-date">${cellContent}</td>`;
                         day++;
                     } else {
-                        calendar += '<td></td>'; // Empty cell after the last day
+                        calendar += '<td></td>';
                     }
                 }
                 calendar += '</tr>';
             }
-
-            calendar += '</tbody>';
-            calendar += '</table>';
-
-            // Display the calendar
+            calendar += '</tbody></table>';
             calendarEl.innerHTML = header + calendar;
-			
-			
+
+            document.querySelectorAll('.calendar-date').forEach(function(cell) {
+                cell.addEventListener('click', function() {
+                    // Remove previous selection
+                    document.querySelectorAll('.calendar-date').forEach(function(cell) {
+                        cell.classList.remove('selected');
+                    });
+
+                    var clickedDate = parseInt(this.textContent);
+                    var clickedDateStr = this.getAttribute('data-date');
+
+                    // Highlight selected date
+                    this.classList.add('selected');
+
+                    // Check for 1st Wednesday
+                    if (clickedDate === firstWednesdayDate) {
+                        result1.innerHTML = '&#10004;'; // Green tick
+                        message1.style.color = 'green';
+                    } else {
+                        result1.innerHTML = '&#10008;'; // Red cross
+                        message1.style.color = 'red';
+                    }
+                });
+            });
         });
     </script>
 </body>

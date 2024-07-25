@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dropdown Lists</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -19,7 +20,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 80%;
+            width: 60%;
             max-width: 600px;
             text-align: center;
         }
@@ -52,6 +53,9 @@
             border-color: #007bff;
             outline: none;
         }
+        .alert {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +73,7 @@
                 <option value="item4">Item 4</option>
                 <option value="item5">Item 5</option>
             </select>
+            <div id="singleSelectMessage" class="alert mt-2"></div>
         </div>
 
         <div class="dropdown-group">
@@ -80,7 +85,46 @@
                 <option value="item4">Item 4</option>
                 <option value="item5">Item 5</option>
             </select>
+            <div id="multipleSelectMessage" class="alert mt-2"></div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const singleSelect = document.getElementById('singleSelect');
+            const multipleSelect = document.getElementById('multipleSelect');
+            const singleSelectMessage = document.getElementById('singleSelectMessage');
+            const multipleSelectMessage = document.getElementById('multipleSelectMessage');
+
+            function displaySelectedValues() {
+                const singleValue = singleSelect.value;
+                const multipleValues = Array.from(multipleSelect.selectedOptions).map(option => option.value);
+
+                if (singleValue) {
+                    singleSelectMessage.textContent = `Selected Single Item: ${singleValue}`;
+                    singleSelectMessage.className = 'alert alert-info';
+                    singleSelectMessage.style.display = 'block';
+                } else {
+                    singleSelectMessage.textContent = '';
+                    singleSelectMessage.style.display = 'none';
+                }
+
+                if (multipleValues.length > 0) {
+                    multipleSelectMessage.textContent = `Selected Multiple Items: ${multipleValues.join(', ')}`;
+                    multipleSelectMessage.className = 'alert alert-info';
+                    multipleSelectMessage.style.display = 'block';
+                } else {
+                    multipleSelectMessage.textContent = '';
+                    multipleSelectMessage.style.display = 'none';
+                }
+            }
+
+            singleSelect.addEventListener('change', displaySelectedValues);
+            multipleSelect.addEventListener('change', displaySelectedValues);
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

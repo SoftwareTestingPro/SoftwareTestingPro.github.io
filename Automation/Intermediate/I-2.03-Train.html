@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Railway Reservation Seat Availability</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,80 +15,92 @@
             height: 100vh;
             margin: 0;
         }
-
+        .container-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 60%;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
         table {
-            width: 80%;
+            width: 100%;
             border-collapse: collapse;
             background-color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
-
         th, td {
-            padding: 12px;
+            padding: 8px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
-
         th {
             background-color: #4CAF50;
             color: white;
         }
-
         tr:hover {
             background-color: #f1f1f1;
         }
-
         caption {
             margin-bottom: 10px;
             font-size: 24px;
             font-weight: bold;
         }
-
-        .radio-cell {
-            text-align: center;
+        .alert {
+            display: none;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <table>
-        <caption>Railway Reservation Seat Availability</caption>
-        <tr>
-            <th>Select</th>
-            <th>Train Number</th>
-            <th>Train Name</th>
-            <th>Seat Availability</th>
-        </tr>
-        <tr>
-            <td class="radio-cell"><input type="radio" name="train"></td>
-            <td>12345</td>
-            <td>Express A</td>
-            <td id="seat1"></td>
-        </tr>
-        <tr>
-            <td class="radio-cell"><input type="radio" name="train"></td>
-            <td>12346</td>
-            <td>Express B</td>
-            <td id="seat2"></td>
-        </tr>
-        <tr>
-            <td class="radio-cell"><input type="radio" name="train"></td>
-            <td>12347</td>
-            <td>Express C</td>
-            <td id="seat3"></td>
-        </tr>
-        <tr>
-            <td class="radio-cell"><input type="radio" name="train"></td>
-            <td>12348</td>
-            <td>Express D</td>
-            <td id="seat4"></td>
-        </tr>
-        <tr>
-            <td class="radio-cell"><input type="radio" name="train"></td>
-            <td>12349</td>
-            <td>Express E</td>
-            <td id="seat5"></td>
-        </tr>
-    </table>
+    <div class="container-box">
+        <h3>Railway Reservation Seat Availability</h3>
+		<h5>Select the train with most number of available seats</h5>
+        <table>
+            <tr>
+                <th>Select</th>
+                <th>Train Number</th>
+                <th>Train Name</th>
+                <th>Seat Availability</th>
+            </tr>
+            <tr>
+                <td class="radio-cell"><input type="radio" name="train" value="1" onclick="updateMessage()"></td>
+                <td>12345</td>
+                <td>Express A</td>
+                <td id="seat1"></td>
+            </tr>
+            <tr>
+                <td class="radio-cell"><input type="radio" name="train" value="2" onclick="updateMessage()"></td>
+                <td>12346</td>
+                <td>Express B</td>
+                <td id="seat2"></td>
+            </tr>
+            <tr>
+                <td class="radio-cell"><input type="radio" name="train" value="3" onclick="updateMessage()"></td>
+                <td>12347</td>
+                <td>Express C</td>
+                <td id="seat3"></td>
+            </tr>
+            <tr>
+                <td class="radio-cell"><input type="radio" name="train" value="4" onclick="updateMessage()"></td>
+                <td>12348</td>
+                <td>Express D</td>
+                <td id="seat4"></td>
+            </tr>
+            <tr>
+                <td class="radio-cell"><input type="radio" name="train" value="5" onclick="updateMessage()"></td>
+                <td>12349</td>
+                <td>Express E</td>
+                <td id="seat5"></td>
+            </tr>
+        </table>
+        <div class="alert alert-success" id="successMessage"></div>
+        <div class="alert alert-danger" id="failureMessage"></div>
+    </div>
 
     <script>
         function getRandomInt(min, max) {
@@ -95,17 +108,53 @@
         }
 
         function getRandomAvailability() {
-            const statuses = ["Available", "Waiting", "RAC"];
+            const statuses = ["Available", "RAC", "Waiting"];
             const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
             const randomValue = getRandomInt(1, 100);
-            return `${randomStatus}: ${randomValue}`;
+            return { status: randomStatus, value: randomValue };
         }
 
-        document.getElementById('seat1').textContent = getRandomAvailability();
-        document.getElementById('seat2').textContent = getRandomAvailability();
-        document.getElementById('seat3').textContent = getRandomAvailability();
-        document.getElementById('seat4').textContent = getRandomAvailability();
-        document.getElementById('seat5').textContent = getRandomAvailability();
+        const seatData = [];
+        for (let i = 1; i <= 5; i++) {
+            const seatInfo = getRandomAvailability();
+            document.getElementById(`seat${i}`).textContent = `${seatInfo.status}: ${seatInfo.value}`;
+            seatData.push({ id: `seat${i}`, status: seatInfo.status, value: seatInfo.value });
+        }
+
+        function updateMessage() {
+            const selectedRadio = document.querySelector('input[name="train"]:checked');
+            if (!selectedRadio) return;
+
+            const trainIndex = selectedRadio.value - 1;
+            const trainData = seatData[trainIndex];
+
+            // Determine the train with the most available seats based on priority
+            const sortedData = seatData.slice().sort((a, b) => {
+                const statusOrder = { "Available": 3, "RAC": 2, "Waiting": 1 };
+                if (a.status === b.status) {
+                    return b.value - a.value;
+                }
+                return statusOrder[b.status] - statusOrder[a.status];
+            });
+
+            const bestTrain = sortedData[0];
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+
+            if (trainData === bestTrain) {
+                successMessage.textContent = 'This train has the most number of seats available.';
+                successMessage.style.display = 'block';
+                failureMessage.style.display = 'none';
+            } else {
+                successMessage.style.display = 'none';
+                failureMessage.textContent = 'This train does not have the most number of seats available.';
+                failureMessage.style.display = 'block';
+            }
+        }
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
