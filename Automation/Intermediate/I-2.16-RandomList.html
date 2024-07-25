@@ -55,6 +55,23 @@
             margin-bottom: 5px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
+        .message {
+            margin-top: 20px;
+            font-size: 1.2em;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success-message {
+            color: #4caf50;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .failure-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +81,12 @@
             <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
         </div>
         <ul class="item-list" id="itemList"></ul>
+        <div class="message success-message" id="successMessage">
+            Correct! The number matches the count of household items.
+        </div>
+        <div class="message failure-message" id="failureMessage">
+            Incorrect! The number does not match the count of household items.
+        </div>
     </div>
 
     <script>
@@ -92,10 +115,31 @@
                 listItem.textContent = item;
                 itemList.appendChild(listItem);
             });
+
+            return numItems;
         }
 
-        // Generate the item list when the page loads
-        window.onload = generateItemList;
+        // Store the number of items for comparison
+        let itemCount = generateItemList();
+
+        document.getElementById('userInput').addEventListener('input', function() {
+            const inputValue = parseInt(this.value, 10);
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+
+            if (!isNaN(inputValue)) {
+                if (inputValue === itemCount) {
+                    successMessage.style.display = 'block';
+                    failureMessage.style.display = 'none';
+                } else {
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'block';
+                }
+            } else {
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>

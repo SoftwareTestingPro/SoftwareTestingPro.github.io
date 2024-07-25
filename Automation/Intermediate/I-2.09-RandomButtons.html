@@ -12,6 +12,7 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
         }
 
         .container {
@@ -21,6 +22,7 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
         }
 
         .button-container {
@@ -58,6 +60,26 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
+        .success-message, .failure-message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .failure-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -67,7 +89,13 @@
     <div class="button-container" id="buttonContainer">
         <!-- Buttons will be added here dynamically -->
     </div>
-    <input type="text" id="inputField" placeholder="Enter something...">
+    <input type="text" id="inputField" placeholder="Enter the number of buttons...">
+    <div class="success-message" id="successMessage">
+        Correct! The number of buttons matches the input value.
+    </div>
+    <div class="failure-message" id="failureMessage">
+        Incorrect. The number of buttons does not match the input value.
+    </div>
 </div>
 
 <script>
@@ -75,16 +103,38 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+    function getRandomName() {
+        const names = ['Giraffe', 'Pyramid', 'Volcano', 'Rainforest', 'Desert', 'Oasis', 'Tornado', 'Coral Reef', 'Aurora', 'Canyon'];
+        return names[Math.floor(Math.random() * names.length)];
+    }
+
     window.onload = function() {
         const container = document.getElementById('buttonContainer');
-        const numberOfButtons = getRandomInt(4, 20);
+        const inputField = document.getElementById('inputField');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
-        for (let i = 1; i <= numberOfButtons; i++) {
+        const numberOfButtons = getRandomInt(4, 20);
+        let buttonCount = numberOfButtons;
+
+        for (let i = 1; i <= buttonCount; i++) {
             const button = document.createElement('button');
-            button.textContent = 'Button ' + i;
+            button.textContent = getRandomName();
             button.id = 'button' + i;
             container.appendChild(button);
         }
+
+        inputField.addEventListener('input', () => {
+            const userInput = parseInt(inputField.value, 10);
+
+            if (userInput === buttonCount) {
+                successMessage.style.display = 'block'; // Show success message
+                failureMessage.style.display = 'none'; // Hide failure message
+            } else {
+                successMessage.style.display = 'none'; // Hide success message
+                failureMessage.style.display = 'block'; // Show failure message
+            }
+        });
     };
 </script>
 

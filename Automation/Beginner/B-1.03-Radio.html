@@ -123,7 +123,7 @@
             </label>
         </div>
         <div class="success-message" id="successMessage">
-            You have successfully selected a radio button.
+            <!-- Message will be updated by JavaScript -->
         </div>
     </div>
 
@@ -138,6 +138,25 @@
 
         radioButtons.forEach(radio => {
             radio.addEventListener('change', () => {
+                const selectedValue = document.querySelector('input[name="gender"]:checked').value;
+                let message = '';
+
+                switch (selectedValue) {
+                    case 'male':
+                        message = 'You have selected Male.';
+                        break;
+                    case 'female':
+                        message = 'You have selected Female.';
+                        break;
+                    case 'other':
+                        message = 'You have selected Other.';
+                        break;
+                    case 'preferNotToSay':
+                        message = 'You have selected Prefer not to say.';
+                        break;
+                }
+
+                successMessage.textContent = message;
                 successMessage.style.display = 'block'; // Show success message
             });
         });

@@ -13,43 +13,61 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
         }
 
         .button {
+            display: inline-block;
             margin: 10px;
-            padding: 10px 20px;
+            padding: 15px 30px;
             font-size: 16px;
             cursor: pointer;
             border: none;
             border-radius: 5px;
+            width: 200px;
+            text-align: center;
+            color: white;
         }
 
         .alert-button {
             background-color: #007BFF;
-            color: white;
         }
 
         .confirm-button {
             background-color: #28A745;
-            color: white;
         }
 
         .prompt-button {
             background-color: #FFC107;
-            color: white;
         }
 
         .custom-button {
             background-color: #DC3545;
-            color: white;
         }
     </style>
 </head>
 <body>
-    <button class="button alert-button" onclick="showAlert()">Show Alert</button>
-    <button class="button confirm-button" onclick="showConfirm()">Show Confirm</button>
-    <button class="button prompt-button" onclick="showPrompt()">Show Prompt</button>
-    <button class="button custom-button" onclick="showCustomAlert()">Show Custom Alert</button>
+    <div class="container">
+        <h3>Perform Actions on Alert Types Displayed Below</h3>
+        <button class="button alert-button" onclick="showAlert()">Show Alert</button>
+        <button class="button confirm-button" onclick="showConfirm()">Show Confirm</button>
+        <button class="button prompt-button" onclick="showPrompt()">Show Prompt</button>
+        <button class="button custom-button" onclick="showCustomAlert()">Show Custom Alert</button>
+    </div>
 
     <script>
         function showAlert() {
