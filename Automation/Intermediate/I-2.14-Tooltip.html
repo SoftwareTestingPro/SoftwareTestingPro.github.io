@@ -61,6 +61,16 @@
             font-size: 1em;
             box-sizing: border-box;
         }
+        .message {
+            margin-top: 20px;
+            font-size: 1em;
+        }
+        .success {
+            color: #28a745;
+        }
+        .failure {
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -68,7 +78,28 @@
         <div class="rainbow-text" data-tooltip="Enter this mouse hover text in below input field">
             Rainbow Text
         </div>
-        <input type="text" placeholder="Enter something...">
+        <input type="text" id="inputField" placeholder="Enter something...">
+        <div class="message" id="result"></div>
     </div>
+
+    <script>
+        document.getElementById('inputField').addEventListener('input', function() {
+            const inputField = document.getElementById('inputField');
+            const userInput = inputField.value;
+            const tooltipText = document.querySelector('.rainbow-text').getAttribute('data-tooltip');
+            const resultDiv = document.getElementById('result');
+
+            if (userInput === tooltipText) {
+                resultDiv.textContent = 'Success! The entered text matches the tooltip text.';
+                resultDiv.className = 'message success';
+            } else if (userInput) {
+                resultDiv.textContent = `Failure! You entered "${userInput}", but the tooltip text is "${tooltipText}".`;
+                resultDiv.className = 'message failure';
+            } else {
+                resultDiv.textContent = '';
+                resultDiv.className = 'message';
+            }
+        });
+    </script>
 </body>
 </html>

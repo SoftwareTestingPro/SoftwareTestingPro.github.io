@@ -50,18 +50,31 @@
         .box button:hover {
             background-color: #0056b3;
         }
+        .message {
+            margin-top: 20px;
+            font-size: 1em;
+        }
+        .success {
+            color: #28a745;
+        }
+        .failure {
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
     <div class="box">
-        <label for="userInput">Click below button to fetch a quote and enter quote in below input field</label>
+        <label for="userInput">Click below button to fetch a quote and enter the quote in the input field:</label>
         <div class="container">
             <button onclick="openQuoteWindow()">Get a Random Life Quote</button>
         </div>
-        <input type="text" id="userInput" name="userInput">
+        <input type="text" id="userInput" name="userInput" disabled>
+        <div class="message" id="result"></div>
     </div>
 
     <script>
+        let displayedQuote = "";
+
         function openQuoteWindow() {
             const quotes = [
                 "Life is what happens when you're busy making other plans. – John Lennon",
@@ -71,10 +84,35 @@
                 "Many of life’s failures are people who did not realize how close they were to success when they gave up. – Thomas A. Edison"
             ];
 
-            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            displayedQuote = quotes[Math.floor(Math.random() * quotes.length)];
             const quoteWindow = window.open("", "quoteWindow", "width=400,height=200");
-            quoteWindow.document.write(`<p style="font-family: Arial, sans-serif; font-size: 1.2em; margin: 20px;">${randomQuote}</p>`);
+            quoteWindow.document.write(`<p style="font-family: Arial, sans-serif; font-size: 1.2em; margin: 20px;">${displayedQuote}</p>`);
+            
+            const inputField = document.getElementById('userInput');
+            inputField.disabled = false; // Enable the input field after the quote is displayed
+            inputField.value = ''; // Clear the input field
+            inputField.focus(); // Focus on the input field
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = ''; // Clear previous result messages
+            resultDiv.className = 'message';
         }
+
+        document.getElementById('userInput').addEventListener('input', function() {
+            const userInput = document.getElementById('userInput').value;
+            const resultDiv = document.getElementById('result');
+
+            if (userInput === displayedQuote) {
+                resultDiv.textContent = `Success! The entered text matches the quote.`;
+                resultDiv.className = 'message success';
+            } else if (userInput) {
+                resultDiv.textContent = `Failure! You entered "${userInput}", but the quote is "${displayedQuote}".`;
+                resultDiv.className = 'message failure';
+            } else {
+                resultDiv.textContent = '';
+                resultDiv.className = 'message';
+            }
+        });
     </script>
 </body>
 </html>

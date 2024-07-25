@@ -103,9 +103,14 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function getRandomName() {
+    function getRandomName(usedNames) {
         const names = ['Giraffe', 'Pyramid', 'Volcano', 'Rainforest', 'Desert', 'Oasis', 'Tornado', 'Coral Reef', 'Aurora', 'Canyon'];
-        return names[Math.floor(Math.random() * names.length)];
+        let uniqueName;
+        do {
+            uniqueName = names[Math.floor(Math.random() * names.length)];
+        } while (usedNames.has(uniqueName));
+        usedNames.add(uniqueName);
+        return uniqueName;
     }
 
     window.onload = function() {
@@ -114,12 +119,13 @@
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
 
-        const numberOfButtons = getRandomInt(4, 20);
+        const numberOfButtons = getRandomInt(4, 10);
+        const usedNames = new Set();
         let buttonCount = numberOfButtons;
 
         for (let i = 1; i <= buttonCount; i++) {
             const button = document.createElement('button');
-            button.textContent = getRandomName();
+            button.textContent = getRandomName(usedNames);
             button.id = 'button' + i;
             container.appendChild(button);
         }

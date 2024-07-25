@@ -31,7 +31,7 @@
             font-size: 1em;
             color: #333;
         }
-        input[type="text"] {
+        input[type="number"] {
             width: calc(100% - 22px);
             padding: 10px;
             margin-top: 5px;
@@ -54,23 +54,60 @@
         a.button:hover {
             background-color: #0056b3;
         }
+        #result {
+            margin-top: 20px;
+            font-size: 1em;
+        }
+        .success {
+            color: #28a745;
+        }
+        .failure {
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="#" class="button" id="alertButton">Generate Alert</a>
         <div class="input-group">
-            <label for="inputField">Click on above button to generate an alert, and enter the duration(in seconds) it took to display:</label>
-            <input type="text" id="inputField" name="inputField">
+            <label for="inputField">After the alert appears, enter the duration (in seconds) it took to display:</label>
+            <input type="number" id="inputField" name="inputField" min="1" step="1" disabled>
         </div>
+        <div id="result"></div>
     </div>
 
     <script>
         document.getElementById('alertButton').addEventListener('click', function(e) {
             e.preventDefault();
+
             const randomTime = Math.floor(Math.random() * 26) + 5; // Random time between 5 and 30 seconds
+            const startTime = Date.now();
+
             setTimeout(() => {
-                alert('This is a alert displayed anytime between 5 and 30 seconds!');
+                alert('This is an alert displayed anytime between 5 and 30 seconds!');
+                const endTime = Date.now();
+                const actualTime = Math.round((endTime - startTime) / 1000);
+
+                const inputField = document.getElementById('inputField');
+                inputField.disabled = false; // Enable the input field after alert is displayed
+
+                inputField.addEventListener('input', () => {
+                    const userInput = parseInt(inputField.value);
+                    const resultDiv = document.getElementById('result');
+
+                    if (!isNaN(userInput)) {
+                        if (userInput === actualTime) {
+                            resultDiv.textContent = `Success! The alert appeared after ${actualTime} seconds.`;
+                            resultDiv.className = 'success';
+                        } else {
+                            resultDiv.textContent = `Failure! You calculated ${userInput} seconds, but it actually took ${actualTime} seconds.`;
+                            resultDiv.className = 'failure';
+                        }
+                    } else {
+                        resultDiv.textContent = 'Please enter a valid number in seconds.';
+                        resultDiv.className = '';
+                    }
+                });
             }, randomTime * 1000);
         });
     </script>
