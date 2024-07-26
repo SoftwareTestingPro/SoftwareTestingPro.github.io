@@ -100,28 +100,14 @@
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: 150px; /* Width for 15 characters */
+            width: 230px; /* Width for 23 characters */
             box-sizing: border-box;
         }
 
-        .message {
+        .countdown-message {
             margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .success {
-            color: green;
-        }
-
-        .failure {
-            color: red;
-        }
-
-        .interactive-message {
-            font-size: 16px;
-            font-weight: normal;
-            margin-top: 10px;
+            font-size: 24px;
+            color: #333;
         }
 
         @keyframes disappear {
@@ -142,7 +128,7 @@
             <div class="spinner"></div>
         </div>
         
-        <div class="thumbnails-label">Thumbnails with ISBN Data</div>
+        <div class="thumbnails-label">Once loading is complete, fetch ISBN value of 2nd thumbnail</div>
         
         <div class="thumbnails" id="thumbnailContainer">
             <!-- Initial thumbnails with image and ISBN data -->
@@ -164,21 +150,19 @@
             </div>
         </div>
         
-        <div class="input-container">
-            <input type="text" id="user-input" name="user-input" placeholder="Type something...">
-        </div>
+        <div class="countdown-message" id="countdown"></div>
         
-        <div class="message" id="resultMessage"></div>
-        <div class="interactive-message" id="interactiveMessage"></div>
+        <div class="input-container">
+            <input type="text" id="user-input" name="user-input" placeholder="Input ISBN of 2nd thumbnail">
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const thumbnailContainer = document.getElementById('thumbnailContainer');
             const loadingScreen = document.querySelector('.loading');
+            const countdownElement = document.getElementById('countdown');
             const userInput = document.getElementById('user-input');
-            const resultMessage = document.getElementById('resultMessage');
-            const interactiveMessage = document.getElementById('interactiveMessage');
             
             // Function to generate random ISBN
             function generateRandomISBN() {
@@ -209,21 +193,25 @@
                 });
             }
 
-            // Check user input against ISBN from the second thumbnail
-            function checkInputAgainstISBN() {
-                const secondThumbnailISBN = document.querySelectorAll('.thumbnail')[1].querySelector('.isbn').textContent.split(': ')[1];
-                const userEnteredText = userInput.value.trim().toLowerCase();
-                const correctISBN = secondThumbnailISBN.toLowerCase(); // Dynamic correct ISBN for comparison
+            // Function to start countdown
+            function startCountdown() {
+                let countdownValue = 3;
+                countdownElement.textContent = countdownValue;
                 
-                if (userEnteredText === correctISBN) {
-                    resultMessage.textContent = 'Success! ISBN matches.';
-                    resultMessage.className = 'message success';
-                } else {
-                    resultMessage.textContent = 'Failure! ISBN does not match.';
-                    resultMessage.className = 'message failure';
-                }
-
-                interactiveMessage.textContent = `Expected ISBN: ${correctISBN} | Actual: ${userEnteredText}`;
+                const countdownInterval = setInterval(() => {
+                    countdownValue--;
+                    countdownElement.textContent = countdownValue;
+                    
+                    if (countdownValue === 0) {
+                        clearInterval(countdownInterval);
+                        countdownElement.textContent = '';
+                        
+                        // Remove all thumbnail elements from DOM
+                        while (thumbnailContainer.firstChild) {
+                            thumbnailContainer.removeChild(thumbnailContainer.firstChild);
+                        }
+                    }
+                }, 1000);
             }
 
             // Show content after random time between 5 and 60 seconds
@@ -231,15 +219,9 @@
             setTimeout(() => {
                 loadingScreen.style.display = 'none';
                 createThumbnails();
-                userInput.addEventListener('input', checkInputAgainstISBN);
-
-                // Add ghostly disappear effect
-                setTimeout(() => {
-                    const thumbnails = document.querySelectorAll('.thumbnail');
-                    thumbnails.forEach(thumbnail => {
-                        thumbnail.style.animation = 'disappear 2s ease forwards';
-                    });
-                }, 3000); // 3 seconds after loading completes
+                
+                // Start countdown after loading screen disappears
+                startCountdown();
             }, loadingDuration);
         });
     </script>
