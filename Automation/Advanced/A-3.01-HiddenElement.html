@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disappearing Element</title>
+    <title>Success Message with GIF</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -17,33 +17,47 @@
             font-family: Arial, sans-serif;
         }
 
-        .modal-content {
+        .container {
+            display: flex;
+            flex-direction: column; /* Align items in a column */
+            align-items: center; /* Center items horizontally */
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 100%;
+            width: auto; /* Fit content width */
+            text-align: center;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #155724;
+        }
+
+        .gif {
+            display: none;
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        button {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-	<label for="user-input">This button hides after 1 second on page load. Click it.</label>
-    <div class="text-center">
-        <button id="showButton" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Click Me</button>
-    </div>
+    <div class="container">
+        <label for="showButton">This button hides after 1 second on page load. Click it.</label>
+        <button id="showButton" class="btn btn-primary btn-lg">Click Me</button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-center" id="myModalLabel">Congratulations !!</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>You have successfully clicked on the button.</p>
-                </div>
-            </div>
+        <!-- Success message and GIF -->
+        <div id="successContainer">
+            <div class="success-message" id="successMessage">Congratulations! Well done!</div>
+            <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnQ4YThxNmJ3aDlwdnZrc25uYXRiNHN4Z3E2bW8xdnE4aGVxaTZociZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ov09jGgEThFKpxZ9eC/giphy.gif" alt="Well Done" class="gif" id="successGif">
         </div>
     </div>
 
@@ -64,6 +78,12 @@
             button.style.display = 'none'; // Hide button from UI
             button.parentNode.removeChild(button); // Remove button from DOM
         }, 1000);
+
+        // Show success message and GIF on button click
+        document.getElementById('showButton').addEventListener('click', function() {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('successGif').style.display = 'block';
+        });
     </script>
 </body>
 </html>

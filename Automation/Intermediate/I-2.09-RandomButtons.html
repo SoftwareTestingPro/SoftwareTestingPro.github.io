@@ -59,6 +59,8 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            max-width: 220px; /* Set a maximum width */
+            text-align: center; /* Center-align text inside input field */
         }
 
         .success-message, .failure-message {
@@ -89,7 +91,7 @@
     <div class="button-container" id="buttonContainer">
         <!-- Buttons will be added here dynamically -->
     </div>
-    <input type="text" id="inputField" placeholder="Enter the number of buttons...">
+    <input type="text" id="inputField" placeholder="Enter the number of buttons..." maxlength="10">
     <div class="success-message" id="successMessage">
         Correct! The number of buttons matches the input value.
     </div>
@@ -131,9 +133,12 @@
         }
 
         inputField.addEventListener('input', () => {
+            // Remove non-digit characters
+            inputField.value = inputField.value.replace(/\D/g, '');
+
             const userInput = parseInt(inputField.value, 10);
 
-            if (userInput === buttonCount) {
+            if (Number.isInteger(userInput) && userInput === buttonCount) {
                 successMessage.style.display = 'block'; // Show success message
                 failureMessage.style.display = 'none'; // Hide failure message
             } else {
