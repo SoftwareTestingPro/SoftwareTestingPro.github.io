@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinner Wheel</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .wheel-container {
+            position: relative;
+            text-align: center;
+        }
+
+        #wheelCanvas {
+            width: 90%;
+            height: auto;
+            border: 5px solid #333;
+            border-radius: 50%;
+        }
+
+        #spinButton {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        #spinButton i {
+            font-size: 24px;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%) rotate(180deg);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid red;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wheel-container">
+        <canvas id="wheelCanvas" width="450" height="450"></canvas>
+        <div class="pointer"></div>
+        <button id="spinButton" class="btn btn-primary">
+            <i class="fas fa-play"></i>
+        </button>
+    </div>
+
+    <div id="result">
+        <label for="nameInput">Click Center of Wheel to Spin. Enter the selected name:</label>
+        <input type="text" id="nameInput" class="form-control" placeholder="Type name here">
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script>
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const spinButton = document.getElementById('spinButton');
+        const nameInput = document.getElementById('nameInput');
+
+        const names = ['Sushil', 'Deepika', 'Kavya', 'Jyoti', 'Avinash', 'Riddhima', 'Saroj', 'Rivansh'];
+        const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#FF5722', '#8BC34A', '#FFC107', '#673AB7', '#E91E63'];
+
+        const numberOfSegments = names.length;
+        const anglePerSegment = (2 * Math.PI) / numberOfSegments;
+        let startAngle = 0;
+        let selectedName = '';
+
+        function drawWheel() {
+            for (let i = 0; i < numberOfSegments; i++) {
+                ctx.beginPath();
+                ctx.moveTo(225, 225);
+                ctx.arc(225, 225, 225, startAngle, startAngle + anglePerSegment);
+                ctx.closePath();
+                ctx.fillStyle = colors[i];
+                ctx.fill();
+                ctx.stroke();
+
+                // Draw text
+                ctx.save();
+                ctx.translate(225, 225);
+                ctx.rotate(startAngle + anglePerSegment / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText(names[i], 200, 10);
+                ctx.restore();
+
+                startAngle += anglePerSegment;
+            }
+        }
+
+        drawWheel();
+
+        spinButton.addEventListener('click', () => {
+            let spinAngle = Math.floor(Math.random() * 360) + (360 * 5); // Spin at least 5 times
+            let currentAngle = 0;
+            let spinSpeed = 10; // Increase for faster spin
+
+            const spin = setInterval(() => {
+                ctx.clearRect(0, 0, 450, 450);
+                startAngle += spinSpeed * (Math.PI / 180);
+                drawWheel();
+                currentAngle += spinSpeed;
+                spinSpeed *= 0.98; // Gradually slow down the spin
+
+                if (spinSpeed < 0.5) { // End the spin when speed is low enough
+                    clearInterval(spin);
+                    const endAngle = (2 * Math.PI - startAngle % (2 * Math.PI)) % (2 * Math.PI);
+                    const selectedSegment = Math.floor((endAngle / anglePerSegment) % numberOfSegments);
+                    selectedName = names[selectedSegment];
+                    console.log(`Selected: ${selectedName}`);
+                }
+            }, 10);
+        });
+
+        nameInput.addEventListener('input', () => {
+            // No success or failure messages are displayed
+        });
+    </script>
+</body>
+</html>
