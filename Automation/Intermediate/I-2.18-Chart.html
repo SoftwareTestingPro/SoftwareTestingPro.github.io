@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales per Month FY 2023-24</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 10px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        .input-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        input {
+            padding: 5px;
+            font-size: 16px;
+        }
+        .message {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sales per Month FY 2023-24</h1>
+        <canvas id="salesChart"></canvas>
+        <div class="input-container">
+            <label for="monthInput">Enter Month with Highest Sales:</label>
+            <input type="text" id="monthInput">
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function getRandomSalesData() {
+            const data = [];
+            for (let i = 0; i < 12; i++) {
+                data.push(Math.floor(Math.random() * 2000) + 500); // Random sales volume between 500 and 2500
+            }
+            return data;
+        }
+
+        const monthNames = ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March'];
+        const salesData = getRandomSalesData();
+        const maxSalesIndex = salesData.indexOf(Math.max(...salesData));
+        const monthWithMaxSales = monthNames[maxSalesIndex];
+
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: monthNames,
+                datasets: [{
+                    label: 'Sales Volume',
+                    data: salesData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Sales Volume'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Sales per Month for FY 2023-24'
+                    }
+                }
+            }
+        });
+
+        document.getElementById('monthInput').addEventListener('input', function() {
+            const userInput = this.value.trim();
+            const messageElement = document.getElementById('message');
+
+            if (userInput.toLowerCase() === monthWithMaxSales.toLowerCase()) {
+                messageElement.textContent = 'Success! You entered the correct month.';
+                messageElement.style.color = 'green';
+            } else {
+                messageElement.textContent = `Failure! The correct month is ${monthWithMaxSales}.`;
+                messageElement.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
