@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Validator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .failure {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Enter Page Source</h2>
+        <textarea id="textInput" placeholder="Paste page source here..."></textarea>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const message = document.getElementById('message');
+
+        textInput.addEventListener('input', function() {
+            const inputValue = textInput.value;
+            if (inputValue.includes('<html lang="en">')) {
+                message.textContent = 'Success! Page source entered';
+                message.className = 'message success';
+            } else {
+                message.textContent = 'Failure. This is not page source';
+                message.className = 'message failure';
+            }
+        });
+    </script>
+</body>
+</html>
