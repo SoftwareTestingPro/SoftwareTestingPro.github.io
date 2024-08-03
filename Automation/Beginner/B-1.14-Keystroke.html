@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Press Any Key</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Keystroke Test</h1>
+        <p id="instruction">Press the "<span id="random-key"></span>" key on your keyboard.</p>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        // Array of possible keys to press
+        const keys = [
+            'Backspace', 'Tab', 'Enter', 'Shift', 'Control', 'Alt', 'CapsLock', 'Escape',
+            'Space', 'PageUp', 'PageDown', 'End', 'Home', 'ArrowLeft', 'ArrowUp',
+            'ArrowRight', 'ArrowDown', 'Insert', 'Delete', '0', '1', '2', '3', '4',
+            '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'Meta', 'ContextMenu', 'NumLock', 'ScrollLock', 'Pause', 'PrintScreen'
+        ];
+        
+        // Function to get a random key
+        function getRandomKey() {
+            return keys[Math.floor(Math.random() * keys.length)];
+        }
+        
+        // Display the random key
+        const randomKey = getRandomKey();
+        document.getElementById('random-key').textContent = randomKey;
+        
+        // Add event listener for key presses
+        document.addEventListener('keydown', function(event) {
+            const messageElement = document.getElementById('message');
+            if (event.key === randomKey) {
+                messageElement.textContent = 'Success! You pressed the correct key.';
+                messageElement.className = 'message success';
+            } else {
+                messageElement.textContent = `Error! You pressed the "${event.key}" key.`;
+                messageElement.className = 'message error';
+            }
+        });
+    </script>
+</body>
+</html>

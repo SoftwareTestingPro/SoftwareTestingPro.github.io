@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Picker</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .date-picker-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .date-picker-wrapper input {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding-right: 40px; /* space for the icon */
+        }
+        .date-picker-wrapper svg {
+            position: absolute;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            fill: #555;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select a Date</h1>
+        <label for="date-picker">Please select today's date from the calendar:</label>
+        <div class="date-picker-wrapper">
+            <input type="date" id="date-picker">
+            <svg id="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M7 10h5v5H7zm6 0h5v5h-5zM7 16h5v5H7zm6 0h5v5h-5zM20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 22V8h16v14H4z"/>
+            </svg>
+        </div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const dateInput = document.getElementById('date-picker');
+        const calendarIcon = document.getElementById('calendar-icon');
+        const messageElement = document.getElementById('message');
+        
+        let isPickerClicked = false;
+
+        // Function to format date to YYYY-MM-DD
+        function formatDate(date) {
+            const d = new Date(date);
+            const month = '' + (d.getMonth() + 1);
+            const day = '' + d.getDate();
+            const year = d.getFullYear();
+            
+            return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
+        }
+
+        // Get today's date in YYYY-MM-DD format
+        const today = formatDate(new Date());
+        
+        calendarIcon.addEventListener('click', () => {
+            isPickerClicked = true;
+            dateInput.showPicker();
+        });
+        
+        dateInput.addEventListener('change', () => {
+            if (isPickerClicked) {
+                const selectedDate = dateInput.value;
+                
+                if (selectedDate === today) {
+                    messageElement.textContent = 'Success! You selected today\'s date.';
+                    messageElement.className = 'message success';
+                } else {
+                    messageElement.textContent = 'Error! You selected a different date.';
+                    messageElement.className = 'message error';
+                }
+                isPickerClicked = false;
+            }
+        });
+    </script>
+</body>
+</html>
