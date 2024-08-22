@@ -47,7 +47,9 @@
         }
 
         #spinButton i {
-            font-size: 24px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .pointer {
@@ -72,7 +74,7 @@
         <canvas id="wheelCanvas" width="450" height="450"></canvas>
         <div class="pointer"></div>
         <button id="spinButton" class="btn btn-primary">
-            <i class="fas fa-play"></i>
+            <i>SPIN</i>
         </button>
     </div>
 
@@ -91,7 +93,19 @@
         const names = ['Sushil', 'Deepika', 'Kavya', 'Jyoti', 'Avinash', 'Riddhima', 'Saroj', 'Rivansh'];
         const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#FF5722', '#8BC34A', '#FFC107', '#673AB7', '#E91E63'];
 
-        const numberOfSegments = names.length;
+        // Function to shuffle an array
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const shuffledNames = shuffle([...names]); // Shuffle the names
+        const shuffledColors = shuffle([...colors]); // Shuffle the colors
+
+        const numberOfSegments = shuffledNames.length;
         const anglePerSegment = (2 * Math.PI) / numberOfSegments;
         let startAngle = 0;
         let selectedName = '';
@@ -102,7 +116,7 @@
                 ctx.moveTo(225, 225);
                 ctx.arc(225, 225, 225, startAngle, startAngle + anglePerSegment);
                 ctx.closePath();
-                ctx.fillStyle = colors[i];
+                ctx.fillStyle = shuffledColors[i];
                 ctx.fill();
                 ctx.stroke();
 
@@ -113,7 +127,7 @@
                 ctx.textAlign = 'right';
                 ctx.fillStyle = '#fff';
                 ctx.font = 'bold 18px Arial';
-                ctx.fillText(names[i], 200, 10);
+                ctx.fillText(shuffledNames[i], 200, 10);
                 ctx.restore();
 
                 startAngle += anglePerSegment;
@@ -138,7 +152,7 @@
                     clearInterval(spin);
                     const endAngle = (2 * Math.PI - startAngle % (2 * Math.PI)) % (2 * Math.PI);
                     const selectedSegment = Math.floor((endAngle / anglePerSegment) % numberOfSegments);
-                    selectedName = names[selectedSegment];
+                    selectedName = shuffledNames[selectedSegment];
                     console.log(`Selected: ${selectedName}`);
                 }
             }, 10);
