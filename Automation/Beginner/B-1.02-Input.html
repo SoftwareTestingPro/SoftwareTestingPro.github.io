@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Text Input Example</title>
+    <title>Input Validation</title>
+    <!-- Material Icons CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
             display: flex;
@@ -13,7 +15,7 @@
             margin: 0;
             background: linear-gradient(135deg, #e0eafc, #cfdef3);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            flex-direction: column; /* Ensures vertical alignment */
+            flex-direction: column;
         }
 
         .container {
@@ -23,74 +25,118 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        h3 {
             text-align: center;
-            margin-bottom: 20px; /* Space for the buttons below */
+            margin-top: 0;
+            margin-bottom: 20px;
         }
 
         label {
-            display: block;
-            margin-bottom: 15px;
+            display: inline-block;
+            margin-bottom: 5px;
             font-size: 16px;
             color: #333;
+            vertical-align: middle;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 15px;
         }
 
         input[type="text"] {
-            width: calc(100% - 22px);
-            padding: 12px;
+            width: calc(100% - 30px);
+            padding: 10px;
             font-size: 16px;
             border: 2px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            vertical-align: middle;
         }
 
-        input[type="text"]:focus {
-            border-color: #007BFF;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-            outline: none;
+        .input-container .material-icons {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            display: none; /* Icons are hidden initially */
+        }
+
+        .input-container.valid .material-icons.valid-icon {
+            color: #28a745;
+            display: inline-block; /* Show check icon on valid input */
+        }
+
+        .input-container.invalid .material-icons.invalid-icon {
+            color: #dc3545;
+            display: inline-block; /* Show cross icon on invalid input */
         }
     </style>
 </head>
 <body>
     <div class="container">
-		<h3>Please Fill Out the Following Information</h3>
-		<h3>All checkboxes should highlight Green</h3>
-        <label for="user-input-name">Enter your name:</label>
-        <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
+        <h3>Please Fill Out the Following Information</h3>
+        <label for="user-input-name">Enter your first name:</label>
+        <div class="input-container">
+            <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
+            <span class="material-icons valid-icon">check_circle</span>
+            <span class="material-icons invalid-icon">cancel</span>
+        </div>
         
         <label for="user-input-age">Enter your age:</label>
-        <input type="text" id="user-input-age" name="user-input-age" maxlength="2" value="Enter Your Age">
+        <div class="input-container">
+            <input type="text" id="user-input-age" name="user-input-age" maxlength="2" value="Enter Your Age">
+            <span class="material-icons valid-icon">check_circle</span>
+            <span class="material-icons invalid-icon">cancel</span>
+        </div>
 
         <label for="text-input">Enter "text within double quotes" in the input field:</label>
-        <input type="text" id="text-input" class="form-control" placeholder="Type something...">
+        <div class="input-container">
+            <input type="text" id="text-input" class="form-control" placeholder="Type something...">
+            <span class="material-icons valid-icon">check_circle</span>
+            <span class="material-icons invalid-icon">cancel</span>
+        </div>
     </div>
 
     <script>
-        document.getElementById('user-input-name').addEventListener('input', function() {
-            const value = this.value;
-            if (/^[A-Za-z]+$/.test(value)) {
-                this.style.borderColor = '#28a745';
+        const validateInput = (input, regex) => {
+            const value = input.value;
+            const parent = input.parentNode;
+            const validIcon = parent.querySelector('.valid-icon');
+            const invalidIcon = parent.querySelector('.invalid-icon');
+
+            if (value === '') {
+                validIcon.style.display = 'none';
+                invalidIcon.style.display = 'none';
+            } else if (regex.test(value)) {
+                parent.classList.add('valid');
+                parent.classList.remove('invalid');
+                validIcon.style.display = 'inline-block';
+                invalidIcon.style.display = 'none';
             } else {
-                this.style.borderColor = '#dc3545';
+                parent.classList.add('invalid');
+                parent.classList.remove('valid');
+                validIcon.style.display = 'none';
+                invalidIcon.style.display = 'inline-block';
             }
+        };
+
+        document.getElementById('user-input-name').addEventListener('input', function() {
+            validateInput(this, /^[A-Za-z]+$/);
         });
 
         document.getElementById('user-input-age').addEventListener('input', function() {
-            const value = this.value;
-            if (/^\d+$/.test(value)) {
-                this.style.borderColor = '#28a745';
-            } else {
-                this.style.borderColor = '#dc3545';
-            }
+            validateInput(this, /^\d+$/);
         });
 
         document.getElementById('text-input').addEventListener('input', function() {
-            const value = this.value;
-            if (value === 'text within double quotes') {
-                this.style.borderColor = '#28a745';
-            } else {
-                this.style.borderColor = '#dc3545';
-            }
+            validateInput(this, /^text within double quotes$/);
         });
     </script>
 </body>

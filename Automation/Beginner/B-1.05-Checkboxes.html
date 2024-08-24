@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Hobbies</title>
+    <title>Checkbox</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -19,7 +19,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 80%;
+            width: auto;
             max-width: 600px;
             text-align: center;
         }
@@ -42,83 +42,117 @@
         .checkbox-group input[type="checkbox"] {
             margin-right: 10px;
         }
-        .success-message {
+        .success-message, .error-message {
             display: none;
             margin-top: 20px;
             padding: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .success-message {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            font-size: 1em;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Select Your Hobbies</h1>
-        <p>Choose your hobbies from the list below:</p>
+        <h1>Select Hobbies</h1>
+        <p id="message">Please select "Music" and the 3rd option in the list.</p>
         
-        <div class="checkbox-group">
-            <label>
-                <input type="checkbox" name="hobbies" value="reading">
-                Reading
-            </label>
-            <label>
-                <input type="checkbox" name="hobbies" value="travelling">
-                Travelling
-            </label>
-            <label>
-                <input type="checkbox" name="hobbies" value="cooking">
-                Cooking
-            </label>
-            <label>
-                <input type="checkbox" name="hobbies" value="sports">
-                Sports
-            </label>
-            <label>
-                <input type="checkbox" name="hobbies" value="music">
-                Music
-            </label>
-            <label>
-                <input type="checkbox" name="hobbies" value="gaming">
-                Gaming
-            </label>
-            <label>
-                <input type="checkbox" name="hobbies" value="gardening">
-                Gardening
-            </label>
-            <label>
-                <input type="checkbox" name="hobbies" value="photography">
-                Photography
-            </label>
+        <div class="checkbox-group" id="checkboxGroup">
+            <!-- Checkboxes will be inserted here by JavaScript -->
         </div>
         <div class="success-message" id="successMessage">
-            You have selected <span id="hobbyCount">0</span> hobbies.
+            You have selected "Music" and the 3rd option.
+        </div>
+        <div class="error-message" id="errorMessage">
+            Please select "Music" and the 3rd option.
         </div>
     </div>
 
     <script>
-        const checkboxes = document.querySelectorAll('input[name="hobbies"]');
-        const successMessage = document.getElementById('successMessage');
-        const hobbyCount = document.getElementById('hobbyCount');
+        const checkboxesData = [
+            { value: "reading", label: "Reading" },
+            { value: "travelling", label: "Travelling" },
+            { value: "cooking", label: "Cooking" },
+            { value: "sports", label: "Sports" },
+            { value: "music", label: "Music" },
+            { value: "gaming", label: "Gaming" },
+            { value: "gardening", label: "Gardening" },
+            { value: "photography", label: "Photography" }
+        ];
 
-        function updateHobbyCount() {
-            const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-            if (selectedCount > 0) {
-                successMessage.style.display = 'block';
-                hobbyCount.textContent = selectedCount;
-            } else {
-                successMessage.style.display = 'none';
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
         }
 
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateHobbyCount);
-        });
+        function createCheckboxes() {
+            // Create a copy of the data and ensure "Music" is not in the 3rd position
+            let data = [...checkboxesData];
+            const musicIndex = data.findIndex(item => item.value === 'music');
+            
+            // Remove "Music" from the list and prepare for reinsertion
+            const music = data.splice(musicIndex, 1)[0];
 
-        // Initialize the count on page load
-        updateHobbyCount();
+            // Shuffle the remaining data
+            shuffleArray(data);
+
+            // Insert "Music" back into one of the first two positions
+            const insertPosition = Math.floor(Math.random() * 2);
+            data.splice(insertPosition, 0, music);
+
+            // Ensure "Music" is not in the 3rd position
+            if (data[2].value === 'music') {
+                data.splice(insertPosition, 1);
+                data.splice(2, 0, music);
+            }
+
+            const checkboxGroup = document.getElementById('checkboxGroup');
+            checkboxGroup.innerHTML = '';
+
+            data.forEach(item => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'hobbies';
+                checkbox.value = item.value;
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(item.label));
+                checkboxGroup.appendChild(label);
+            });
+        }
+
+        function updateHobbyCount() {
+            const checkboxes = document.querySelectorAll('input[name="hobbies"]');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const selectedHobbies = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+            
+            // Get the value of the 3rd option
+            const thirdOptionValue = document.querySelectorAll('input[name="hobbies"]')[2].value;
+
+            if (selectedHobbies.includes('music') && selectedHobbies.includes(thirdOptionValue) &&
+                selectedHobbies.length === 2) {
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            } else {
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        createCheckboxes();
+        document.getElementById('checkboxGroup').addEventListener('change', updateHobbyCount);
     </script>
 </body>
 </html>

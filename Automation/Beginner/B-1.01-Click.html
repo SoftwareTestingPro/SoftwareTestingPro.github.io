@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click Me!</title>
+    <title>Click Action</title>
     <style>
         body {
             display: flex;
@@ -44,32 +44,43 @@
             margin-bottom: 20px;
         }
 
-        .box a {
+        .success-message {
+            color: green;
+            font-weight: bold;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .box button {
             display: inline-block;
-            text-decoration: none;
-            color: #007bff;
+            background-color: #007bff;
+            color: #fff;
             font-weight: bold;
             padding: 10px 20px;
             border: 2px solid #007bff;
             border-radius: 5px;
+            cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .box a:hover {
-            background-color: #007bff;
-            color: #fff;
+        .box button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="box">
-        <div class="banner">
-            <h1>Click Me!</h1>
-        </div>
         <div class="level-info">
-            <p>Welcome to our interactive page. Click the link below to experience it.</p>
+            <p>Click the below button</p>
         </div>
-        <a href="B-1.01-Click-Validate.html">Click Me</a>
+        <button id="clickButton">Click Me</button>
+        <div id="successMessage" class="success-message">Success! You clicked the button.</div>
     </div>
+
+    <script>
+        document.getElementById('clickButton').addEventListener('click', function() {
+            document.getElementById('successMessage').style.display = 'block';
+        });
+    </script>
 </body>
 </html>

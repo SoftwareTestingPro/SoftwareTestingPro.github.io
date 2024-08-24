@@ -19,7 +19,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 80%;
+            width: auto; /* Fit container to content */
             max-width: 400px;
             text-align: center;
         }
@@ -37,9 +37,11 @@
         input[type="text"] {
             padding: 10px;
             font-size: 1em;
-            width: calc(100% - 22px); /* Account for padding and border */
+            width: calc(100% - 22px); /* Adjust width to fit within container, accounting for padding */
             border: 1px solid #ccc;
             border-radius: 5px;
+            text-align: center; /* Center-align text in input field */
+            box-sizing: border-box; /* Include padding and border in width calculation */
         }
         .message {
             display: none;
@@ -63,7 +65,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Match the Page Title</h1>
+        <h1>Web Page Title</h1>
         <label for="titleInput">Enter the title of this webpage:</label>
         <input type="text" id="titleInput" placeholder="Enter title here">
         <div class="message success-message" id="successMessage">

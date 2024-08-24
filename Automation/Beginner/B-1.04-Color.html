@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Button Background Color Validation</title>
+    <title>Color Validation</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -20,8 +20,8 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 80%;
-            max-width: 400px;
+            width: auto; /* Adjust width to fit content */
+            max-width: 100%; /* Ensure it doesn't exceed viewport */
             text-align: center;
         }
 
@@ -47,13 +47,18 @@
         }
 
         .input-container {
-            text-align: center;
+            display: grid;
+            grid-template-columns: 1fr 10ch 2rem; /* Define columns for label, input, and icon */
+            gap: 15px; /* Add space between columns */
+            align-items: center;
+            text-align: left;
+            margin-bottom: 20px; /* Space between input fields */
         }
 
         .input-container label {
-            font-size: 18px;
-            margin-bottom: 10px;
-            display: block;
+            font-size: 14px; /* Smaller font size for labels */
+            margin: 0;
+            white-space: nowrap; /* Prevent text wrapping */
         }
 
         .input-container input[type="text"] {
@@ -61,23 +66,24 @@
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: calc(100% - 22px);
+            width: 10ch; /* Width to fit 10 characters */
             box-sizing: border-box;
             text-align: center; /* Center align text */
+            max-width: 10ch; /* Limit width to fit 10 characters */
+            maxlength: 10; /* Limit input to 10 characters */
         }
 
-        .validation-message {
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
+        .validation-icon {
+            font-size: 20px; /* Adjust icon size */
+            display: none; /* Hide icons by default */
         }
 
-        .validation-message.failure {
-            color: #d9534f; /* Red color for failure */
-        }
-
-        .validation-message.success {
+        .validation-icon.success {
             color: #28a745; /* Green color for success */
+        }
+
+        .validation-icon.failure {
+            color: #d9534f; /* Red color for failure */
         }
     </style>
 </head>
@@ -85,17 +91,21 @@
     <div class="container-box">
         <button class="colorful-button" id="colorButton">Colorful Button</button>
         <div class="input-container">
-            <label for="user-input1">Fetch and enter default hex color of button:</label>
-            <input type="text" id="user-input1" name="user-input1" placeholder="Type something...">
-            <div class="validation-message" id="message1"></div>
+            <label for="user-input1">Fetch and input default hex color of button:</label>
+            <input type="text" id="user-input1" name="user-input1">
+            <span class="validation-icon" id="icon1"></span>
+        </div>
 
-            <label for="user-input2">Perform mouseover and enter hex color:</label>
-            <input type="text" id="user-input2" name="user-input2" placeholder="Type something...">
-            <div class="validation-message" id="message2"></div>
+        <div class="input-container">
+            <label for="user-input2">Perform mouseover and input hex color:</label>
+            <input type="text" id="user-input2" name="user-input2">
+            <span class="validation-icon" id="icon2"></span>
+        </div>
 
-            <label for="user-input3">Perform click and hold and enter hex color:</label>
-            <input type="text" id="user-input3" name="user-input3" placeholder="Type something...">            
-            <div class="validation-message" id="message3"></div>
+        <div class="input-container">
+            <label for="user-input3">Perform click and hold and input hex color:</label>
+            <input type="text" id="user-input3" name="user-input3">            
+            <span class="validation-icon" id="icon3"></span>
         </div>
     </div>
 
@@ -126,20 +136,20 @@
             // Input validation
             function validateInput(inputId, correctColor) {
                 const input = document.getElementById(inputId);
-                const message = document.getElementById('message' + inputId.slice(-1));
+                const icon = document.getElementById('icon' + inputId.slice(-1));
 
                 input.addEventListener('input', () => {
                     const value = input.value.trim();
                     if (value.toLowerCase() === correctColor.toLowerCase()) {
-                        message.textContent = 'Success! The color is correct.';
-                        message.classList.add('success');
-                        message.classList.remove('failure');
+                        icon.innerHTML = '&#10003;'; // Checkmark symbol
+                        icon.classList.add('success');
+                        icon.classList.remove('failure');
                     } else {
-                        message.textContent = 'Failure! Please enter the correct color.';
-                        message.classList.add('failure');
-                        message.classList.remove('success');
+                        icon.innerHTML = '&#10007;'; // Cross symbol
+                        icon.classList.add('failure');
+                        icon.classList.remove('success');
                     }
-                    message.style.display = 'block';
+                    icon.style.display = 'inline'; // Show icon
                 });
             }
 

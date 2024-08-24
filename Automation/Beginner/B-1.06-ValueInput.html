@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Fields Example</title>
+    <title>Input Value</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container-box {
@@ -19,18 +19,21 @@
         .alert {
             display: none;
         }
+        .text-center {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="d-flex justify-content-center align-items-center full-height">
         <div class="container-box">
-            <h4>Fetch text from 1st Input field and enter in 2nd Input Field</h4>
+            <h4 class="text-center">Input Validations</h4>
             <div class="form-group">
-                <label for="inputField1">First Input Field (Random Value):</label>
+                <label for="inputField1">Copy text from below Input Field:</label>
                 <input type="text" class="form-control" id="inputField1" readonly>
             </div>
             <div class="form-group">
-                <label for="inputField2">Second Input Field (Blank):</label>
+                <label for="inputField2">Paste text copied from above Input Field:</label>
                 <input type="text" class="form-control" id="inputField2">
             </div>
             <div id="message" class="alert" role="alert"></div>
@@ -42,7 +45,12 @@
             const inputField2 = document.getElementById('inputField2');
             const message = document.getElementById('message');
 
-            inputField1.value = Math.random().toString(36).substring(3);
+            // Generate random text
+            const randomText = Math.random().toString(36).substring(3);
+
+            // Set value as attribute and also as displayed value
+            inputField1.setAttribute('value', randomText);
+            inputField1.value = randomText;
 
             inputField2.addEventListener('input', () => {
                 if (inputField2.value === inputField1.value) {

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 50%; /* Adjusted to 50% of the original size */
+            max-width: 600px; /* Maximum width of the container */
+            position: relative;
+        }
+        .header {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .terms {
+            max-height: 400px; /* Adjust height as needed */
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #ccc; /* Border added to the terms container */
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #ccc; /* Initial grey color */
+            border: none;
+            border-radius: 5px;
+            cursor: not-allowed;
+            transition: background-color 0.3s;
+            display: block; /* Center alignment */
+            margin: 0 auto; /* Center alignment */
+        }
+        button.enabled {
+            background-color: #007bff; /* Blue color when enabled */
+            cursor: pointer;
+        }
+        button.clicked {
+            background-color: #28a745; /* Green color after clicked */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Scroll to bottom of page to accept Terms and Conditions</div>
+        <div class="terms">
+            <h2>1. Introduction</h2>
+            <p>Welcome to our Terms and Conditions. Please read them carefully.</p>
+            
+            <h2>2. Acceptance of Terms</h2>
+            <p>By using our services, you agree to these terms and conditions.</p>
+            
+            <h2>3. User Responsibilities</h2>
+            <p>Users are responsible for their own actions while using the service.</p>
+            
+            <h2>4. Service Availability</h2>
+            <p>We strive to provide uninterrupted service but cannot guarantee it.</p>
+            
+            <h2>5. Privacy Policy</h2>
+            <p>Your privacy is important to us. Please review our privacy policy.</p>
+            
+            <h2>6. Intellectual Property</h2>
+            <p>All intellectual property rights are owned by us or our licensors.</p>
+            
+            <h2>7. Limitation of Liability</h2>
+            <p>Our liability is limited as described in these terms.</p>
+            
+            <h2>8. Termination</h2>
+            <p>We may terminate your access if you violate our terms.</p>
+            
+            <h2>9. Changes to Terms</h2>
+            <p>We may update these terms from time to time.</p>
+            
+            <h2>10. Contact Information</h2>
+            <p>If you have any questions, please contact us.</p>
+        </div>
+        <button id="acceptButton" disabled>I Accept</button>
+    </div>
+
+    <script>
+        const terms = document.querySelector('.terms');
+        const acceptButton = document.getElementById('acceptButton');
+
+        terms.addEventListener('scroll', () => {
+            if (terms.scrollTop + terms.clientHeight >= terms.scrollHeight) {
+                acceptButton.classList.add('enabled');
+                acceptButton.disabled = false;
+            }
+        });
+
+        acceptButton.addEventListener('click', () => {
+            acceptButton.classList.add('clicked');
+            acceptButton.textContent = 'Accepted'; // Update button text
+            acceptButton.disabled = true; // Disable button after click
+        });
+    </script>
+</body>
+</html>

@@ -3,128 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dropdown Lists</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Select</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            background-color: #f9f9f9;
         }
         .container {
             background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 60%;
-            max-width: 600px;
-            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: auto; /* Fit container to content */
         }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #333;
-        }
-        .dropdown-group {
+        h2 {
+            text-align: center; /* Center-align header */
             margin-bottom: 20px;
         }
         label {
-            font-size: 1em;
-            color: #333;
             display: block;
-            margin-bottom: 5px;
-        }
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1em;
             margin-bottom: 10px;
-            background-color: #fff;
-            transition: border-color 0.3s;
         }
-        select:focus {
-            border-color: #007bff;
-            outline: none;
+        .dropdown-wrapper {
+            margin-bottom: 10px;
         }
-        .alert {
-            display: none;
+        .dropdown-wrapper select {
+            width: calc(100% - 30px); /* Adjust width to fit within container, accounting for icon space */
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px; /* Space between dropdown and icon */
+        }
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .validation-icon {
+            width: 20px;
+            height: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .validation-icon.success {
+            background-color: #28a745; /* Green background */
+            mask: url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/check-circle-fill.svg') no-repeat center center;
+            mask-size: contain;
+        }
+        .validation-icon.error {
+            background-color: #dc3545; /* Red background */
+            mask: url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/x-circle-fill.svg') no-repeat center center;
+            mask-size: contain;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Dropdown Lists</h1>
-        <p>Select one item from the first dropdown list and multiple items from the second dropdown list.</p>
+        <h2>Select Options</h2>
         
-        <div class="dropdown-group">
-            <label for="singleSelect">Select One Item:</label>
-            <select id="singleSelect">
-                <option value="" disabled selected>Select an item</option>
-                <option value="item1">Item 1</option>
-                <option value="item2">Item 2</option>
-                <option value="item3">Item 3</option>
-                <option value="item4">Item 4</option>
-                <option value="item5">Item 5</option>
-            </select>
-            <div id="singleSelectMessage" class="alert mt-2"></div>
+        <div class="dropdown-wrapper">
+            <label for="dropdown1">Select '2' from dropdown:</label>
+            <div class="dropdown-container">
+                <select id="dropdown1">
+                    <option value="">Select</option>
+                    <!-- Options will be added dynamically -->
+                </select>
+                <span id="icon1" class="validation-icon"></span>
+            </div>
         </div>
 
-        <div class="dropdown-group">
-            <label for="multipleSelect">Select Multiple Items(Use ctrl+click):</label>
-            <select id="multipleSelect" multiple>
-                <option value="item1">Item 1</option>
-                <option value="item2">Item 2</option>
-                <option value="item3">Item 3</option>
-                <option value="item4">Item 4</option>
-                <option value="item5">Item 5</option>
-            </select>
-            <div id="multipleSelectMessage" class="alert mt-2"></div>
+        <div class="dropdown-wrapper">
+            <label for="dropdown2">Select '2' and '4' from dropdown:</label>
+            <div class="dropdown-container">
+                <select id="dropdown2" multiple>
+                    <option value="">Select</option>
+                    <!-- Options will be added dynamically -->
+                </select>
+                <span id="icon2" class="validation-icon"></span>
+            </div>
+        </div>
+
+        <div class="dropdown-wrapper">
+            <label for="dropdown3">Select the 3rd option from dropdown:</label>
+            <div class="dropdown-container">
+                <select id="dropdown3">
+                    <option value="">Select</option>
+                    <!-- Options will be added dynamically -->
+                </select>
+                <span id="icon3" class="validation-icon"></span>
+            </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const singleSelect = document.getElementById('singleSelect');
-            const multipleSelect = document.getElementById('multipleSelect');
-            const singleSelectMessage = document.getElementById('singleSelectMessage');
-            const multipleSelectMessage = document.getElementById('multipleSelectMessage');
-
-            function displaySelectedValues() {
-                const singleValue = singleSelect.value;
-                const multipleValues = Array.from(multipleSelect.selectedOptions).map(option => option.value);
-
-                if (singleValue) {
-                    singleSelectMessage.textContent = `Selected Single Item: ${singleValue}`;
-                    singleSelectMessage.className = 'alert alert-info';
-                    singleSelectMessage.style.display = 'block';
-                } else {
-                    singleSelectMessage.textContent = '';
-                    singleSelectMessage.style.display = 'none';
-                }
-
-                if (multipleValues.length > 0) {
-                    multipleSelectMessage.textContent = `Selected Multiple Items: ${multipleValues.join(', ')}`;
-                    multipleSelectMessage.className = 'alert alert-info';
-                    multipleSelectMessage.style.display = 'block';
-                } else {
-                    multipleSelectMessage.textContent = '';
-                    multipleSelectMessage.style.display = 'none';
-                }
+        // Function to shuffle array
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
+        }
 
-            singleSelect.addEventListener('change', displaySelectedValues);
-            multipleSelect.addEventListener('change', displaySelectedValues);
+        // Generate and shuffle list items
+        function generateRandomOptions() {
+            const numbers = [1, 2, 3, 4, 5];
+            shuffle(numbers);
+
+            const dropdown1 = document.getElementById('dropdown1');
+            const dropdown2 = document.getElementById('dropdown2');
+            const dropdown3 = document.getElementById('dropdown3');
+
+            // Add options to dropdown1
+            numbers.forEach(num => {
+                const option = document.createElement('option');
+                option.value = num;
+                option.textContent = num;
+                dropdown1.appendChild(option);
+            });
+
+            // Add options to dropdown2
+            numbers.forEach(num => {
+                const option = document.createElement('option');
+                option.value = num;
+                option.textContent = num;
+                dropdown2.appendChild(option);
+            });
+
+            // Add options to dropdown3
+            numbers.forEach(num => {
+                const option = document.createElement('option');
+                option.value = num;
+                option.textContent = num;
+                dropdown3.appendChild(option);
+            });
+
+            // Store the randomized list to check later
+            dropdown3.dataset.randomizedList = JSON.stringify(numbers);
+        }
+
+        // Validate selections
+        function validateDropdown1() {
+            const dropdown1 = document.getElementById('dropdown1').value;
+            const icon = document.getElementById('icon1');
+
+            if (dropdown1 === '2') {
+                icon.className = 'validation-icon success';
+            } else {
+                icon.className = 'validation-icon error';
+            }
+        }
+
+        function validateDropdown2() {
+            const dropdown2 = Array.from(document.getElementById('dropdown2').selectedOptions).map(option => option.value);
+            const icon = document.getElementById('icon2');
+
+            if (dropdown2.includes('2') && dropdown2.includes('4') && dropdown2.length === 2) {
+                icon.className = 'validation-icon success';
+            } else {
+                icon.className = 'validation-icon error';
+            }
+        }
+
+        function validateDropdown3() {
+            const dropdown3 = document.getElementById('dropdown3').value;
+            const icon = document.getElementById('icon3');
+
+            // Retrieve the randomized list for dropdown3
+            const randomizedList = JSON.parse(document.getElementById('dropdown3').dataset.randomizedList);
+
+            // Determine the 3rd item in the randomized list
+            const thirdItem = randomizedList[2].toString();
+
+            if (dropdown3 === thirdItem) {
+                icon.className = 'validation-icon success';
+            } else {
+                icon.className = 'validation-icon error';
+            }
+        }
+
+        // Initialize dropdowns and add event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            generateRandomOptions();
+
+            document.getElementById('dropdown1').addEventListener('change', validateDropdown1);
+            document.getElementById('dropdown2').addEventListener('change', validateDropdown2);
+            document.getElementById('dropdown3').addEventListener('change', validateDropdown3);
         });
     </script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
