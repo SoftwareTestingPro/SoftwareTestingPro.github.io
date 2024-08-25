@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .restaurant-card {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .restaurant-card h3 {
+            margin: 10px 0;
+        }
+        .restaurant-card p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        .loading img {
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+		h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+	<h2>Please scroll down until all restaurants are displayed. Count them and navigate back once done.</h2>
+    <div class="restaurant-grid" id="restaurantGrid">
+        <!-- Thumbnails will be generated here -->
+    </div>
+
+    <div class="loading" id="loading">
+        <img src="https://i.imgur.com/LLF5iyg.gif" alt="Loading...">
+    </div>
+
+    <script>
+        const restaurantGrid = document.getElementById('restaurantGrid');
+        const loading = document.getElementById('loading');
+        const totalRestaurants = Math.floor(Math.random() * 351) + 150; // Randomly generate between 150 and 200 restaurants
+        let loadedRestaurants = 0;
+
+        const restaurantNames = [
+            "The Gourmet Kitchen", "Sunset Diner", "The Hungry Bear", "Bistro Bliss", "Taste of Heaven",
+            "Ocean Breeze Cafe", "Urban Eats", "Spice Symphony", "Blue Moon Deli", "Golden Harvest",
+            "The Rustic Spoon", "Pasta Paradise", "The Cozy Nook", "Sweet Basil Bistro", "Culinary Delight"
+        ];
+
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomName() {
+            return restaurantNames[getRandomNumber(0, restaurantNames.length - 1)];
+        }
+
+        function generateRestaurantThumbnail(index) {
+            const restaurantCard = document.createElement('div');
+            restaurantCard.className = 'restaurant-card';
+            restaurantCard.innerHTML = `
+                <h3>${getRandomName()}</h3>
+                <p>Address: ${getRandomNumber(100, 999)} Main St, City ${getRandomNumber(1, 50)}, State</p>
+                <p>Phone: (123) 456-789${index % 10}</p>
+            `;
+            return restaurantCard;
+        }
+
+        function loadMoreRestaurants() {
+            if (loadedRestaurants >= totalRestaurants) return; // Prevent further loading
+
+            loading.style.display = 'block'; // Show loading icon
+
+            setTimeout(() => {
+                for (let i = 0; i < 30 && loadedRestaurants < totalRestaurants; i++) {
+                    const restaurantCard = generateRestaurantThumbnail(loadedRestaurants + 1);
+                    restaurantGrid.appendChild(restaurantCard);
+                    loadedRestaurants++;
+                }
+                loading.style.display = 'none'; // Hide loading icon after loading
+
+                // Store the actual number of restaurants displayed in localStorage
+                localStorage.setItem('restaurantCount', loadedRestaurants);
+            }, getRandomNumber(1000, 3000)); // Random delay between 1 and 3 seconds
+        }
+
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight && loadedRestaurants < totalRestaurants) {
+                loadMoreRestaurants();
+            }
+        });
+
+        // Initial load
+        loadMoreRestaurants();
+    </script>
+</body>
+</html>

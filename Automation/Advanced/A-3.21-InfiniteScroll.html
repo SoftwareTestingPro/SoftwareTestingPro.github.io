@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants Count</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: inline-block; /* Make container width equal to content */
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .spaced-button {
+            margin-bottom: 20px; /* Add space below the first button */
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center align the input and label */
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            color: #555;
+            margin-right: 10px;
+        }
+        input[type="text"] {
+            width: 100px; /* Set the width of the input field */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center; /* Center the text inside the input */
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Validate Restaurants Count</h1>
+        <button class="spaced-button" onclick="window.location.href='RestaurantsList.html'">Go to Restaurant List</button>
+        
+        <div class="input-group">
+            <label for="restaurantCount">Enter Total Restaurants Count:</label>
+            <input type="text" id="restaurantCount" placeholder="Enter number" maxlength="3">
+        </div>
+        
+        <button onclick="validateGuess()">Validate</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        // Restrict input to digits only
+        const restaurantCountInput = document.getElementById('restaurantCount');
+        restaurantCountInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, ''); // Remove non-digit characters
+        });
+
+        function validateGuess() {
+            const userGuess = restaurantCountInput.value;
+            const actualCount = localStorage.getItem('restaurantCount'); // Fetch actual count from localStorage
+            const message = document.getElementById('message');
+
+            if (userGuess == actualCount) {
+                message.textContent = 'Success! You entered the correct number of restaurants.';
+                message.className = 'message success';
+            } else {
+                message.textContent = 'Failure! Your guess was incorrect.';
+                message.className = 'message failure';
+            }
+        }
+    </script>
+</body>
+</html>
