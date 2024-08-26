@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Drop Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .image-container, .drop-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .image-container img {
+            border: 2px solid #ccc;
+            padding: 5px;
+            cursor: grab;
+        }
+        .drop-zone {
+            border: 2px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: #f9f9f9;
+        }
+        .drop-zone span {
+            position: absolute;
+            color: #888;
+            font-size: 14px;
+            pointer-events: none;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h2>Drop Image To Similar Size Drop Area</h2>
+    <div class="image-container">
+        <img src="https://via.placeholder.com/100" alt="Image 1" width="100" height="100" draggable="true" id="img1">
+        <img src="https://via.placeholder.com/150x200" alt="Image 2" width="150" height="200" draggable="true" id="img2">
+        <img src="https://via.placeholder.com/120x150" alt="Image 3" width="120" height="150" draggable="true" id="img3">
+        <img src="https://via.placeholder.com/200x100" alt="Image 4" width="200" height="100" draggable="true" id="img4">
+    </div>
+
+    <div class="drop-container" id="dropContainer">
+        <!-- Drop zones will be generated here -->
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <script>
+        const images = [
+            { id: 'img1', width: 100, height: 100 },
+            { id: 'img2', width: 150, height: 200 },
+            { id: 'img3', width: 120, height: 150 },
+            { id: 'img4', width: 200, height: 100 }
+        ];
+
+        const dropContainer = document.getElementById('dropContainer');
+        const messageDiv = document.getElementById('message');
+        let droppedCount = 0;
+
+        // Shuffle images array to randomize drop zones
+        const shuffledImages = images.sort(() => Math.random() - 0.5);
+
+        // Create drop zones based on shuffled images
+        shuffledImages.forEach(image => {
+            const dropZone = document.createElement('div');
+            dropZone.classList.add('drop-zone');
+            dropZone.setAttribute('data-width', image.width);
+            dropZone.setAttribute('data-height', image.height);
+            dropZone.style.width = `${image.width}px`;
+            dropZone.style.height = `${image.height}px`;
+
+            const sizeText = document.createElement('span');
+            sizeText.textContent = `${image.width} x ${image.height}`;
+            dropZone.appendChild(sizeText);
+
+            dropContainer.appendChild(dropZone);
+
+            // Event listeners for drag and drop
+            dropZone.addEventListener('dragover', event => {
+                event.preventDefault();
+            });
+
+            dropZone.addEventListener('drop', event => {
+                event.preventDefault();
+                const imageId = event.dataTransfer.getData('text/plain');
+                const draggedImage = document.getElementById(imageId);
+
+                if (
+                    parseInt(draggedImage.width) === parseInt(dropZone.dataset.width) &&
+                    parseInt(draggedImage.height) === parseInt(dropZone.dataset.height)
+                ) {
+                    if (!dropZone.hasChildNodes() || dropZone.childElementCount === 1) {
+                        dropZone.innerHTML = '';
+                        dropZone.appendChild(draggedImage);
+                        droppedCount++;
+                        messageDiv.textContent = `Successfully dropped ${droppedCount} of 4 images.`;
+
+                        if (droppedCount === 4) {
+                            messageDiv.textContent = 'All images successfully dropped!';
+                        }
+                    } else {
+                        alert('This drop zone already has an image.');
+                    }
+                } else {
+                    alert('This image doesn’t match the drop area size.');
+                }
+            });
+        });
+
+        // Add dragstart event to images
+        images.forEach(imageData => {
+            const image = document.getElementById(imageData.id);
+            image.addEventListener('dragstart', event => {
+                event.dataTransfer.setData('text/plain', event.target.id);
+            });
+        });
+    </script>
+</body>
+</html>
