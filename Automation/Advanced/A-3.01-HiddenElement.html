@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Success Message with GIF</title>
+    <title>Hiding Element</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -19,45 +19,48 @@
 
         .container {
             display: flex;
-            flex-direction: column; /* Align items in a column */
-            align-items: center; /* Center items horizontally */
+            flex-direction: column;
+            align-items: center;
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             max-width: 100%;
-            width: auto; /* Fit content width */
+            width: auto;
             text-align: center;
         }
 
-        .success-message {
+        .success-message,
+        .failure-message {
             display: none;
             margin-top: 20px;
             font-size: 1.2em;
+        }
+
+        .success-message {
             color: #155724;
         }
 
-        .gif {
-            display: none;
-            margin-top: 20px;
-            max-width: 100%;
-            height: auto;
+        .failure-message {
+            color: #721c24;
         }
 
-        button {
-            margin-top: 20px;
+        #countdown {
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: #007bff;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <label for="showButton">This button hides after 1 second on page load. Click it.</label>
-        <button id="showButton" class="btn btn-primary btn-lg">Click Me</button>
+        <label id="labelText">Click the button displayed in next screen</label>
+        <div id="countdown">Time remaining: 5 seconds</div>
 
-        <!-- Success message and GIF -->
-        <div id="successContainer">
+        <!-- Success and failure messages -->
+        <div id="messageContainer">
             <div class="success-message" id="successMessage">Congratulations! Well done!</div>
-            <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnQ4YThxNmJ3aDlwdnZrc25uYXRiNHN4Z3E2bW8xdnE4aGVxaTZociZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ov09jGgEThFKpxZ9eC/giphy.gif" alt="Well Done" class="gif" id="successGif">
+            <div class="failure-message" id="failureMessage">Sorry, you missed it!</div>
         </div>
     </div>
 
@@ -67,22 +70,60 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        // Show the button initially
-        document.getElementById('showButton').classList.add('d-block');
+        document.addEventListener("DOMContentLoaded", function() {
+            var labelText = document.getElementById('labelText');
+            var countdown = document.getElementById('countdown');
+            var successMessage = document.getElementById('successMessage');
+            var failureMessage = document.getElementById('failureMessage');
+            var buttonClicked = false;
+            var timeLeft = 5;
 
-        // Hide and remove the button after 1 second
-        setTimeout(function() {
-            var button = document.getElementById('showButton');
-            button.classList.remove('d-block');
-            button.classList.add('d-none');
-            button.style.display = 'none'; // Hide button from UI
-            button.parentNode.removeChild(button); // Remove button from DOM
-        }, 1000);
+            // Countdown timer
+            var countdownInterval = setInterval(function() {
+                timeLeft--;
+                countdown.textContent = `Time remaining: ${timeLeft} seconds`;
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
 
-        // Show success message and GIF on button click
-        document.getElementById('showButton').addEventListener('click', function() {
-            document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('successGif').style.display = 'block';
+            // After 5 seconds, hide the label and create the button
+            setTimeout(function() {
+                labelText.style.display = 'none';
+                countdown.style.display = 'none';
+
+                // Create the button element
+                var button = document.createElement('button');
+                button.id = 'showButton';
+                button.className = 'btn btn-primary btn-lg';
+                button.textContent = 'Click Me';
+                document.querySelector('.container').appendChild(button);
+
+                // Show the button instantly
+                button.style.display = 'block';
+
+                // After 1 second, hide the button if not clicked
+                setTimeout(function() {
+                    if (!buttonClicked) {
+                        button.style.display = 'none';
+                        if (button.parentNode) {
+                            button.parentNode.removeChild(button); // Remove button from DOM
+                        }
+                        failureMessage.style.display = 'block';
+                    }
+                }, 500);
+
+                // If the button is clicked, show the success message
+                button.addEventListener('click', function() {
+                    buttonClicked = true;
+                    button.style.display = 'none';
+                    if (button.parentNode) {
+                        button.parentNode.removeChild(button); // Remove button from DOM
+                    }
+                    successMessage.style.display = 'block';
+                });
+
+            }, 5000);
         });
     </script>
 </body>
