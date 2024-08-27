@@ -25,29 +25,18 @@
             color: #333;
         }
 
-        .frame {
+        .iframe-container {
             border: 1px solid #e0e0e0;
             border-radius: 12px;
-            padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
+            overflow: hidden;
             display: inline-block;
         }
 
-        .button {
-            padding: 12px 24px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #007bff;
+        iframe {
             border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
+            width: 300px;
+            height: 150px;
         }
 
         .message {
@@ -69,15 +58,53 @@
 <body>
     <div class="container">
         <div class="header">Click the below button</div>
-        <div class="frame">
-            <button class="button" id="action-button" type="button">Click Me</button>
+        <div class="iframe-container">
+            <iframe src="about:blank" id="button-frame"></iframe>
         </div>
         <div id="message" class="message"></div>
     </div>
+
     <script>
-        document.getElementById('action-button').addEventListener('click', function() {
-            document.getElementById('message').innerHTML = `<div class="success">Success! You clicked the button within a frame.</div>`;
-        });
+        // Create content for the iframe
+        const iframe = document.getElementById('button-frame');
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+        iframeDoc.open();
+        iframeDoc.write(`
+            <style>
+                body {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                    margin: 0;
+                    background-color: #fff;
+                }
+                .button {
+                    padding: 12px 24px;
+                    font-size: 18px;
+                    color: #fff;
+                    background-color: #007bff;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    transition: background-color 0.3s, transform 0.3s;
+                }
+                .button:hover {
+                    background-color: #0056b3;
+                    transform: scale(1.05);
+                }
+            </style>
+            <button class="button" id="action-button" type="button">Click Me</button>
+        `);
+        iframeDoc.close();
+
+        // Add event listener for the button inside the iframe
+        iframe.onload = function() {
+            iframeDoc.getElementById('action-button').addEventListener('click', function() {
+                document.getElementById('message').innerHTML = `<div class="success">Success! You clicked the button within a frame.</div>`;
+            });
+        };
     </script>
 </body>
 </html>
