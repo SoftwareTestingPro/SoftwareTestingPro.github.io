@@ -37,6 +37,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         button {
@@ -58,16 +59,23 @@
             margin-top: 20px;
         }
 
-        h2 {
+        .success-message {
+            color: green;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        h3 {
             margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h3>Click on below button to see your current location</h3>
+        <h3 id="location-label">Click on the button below to see your current location</h3>
         <button onclick="getLocation()">Click Here</button>
         <div id="location-info"></div>
+        <div id="success-message" class="success-message" style="display: none;">Success! Location details have been retrieved.</div>
     </div>
 
     <script>
@@ -89,6 +97,11 @@
             `;
 
             getCountryInfo(latitude, longitude);
+
+            // Update label, remove button, and display success message
+            document.getElementById('location-label').textContent = 'Below are your location details';
+            document.querySelector('button').remove();
+            document.getElementById('success-message').style.display = 'block';
         }
 
         function showError(error) {

@@ -62,10 +62,10 @@
 </head>
 <body>
     <div class="container">
-        <a href="https://sample-videos.com/zip/100mb.zip" class="download-link" download>Click here to download  100 MB file</a>
+        <a href="https://sample-videos.com/zip/100mb.zip" class="download-link" download>Click here to download 100 MB file</a>
         <div class="input-container">
-            <label for="user-input">Calculate seconds taken to download the file:</label>
-            <input type="text" id="user-input" name="user-input" placeholder="Type something...">
+            <label for="user-input">How long did it took to download file completely:</label>
+            <input type="text" id="user-input" name="user-input" placeholder="Enter duration in seconds" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
     </div>
 </body>
