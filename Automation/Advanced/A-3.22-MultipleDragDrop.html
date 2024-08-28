@@ -70,10 +70,16 @@
         const messageDiv = document.getElementById('message');
         let droppedCount = 0;
 
-        // Shuffle images array to randomize drop zones
-        const shuffledImages = images.sort(() => Math.random() - 0.5);
+        // Separate the first image
+        const firstImage = images[0];
 
-        // Create drop zones based on shuffled images
+        // Shuffle the rest of the images array
+        const shuffledImages = images.slice(1).sort(() => Math.random() - 0.5);
+
+        // Insert the first image as the third item
+        shuffledImages.splice(2, 0, firstImage);
+
+        // Create drop zones based on the updated shuffled images array
         shuffledImages.forEach(image => {
             const dropZone = document.createElement('div');
             dropZone.classList.add('drop-zone');

@@ -3,110 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore different types of screenshots you can capture, including individual flags, entire page screenshots, and a combined screenshot of all 20 flags.">
-    <meta name="keywords" content="screenshots, flags, capture screenshots, flag images, screenshot guide">
-    <meta name="author" content="Your Name">
-    <meta name="robots" content="index, follow">
-    <title>Types of Screenshots</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Flag Display with Timer</title>
     <style>
-        .flag {
-            width: 100%;
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            transition: all 1s ease-in-out;
+        }
+        .scrollable {
             height: auto;
+            overflow-y: auto;
+            padding: 20px;
         }
-        .sub-heading {
-            margin-top: 10px;
+        #label {
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            padding: 10px;
+            z-index: 10;
         }
-        ul {
-            list-style-type: disc;
-            padding-left: 20px;
+        #timer {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #flagsContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            transition: all 1s ease-in-out;
+        }
+        img {
+            width: 150px;
+            height: auto;
+            align-self: center;
+            transition: all 0.5s ease-in-out;
+        }
+        .hidden {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        .visible {
+            opacity: 1;
+            transform: scale(1);
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container mt-5">
-            <h2>Capture different types of Screenshots</h2>
-            <section>
-                <ul>
-                    <li class="sub-heading">Capture a screenshot of the flag of one country.</li>
-                    <li class="sub-heading">Capture a screenshot of the currently displayed page.</li>
-                    <li class="sub-heading">Capture a single screenshot of all 20 flags.</li>
-                </ul>
-            </section>
-        </div>
-    </header>
-    <main>
-        <div class="container">
-            <div class="row">
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/us.png" class="flag img-thumbnail" alt="Flag of the United States of America">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/cn.png" class="flag img-thumbnail" alt="Flag of China">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/fr.png" class="flag img-thumbnail" alt="Flag of France">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/de.png" class="flag img-thumbnail" alt="Flag of Germany">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/in.png" class="flag img-thumbnail" alt="Flag of India">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/jp.png" class="flag img-thumbnail" alt="Flag of Japan">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/ru.png" class="flag img-thumbnail" alt="Flag of Russia">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/gb.png" class="flag img-thumbnail" alt="Flag of the United Kingdom">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/it.png" class="flag img-thumbnail" alt="Flag of Italy">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/br.png" class="flag img-thumbnail" alt="Flag of Brazil">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/ca.png" class="flag img-thumbnail" alt="Flag of Canada">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/au.png" class="flag img-thumbnail" alt="Flag of Australia">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/mx.png" class="flag img-thumbnail" alt="Flag of Mexico">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/za.png" class="flag img-thumbnail" alt="Flag of South Africa">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/kr.png" class="flag img-thumbnail" alt="Flag of South Korea">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/es.png" class="flag img-thumbnail" alt="Flag of Spain">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/se.png" class="flag img-thumbnail" alt="Flag of Sweden">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/ch.png" class="flag img-thumbnail" alt="Flag of Switzerland">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/tr.png" class="flag img-thumbnail" alt="Flag of Turkey">
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 mb-4">
-                    <img src="https://flagpedia.net/data/flags/h80/ar.png" class="flag img-thumbnail" alt="Flag of Argentina">
-                </div>
-            </div>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2024 Types of Screenshots. All rights reserved.</p>
-    </footer>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <div class="container" id="contentContainer">
+        <div id="label">Flags displaying in...</div>
+        <div id="timer">5</div>
+        <div id="flagsContainer"></div>
+    </div>
+
+    <script>
+        const label = document.getElementById('label');
+        const timer = document.getElementById('timer');
+        const flagsContainer = document.getElementById('flagsContainer');
+        const contentContainer = document.getElementById('contentContainer');
+
+        const flags = [
+            "https://flagcdn.com/w320/us.png", // USA
+            "https://flagcdn.com/w320/ca.png", // Canada
+            "https://flagcdn.com/w320/gb.png", // UK
+            "https://flagcdn.com/w320/fr.png", // France
+            "https://flagcdn.com/w320/de.png", // Germany
+            "https://flagcdn.com/w320/jp.png", // Japan
+            "https://flagcdn.com/w320/au.png", // Australia
+            "https://flagcdn.com/w320/in.png", // India
+            "https://flagcdn.com/w320/br.png", // Brazil
+            "https://flagcdn.com/w320/ru.png"  // Russia
+        ];
+
+        let countdown = 5;
+
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            timer.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                startFlagSequence();
+            }
+        }, 1000);
+
+        function startFlagSequence() {
+            // Hide timer and display first flag
+            label.textContent = "Here is a random flag! Capture only flag in screenshot";
+            timer.classList.add('hidden');
+
+            setTimeout(() => {
+                displayFlags(1);
+            }, 1000);
+
+            // Transition to display 3 flags
+            setTimeout(() => {
+                label.textContent = "Here are 3 random flags! Capture them in a single screenshot";
+                displayFlags(3);
+            }, 6000);
+
+            // Transition to display 20 flags and make the page scrollable
+            setTimeout(() => {
+                label.textContent = "Here are 20 random flags! Capture them in a single screenshot";
+                contentContainer.classList.add('scrollable');
+                displayFlags(20);
+            }, 12000);
+        }
+
+        function displayFlags(number) {
+            flagsContainer.innerHTML = '';
+            for (let i = 0; i < number; i++) {
+                const flagIndex = Math.floor(Math.random() * flags.length);
+                const img = document.createElement('img');
+                img.src = flags[flagIndex];
+                img.classList.add('hidden');
+                flagsContainer.appendChild(img);
+                
+                setTimeout(() => {
+                    img.classList.remove('hidden');
+                    img.classList.add('visible');
+                }, 100);
+            }
+        }
+    </script>
 </body>
 </html>

@@ -46,6 +46,25 @@
             height: 20px;
             cursor: pointer;
             fill: #555;
+            animation: blink 1s infinite; /* Apply the blinking animation */
+        }
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+                fill: #ff0000; /* Red */
+            }
+            25% {
+                opacity: 0.5;
+                fill: #00ff00; /* Green */
+            }
+            50% {
+                opacity: 1;
+                fill: #0000ff; /* Blue */
+            }
+            75% {
+                opacity: 0.5;
+                fill: #ffff00; /* Yellow */
+            }
         }
         .message {
             margin-top: 20px;
@@ -62,7 +81,7 @@
 <body>
     <div class="container">
         <h1>Select a Date</h1>
-        <label for="date-picker">Please select today's date from the calendar:</label>
+        <label for="date-picker">Click on flashing calendar icon and Select today's date:</label>
         <div class="date-picker-wrapper">
             <input type="date" id="date-picker">
             <svg id="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

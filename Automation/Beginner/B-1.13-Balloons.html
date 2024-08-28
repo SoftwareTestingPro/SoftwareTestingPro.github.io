@@ -45,21 +45,29 @@
                 opacity: 0;
             }
         }
-        #score {
+        #timer {
             position: absolute;
             top: 10px;
             left: 10px;
             font-size: 24px;
             color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
         }
-        #finalScore {
+        #finalMessage {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 32px;
+            font-size: 24px;
             color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
             display: none;
+            text-align: center;
+            max-width: 80%;
         }
         h3 {
             color: white;
@@ -67,20 +75,22 @@
     </style>
 </head>
 <body>
-    <h3>Pop the balloons! Click on balloons with even numbers to add to your score. Odd numbers will deduct from your score.</h3>
+    <h3>Pop the balloons! Click on all even-numbered balloons to win. Avoid odd-numbered balloons.</h3>
+    <div id="timer">Time: 20</div>
     <div id="gameContainer">
-        <div id="score">Score: 0</div>
-        <div id="finalScore"></div>
+        <div id="finalMessage"></div>
     </div>
 
     <script>
-        let score = 0;
-        let gameDuration = 60000; // 1 minute
-        let gameInterval;
+        let gameDuration = 20000; // 20 seconds
+        let timeLeft = 20;
         let balloonInterval;
+        let evenBalloonsClicked = 0;
+        let evenBalloonsMissed = 0;
+        let oddBalloonClicked = false;
+        const timerElement = document.getElementById('timer');
         const gameContainer = document.getElementById('gameContainer');
-        const scoreElement = document.getElementById('score');
-        const finalScoreElement = document.getElementById('finalScore');
+        const finalMessageElement = document.getElementById('finalMessage');
 
         function createBalloon() {
             const balloon = document.createElement('div');
@@ -93,6 +103,9 @@
 
             setTimeout(() => {
                 if (balloon.parentElement) {
+                    if (number % 2 === 0) {
+                        evenBalloonsMissed++;
+                    }
                     gameContainer.removeChild(balloon);
                 }
             }, 10000); // Remove balloon after 10 seconds
@@ -101,24 +114,34 @@
         function burstBalloon(balloon, number) {
             gameContainer.removeChild(balloon);
             if (number % 2 === 0) {
-                score += number;
+                evenBalloonsClicked++;
             } else {
-                score -= number;
+                oddBalloonClicked = true;
             }
-            scoreElement.textContent = `Score: ${score}`;
         }
 
         function startGame() {
             balloonInterval = setInterval(createBalloon, 1000); // Create balloon every second
-            gameInterval = setTimeout(endGame, gameDuration); // End game after 1 minute
+            setInterval(updateTimer, 1000); // Update timer every second
+            setTimeout(endGame, gameDuration); // End game after 20 seconds
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            timerElement.textContent = `Time: ${timeLeft}`;
         }
 
         function endGame() {
             clearInterval(balloonInterval);
-            clearTimeout(gameInterval);
             document.querySelectorAll('.balloon').forEach(balloon => gameContainer.removeChild(balloon));
-            finalScoreElement.textContent = `Final Score: ${score}`;
-            finalScoreElement.style.display = 'block';
+            timerElement.style.display = 'none'; // Hide the timer
+
+            if (evenBalloonsMissed === 0 && !oddBalloonClicked && evenBalloonsClicked > 0) {
+                finalMessageElement.textContent = 'Success! You clicked all even-numbered balloons!';
+            } else {
+                finalMessageElement.textContent = 'Failure! Either you missed an even-numbered balloon or clicked an odd-numbered balloon.';
+            }
+            finalMessageElement.style.display = 'block';
         }
 
         window.onload = startGame;
