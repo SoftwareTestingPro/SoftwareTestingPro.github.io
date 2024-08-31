@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Comparison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .label-bold {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .text-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .text-item {
+            margin: 0 20px;
+        }
+        .text-label {
+            font-weight: bold;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:active {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="label-bold">Are both texts same ?</div>
+        <div class="text-container">
+            <div class="text-item">
+                <div class="text-label">Text 1:</div>
+                <div id="text1"></div>
+            </div>
+            <div class="text-item">
+                <div class="text-label">Text 2:</div>
+                <div id="text2"></div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button onclick="checkAnswer(true)">Yes</button>
+            <button onclick="checkAnswer(false)">No</button>
+        </div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const text1Element = document.getElementById('text1');
+        const text2Element = document.getElementById('text2');
+        const messageElement = document.getElementById('message');
+
+        const texts = ["Hello", "World", "Text", "Example", "Random", "Comparison"];
+
+        // Function to generate random text, sometimes same, sometimes different
+        function setRandomTexts() {
+            const randomText1 = texts[Math.floor(Math.random() * texts.length)];
+            const randomText2 = Math.random() > 0.5 ? randomText1 : texts[Math.floor(Math.random() * texts.length)];
+            text1Element.textContent = randomText1;
+            text2Element.textContent = randomText2;
+        }
+
+        function checkAnswer(isTrueSelected) {
+            const text1 = text1Element.textContent;
+            const text2 = text2Element.textContent;
+            const isSuccess = (text1 === text2 && isTrueSelected) || (text1 !== text2 && !isTrueSelected);
+
+            if (isSuccess) {
+                messageElement.textContent = "Correct!";
+                messageElement.style.color = "green";
+            } else {
+                messageElement.textContent = "Incorrect!";
+                messageElement.style.color = "red";
+            }
+        }
+
+        // Set random texts on page load
+        setRandomTexts();
+    </script>
+</body>
+</html>
