@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Type and Select an Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            position: relative; /* Ensure dropdown is positioned relative to the container */
+            text-align: center; /* Center align the text */
+        }
+        .label {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold; /* Make the label text bold */
+            color: #555;
+        }
+        .input-field {
+            width: calc(100% - 22px); /* Adjust width to fit within padding */
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000; /* Ensure dropdown is on top */
+            display: none; /* Hide by default */
+        }
+        .dropdown div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .dropdown div:hover {
+            background-color: #f0f0f0;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <label class="label" id="labelText"></label>
+    <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing...">
+    <div id="results" class="dropdown"></div>
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+    const items = [
+        'Apple',
+        'Banana',
+        'Orange',
+        'Pineapple',
+        'Strawberry',
+        'Blueberry',
+        'Grapes',
+        'Watermelon',
+        'Peach',
+        'Mango'
+    ];
+
+    let randomItem;
+
+    // Randomly select an item from the list
+    function selectRandomItem() {
+        randomItem = items[Math.floor(Math.random() * items.length)];
+        document.getElementById('labelText').textContent = `Type and Select '${randomItem}' from the list below:`;
+    }
+
+    function displayResults() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const resultsDiv = document.getElementById('results');
+        
+        if (input.length === 0) {
+            resultsDiv.innerHTML = '';
+            resultsDiv.style.display = 'none';
+            return;
+        }
+
+        const filteredItems = items.filter(item => item.toLowerCase().includes(input));
+        
+        if (filteredItems.length > 0) {
+            resultsDiv.innerHTML = filteredItems.map(item => `<div onclick="selectItem('${item}')">${item}</div>`).join('');
+            resultsDiv.style.display = 'block';
+        } else {
+            resultsDiv.innerHTML = '<div>No matching results</div>';
+            resultsDiv.style.display = 'block';
+        }
+    }
+
+    function selectItem(item) {
+        const messageDiv = document.getElementById('message');
+        
+        if (item === randomItem) {
+            messageDiv.innerHTML = `Congratulations! You selected the correct item: ${item}.`;
+            messageDiv.className = 'message success';
+        } else {
+            messageDiv.innerHTML = `Sorry, ${item} is not the correct item. Please select ${randomItem}.`;
+            messageDiv.className = 'message failure';
+        }
+
+        document.getElementById('searchInput').value = item;
+        document.getElementById('results').innerHTML = '';
+        document.getElementById('results').style.display = 'none';
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const resultsDiv = document.getElementById('results');
+        if (!resultsDiv.contains(event.target) && event.target.id !== 'searchInput') {
+            resultsDiv.innerHTML = '';
+            resultsDiv.style.display = 'none';
+        }
+    });
+
+    // Initialize with a random item
+    selectRandomItem();
+</script>
+
+</body>
+</html>
