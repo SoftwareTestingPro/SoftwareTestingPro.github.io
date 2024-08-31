@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable List Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .label-bold {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .list-container {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            min-height: 150px;
+        }
+        .list-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #e0f7fa; /* Light blue background */
+            border-radius: 8px; /* Rounded corners */
+            cursor: move;
+            user-select: none;
+        }
+        .success-message {
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="label-bold">Drag and Drop items to Sort Alphabetically:</div>
+        <ul id="animalList" class="list-container">
+            <!-- List items will be inserted here by JavaScript -->
+        </ul>
+        <div id="successMessage" class="success-message" style="display: none;">Success! List is sorted.</div>
+    </div>
+
+    <!-- Load SortableJS from the new CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const allItems = ["Elephant", "Tiger", "Zebra", "Giraffe", "Lion", "Monkey", "Panda", "Koala", "Kangaroo", "Penguin"];
+            
+            // Shuffle and select 5 random items
+            const shuffledItems = allItems.sort(() => Math.random() - 0.5).slice(0, 5);
+            
+            // Create list items
+            const list = document.getElementById('animalList');
+            shuffledItems.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                li.className = 'list-item';
+                list.appendChild(li);
+            });
+
+            // Initialize SortableJS
+            Sortable.create(list, {
+                animation: 150,
+                onEnd: function(evt) {
+                    // Check if list is sorted
+                    const items = Array.from(list.children).map(li => li.textContent);
+                    const sortedItems = [...items].sort();
+                    if (JSON.stringify(items) === JSON.stringify(sortedItems)) {
+                        document.getElementById('successMessage').style.display = 'block';
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
