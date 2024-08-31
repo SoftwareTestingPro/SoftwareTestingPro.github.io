@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Elements in Container</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .label {
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .container {
+            position: relative;
+            width: 500px;
+            height: 400px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .draggable {
+            width: 50px;
+            height: 50px;
+            border: none; /* Always hidden */
+            background-color: transparent; /* Always hidden */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            position: absolute;
+            cursor: move;
+            user-select: none;
+        }
+        .draggable.horizontal {
+            cursor: ew-resize;
+        }
+        .draggable.vertical {
+            cursor: ns-resize;
+        }
+        .success-message {
+            font-size: 16px;
+            font-weight: bold;
+            color: #155724;
+            display: none; /* Initially hidden */
+            white-space: nowrap; /* Prevent text from wrapping to the next line */
+            overflow: hidden; /* Hide overflow text */
+            text-overflow: ellipsis; /* Display ellipsis if text overflows */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-wrapper">
+        <div class="label">Drag the elements and position Y over X:</div>
+        <div class="container">
+            <div id="horizontal" class="draggable horizontal">X</div>
+            <div id="vertical" class="draggable vertical">Y</div>
+        </div>
+        <div id="successMessage" class="success-message">Success! Element Y is exactly on top of Element X.</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.container');
+            const horizontalElement = document.getElementById('horizontal');
+            const verticalElement = document.getElementById('vertical');
+            const successMessage = document.getElementById('successMessage');
+            let successDisplayed = false;
+
+            const getContainerRect = () => container.getBoundingClientRect();
+
+            const positionElements = () => {
+                if (successDisplayed) return; // Prevent positioning if success message is displayed
+                const containerRect = getContainerRect();
+                const labelHeight = document.querySelector('.label').offsetHeight;
+                const maxX = containerRect.width - horizontalElement.offsetWidth;
+                const maxY = containerRect.height - verticalElement.offsetHeight - labelHeight;
+
+                // Ensure elements are positioned below the label and within container bounds
+                const xLeft = Math.random() * (maxX / 2); // Random X for X element
+                const xTop = Math.random() * maxY;
+                const yLeft = xLeft + horizontalElement.offsetWidth + Math.random() * (maxX - xLeft - horizontalElement.offsetWidth); // Ensure Y is to the right of X
+                const yTop = Math.random() * (maxY - verticalElement.offsetHeight);
+
+                horizontalElement.style.left = `${xLeft}px`;
+                horizontalElement.style.top = `${xTop + labelHeight}px`;
+                verticalElement.style.left = `${yLeft}px`;
+                verticalElement.style.top = `${yTop + labelHeight}px`;
+            };
+
+            const checkOverlap = () => {
+                if (successDisplayed) return; // Prevent further checks if success message is displayed
+                const tolerance = 5; // Tolerance level for overlap check
+                const xRect = horizontalElement.getBoundingClientRect();
+                const yRect = verticalElement.getBoundingClientRect();
+
+                // Check if X and Y are exactly on top of each other with some tolerance
+                const isExactlyOnTop = Math.abs(xRect.left - yRect.left) < tolerance &&
+                                        Math.abs(xRect.top - yRect.top) < tolerance &&
+                                        Math.abs(xRect.width - yRect.width) < tolerance &&
+                                        Math.abs(xRect.height - yRect.height) < tolerance;
+
+                if (isExactlyOnTop) {
+                    successMessage.style.display = 'block';
+                    successDisplayed = true;
+                }
+            };
+
+            const dragStart = (event, isHorizontal) => {
+                event.preventDefault();
+                const containerRect = getContainerRect();
+                const offsetX = event.clientX - event.target.getBoundingClientRect().left;
+                const offsetY = event.clientY - event.target.getBoundingClientRect().top;
+
+                const onMouseMove = (e) => {
+                    if (successDisplayed) return; // Prevent movement if success message is displayed
+
+                    const element = event.target;
+                    const rect = element.getBoundingClientRect();
+                    let newX = e.clientX - offsetX;
+                    let newY = e.clientY - offsetY;
+
+                    if (isHorizontal) {
+                        // Restrict horizontal movement within container
+                        newX = Math.max(containerRect.left, Math.min(newX, containerRect.right - rect.width));
+                        element.style.left = `${newX - containerRect.left}px`;
+                    } else {
+                        // Restrict vertical movement within container
+                        newY = Math.max(containerRect.top, Math.min(newY, containerRect.bottom - rect.height));
+                        element.style.top = `${newY - containerRect.top}px`;
+                    }
+
+                    // Check if the elements are exactly on top of each other
+                    checkOverlap();
+                };
+
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                };
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            };
+
+            horizontalElement.addEventListener('mousedown', (event) => {
+                dragStart(event, true);
+            });
+
+            verticalElement.addEventListener('mousedown', (event) => {
+                dragStart(event, false);
+            });
+
+            // Position elements on load
+            positionElements();
+        });
+    </script>
+
+</body>
+</html>
