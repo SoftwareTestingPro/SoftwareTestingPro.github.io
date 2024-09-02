@@ -78,7 +78,7 @@
             });
 
             // Initialize SortableJS
-            Sortable.create(list, {
+            const sortable = Sortable.create(list, {
                 animation: 150,
                 onEnd: function(evt) {
                     // Check if list is sorted
@@ -86,6 +86,7 @@
                     const sortedItems = [...items].sort();
                     if (JSON.stringify(items) === JSON.stringify(sortedItems)) {
                         document.getElementById('successMessage').style.display = 'block';
+                        sortable.option("disabled", true); // Disable dragging and sorting
                     }
                 }
             });
