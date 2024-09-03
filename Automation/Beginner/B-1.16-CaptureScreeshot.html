@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flag Display with Timer</title>
+    <title>Capturing Screenshots</title>
     <style>
         body {
             margin: 0;
@@ -100,7 +100,7 @@
 
         function startFlagSequence() {
             // Hide timer and display first flag
-            label.textContent = "Here is a random flag! Capture only flag in screenshot";
+            label.textContent = "Here is a random flag! Capture and save the flag as screenshot";
             timer.classList.add('hidden');
 
             setTimeout(() => {
@@ -109,13 +109,13 @@
 
             // Transition to display 3 flags
             setTimeout(() => {
-                label.textContent = "Here are 3 random flags! Capture them in a single screenshot";
+                label.textContent = "Here are 3 random flags! Capture and save the current page as screenshot";
                 displayFlags(3);
             }, 6000);
 
             // Transition to display 20 flags and make the page scrollable
             setTimeout(() => {
-                label.textContent = "Here are 20 random flags! Capture them in a single screenshot";
+                label.textContent = "Here are 20 random flags! Capture and save all 20 flags as a single screenshot";
                 contentContainer.classList.add('scrollable');
                 displayFlags(20);
             }, 12000);
