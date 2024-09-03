@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet Sorting Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .container h2 {
+            margin: 0 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .letter-boxes {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .letter-box, .input-box {
+            width: 50px;
+            height: 50px;
+            margin: 0 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: white; /* Changed to white */
+            text-transform: uppercase; /* Force uppercase letters */
+        }
+
+        .input-box input:focus {
+            outline: none;
+            border: 2px solid #4CAF50;
+        }
+
+        .input-box.invalid input {
+            border: 2px solid red;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .invalid-message {
+            color: red;
+            font-size: 14px;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Arrange the Letters in Alphabetical Order</h2>
+    <div class="letter-boxes" id="letterBoxes"></div>
+    <div class="letter-boxes">
+        <div class="input-box"><input type="text" maxlength="1" /></div>
+        <div class="input-box"><input type="text" maxlength="1" /></div>
+        <div class="input-box"><input type="text" maxlength="1" /></div>
+        <div class="input-box"><input type="text" maxlength="1" /></div>
+        <div class="input-box"><input type="text" maxlength="1" /></div>
+    </div>
+    <div class="message" id="message">Success! The letters are in alphabetical order.</div>
+    <div class="invalid-message" id="invalidMessage">Invalid input! Please enter a letter from above.</div>
+</div>
+
+<script>
+    function generateRandomLetters(count) {
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        const selectedLetters = [];
+        while (selectedLetters.length < count) {
+            const randomIndex = Math.floor(Math.random() * letters.length);
+            const letter = letters[randomIndex];
+            if (!selectedLetters.includes(letter)) {
+                selectedLetters.push(letter);
+            }
+        }
+        return selectedLetters;
+    }
+
+    function displayRandomLetters() {
+        const letterBoxes = document.getElementById('letterBoxes');
+        const randomLetters = generateRandomLetters(5);
+        randomLetters.forEach(letter => {
+            const div = document.createElement('div');
+            div.classList.add('letter-box');
+            div.textContent = letter;
+            letterBoxes.appendChild(div);
+        });
+        return randomLetters;
+    }
+
+    function checkAlphabeticalOrder(userInput, originalLetters) {
+        const sortedOriginal = [...originalLetters].sort();
+        return userInput.every((letter, index) => letter === sortedOriginal[index]);
+    }
+
+    function validateInput(input, randomLetters) {
+        const inputValue = input.value.toUpperCase();
+        if (!randomLetters.includes(inputValue)) {
+            const invalidMessage = document.getElementById('invalidMessage');
+            const inputBox = input.parentElement;
+
+            // Highlight the input box in red
+            inputBox.classList.add('invalid');
+            // Display the invalid input message
+            invalidMessage.style.display = 'block';
+
+            // Clear the input field after a short delay
+            setTimeout(() => {
+                input.value = '';
+                inputBox.classList.remove('invalid');
+                invalidMessage.style.display = 'none';
+            }, 1500);
+
+            return false;
+        }
+        return true;
+    }
+
+    function addInputEventListeners(randomLetters) {
+        const inputBoxes = document.querySelectorAll('.input-box input');
+        const messageDiv = document.getElementById('message');
+
+        inputBoxes.forEach(input => {
+            input.addEventListener('input', () => {
+                if (validateInput(input, randomLetters)) {
+                    const userInput = Array.from(inputBoxes).map(input => input.value.toUpperCase());
+                    if (userInput.every(letter => letter) && checkAlphabeticalOrder(userInput, randomLetters)) {
+                        messageDiv.style.display = 'block';
+                    } else {
+                        messageDiv.style.display = 'none';
+                    }
+                }
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const randomLetters = displayRandomLetters();
+        addInputEventListeners(randomLetters);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Sorting Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .container h2 {
+            margin: 0 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .number-boxes {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .number-box, .input-box {
+            width: 50px;
+            height: 50px;
+            margin: 0 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: white; /* Changed to white */
+        }
+
+        .input-box input:focus {
+            outline: none;
+            border: 2px solid #4CAF50;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Arrange the Numbers in Ascending Order and Input in below fields</h2>
+    <div class="number-boxes" id="numberBoxes"></div>
+    <div class="number-boxes">
+        <div class="input-box"><input type="text" maxlength="2" /></div>
+        <div class="input-box"><input type="text" maxlength="2" /></div>
+        <div class="input-box"><input type="text" maxlength="2" /></div>
+        <div class="input-box"><input type="text" maxlength="2" /></div>
+        <div class="input-box"><input type="text" maxlength="2" /></div>
+    </div>
+    <div class="message" id="message">Success! The numbers are in ascending order.</div>
+</div>
+
+<script>
+    function generateRandomNumbers(count, min, max) {
+        const numbers = [];
+        while (numbers.length < count) {
+            const num = Math.floor(Math.random() * (max - min + 1)) + min;
+            if (!numbers.includes(num)) {
+                numbers.push(num);
+            }
+        }
+        return numbers;
+    }
+
+    function displayRandomNumbers() {
+        const numberBoxes = document.getElementById('numberBoxes');
+        const randomNumbers = generateRandomNumbers(5, 1, 99);
+        randomNumbers.forEach(num => {
+            const div = document.createElement('div');
+            div.classList.add('number-box');
+            div.textContent = num;
+            numberBoxes.appendChild(div);
+        });
+        return randomNumbers;
+    }
+
+    function checkSortedOrder(userInput, originalNumbers) {
+        const sortedOriginal = [...originalNumbers].sort((a, b) => a - b);
+        return userInput.every((num, index) => num === sortedOriginal[index]);
+    }
+
+    function addInputEventListeners(randomNumbers) {
+        const inputBoxes = document.querySelectorAll('.input-box input');
+        const messageDiv = document.getElementById('message');
+
+        inputBoxes.forEach(input => {
+            input.addEventListener('input', () => {
+                const userInput = Array.from(inputBoxes).map(input => parseInt(input.value));
+                if (userInput.every(num => !isNaN(num)) && checkSortedOrder(userInput, randomNumbers)) {
+                    messageDiv.style.display = 'block';
+                } else {
+                    messageDiv.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const randomNumbers = displayRandomNumbers();
+        addInputEventListeners(randomNumbers);
+    });
+</script>
+
+</body>
+</html>
