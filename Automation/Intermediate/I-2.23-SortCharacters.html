@@ -56,8 +56,8 @@
             border: none;
             font-size: 18px;
             font-weight: bold;
-            background-color: white; /* Changed to white */
-            text-transform: uppercase; /* Force uppercase letters */
+            background-color: white;
+            text-transform: uppercase;
         }
 
         .input-box input:focus {
@@ -169,6 +169,8 @@
                     const userInput = Array.from(inputBoxes).map(input => input.value.toUpperCase());
                     if (userInput.every(letter => letter) && checkAlphabeticalOrder(userInput, randomLetters)) {
                         messageDiv.style.display = 'block';
+                        // Disable all input fields
+                        inputBoxes.forEach(input => input.disabled = true);
                     } else {
                         messageDiv.style.display = 'none';
                     }

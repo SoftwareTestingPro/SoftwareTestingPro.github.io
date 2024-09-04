@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentence Input Validation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .container h2 {
+            margin: 0 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .sentence {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            box-shadow: none; /* Removed shadow */
+        }
+
+        .input-container input:focus {
+            outline: none;
+            border: 2px solid #4CAF50;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .error-message {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Enter the Words in the Same Sequence in below input fields:</h2>
+    <div class="sentence" id="sentence"></div>
+    <div class="input-container" id="inputContainer"></div>
+    <div class="message" id="successMessage">Success! You've entered the correct words.</div>
+    <div class="error-message" id="errorMessage">Failure! The words are not correct.</div>
+</div>
+
+<script>
+    const sentences = [
+        "This is a test sentence",
+        "HTML5 container box example",
+        "Random sentence for validation",
+        "Check your input carefully",
+        "Please enter words correctly",
+		"How is this learning platform",
+		"Give me some feedback",
+		"Are you enjoying this platform"
+    ];
+
+    function getRandomSentence() {
+        return sentences[Math.floor(Math.random() * sentences.length)];
+    }
+
+    function createSentenceWithInputs() {
+        const sentenceElement = document.getElementById('sentence');
+        const inputContainer = document.getElementById('inputContainer');
+        const sentence = getRandomSentence();
+        const words = sentence.split(" ");
+        
+        sentenceElement.textContent = sentence;
+        inputContainer.innerHTML = "";
+
+        words.forEach((word, index) => {
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.maxLength = word.length;
+            inputField.placeholder = `Word ${index + 1}`;
+            inputField.addEventListener('input', () => validateInput(words));
+
+            inputContainer.appendChild(inputField);
+        });
+    }
+
+    function validateInput(correctWords) {
+        const inputs = document.querySelectorAll('.input-container input');
+        let isCorrect = true;
+
+        inputs.forEach((input, index) => {
+            if (input.value.trim() !== correctWords[index]) {
+                isCorrect = false;
+            }
+        });
+
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        if (isCorrect && Array.from(inputs).every(input => input.value.trim() !== "")) {
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        } else if (Array.from(inputs).every(input => input.value.trim() !== "")) {
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'block';
+        } else {
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+        }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', createSentenceWithInputs);
+</script>
+
+</body>
+</html>

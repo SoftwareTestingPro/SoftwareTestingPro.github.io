@@ -56,7 +56,7 @@
             border: none;
             font-size: 18px;
             font-weight: bold;
-            background-color: white; /* Changed to white */
+            background-color: white;
         }
 
         .input-box input:focus {
@@ -130,6 +130,8 @@
                 const userInput = Array.from(inputBoxes).map(input => parseInt(input.value));
                 if (userInput.every(num => !isNaN(num)) && checkSortedOrder(userInput, randomNumbers)) {
                     messageDiv.style.display = 'block';
+                    // Disable all input fields
+                    inputBoxes.forEach(input => input.disabled = true);
                 } else {
                     messageDiv.style.display = 'none';
                 }

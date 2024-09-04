@@ -134,6 +134,8 @@
 
                 if (userInput.every(word => word) && checkAlphabeticalOrder(userInput, originalWords)) {
                     messageDiv.style.display = 'block';
+                    // Disable all input fields
+                    inputBoxes.forEach(input => input.disabled = true);
                 } else {
                     messageDiv.style.display = 'none';
                 }
