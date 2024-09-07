@@ -19,8 +19,8 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 50%; /* Adjusted to 50% of the original size */
-            max-width: 600px; /* Maximum width of the container */
+            width: 90%; /* Adjusted for responsiveness */
+            max-width: 600px;
             position: relative;
         }
         .header {
@@ -30,10 +30,10 @@
             color: #333;
         }
         .terms {
-            max-height: 400px; /* Adjust height as needed */
+            max-height: 400px;
             overflow-y: auto;
             margin-bottom: 20px;
-            border: 1px solid #ccc; /* Border added to the terms container */
+            border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
         }
@@ -41,26 +41,69 @@
             padding: 10px 20px;
             font-size: 1em;
             color: #fff;
-            background-color: #ccc; /* Initial grey color */
+            background-color: #ccc;
             border: none;
             border-radius: 5px;
             cursor: not-allowed;
             transition: background-color 0.3s;
-            display: block; /* Center alignment */
-            margin: 0 auto; /* Center alignment */
+            display: block;
+            margin: 0 auto;
+            width: 100%; /* Ensure the button is responsive */
+            max-width: 300px; /* Limit the button width on large screens */
         }
         button.enabled {
-            background-color: #007bff; /* Blue color when enabled */
+            background-color: #007bff;
             cursor: pointer;
         }
         button.clicked {
-            background-color: #28a745; /* Green color after clicked */
+            background-color: #28a745;
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                width: 90%;
+                max-width: 500px;
+            }
+
+            .header {
+                font-size: 1.3em;
+            }
+
+            .terms {
+                max-height: 300px;
+            }
+
+            button {
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                width: 90%;
+            }
+
+            .header {
+                font-size: 1.2em;
+            }
+
+            .terms {
+                max-height: 250px;
+            }
+
+            button {
+                font-size: 0.8em;
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">Scroll to bottom of page to accept Terms and Conditions</div>
+        <div class="header">Scroll to the bottom of the page to accept the Terms and Conditions</div>
         <div class="terms">
             <h2>1. Introduction</h2>
             <p>Welcome to our Terms and Conditions. Please read them carefully.</p>
