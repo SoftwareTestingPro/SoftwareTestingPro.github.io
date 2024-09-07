@@ -16,29 +16,36 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         .container {
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             padding: 20px;
-            max-width: 400px;
-            width: 90%;
+            max-width: 500px;
+            width: 100%;
             text-align: center;
+            box-sizing: border-box;
         }
+
         .header {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
         }
+
         ul {
             list-style-type: disc;
             text-align: left;
             padding-left: 20px;
             margin-bottom: 20px;
         }
+
         ul li {
             margin-bottom: 10px;
+            font-size: 16px;
         }
+
         .proceed-button {
             display: block;
             margin: 0 auto;
@@ -50,6 +57,47 @@
             font-size: 16px;
             cursor: pointer;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                max-width: 90%;
+            }
+
+            .header {
+                font-size: 22px;
+            }
+
+            ul li {
+                font-size: 14px;
+            }
+
+            .proceed-button {
+                width: 100%;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                max-width: 95%;
+            }
+
+            .header {
+                font-size: 20px;
+            }
+
+            ul li {
+                font-size: 12px;
+            }
+
+            .proceed-button {
+                width: 100%;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -58,20 +106,20 @@
     <div class="header">INSTRUCTIONS</div>
     <ul>
         <li>This platform overcomes the challenges faced by software automation learners where they could not find a practice platform to automate different kinds of scenarios.</li>
-		<li>You can use this platform using any programming language and any software automation tool like Selenium, Cypress, Playwright, Test Complete etc</li>                        
-		<li>Create a new project in your preferred IDE.</li>
-		<li>Add packages for each proficiency level i.e Beginner, Intermediate, Advanced.</li>
-		<li>Maintain each automation test in respective package.</li>
-		<li>Select any task as per your current software automation knowledge and automate it.</li>
-		<li>Most of the tasks display a success message when successfully automated. Assert it.</li>
-		<li>For any challenges faced, search solution over internet.</li>
+        <li>You can use this platform using any programming language and any software automation tool like Selenium, Cypress, Playwright, Test Complete, etc.</li>
+        <li>Create a new project in your preferred IDE.</li>
+        <li>Add packages for each proficiency level, i.e., Beginner, Intermediate, Advanced.</li>
+        <li>Maintain each automation test in its respective package.</li>
+        <li>Select any task as per your current software automation knowledge and automate it.</li>
+        <li>Most of the tasks display a success message when successfully automated. Assert it.</li>
+        <li>For any challenges faced, search for solutions on the internet.</li>
     </ul>
     <button class="proceed-button" onclick="proceed()">Proceed</button>
 </div>
 
 <script>
     function proceed() {
-       window.location.href = "Home.html";
+        window.location.href = "Home.html";
     }
 </script>
 
