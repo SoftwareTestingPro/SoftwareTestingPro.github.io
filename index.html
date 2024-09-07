@@ -12,6 +12,7 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -62,18 +63,39 @@
             border-radius: 5px;
             font-size: 14px;
         }
+        footer {
+            position: absolute;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        footer a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="input-container">
-        <label for="user-input">Select a course to start practice:</label>
+        <label for="user-input">Select course to start practice:</label>
     </div>
     <div class="container">
         <a href="Automation/Instructions.html" class="box" aria-label="Navigate to Automation Home" title="Automation Home">
-            Automation
+            Software Automation
             <span>Learn Automation</span>
         </a>
     </div>
+
+    <footer>
+        <label>Copyright © 2024</label>
+        <a href="Developer.html">About Developer</a>
+        <a href="https://forms.gle/GFYLiy6VJ8b2BEKj6">Contact</a>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
