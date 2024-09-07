@@ -13,6 +13,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
         }
 
         header {
@@ -22,13 +23,20 @@
 
         h1 {
             margin: 0;
+            font-size: 2em;
+        }
+
+        h2 {
+            font-size: 1.2em;
         }
 
         .profile-section {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
             margin-top: 40px;
+            width: 100%;
         }
 
         .profile-image {
@@ -36,25 +44,65 @@
             height: 150px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 40px;
+            margin: 20px;
         }
 
         .about, .details {
-            width: 300px;
+            width: 45%;
+            min-width: 300px;
+            margin: 20px;
         }
 
-        .about p, .details ul {
+        .about p, .details p {
             font-size: 18px;
             line-height: 1.6;
         }
 
-        .details ul {
-            list-style: none;
-            padding: 0;
+        .details h3, .about h3 {
+            margin-bottom: 10px;
         }
 
-        .details li {
-            margin-bottom: 10px;
+        @media (max-width: 768px) {
+            .profile-section {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .about, .details {
+                width: 100%;
+                margin: 0;
+            }
+
+            .profile-image {
+                margin-bottom: 20px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            header h2 {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .about p, .details p {
+                font-size: 16px;
+            }
+
+            .profile-image {
+                width: 120px;
+                height: 120px;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            header h2 {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
