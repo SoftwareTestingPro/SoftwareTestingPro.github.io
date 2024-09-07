@@ -10,10 +10,11 @@
             margin: 0;
             padding: 20px;
             background-color: #f8f9fa;
+            box-sizing: border-box;
         }
         .restaurant-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid layout */
             gap: 20px;
         }
         .restaurant-card {
@@ -25,10 +26,12 @@
         }
         .restaurant-card h3 {
             margin: 10px 0;
+            font-size: 1.2em; /* Responsive font size */
         }
         .restaurant-card p {
             margin: 5px 0;
             color: #555;
+            font-size: 0.9em; /* Responsive font size */
         }
         .loading {
             text-align: center;
@@ -43,16 +46,45 @@
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
-		h2 {
+        h2 {
             text-align: center;
             margin-bottom: 20px;
-            font-size: 20px;
+            font-size: 1.5em; /* Responsive font size */
             color: #333;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .restaurant-card {
+                padding: 15px;
+            }
+            .restaurant-card h3 {
+                font-size: 1.1em; /* Slightly smaller font size for medium screens */
+            }
+            .restaurant-card p {
+                font-size: 0.85em; /* Slightly smaller font size for medium screens */
+            }
+            h2 {
+                font-size: 1.3em; /* Slightly smaller font size for medium screens */
+            }
+        }
+        @media (max-width: 480px) {
+            .restaurant-card {
+                padding: 10px;
+            }
+            .restaurant-card h3 {
+                font-size: 1em; /* Smaller font size for small screens */
+            }
+            .restaurant-card p {
+                font-size: 0.8em; /* Smaller font size for small screens */
+            }
+            h2 {
+                font-size: 1.2em; /* Smaller font size for small screens */
+            }
         }
     </style>
 </head>
 <body>
-	<h2>Please scroll down until all restaurants are displayed. Count them and navigate back once done.</h2>
+    <h2>Please scroll down until all restaurants are displayed. Count them and navigate back once done.</h2>
     <div class="restaurant-grid" id="restaurantGrid">
         <!-- Thumbnails will be generated here -->
     </div>

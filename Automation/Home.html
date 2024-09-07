@@ -20,7 +20,7 @@
             display: flex;
             justify-content: space-around;
             max-width: 1200px;
-            width: 100%;
+            width: 90%;
             padding: 20px;
             flex-wrap: wrap;
         }
@@ -30,7 +30,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            margin: 0 10px;
+            margin: 10px;
             text-align: center;
         }
         .box-header {
@@ -53,17 +53,31 @@
             text-decoration: none;
             color: #333;
             border-radius: 5px;
-            transition: background-color 2s ease; /* Updated transition duration */
-        }
-        .links a.hovered {
-            transition: background-color 2s ease; /* Ensure transition is applied */
+            transition: background-color 2s ease;
         }
 
         /* Mobile Styles */
         @media (max-width: 768px) {
             .box {
-                width: 100%;
+                width: 90%;
                 margin: 10px 0;
+            }
+        }
+        /* Small mobile (landscape and portrait) */
+        @media (max-width: 480px) {
+            .box-header {
+                font-size: 20px;
+            }
+            .links a {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+
+        /* Tablet and larger screens */
+        @media (min-width: 768px) and (max-width: 1200px) {
+            .box {
+                width: 40%;
             }
         }
     </style>
@@ -118,7 +132,7 @@
                 <li><a href="Intermediate/I-2.18-Chart.html">Chart</a></li>
                 <li><a href="Intermediate/I-2.19-FetchDate.html">Fetch Date</a></li>
                 <li><a href="Intermediate/I-2.20-ValueInput.html">Input Value</a></li>
-                <li><a href="Intermediate/I-2.21-ScrollableList.html">Terms and Conditions</a></li>
+                <li><a href="Intermediate/I-2.21-ScrollableList.html"> Terms and Conditions</a></li>
                 <li><a href="Intermediate/I-2.22-SortNumbers.html">Sort Numbers</a></li>
                 <li><a href="Intermediate/I-2.23-SortCharacters.html">Sort Characters</a></li>
                 <li><a href="Intermediate/I-2.24-SortWords.html">Sort Words</a></li>
@@ -173,8 +187,8 @@
             });
 
             link.addEventListener('mouseout', () => {
-                link.style.transition = 'background-color 2s ease'; // Smooth transition
-                link.style.backgroundColor = '#f0f0f0'; // Original color
+                link.style.transition = 'background-color 2s ease';
+                link.style.backgroundColor = '#f0f0f0';
             });
         });
     </script>

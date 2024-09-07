@@ -22,6 +22,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px; /* Default width for larger screens */
         }
 
         a.download-link {
@@ -58,13 +59,53 @@
             width: calc(100% - 22px);
             box-sizing: border-box;
         }
+
+        /* Responsive styles for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+
+            a.download-link {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            .input-container label {
+                font-size: 16px;
+            }
+
+            .input-container input[type="text"] {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%; /* Full width on small mobile screens */
+                padding: 15px;
+            }
+
+            a.download-link {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .input-container label {
+                font-size: 14px;
+            }
+
+            .input-container input[type="text"] {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="https://sample-videos.com/zip/100mb.zip" class="download-link" download>Click here to download a file</a>
         <div class="input-container">
-            <label for="user-input">How long did it took to download file completely:</label>
+            <label for="user-input">How long did it take to download the file completely:</label>
             <input type="text" id="user-input" name="user-input" placeholder="Enter duration in seconds" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
     </div>

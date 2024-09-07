@@ -13,19 +13,23 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            padding: 10px; /* Added padding for better spacing on mobile */
+            box-sizing: border-box;
         }
 
         table {
-            width: 80%;
             border-collapse: collapse;
             background-color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto; /* Center the table */
+            width: auto; /* Fit to content */
         }
 
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            word-wrap: break-word; /* Handle long text */
         }
 
         th {
@@ -54,52 +58,58 @@
         input:focus {
             outline: 2px solid #4CAF50;
         }
+
+        /* Media query for smaller screens */
+        @media (max-width: 600px) {
+            table {
+                width: 100%; /* Full width for small screens */
+                display: block; /* Make table scrollable horizontally */
+                overflow-x: auto;
+            }
+
+            th, td {
+                padding: 8px; /* Reduced padding for better fit */
+                font-size: 14px; /* Smaller text for mobile */
+            }
+
+            caption {
+                font-size: 18px; /* Adjusted caption size */
+            }
+        }
     </style>
 </head>
 <body>
     <table>
-        <caption>Read data from excel file written in previous example and enter values below</caption>
+        <caption>Read data from the Excel file written in the previous example and enter values below</caption>
         <tr>
-            <th>Employee ID</th>
             <th>Name</th>
             <th>Department</th>
             <th>Position</th>
-            <th>Email</th>
         </tr>
         <tr>
-            <td><input type="text" placeholder="Enter Employee ID"></td>
             <td><input type="text" placeholder="Enter Name"></td>
             <td><input type="text" placeholder="Enter Department"></td>
             <td><input type="text" placeholder="Enter Position"></td>
-            <td><input type="text" placeholder="Enter Email"></td>
         </tr>
         <tr>
-            <td><input type="text" placeholder="Enter Employee ID"></td>
             <td><input type="text" placeholder="Enter Name"></td>
             <td><input type="text" placeholder="Enter Department"></td>
             <td><input type="text" placeholder="Enter Position"></td>
-            <td><input type="text" placeholder="Enter Email"></td>
         </tr>
         <tr>
-            <td><input type="text" placeholder="Enter Employee ID"></td>
             <td><input type="text" placeholder="Enter Name"></td>
             <td><input type="text" placeholder="Enter Department"></td>
             <td><input type="text" placeholder="Enter Position"></td>
-            <td><input type="text" placeholder="Enter Email"></td>
         </tr>
         <tr>
-            <td><input type="text" placeholder="Enter Employee ID"></td>
             <td><input type="text" placeholder="Enter Name"></td>
             <td><input type="text" placeholder="Enter Department"></td>
             <td><input type="text" placeholder="Enter Position"></td>
-            <td><input type="text" placeholder="Enter Email"></td>
         </tr>
         <tr>
-            <td><input type="text" placeholder="Enter Employee ID"></td>
             <td><input type="text" placeholder="Enter Name"></td>
             <td><input type="text" placeholder="Enter Department"></td>
             <td><input type="text" placeholder="Enter Position"></td>
-            <td><input type="text" placeholder="Enter Email"></td>
         </tr>
     </table>
 </body>

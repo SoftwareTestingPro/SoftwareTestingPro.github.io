@@ -13,19 +13,24 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            padding: 10px; /* Added padding for mobile view */
+            box-sizing: border-box;
         }
 
         table {
-            width: 80%;
+            width: auto; /* Set to auto to fit content */
             border-collapse: collapse;
             background-color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            margin: 0 auto; /* Center the table */
         }
 
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            word-wrap: break-word; /* Handle long text */
         }
 
         th {
@@ -42,52 +47,56 @@
             font-size: 24px;
             font-weight: bold;
         }
+
+        /* Media query for smaller screens */
+        @media (max-width: 600px) {
+            table {
+                width: 100%; /* Full width for small screens */
+            }
+
+            th, td {
+                padding: 8px; /* Reduced padding for better fit */
+                font-size: 14px; /* Smaller text for mobile */
+            }
+
+            caption {
+                font-size: 18px; /* Adjusted caption size */
+            }
+        }
     </style>
 </head>
 <body>
     <table>
-        <caption>Write Below Employee Data In a Excel File</caption>
+        <caption>Write Below Employee Data In an Excel File</caption>
         <tr>
-            <th>Employee ID</th>
             <th>Name</th>
             <th>Department</th>
             <th>Position</th>
-            <th>Email</th>
         </tr>
         <tr>
-            <td>001</td>
             <td>John Doe</td>
             <td>Engineering</td>
             <td>Software Engineer</td>
-            <td>john.doe@example.com</td>
         </tr>
         <tr>
-            <td>002</td>
             <td>Jane Smith</td>
             <td>Marketing</td>
             <td>Marketing Manager</td>
-            <td>jane.smith@example.com</td>
         </tr>
         <tr>
-            <td>003</td>
             <td>Emily Johnson</td>
             <td>Human Resources</td>
             <td>HR Specialist</td>
-            <td>emily.johnson@example.com</td>
         </tr>
         <tr>
-            <td>004</td>
             <td>Michael Brown</td>
             <td>Sales</td>
             <td>Sales Representative</td>
-            <td>michael.brown@example.com</td>
         </tr>
         <tr>
-            <td>005</td>
             <td>Linda Wilson</td>
             <td>Finance</td>
             <td>Financial Analyst</td>
-            <td>linda.wilson@example.com</td>
         </tr>
     </table>
 </body>

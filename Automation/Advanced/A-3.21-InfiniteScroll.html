@@ -14,6 +14,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            box-sizing: border-box;
         }
         .container {
             padding: 20px;
@@ -21,33 +22,37 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-            display: inline-block; /* Make container width equal to content */
+            max-width: 90%; /* Limit container width to 90% of viewport */
+            width: fit-content; /* Make container width equal to content */
         }
         h1 {
             margin-bottom: 20px;
-            font-size: 24px;
+            font-size: 1.5em; /* Responsive font size */
             color: #333;
         }
         .spaced-button {
             margin-bottom: 20px; /* Add space below the first button */
+            display: block;
+            width: 100%; /* Full width on small screens */
         }
         .input-group {
             display: flex;
+            flex-direction: column; /* Stack label and input vertically */
             align-items: center;
-            justify-content: center; /* Center align the input and label */
             margin-bottom: 20px;
         }
         label {
-            font-size: 16px;
+            font-size: 1em; /* Responsive font size */
             color: #555;
-            margin-right: 10px;
+            margin-bottom: 10px; /* Space between label and input */
         }
         input[type="text"] {
-            width: 100px; /* Set the width of the input field */
+            width: 80%; /* Responsive width */
+            max-width: 150px; /* Maximum width for larger screens */
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 1em; /* Responsive font size */
             text-align: center; /* Center the text inside the input */
         }
         button {
@@ -56,21 +61,43 @@
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 1em; /* Responsive font size */
             cursor: pointer;
+            width: 100%; /* Full width on small screens */
         }
         button:hover {
             background-color: #0056b3;
         }
         .message {
             margin-top: 20px;
-            font-size: 16px;
+            font-size: 1em; /* Responsive font size */
         }
         .success {
             color: green;
         }
         .failure {
             color: red;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.2em; /* Smaller font size for mobile */
+            }
+            .input-group {
+                flex-direction: column; /* Stack vertically on small screens */
+                align-items: center;
+            }
+            input[type="text"] {
+                width: 100%; /* Full width input on small screens */
+            }
+            button {
+                padding: 12px 0;
+                font-size: 1em;
+            }
         }
     </style>
 </head>
