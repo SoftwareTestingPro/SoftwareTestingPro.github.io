@@ -23,7 +23,8 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 400px;
-            width: 100%;
+            width: 90%; /* Adjusted for mobile responsiveness */
+            margin: 0 auto; /* Center the box on mobile */
         }
 
         .banner {
@@ -65,6 +66,22 @@
 
         .box button:hover {
             background-color: #0056b3;
+        }
+
+        /* Responsive styling for small devices */
+        @media (max-width: 600px) {
+            .box {
+                width: 81%; /* 90% width for smaller mobile screens */
+            }
+
+            .banner h1 {
+                font-size: 20px; /* Reduce font size for smaller screens */
+            }
+
+            .box button {
+                font-size: 14px; /* Adjust button font size */
+                padding: 10px 15px;
+            }
         }
     </style>
 </head>
