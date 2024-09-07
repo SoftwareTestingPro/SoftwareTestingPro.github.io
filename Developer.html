@@ -13,7 +13,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
         }
 
         header {
@@ -33,10 +32,8 @@
         .profile-section {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            justify-content: center;
             margin-top: 40px;
-            width: 100%;
         }
 
         .profile-image {
@@ -44,13 +41,11 @@
             height: 150px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 20px;
+            margin: 0 40px;
         }
 
         .about, .details {
-            width: 45%;
-            min-width: 300px;
-            margin: 20px;
+            width: 300px;
         }
 
         .about p, .details p {
@@ -58,23 +53,32 @@
             line-height: 1.6;
         }
 
-        .details h3, .about h3 {
+        .details ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .details li {
             margin-bottom: 10px;
         }
 
+        /* Responsive adjustments for mobile devices */
         @media (max-width: 768px) {
             .profile-section {
                 flex-direction: column;
                 align-items: center;
+                margin-top: 20px;
             }
 
             .about, .details {
-                width: 100%;
-                margin: 0;
+                width: 90%; /* Full width for mobile */
+                text-align: center;
             }
 
             .profile-image {
-                margin-bottom: 20px;
+                margin: 20px 0; /* Center image with spacing */
+                width: 120px;
+                height: 120px;
             }
 
             header h1 {
@@ -87,17 +91,17 @@
         }
 
         @media (max-width: 480px) {
+            .profile-image {
+                width: 100px;
+                height: 100px;
+            }
+
             .about p, .details p {
                 font-size: 16px;
             }
 
-            .profile-image {
-                width: 120px;
-                height: 120px;
-            }
-
             header h1 {
-                font-size: 1.5em;
+                font-size: 1.6em;
             }
 
             header h2 {
