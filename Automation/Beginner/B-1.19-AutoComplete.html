@@ -20,7 +20,7 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             padding: 20px;
             max-width: 400px;
-            width: 90%;
+            width: 85%;
             position: relative; /* Ensure dropdown is positioned relative to the container */
             text-align: center; /* Center align the text */
         }
@@ -38,6 +38,7 @@
             border: 1px solid #ccc;
             font-size: 16px;
             margin-bottom: 10px;
+            box-sizing: border-box; /* Ensure padding and border are included in width */
         }
         .dropdown {
             position: absolute;
@@ -70,6 +71,32 @@
         }
         .failure {
             color: red;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                max-width: 100%; /* Adjust to fit small screens */
+            }
+
+            .label {
+                font-size: 14px; /* Smaller font size */
+            }
+
+            .input-field {
+                font-size: 14px; /* Adjust font size for inputs */
+                padding: 8px; /* Reduce padding */
+                margin-bottom: 8px; /* Adjust spacing */
+            }
+
+            .dropdown {
+                max-height: 150px; /* Reduce dropdown height */
+            }
+
+            .message {
+                font-size: 14px; /* Smaller font size for messages */
+            }
         }
     </style>
 </head>

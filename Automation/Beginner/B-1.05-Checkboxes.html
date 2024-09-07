@@ -13,6 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden; /* Prevent horizontal scroll on mobile */
         }
         .container {
             background-color: #fff;
@@ -20,7 +21,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: auto;
-            max-width: 600px;
+            max-width: 600px; /* Max width for larger screens */
             text-align: center;
         }
         h1 {
@@ -58,6 +59,31 @@
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%; /* Adjust container width for smaller screens */
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.2em;
+            }
+            .checkbox-group label {
+                font-size: 0.9em;
+            }
+            .success-message, .error-message {
+                font-size: 0.9em;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .checkbox-group {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>

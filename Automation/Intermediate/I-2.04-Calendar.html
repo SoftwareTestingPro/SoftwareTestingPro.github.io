@@ -20,12 +20,14 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 60%;
-            max-width: 600px;
+            width: 90%; /* Adjust width to be responsive */
+            max-width: 90%; /* Set a maximum width for smaller screens */
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
             text-align: center;
+			font-size: 1.2em;
         }
         .calendar-header {
-            font-size: 1.5em;
+            font-size: 2em;
             margin-bottom: 20px;
         }
         .calendar-table {
@@ -36,6 +38,7 @@
             text-align: center;
             padding: 10px;
             border: 1px solid #ddd;
+            box-sizing: border-box; /* Ensure padding is included in the width */
         }
         .calendar-table th {
             background-color: #f8f9fa;
@@ -53,11 +56,37 @@
         }
         .info-message {
             margin-top: 20px;
-            font-size: 1em;
+            font-size: 1.5em;
         }
         .tick-cross {
             font-size: 1.5em;
             margin-left: 10px;
+        }
+        
+        /* Media queries for larger screens */
+        @media (min-width: 768px) {
+            .calendar-container {
+                max-width: 600px; /* Larger width for medium to large screens */
+				width: 80%;
+            }
+            .calendar-header {
+                font-size: 1.8em; /* Larger font size for medium screens */
+            }
+            .calendar-table th, .calendar-table td {
+                font-size: 1.1em; /* Larger font size for table cells */
+            }
+        }
+        @media (min-width: 992px) {
+            .calendar-container {
+                max-width: 800px; /* Larger width for desktop screens */
+				width: 80%;
+            }
+            .calendar-header {
+                font-size: 2em; /* Larger font size for desktop screens */
+            }
+            .calendar-table th, .calendar-table td {
+                font-size: 1.2em; /* Larger font size for table cells */
+            }
         }
     </style>
 </head>
@@ -65,7 +94,7 @@
     <div class="calendar-container">
         <div id="calendar"></div>
         <div class="info-message">
-            <span id="message1">Click the date on the first Wednesday <span id="result1" class="tick-cross"
+            <span id="message1">Click the date on the first Wednesday <span id="result1" class="tick-cross"></span></span>
         </div>
     </div>
 
@@ -94,7 +123,6 @@
             var numRows = Math.ceil((daysInMonth + startIndex - 1) / 7);
             var day = 1;
             var firstWednesdayDate = null;
-            var day15 = 15;
 
             for (var i = 0; i < numRows; i++) {
                 calendar += '<tr>';

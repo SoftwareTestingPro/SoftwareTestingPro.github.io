@@ -20,11 +20,19 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 60%;
+            width: 85%; /* Make the container responsive */
+            max-width: 600px; /* Limit the maximum width */
             text-align: center;
         }
-        h2 {
+        h3 {
+            margin-bottom: 10px;
+        }
+        h5 {
             margin-bottom: 20px;
+            font-size: 16px; /* Adjust font size for better readability */
+        }
+        .table-responsive {
+            overflow-x: auto; /* Enable horizontal scrolling */
         }
         table {
             width: 100%;
@@ -47,57 +55,89 @@
         }
         caption {
             margin-bottom: 10px;
-            font-size: 24px;
+            font-size: 20px; /* Slightly smaller font size */
             font-weight: bold;
         }
         .alert {
             display: none;
             margin-top: 20px;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h5 {
+                font-size: 14px; /* Smaller font size on medium screens */
+            }
+            th, td {
+                font-size: 14px; /* Smaller font size for table cells */
+            }
+        }
+
+        @media (max-width: 576px) {
+            h3 {
+                font-size: 18px; /* Adjust font size for headers */
+            }
+            h5 {
+                font-size: 12px; /* Even smaller font size for small screens */
+            }
+            th, td {
+                font-size: 12px; /* Smaller font size for table cells */
+                padding: 6px; /* Reduced padding */
+            }
+            table {
+                font-size: 12px; /* Adjust table font size */
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container-box">
         <h3>Railway Reservation Seat Availability</h3>
-		<h5>Select the train with most number of available seats for reservation</h5>
-        <table>
-            <tr>
-                <th>Select</th>
-                <th>Train Number</th>
-                <th>Train Name</th>
-                <th>Seat Availability</th>
-            </tr>
-            <tr>
-                <td class="radio-cell"><input type="radio" name="train" value="1" onclick="updateMessage()"></td>
-                <td>12345</td>
-                <td>Express A</td>
-                <td id="seat1"></td>
-            </tr>
-            <tr>
-                <td class="radio-cell"><input type="radio" name="train" value="2" onclick="updateMessage()"></td>
-                <td>12346</td>
-                <td>Express B</td>
-                <td id="seat2"></td>
-            </tr>
-            <tr>
-                <td class="radio-cell"><input type="radio" name="train" value="3" onclick="updateMessage()"></td>
-                <td>12347</td>
-                <td>Express C</td>
-                <td id="seat3"></td>
-            </tr>
-            <tr>
-                <td class="radio-cell"><input type="radio" name="train" value="4" onclick="updateMessage()"></td>
-                <td>12348</td>
-                <td>Express D</td>
-                <td id="seat4"></td>
-            </tr>
-            <tr>
-                <td class="radio-cell"><input type="radio" name="train" value="5" onclick="updateMessage()"></td>
-                <td>12349</td>
-                <td>Express E</td>
-                <td id="seat5"></td>
-            </tr>
-        </table>
+        <h5>Select the train with the most number of available seats for reservation</h5>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Train Number</th>
+                        <th>Train Name</th>
+                        <th>Seat Availability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="radio-cell"><input type="radio" name="train" value="1" onclick="updateMessage()"></td>
+                        <td>12345</td>
+                        <td>Express A</td>
+                        <td id="seat1"></td>
+                    </tr>
+                    <tr>
+                        <td class="radio-cell"><input type="radio" name="train" value="2" onclick="updateMessage()"></td>
+                        <td>12346</td>
+                        <td>Express B</td>
+                        <td id="seat2"></td>
+                    </tr>
+                    <tr>
+                        <td class="radio-cell"><input type="radio" name="train" value="3" onclick="updateMessage()"></td>
+                        <td>12347</td>
+                        <td>Express C</td>
+                        <td id="seat3"></td>
+                    </tr>
+                    <tr>
+                        <td class="radio-cell"><input type="radio" name="train" value="4" onclick="updateMessage()"></td>
+                        <td>12348</td>
+                        <td>Express D</td>
+                        <td id="seat4"></td>
+                    </tr>
+                    <tr>
+                        <td class="radio-cell"><input type="radio" name="train" value="5" onclick="updateMessage()"></td>
+                        <td>12349</td>
+                        <td>Express E</td>
+                        <td id="seat5"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="alert alert-success" id="successMessage"></div>
         <div class="alert alert-danger" id="failureMessage"></div>
     </div>

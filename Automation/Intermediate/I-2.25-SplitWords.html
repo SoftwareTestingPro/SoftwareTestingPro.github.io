@@ -21,8 +21,9 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: 600px;
+            max-width: 600px; /* Set max-width for desktop */
             width: 100%;
+            box-sizing: border-box; /* Ensure padding and border are included in the width */
         }
 
         .container h2 {
@@ -39,13 +40,14 @@
 
         .input-container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
         }
 
         .input-container input {
-            width: 100%;
+            width: calc(100% / 5 - 10px); /* Adjust input width to fit 5 inputs in a row */
             padding: 8px;
             font-size: 16px;
             text-align: center;
@@ -83,12 +85,18 @@
             border-radius: 5px;
             display: none;
         }
+
+        @media (max-width: 600px) {
+            .container {
+                max-width: 90%; /* Adjust max-width for mobile devices */
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Enter the Words in the Same Sequence in below input fields:</h2>
+    <h2>Enter the Words in the Same Sequence in the Input Fields Below:</h2>
     <div class="sentence" id="sentence"></div>
     <div class="input-container" id="inputContainer"></div>
     <div class="message" id="successMessage">Success! You've entered the correct words.</div>
@@ -102,9 +110,9 @@
         "Random sentence for validation",
         "Check your input carefully",
         "Please enter words correctly",
-		"How is this learning platform",
-		"Give me some feedback",
-		"Are you enjoying this platform"
+        "How is this learning platform",
+        "Give me some feedback",
+        "Are you enjoying this platform"
     ];
 
     function getRandomSentence() {

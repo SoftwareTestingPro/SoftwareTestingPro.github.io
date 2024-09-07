@@ -21,6 +21,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            width: 80%; /* Adjust container width for responsiveness */
+            max-width: 600px; /* Max width for larger screens */
         }
 
         .container h2 {
@@ -29,20 +31,20 @@
             font-weight: bold;
         }
 
-        .number-boxes {
+        .number-boxes, .input-boxes {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
         }
 
         .number-box, .input-box {
-            width: 50px;
-            height: 50px;
+            width: 40px; /* Default width for smaller screens */
+            height: 40px; /* Default height for smaller screens */
             margin: 0 5px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 14px; /* Default font size for smaller screens */
             font-weight: bold;
             border: 2px solid #ddd;
             border-radius: 4px;
@@ -54,7 +56,7 @@
             height: 100%;
             text-align: center;
             border: none;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             background-color: white;
         }
@@ -75,6 +77,22 @@
             border-radius: 5px;
             display: none;
         }
+
+        @media (min-width: 768px) {
+            .number-box, .input-box {
+                width: 50px; /* Larger width for desktop screens */
+                height: 50px; /* Larger height for desktop screens */
+                font-size: 18px; /* Larger font size for desktop screens */
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .number-box, .input-box {
+                width: 60px; /* Larger width for larger screens */
+                height: 60px; /* Larger height for larger screens */
+                font-size: 20px; /* Larger font size for larger screens */
+            }
+        }
     </style>
 </head>
 <body>
@@ -82,7 +100,7 @@
 <div class="container">
     <h2>Arrange the Numbers in Ascending Order and Input in below fields</h2>
     <div class="number-boxes" id="numberBoxes"></div>
-    <div class="number-boxes">
+    <div class="input-boxes">
         <div class="input-box"><input type="text" maxlength="2" /></div>
         <div class="input-box"><input type="text" maxlength="2" /></div>
         <div class="input-box"><input type="text" maxlength="2" /></div>

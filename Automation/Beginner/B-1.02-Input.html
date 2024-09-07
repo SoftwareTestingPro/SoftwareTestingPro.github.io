@@ -13,7 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            background-color: #f0f0f0; /* Changed background color */
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             flex-direction: column;
         }
@@ -77,6 +77,30 @@
             color: #dc3545;
             display: inline-block; /* Show cross icon on invalid input */
         }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
     </style>
 </head>
 <body>
@@ -91,7 +115,7 @@
         
         <label for="user-input-age">Enter your age:</label>
         <div class="input-container">
-            <input type="text" id="user-input-age" name="user-input-age" maxlength="2" value="Enter Your Age">
+            <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age">
             <span class="material-icons valid-icon">check_circle</span>
             <span class="material-icons invalid-icon">cancel</span>
         </div>
