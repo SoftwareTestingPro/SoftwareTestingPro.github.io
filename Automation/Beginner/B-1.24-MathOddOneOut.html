@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Odd One Out Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      width: 90%;
+      max-width: 500px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px; /* Distance between buttons */
+      justify-content: center;
+    }
+    .math-button {
+      width: 120px;
+      height: 60px;
+      border: none;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .container {
+        width: 85%;
+      }
+      .buttons {
+        gap: 20px;
+      }
+      .math-button {
+        width: 100px;
+        height: 50px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Math Odd One Out Game</h2>
+  <div class="buttons" id="buttonContainer"></div>
+  <div id="message"></div>
+</div>
+
+<script>
+  // Function to generate a correct equation
+  function generateCorrectEquation() {
+    const a = Math.floor(Math.random() * 10) + 1;
+    const b = Math.floor(Math.random() * 10) + 1;
+    return `${a} + ${b} = ${a + b}`;
+  }
+
+  // Function to generate an incorrect equation
+  function generateIncorrectEquation() {
+    const a = Math.floor(Math.random() * 10) + 1;
+    const b = Math.floor(Math.random() * 10) + 1;
+    const incorrectSum = (a + b) + Math.floor(Math.random() * 10) + 1; // Ensures incorrect result
+    return `${a} + ${b} = ${incorrectSum}`;
+  }
+
+  // Generate 3 correct equations and 1 incorrect equation
+  const correctEquations = [generateCorrectEquation(), generateCorrectEquation(), generateCorrectEquation()];
+  const incorrectEquation = generateIncorrectEquation();
+
+  // Combine and shuffle equations
+  const equations = [...correctEquations, incorrectEquation];
+  function shuffleArray(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+  const shuffledEquations = shuffleArray(equations);
+
+  // Add buttons to the DOM
+  const buttonContainer = document.getElementById('buttonContainer');
+  shuffledEquations.forEach(equation => {
+    const button = document.createElement('button');
+    button.classList.add('math-button');
+    button.textContent = equation;
+
+    // Check if this is the incorrect equation
+    button.onclick = () => {
+      if (equation === incorrectEquation) {
+        document.getElementById('message').innerHTML = '<span style="color: green;">Success! You found the odd one out!</span>';
+      } else {
+        document.getElementById('message').innerHTML = '<span style="color: red;">Failure! Try again.</span>';
+      }
+    };
+
+    buttonContainer.appendChild(button);
+  });
+</script>
+
+</body>
+</html>

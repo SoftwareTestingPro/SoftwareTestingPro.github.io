@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound Odd One Out Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px; /* Distance between buttons */
+      justify-content: center;
+    }
+    .sound-button {
+      width: 110px;
+      height: 110px;
+      border: none;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+    }
+    .play-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .container {
+        width: 85%;
+      }
+      .buttons {
+        gap: 20px;
+      }
+      .sound-button {
+        width: 90px;
+        height: 90px;
+        font-size: 16px;
+      }
+      .play-icon {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Sound Odd One Out Game</h2>
+  <div class="buttons" id="buttonContainer"></div>
+  <div id="message"></div>
+</div>
+
+<script>
+  // Local sound files
+  const sounds = [
+    { name: 'Sound 1', file: '../../sounds/crow-call.mp3' },
+    { name: 'Sound 2', file: '../../sounds/crow-call.mp3' },
+    { name: 'Sound 3', file: '../../sounds/crow-call.mp3' },
+    { name: 'Sound 4', file: '../../sounds/bird-chirping.mp3' }
+  ];
+
+  // Function to shuffle an array
+  function shuffleArray(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  // Prepare sound buttons array (3 normal, 1 odd)
+  const normalSounds = sounds.slice(0, 3);
+  const oddSound = sounds[3];
+  const soundButtons = [...normalSounds, oddSound];
+  shuffleArray(soundButtons); // Shuffle the buttons for randomness
+
+  // Add buttons to the DOM
+  const buttonContainer = document.getElementById('buttonContainer');
+  soundButtons.forEach(sound => {
+    const button = document.createElement('button');
+    button.classList.add('sound-button');
+
+    const playIcon = document.createElement('div');
+    playIcon.classList.add('play-icon');
+    playIcon.innerHTML = '▶️'; // Play icon for the button
+
+    button.appendChild(playIcon);
+
+    // Add click event listener to play sound when icon is clicked
+    playIcon.onclick = (event) => {
+      event.stopPropagation(); // Prevent the button click event from firing
+      playSound(sound);
+    };
+
+    // Add click event listener to button to determine if it is the odd sound
+    button.onclick = () => {
+      if (sound === oddSound) {
+        document.getElementById('message').innerHTML = '<span style="color: green;">Success! You found the odd sound out!</span>';
+      } else {
+        document.getElementById('message').innerHTML = '<span style="color: red;">Failure! Try again.</span>';
+      }
+    };
+
+    buttonContainer.appendChild(button);
+  });
+
+  function playSound(sound) {
+    const audio = new Audio(sound.file);
+    audio.play();
+  }
+</script>
+
+</body>
+</html>

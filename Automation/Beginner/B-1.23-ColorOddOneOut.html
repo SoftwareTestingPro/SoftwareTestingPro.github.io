@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Odd One Out Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    button {
+      padding: 40px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .container {
+        width: 85%;
+      }
+      button {
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Color Odd One Out Game</h2>
+  <div class="buttons" id="buttonContainer"></div>
+  <div id="message"></div>
+</div>
+
+<script>
+  // Function to generate a random color in hex format
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  // Create the color options (3 similar and 1 odd)
+  const normalColor = getRandomColor(); // This will be the common color for 3 buttons
+  const oddColor = getRandomColor();    // This will be the odd one out color
+  while (normalColor === oddColor) {    // Ensure the odd color is actually different
+    oddColor = getRandomColor();
+  }
+
+  // Generate 3 normal color buttons
+  const colorButtons = [normalColor, normalColor, normalColor, oddColor];
+  // Shuffle buttons randomly
+  colorButtons.sort(() => Math.random() - 0.5);
+
+  // Add buttons to the DOM
+  const buttonContainer = document.getElementById('buttonContainer');
+  colorButtons.forEach((color, index) => {
+    const button = document.createElement('button');
+    button.style.backgroundColor = color;
+    button.onclick = () => checkOddOneOut(color === oddColor);
+    buttonContainer.appendChild(button);
+  });
+
+  function checkOddOneOut(isOddOneOut) {
+    const messageDiv = document.getElementById('message');
+    if (isOddOneOut) {
+      messageDiv.innerHTML = '<span style="color: green;">Success! You found the odd color out!</span>';
+    } else {
+      messageDiv.innerHTML = '<span style="color: red;">Failure! Try again.</span>';
+    }
+  }
+</script>
+
+</body>
+</html>
