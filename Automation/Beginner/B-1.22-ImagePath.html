@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image URL Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: auto; /* Fit to content */
+            max-width: 90%; /* Adjust max-width for better fit on mobile */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .input-group label {
+            font-size: 16px;
+            color: #555;
+            display: block;
+            margin-bottom: 5px; /* Adjust spacing for better mobile view */
+        }
+        .input-group input {
+            width: calc(100% - 20px); /* Full width minus padding */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .message {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+
+        /* Media Query for larger screens */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 80%; /* Increase container width by 20% on larger screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img id="image" src="" alt="Random Image">
+        <div class="input-group">
+            <label for="imageURL">Enter Image Source URL:</label>
+            <input type="text" id="imageURL" placeholder="">
+        </div>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        const imageElement = document.getElementById('image');
+        const urlInput = document.getElementById('imageURL');
+        const messageElement = document.getElementById('message');
+
+        const imageUrls = [
+            'https://picsum.photos/250/250',
+            'https://picsum.photos/250/251',
+            'https://picsum.photos/250/252',
+            'https://picsum.photos/250/253',
+            'https://picsum.photos/250/254'
+        ];
+
+        function setRandomImage() {
+            const randomIndex = Math.floor(Math.random() * imageUrls.length);
+            const randomImageUrl = imageUrls[randomIndex];
+            imageElement.src = randomImageUrl;
+            imageElement.dataset.src = randomImageUrl;
+        }
+
+        function checkURL() {
+            const inputUrl = urlInput.value.trim();
+            const correctUrl = imageElement.dataset.src;
+
+            if (inputUrl === correctUrl) {
+                messageElement.textContent = 'Success! The URL is correct.';
+                messageElement.className = 'message success';
+            } else if (inputUrl === '') {
+                messageElement.textContent = '';
+            } else {
+                messageElement.textContent = 'Failure! The URL is incorrect.';
+                messageElement.className = 'message failure';
+            }
+        }
+
+        urlInput.addEventListener('input', checkURL);
+        window.addEventListener('load', setRandomImage);
+    </script>
+
+</body>
+</html>
