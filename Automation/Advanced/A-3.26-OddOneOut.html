@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Odd One Out Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    button {
+      padding: 15px;
+      font-size: 18px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .container {
+        width: 85%;
+      }
+      button {
+        font-size: 16px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Odd One Out Game</h2>
+  <div class="buttons" id="buttonContainer"></div>
+  <div id="message"></div>
+</div>
+
+<script>
+  const characters = ['A', 'B', 'C', 'D', 'E', 'F'];  // Example character options
+  const numbers = ['1', '2', '3', '4', '5', '6'];      // Example number options
+  const emojis = ['😊', '😂', '😎', '🤔', '😅'];       // Example emoji options
+  const specialChars = ['!', '@', '#', '$', '%', '^']; // Example special characters
+
+  // Randomly select a category for normal options
+  const categories = [characters, numbers, emojis, specialChars];
+  const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
+
+  // Pick random 3 items from the selected category
+  let options = [];
+  while (options.length < 3) {
+    const option = selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
+    if (!options.includes(option)) {
+      options.push(option);
+    }
+  }
+
+  // Pick a random odd one out from a different category
+  const oddOneCategory = categories.filter(category => category !== selectedCategory);
+  const oddOneOut = oddOneCategory[Math.floor(Math.random() * oddOneCategory.length)][Math.floor(Math.random() * 5)];
+
+  // Randomly insert the odd one out into the options
+  const oddOneIndex = Math.floor(Math.random() * 4);
+  options.splice(oddOneIndex, 0, oddOneOut);
+
+  // Add buttons to the DOM
+  const buttonContainer = document.getElementById('buttonContainer');
+  options.forEach((option, index) => {
+    const button = document.createElement('button');
+    button.innerText = option;
+    button.onclick = () => checkOddOneOut(index === oddOneIndex);
+    buttonContainer.appendChild(button);
+  });
+
+  function checkOddOneOut(isOddOneOut) {
+    const messageDiv = document.getElementById('message');
+    if (isOddOneOut) {
+      messageDiv.innerHTML = '<span style="color: green;">Success! You found the odd one out!</span>';
+    } else {
+      messageDiv.innerHTML = '<span style="color: red;">Failure! Try again.</span>';
+    }
+  }
+</script>
+
+</body>
+</html>
