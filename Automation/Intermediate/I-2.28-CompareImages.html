@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Match Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .image-box {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .failure {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="image-container">
+            <div id="image1" class="image-box"></div>
+            <div id="image2" class="image-box"></div>
+        </div>
+        <label id="label">Are both images the same?</label>
+        <div class="buttons">
+            <button onclick="checkAnswer(true)">Yes</button>
+            <button onclick="checkAnswer(false)">No</button>
+        </div>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        // Array of image classes (images are added via CSS)
+        const imageClasses = ['image1', 'image2', 'image3', 'image4', 'image5'];
+
+        // Randomly decide if images should be the same or different
+        let isSame = Math.random() < 0.5;
+
+        // Function to randomly set images via CSS classes
+        function setImages() {
+            const img1 = document.getElementById('image1');
+            const img2 = document.getElementById('image2');
+
+            if (isSame) {
+                // Same images
+                const randomClass = imageClasses[Math.floor(Math.random() * imageClasses.length)];
+                img1.classList.add(randomClass);
+                img2.classList.add(randomClass);
+            } else {
+                // Different images
+                const randomClass1 = imageClasses[Math.floor(Math.random() * imageClasses.length)];
+                let randomClass2 = imageClasses[Math.floor(Math.random() * imageClasses.length)];
+                
+                // Ensure images are different
+                while (randomClass1 === randomClass2) {
+                    randomClass2 = imageClasses[Math.floor(Math.random() * imageClasses.length)];
+                }
+
+                img1.classList.add(randomClass1);
+                img2.classList.add(randomClass2);
+            }
+        }
+
+        // Function to check user's answer
+        function checkAnswer(userSaysSame) {
+            const messageElement = document.getElementById('message');
+            if (userSaysSame === isSame) {
+                messageElement.textContent = 'Success! You guessed correctly!';
+                messageElement.className = 'message success';
+            } else {
+                messageElement.textContent = 'Failure! Your guess was wrong.';
+                messageElement.className = 'message failure';
+            }
+        }
+
+        // Initialize images on page load
+        window.onload = setImages;
+    </script>
+
+    <style>
+        /* Add the images using CSS classes */
+        .image1 {
+            background-image: url('https://picsum.photos/seed/pic1/100');
+        }
+
+        .image2 {
+            background-image: url('https://picsum.photos/seed/pic2/100');
+        }
+
+        .image3 {
+            background-image: url('https://picsum.photos/seed/pic3/100');
+        }
+
+        .image4 {
+            background-image: url('https://picsum.photos/seed/pic4/100');
+        }
+
+        .image5 {
+            background-image: url('https://picsum.photos/seed/pic5/100');
+        }
+    </style>
+
+</body>
+</html>
