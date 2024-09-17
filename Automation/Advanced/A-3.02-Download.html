@@ -23,6 +23,7 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 400px; /* Default width for larger screens */
+            position: relative;
         }
 
         a.download-link {
@@ -33,11 +34,32 @@
             color: #fff;
             background-color: #007bff;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: opacity 0.3s;
         }
 
         a.download-link:hover {
             background-color: #0056b3;
+        }
+
+        /* Particle grid */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #007bff;
+            border-radius: 50%;
         }
 
         .input-container {
@@ -103,11 +125,58 @@
 </head>
 <body>
     <div class="container">
-        <a href="https://sample-videos.com/zip/100mb.zip" class="download-link" download>Click here to download a file</a>
+        <a href="https://sample-videos.com/zip/100mb.zip" class="download-link" download onclick="disintegrate(this)">Click here to download a file</a>
         <div class="input-container">
-            <label for="user-input">How long did it take to download the file completely:</label>
+            <label for="user-input">How long did it take to download the file completely in your downloads folder:</label>
             <input type="text" id="user-input" name="user-input" placeholder="Enter duration in seconds" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+
+    <script>
+        function disintegrate(button) {
+            // Create a particle container
+            const particleContainer = document.createElement('div');
+            particleContainer.classList.add('particles');
+            button.appendChild(particleContainer);
+
+            // Create particles
+            const particleCount = 100;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particleContainer.appendChild(particle);
+            }
+
+            // Hide button text
+            button.style.color = 'transparent';
+
+            // Anime.js animation
+            anime({
+                targets: '.particle',
+                translateX: () => anime.random(-200, 200),
+                translateY: () => anime.random(-200, 200),
+                scale: [1, 0],
+                opacity: [1, 0],
+                easing: 'easeOutExpo',
+                duration: 2000
+            });
+
+            // Animate button fading and shrinking
+            anime({
+                targets: button,
+                scale: [1, 0],
+                opacity: [1, 0],
+                easing: 'easeOutExpo',
+                duration: 2000,
+                complete: function() {
+                    button.style.display = 'none'; // Remove the button after animation
+                }
+            });
+        }
+    </script>
 </body>
 </html>
