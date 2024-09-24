@@ -104,6 +104,29 @@
         .champ {
             color: #2ecc71;
         }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
     </style>
 </head>
 <body>
@@ -127,12 +150,13 @@
 <div id="result-container" class="result-container" style="display: none;">
     <p id="result-summary"></p>
     <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
 </div>
 
 <script>
     const questions = [
         {
-            question: "Which of the below language is not supported by seleium?",
+            question: "Which of the below language is not supported by selenium?",
             options: ["Java", "JavaScript", "C#", "ASP.NET"],
             correct: "ASP.NET"
         },
@@ -141,7 +165,7 @@
             options: ["Cucumber", "Cypress", "Puppeteer", "Mocha"],
             correct: "Mocha"
         },
-		{
+        {
             question: "Which type of XPath starts with a double forward slash?",
             options: ["Relative XPath", "Absolute XPath"],
             correct: "Relative XPath"
@@ -257,6 +281,10 @@
 
     function updateScore() {
         document.getElementById('score-display').innerText = `Score: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
     }
 
     function startQuiz() {
