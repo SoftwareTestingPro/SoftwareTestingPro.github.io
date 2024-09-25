@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Drag and Drop Between Frames</title>
+    <style>
+        /* Overall layout styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px; /* Add padding for mobile responsiveness */
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.2rem; /* Reduce the header font size */
+        }
+
+        /* Styling for the iframe containers */
+        .iframe-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px; /* Add some space between the containers */
+            flex-wrap: nowrap; /* Ensure boxes remain side by side */
+        }
+
+        iframe {
+            width: 240px; /* Width for larger screens */
+            height: 180px; /* Height for larger screens */
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .iframe-container {
+                padding: 0 20px; /* Add left and right padding */
+            }
+
+            iframe {
+                width: 180px; /* Reduced width for mobile devices */
+                height: 140px; /* Reduced height for mobile devices */
+            }
+        }
+
+        /* Center alignment */
+        .center {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        #message {
+            margin-top: 20px;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Modern Drag and Drop between Frames</h2>
+
+    <div class="iframe-container">
+        <iframe id="frame1"></iframe>
+        <iframe id="frame2"></iframe>
+    </div>
+
+    <script>
+        // Inject content into iframe 1 (drag source)
+        const frame1Doc = document.getElementById('frame1').contentWindow.document;
+        frame1Doc.open();
+        frame1Doc.write(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <style>
+                    body {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        margin: 0;
+                        background-color: #fff;
+                        font-family: Arial, sans-serif;
+                    }
+
+                    .container {
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    .draggable {
+                        width: 120px; /* Reduced size */
+                        height: 50px; /* Reduced height */
+                        background-color: #4CAF50;
+                        color: white;
+                        text-align: center;
+                        line-height: 50px;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        cursor: grab;
+                        transition: background-color 0.3s ease;
+                    }
+
+                    .draggable:hover {
+                        background-color: #45a049;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">					
+                    <div id="drag1" class="draggable" draggable="true" ondragstart="parent.drag(event)">Drag Me</div>
+                </div>
+            </body>
+            </html>
+        `);
+        frame1Doc.close();
+
+        // Inject content into iframe 2 (drop target)
+        const frame2Doc = document.getElementById('frame2').contentWindow.document;
+        frame2Doc.open();
+        frame2Doc.write(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <style>
+                    body {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        margin: 0;
+                        background-color: #fff;
+                        font-family: Arial, sans-serif;
+                    }
+
+                    .container {
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    #dropContainer {
+                        width: 120px; /* Reduced size */
+                        height: 50px; /* Reduced height */
+                        background-color: #f8f9fa;
+                        border: 2px dashed #ccc;
+                        border-radius: 10px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        color: #aaa;
+                        font-size: 16px;
+                        transition: background-color 0.3s ease;
+                    }
+
+                    #dropContainer:hover {
+                        background-color: #e6e6e6;
+                    }
+
+                    #dropContainer::-webkit-scrollbar {
+                        display: none;
+                    }
+
+                    #message {
+                        position: absolute;
+                        bottom: 20px;
+                        color: #4CAF50;
+                        font-weight: bold;
+                        font-size: 14px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div id="dropContainer" ondrop="parent.drop(event)" ondragover="parent.allowDrop(event)">
+                        Drop Here
+                    </div>
+                </div>
+                <p id="message"></p>
+            </body>
+            </html>
+        `);
+        frame2Doc.close();
+
+        // Drag and drop functionality (in the parent window to work between frames)
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var draggedElement = document.getElementById('frame1').contentWindow.document.getElementById(data);
+            var dropTarget = document.getElementById('frame2').contentWindow.document.getElementById('dropContainer');
+            dropTarget.appendChild(draggedElement);
+
+            // Display success message
+            var message = document.getElementById('frame2').contentWindow.document.getElementById('message');
+            message.innerText = "Element successfully dropped!";
+        }
+    </script>
+
+</body>
+</html>
