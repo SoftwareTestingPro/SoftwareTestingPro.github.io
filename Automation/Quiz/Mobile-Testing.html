@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What is the primary purpose of mobile testing?",
+        "options": ["To ensure compatibility with various devices", "To validate network performance", "To test backend services", "None of the above"],
+        "correct": "To ensure compatibility with various devices"
+    },
+    {
+        "question": "Which of the following is NOT a type of mobile application?",
+        "options": ["Native", "Web", "Hybrid", "Universal"],
+        "correct": "Universal"
+    },
+    {
+        "question": "What does 'Responsive Design' refer to in mobile applications?",
+        "options": ["Applications adjusting to different screen sizes", "Fast loading times", "Backend database optimization", "None of the above"],
+        "correct": "Applications adjusting to different screen sizes"
+    },
+    {
+        "question": "What is 'Emulator' in mobile testing?",
+        "options": ["Software that mimics mobile hardware", "A real mobile device", "A testing framework", "None of the above"],
+        "correct": "Software that mimics mobile hardware"
+    },
+    {
+        "question": "What is the role of 'Appium' in mobile testing?",
+        "options": ["Test automation framework for mobile applications", "Device management tool", "Performance monitoring tool", "None of the above"],
+        "correct": "Test automation framework for mobile applications"
+    },
+    {
+        "question": "Which mobile operating system is open source?",
+        "options": ["iOS", "Android", "Windows Mobile", "Blackberry"],
+        "correct": "Android"
+    },
+    {
+        "question": "What is 'User Experience (UX)' testing in mobile apps?",
+        "options": ["Testing the ease of use and satisfaction of the user", "Performance testing", "Security testing", "None of the above"],
+        "correct": "Testing the ease of use and satisfaction of the user"
+    },
+    {
+        "question": "Which of the following tools is used for mobile performance testing?",
+        "options": ["JMeter", "Selenium", "Postman", "Cucumber"],
+        "correct": "JMeter"
+    },
+    {
+        "question": "What does 'Cross-Platform Testing' involve?",
+        "options": ["Testing apps on multiple operating systems", "Testing web applications", "Performance testing", "None of the above"],
+        "correct": "Testing apps on multiple operating systems"
+    },
+    {
+        "question": "Which of the following is an important aspect of mobile security testing?",
+        "options": ["Data encryption", "User interface design", "Load time", "None of the above"],
+        "correct": "Data encryption"
+    },
+    {
+        "question": "What does 'Mobile Compatibility Testing' ensure?",
+        "options": ["Application works on different devices", "Fast loading times", "User satisfaction", "None of the above"],
+        "correct": "Application works on different devices"
+    },
+    {
+        "question": "What is 'Localization Testing' in mobile applications?",
+        "options": ["Testing the application in different languages and regions", "Performance testing", "Functionality testing", "None of the above"],
+        "correct": "Testing the application in different languages and regions"
+    },
+    {
+        "question": "What does 'Accessibility Testing' evaluate in mobile applications?",
+        "options": ["Usability for people with disabilities", "Performance under load", "Network speed", "None of the above"],
+        "correct": "Usability for people with disabilities"
+    },
+    {
+        "question": "Which tool is commonly used for automated mobile app testing?",
+        "options": ["Selenium", "Appium", "JMeter", "Postman"],
+        "correct": "Appium"
+    },
+    {
+        "question": "What does 'Real Device Testing' involve?",
+        "options": ["Testing on physical devices", "Testing in an emulator", "Testing in a simulator", "None of the above"],
+        "correct": "Testing on physical devices"
+    },
+    {
+        "question": "What is the purpose of 'Performance Testing' for mobile apps?",
+        "options": ["To assess speed, responsiveness, and stability under load", "To test functionalities", "To evaluate user interface", "None of the above"],
+        "correct": "To assess speed, responsiveness, and stability under load"
+    },
+    {
+        "question": "What does 'Installation Testing' check in mobile applications?",
+        "options": ["The process of installing and uninstalling the app", "App performance", "Network connectivity", "None of the above"],
+        "correct": "The process of installing and uninstalling the app"
+    },
+    {
+        "question": "Which testing technique is used to validate the app's UI?",
+        "options": ["Functional Testing", "Performance Testing", "Load Testing", "None of the above"],
+        "correct": "Functional Testing"
+    },
+    {
+        "question": "What is 'API Testing' in the context of mobile applications?",
+        "options": ["Testing the application's interfaces", "Testing the user interface", "Performance testing", "None of the above"],
+        "correct": "Testing the application's interfaces"
+    },
+    {
+        "question": "What is 'Network Testing' for mobile applications?",
+        "options": ["Testing the application under different network conditions", "Testing the UI", "Performance testing", "None of the above"],
+        "correct": "Testing the application under different network conditions"
+    },
+    {
+        "question": "What is the role of 'Simulators' in mobile testing?",
+        "options": ["To simulate the behavior of mobile devices", "To test performance", "To manage app deployments", "None of the above"],
+        "correct": "To simulate the behavior of mobile devices"
+    },
+    {
+        "question": "What does 'Battery Testing' assess in mobile apps?",
+        "options": ["The app's impact on battery consumption", "User experience", "Performance metrics", "None of the above"],
+        "correct": "The app's impact on battery consumption"
+    },
+    {
+        "question": "What is 'Mobile Regression Testing'?",
+        "options": ["Testing existing functionalities after updates", "Performance testing", "Load testing", "None of the above"],
+        "correct": "Testing existing functionalities after updates"
+    },
+    {
+        "question": "Which of the following is NOT a mobile testing tool?",
+        "options": ["Appium", "Selenium", "QTP", "JMeter"],
+        "correct": "QTP"
+    },
+    {
+        "question": "What is 'Cloud-Based Mobile Testing'?",
+        "options": ["Testing applications using cloud services", "Testing in a local environment", "Performance testing", "None of the above"],
+        "correct": "Testing applications using cloud services"
+    },
+    {
+        "question": "Which type of testing focuses on the app's behavior under various network conditions?",
+        "options": ["Network Testing", "Performance Testing", "Load Testing", "None of the above"],
+        "correct": "Network Testing"
+    },
+    {
+        "question": "What does 'Usability Testing' evaluate in mobile apps?",
+        "options": ["User satisfaction and ease of use", "Performance metrics", "Security features", "None of the above"],
+        "correct": "User satisfaction and ease of use"
+    },
+    {
+        "question": "What is the main goal of 'Mobile Application Testing'?",
+        "options": ["To ensure app performance and functionality across devices", "To validate backend services", "To optimize database queries", "None of the above"],
+        "correct": "To ensure app performance and functionality across devices"
+    },
+    {
+        "question": "What is 'Cloud Testing' for mobile applications?",
+        "options": ["Testing applications using cloud infrastructure", "Testing on real devices", "Testing in simulators", "None of the above"],
+        "correct": "Testing applications using cloud infrastructure"
+    },
+    {
+        "question": "What is the significance of 'Device Fragmentation' in mobile testing?",
+        "options": ["Testing the app on multiple device types and OS versions", "Performance testing", "Load testing", "None of the above"],
+        "correct": "Testing the app on multiple device types and OS versions"
+    },
+    {
+        "question": "Which tool is used for mobile UI testing?",
+        "options": ["Appium", "Postman", "Selenium", "JMeter"],
+        "correct": "Appium"
+    },
+    {
+        "question": "What does 'Mobile Test Automation' aim to achieve?",
+        "options": ["Reduce manual testing effort", "Improve test coverage", "Increase testing speed", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does 'Crash Testing' assess in mobile apps?",
+        "options": ["The app's stability under load", "User experience", "Performance metrics", "None of the above"],
+        "correct": "The app's stability under load"
+    },
+    {
+        "question": "What is 'Field Testing' in mobile applications?",
+        "options": ["Testing in real-world conditions", "Testing in a lab environment", "Performance testing", "None of the above"],
+        "correct": "Testing in real-world conditions"
+    },
+    {
+        "question": "What is the purpose of 'Mobile Security Testing'?",
+        "options": ["To identify security vulnerabilities in the app", "To improve UI design", "To enhance performance", "None of the above"],
+        "correct": "To identify security vulnerabilities in the app"
+    },
+    {
+        "question": "What is the focus of 'App Compatibility Testing'?",
+        "options": ["Ensuring the app works across different devices and OS versions", "Testing the UI", "Performance testing", "None of the above"],
+        "correct": "Ensuring the app works across different devices and OS versions"
+    },
+    {
+        "question": "What is 'Mobile Device Management (MDM)'?",
+        "options": ["A solution for managing mobile devices in enterprises", "A type of testing", "A testing framework", "None of the above"],
+        "correct": "A solution for managing mobile devices in enterprises"
+    },
+    {
+        "question": "Which mobile testing type focuses on the app's performance?",
+        "options": ["Performance Testing", "Usability Testing", "Functional Testing", "None of the above"],
+        "correct": "Performance Testing"
+    },
+    {
+        "question": "What is the goal of 'Functional Testing' in mobile applications?",
+        "options": ["To validate that the app performs as expected", "To test performance", "To ensure security", "None of the above"],
+        "correct": "To validate that the app performs as expected"
+    },
+    {
+        "question": "What does 'Visual Testing' assess in mobile applications?",
+        "options": ["The visual appearance of the app", "Performance metrics", "User experience", "None of the above"],
+        "correct": "The visual appearance of the app"
+    },
+    {
+        "question": "What is the primary goal of 'Mobile Test Planning'?",
+        "options": ["To define the strategy for mobile testing", "To automate tests", "To optimize UI design", "None of the above"],
+        "correct": "To define the strategy for mobile testing"
+    },
+    {
+        "question": "What is 'Real-Time Monitoring' in mobile testing?",
+        "options": ["Monitoring app performance while it's in use", "Testing the app", "Performance testing", "None of the above"],
+        "correct": "Monitoring app performance while it's in use"
+    },
+    {
+        "question": "What does 'Load Testing' for mobile applications assess?",
+        "options": ["App performance under heavy loads", "User experience", "Network conditions", "None of the above"],
+        "correct": "App performance under heavy loads"
+    },
+    {
+        "question": "What does 'Exploratory Testing' involve in mobile testing?",
+        "options": ["Testing without a formal test plan", "Load testing", "Automation", "None of the above"],
+        "correct": "Testing without a formal test plan"
+    },
+    {
+        "question": "Which type of testing ensures compliance with regulations in mobile apps?",
+        "options": ["Compliance Testing", "Performance Testing", "Load Testing", "None of the above"],
+        "correct": "Compliance Testing"
+    },
+    {
+        "question": "What is 'Analytics Testing' in mobile applications?",
+        "options": ["Testing the app's data collection and reporting", "Performance testing", "Load testing", "None of the above"],
+        "correct": "Testing the app's data collection and reporting"
+    },
+    {
+        "question": "What does 'In-App Purchase Testing' ensure?",
+        "options": ["The purchasing functionality works as intended", "Performance testing", "User experience", "None of the above"],
+        "correct": "The purchasing functionality works as intended"
+    },
+    {
+        "question": "What is 'Mobile Analytics' used for?",
+        "options": ["To track user behavior and app performance", "To test functionalities", "To enhance security", "None of the above"],
+        "correct": "To track user behavior and app performance"
+    },
+    {
+        "question": "What does 'Crash Reporting' provide?",
+        "options": ["Information about app crashes", "Performance metrics", "User experience data", "None of the above"],
+        "correct": "Information about app crashes"
+    },
+    {
+        "question": "What is 'Mobile App Distribution'?",
+        "options": ["The process of making an app available to users", "Performance testing", "Load testing", "None of the above"],
+        "correct": "The process of making an app available to users"
+    },
+    {
+        "question": "What is the main focus of 'Mobile App Testing Automation'?",
+        "options": ["To automate repetitive testing tasks", "To test performance", "To improve user experience", "None of the above"],
+        "correct": "To automate repetitive testing tasks"
+    },
+    {
+        "question": "Which testing type assesses the app's performance in real-world conditions?",
+        "options": ["Field Testing", "Load Testing", "Performance Testing", "None of the above"],
+        "correct": "Field Testing"
+    },
+    {
+        "question": "What does 'Mobile Test Framework' refer to?",
+        "options": ["A set of tools and practices for mobile testing", "A type of mobile app", "A testing method", "None of the above"],
+        "correct": "A set of tools and practices for mobile testing"
+    },
+    {
+        "question": "What is 'Test Case Management' in mobile testing?",
+        "options": ["The process of managing test cases", "Testing performance", "Evaluating user experience", "None of the above"],
+        "correct": "The process of managing test cases"
+    },
+    {
+        "question": "What does 'Mobile Device Testing' focus on?",
+        "options": ["Testing applications on mobile devices", "Performance testing", "User experience", "None of the above"],
+        "correct": "Testing applications on mobile devices"
+    },
+    {
+        "question": "What is 'User Feedback Testing'?",
+        "options": ["Collecting user opinions on the app", "Performance testing", "Load testing", "None of the above"],
+        "correct": "Collecting user opinions on the app"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

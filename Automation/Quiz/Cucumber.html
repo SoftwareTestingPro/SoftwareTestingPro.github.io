@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [      
+    {
+        "question": "What is Cucumber primarily used for?",
+        "options": ["Unit testing", "Behavior-driven development", "Load testing", "Integration testing"],
+        "correct": "Behavior-driven development"
+    },
+    {
+        "question": "Which language is primarily used to write Cucumber tests?",
+        "options": ["Java", "Ruby", "Python", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What file extension is used for Cucumber feature files?",
+        "options": [".feature", ".cucumber", ".txt", ".test"],
+        "correct": ".feature"
+    },
+    {
+        "question": "What keyword is used to define a feature in Cucumber?",
+        "options": ["Scenario", "Feature", "Test", "Given"],
+        "correct": "Feature"
+    },
+    {
+        "question": "What is the purpose of the 'Given' keyword in Cucumber?",
+        "options": ["To describe the initial context", "To describe the expected outcome", "To define a scenario", "To indicate the end of a scenario"],
+        "correct": "To describe the initial context"
+    },
+    {
+        "question": "Which of the following is NOT a valid Cucumber step definition keyword?",
+        "options": ["Given", "When", "Then", "BeforeAll"],
+        "correct": "BeforeAll"
+    },
+    {
+        "question": "What annotation is used to define a Cucumber step definition in Java?",
+        "options": ["@Cucumber", "@Step", "@Given", "@Test"],
+        "correct": "@Given"
+    },
+    {
+        "question": "Which plugin is used to run Cucumber tests in Maven?",
+        "options": ["cucumber-junit", "cucumber-testng", "cucumber-maven-plugin", "cucumber-junit-plugin"],
+        "correct": "cucumber-maven-plugin"
+    },
+    {
+        "question": "How do you specify the format of the Cucumber report?",
+        "options": ["@reportFormat", "cucumber.options", "cucumber.report.format", "format()"],
+        "correct": "cucumber.options"
+    },
+    {
+        "question": "What is the purpose of the 'Scenario Outline' in Cucumber?",
+        "options": ["To define multiple scenarios", "To run the same scenario with different data", "To create reusable steps", "To group related scenarios"],
+        "correct": "To run the same scenario with different data"
+    },
+    {
+        "question": "Which keyword is used to define an example table in a Scenario Outline?",
+        "options": ["Examples", "Data", "Scenarios", "Inputs"],
+        "correct": "Examples"
+    },
+    {
+        "question": "What is the role of the 'Hooks' in Cucumber?",
+        "options": ["To manage test data", "To define reusable steps", "To run code before or after scenarios", "To validate scenarios"],
+        "correct": "To run code before or after scenarios"
+    },
+    {
+        "question": "Which annotation is used to indicate a hook that runs before each scenario?",
+        "options": ["@Before", "@BeforeEach", "@BeforeScenario", "@Setup"],
+        "correct": "@Before"
+    },
+    {
+        "question": "What is the default step definition language for Cucumber?",
+        "options": ["Java", "Ruby", "JavaScript", "Python"],
+        "correct": "Java"
+    },
+    {
+        "question": "What does the 'And' keyword do in Cucumber?",
+        "options": ["It combines two actions", "It specifies an alternative condition", "It adds an additional step", "It indicates the end of a scenario"],
+        "correct": "It adds an additional step"
+    },
+    {
+        "question": "How can you parameterize steps in Cucumber?",
+        "options": ["Using variables", "Using tables", "Using placeholders", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which file is typically used to configure Cucumber in a Maven project?",
+        "options": ["pom.xml", "cucumber.xml", "testng.xml", "cucumber.json"],
+        "correct": "pom.xml"
+    },
+    {
+        "question": "What command is used to run Cucumber tests from the command line?",
+        "options": ["cucumber run", "mvn test", "cucumber", "mvn cucumber:run"],
+        "correct": "mvn test"
+    },
+    {
+        "question": "What is the function of the 'Tags' feature in Cucumber?",
+        "options": ["To group scenarios for execution", "To categorize test cases", "To filter scenarios based on conditions", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which file is generated by Cucumber after running tests?",
+        "options": ["cucumber.json", "cucumber.report", "test-results.xml", "output.txt"],
+        "correct": "cucumber.json"
+    },
+    {
+        "question": "What does the '@cucumber.api.junit.Cucumber' annotation do?",
+        "options": ["It initializes the Cucumber runner", "It defines a test suite", "It configures step definitions", "It sets up test data"],
+        "correct": "It initializes the Cucumber runner"
+    },
+    {
+        "question": "Which of the following best describes Cucumber's behavior-driven development?",
+        "options": ["Testing code quality", "Specifying behavior in natural language", "Automating UI tests", "Managing project documentation"],
+        "correct": "Specifying behavior in natural language"
+    },
+    {
+        "question": "Which tool can be integrated with Cucumber for reporting?",
+        "options": ["ExtentReports", "TestNG", "JUnit", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which of the following is a valid scenario outline?",
+        "options": ["Scenario Outline: Login", "Scenario Outline: Login with Examples", "Scenario Outline: Login with Examples: ", "Scenario Outline: Login Example"],
+        "correct": "Scenario Outline: Login with Examples"
+    },
+    {
+        "question": "What does 'Gherkin' refer to in Cucumber?",
+        "options": ["A testing framework", "A programming language", "A plain-text language for defining features", "A report format"],
+        "correct": "A plain-text language for defining features"
+    },
+    {
+        "question": "What is the significance of the 'Background' keyword in Cucumber?",
+        "options": ["To define global setup steps", "To define reusable steps", "To manage scenario data", "To separate scenarios"],
+        "correct": "To define global setup steps"
+    },
+    {
+        "question": "Which of the following is NOT a valid Gherkin keyword?",
+        "options": ["Given", "When", "Then", "Ensure"],
+        "correct": "Ensure"
+    },
+    {
+        "question": "What is the purpose of the 'Then' keyword in a scenario?",
+        "options": ["To describe the action to be taken", "To specify the expected outcome", "To define the context", "To group steps"],
+        "correct": "To specify the expected outcome"
+    },
+    {
+        "question": "How do you define a step with a regular expression in Cucumber?",
+        "options": ["Using @Given", "Using regex syntax in the step definition", "Using @Regex", "Using @Pattern"],
+        "correct": "Using regex syntax in the step definition"
+    },
+    {
+        "question": "What is the purpose of the 'Data Tables' feature in Cucumber?",
+        "options": ["To represent structured data", "To define scenarios", "To parameterize tests", "Both a and c"],
+        "correct": "Both a and c"
+    },
+    {
+        "question": "Which command is used to generate a Cucumber report?",
+        "options": ["cucumber report", "mvn cucumber:report", "cucumber generate-report", "mvn test"],
+        "correct": "mvn cucumber:report"
+    },
+    {
+        "question": "How can you run specific scenarios in Cucumber?",
+        "options": ["By using tags", "By modifying the feature file", "By specifying scenario names", "Both a and c"],
+        "correct": "Both a and c"
+    },
+    {
+        "question": "Which of the following is used to run Cucumber tests in a Continuous Integration environment?",
+        "options": ["Jenkins", "CircleCI", "Travis CI", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the Cucumber version that introduced support for Java 11?",
+        "options": ["Cucumber 5", "Cucumber 6", "Cucumber 7", "Cucumber 4"],
+        "correct": "Cucumber 6"
+    },
+    {
+        "question": "Which framework is commonly used with Cucumber for testing web applications?",
+        "options": ["JUnit", "TestNG", "Spock", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How can you share step definitions across multiple feature files?",
+        "options": ["By placing them in a common directory", "By using global definitions", "By importing them", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the 'CucumberOptions' annotation?",
+        "options": ["To specify test runner options", "To configure reporting", "To set up dependencies", "To define hooks"],
+        "correct": "To specify test runner options"
+    },
+    {
+        "question": "Which of the following is a way to organize feature files in a Cucumber project?",
+        "options": ["By functionality", "By user stories", "By scenarios", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which Cucumber annotation is used to define a test suite?",
+        "options": ["@Cucumber", "@Suite", "@RunWith", "@CucumberOptions"],
+        "correct": "@RunWith"
+    },
+    {
+        "question": "What is the purpose of the 'Cucumber Runner'?",
+        "options": ["To execute feature files", "To compile step definitions", "To generate reports", "To configure the environment"],
+        "correct": "To execute feature files"
+    },
+    {
+        "question": "How can you skip specific scenarios during execution?",
+        "options": ["Using tags", "Using comments", "Using the ignore keyword", "Both a and b"],
+        "correct": "Using tags"
+    },
+    {
+        "question": "What is the benefit of using Cucumber with Selenium?",
+        "options": ["Improved readability", "Better test management", "Enhanced collaboration", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which command do you use to run Cucumber tests in a Gradle project?",
+        "options": ["gradle run", "gradle cucumber", "gradle test", "cucumber gradle"],
+        "correct": "gradle test"
+    },
+    {
+        "question": "How can you pass data to Cucumber tests?",
+        "options": ["Using command line arguments", "Using environment variables", "Using data tables", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the role of the 'World' class in Cucumber?",
+        "options": ["To define shared state", "To manage test execution", "To handle hooks", "To configure options"],
+        "correct": "To define shared state"
+    },
+    {
+        "question": "What is a common practice for writing step definitions?",
+        "options": ["Keep them short and simple", "Use complex logic", "Mix multiple scenarios in one step", "Avoid reuse"],
+        "correct": "Keep them short and simple"
+    },
+    {
+        "question": "Which method is used to run Cucumber tests programmatically?",
+        "options": ["Cucumber.main()", "Cucumber.run()", "Cucumber.execute()", "Cucumber.start()"],
+        "correct": "Cucumber.main()"
+    },
+    {
+        "question": "What is the purpose of the 'dry run' option in Cucumber?",
+        "options": ["To run scenarios without executing code", "To validate step definitions", "To generate reports", "To debug scenarios"],
+        "correct": "To validate step definitions"
+    },
+    {
+        "question": "What does the 'cucumber.api' package contain?",
+        "options": ["Cucumber annotations", "Step definition classes", "Cucumber runner classes", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How can you create reusable step definitions in Cucumber?",
+        "options": ["By using common methods", "By using shared state", "By using parameterization", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the default behavior of Cucumber if a step is not defined?",
+        "options": ["It fails the scenario", "It skips the step", "It logs a warning", "It continues execution"],
+        "correct": "It fails the scenario"
+    },
+    {
+        "question": "What is a best practice when writing Cucumber scenarios?",
+        "options": ["Use clear and concise language", "Make scenarios too complex", "Avoid collaboration", "Focus on implementation details"],
+        "correct": "Use clear and concise language"
+    },
+    {
+        "question": "What is the purpose of the 'Cucumber Reports' feature?",
+        "options": ["To log execution time", "To provide detailed test results", "To generate step definitions", "To run tests in parallel"],
+        "correct": "To provide detailed test results"
+    },
+    {
+        "question": "Which of the following is a common use of tags in Cucumber?",
+        "options": ["To categorize scenarios", "To run specific scenarios", "To skip scenarios", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the role of the 'Step Definitions' in Cucumber?",
+        "options": ["To define the behavior of steps", "To write feature files", "To manage hooks", "To handle reporting"],
+        "correct": "To define the behavior of steps"
+    },
+    {
+        "question": "Which of the following can be used to run Cucumber tests in parallel?",
+        "options": ["JUnit", "TestNG", "Cucumber-JVM", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How do you define custom steps in Cucumber?",
+        "options": ["Using the Given keyword", "By writing custom code", "By using annotations", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the advantage of using Gherkin syntax?",
+        "options": ["It is easy to read", "It is language-agnostic", "It supports collaboration", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the 'Scenario' keyword define?",
+        "options": ["A single test case", "A group of scenarios", "A test suite", "A feature file"],
+        "correct": "A single test case"
+    },
+    {
+        "question": "Which tool can be used to manage dependencies in a Cucumber project?",
+        "options": ["NPM", "Maven", "Gradle", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which of the following describes the 'Scenario' keyword in Gherkin?",
+        "options": ["Defines a feature", "Describes a specific use case", "Sets up test data", "Groups related tests"],
+        "correct": "Describes a specific use case"
+    },
+    {
+        "question": "What is the role of the 'Feature File' in Cucumber?",
+        "options": ["To define test cases", "To document behavior", "To manage step definitions", "Both a and b"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "How can you handle asynchronous calls in Cucumber?",
+        "options": ["Using callbacks", "Using promises", "By adding waits", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the 'Then' keyword indicate in a scenario?",
+        "options": ["An action to perform", "An expected result", "A condition", "A prerequisite"],
+        "correct": "An expected result"
+    },
+    {
+        "question": "Which Cucumber feature helps manage dependencies?",
+        "options": ["Maven", "Gradle", "Both a and b", "None of the above"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "What keyword is used to define a step that performs an action?",
+        "options": ["Given", "When", "Then", "And"],
+        "correct": "When"
+    },
+    {
+        "question": "What is a common use of the 'Background' section in Cucumber?",
+        "options": ["To set up prerequisites for scenarios", "To document features", "To manage hooks", "To group scenarios"],
+        "correct": "To set up prerequisites for scenarios"
+    },
+    {
+        "question": "Which of the following is an advantage of using Cucumber?",
+        "options": ["Improved collaboration", "Clear documentation", "Better test management", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is a common mistake when writing Cucumber scenarios?",
+        "options": ["Using technical jargon", "Being too verbose", "Not using tags", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How do you specify the location of feature files in Cucumber?",
+        "options": ["Using @CucumberOptions", "Using the pom.xml file", "Using the cucumber.json file", "Both a and b"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "Which of the following describes the role of the 'Cucumber Runner'?",
+        "options": ["To execute feature files", "To define step definitions", "To manage hooks", "To generate reports"],
+        "correct": "To execute feature files"
+    },
+    {
+        "question": "What does the 'dry run' option do when running Cucumber tests?",
+        "options": ["Executes tests without running the steps", "Runs tests normally", "Skips tests", "Logs output"],
+        "correct": "Executes tests without running the steps"
+    },
+    {
+        "question": "How can you filter scenarios by tags when running tests?",
+        "options": ["Using -t option", "Using --tags option", "Using -D option", "Using @tags option"],
+        "correct": "Using --tags option"
+    },
+    {
+        "question": "Which tool is often used for Continuous Integration with Cucumber?",
+        "options": ["Jenkins", "GitLab CI", "CircleCI", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the primary goal of Behavior Driven Development (BDD)?",
+        "options": ["To test performance", "To improve collaboration between technical and non-technical teams", "To automate unit tests", "To manage dependencies"],
+        "correct": "To improve collaboration between technical and non-technical teams"
+    },
+    {
+        "question": "Which of the following is a valid Gherkin feature file header?",
+        "options": ["Feature: User Login", "Feature: User Login {}", "Feature: User Login []", "Feature: User Login ()"],
+        "correct": "Feature: User Login"
+    },
+    {
+        "question": "How can you parameterize steps in Cucumber?",
+        "options": ["Using regular expressions", "Using placeholders", "Using data tables", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the result of running a Cucumber test with undefined steps?",
+        "options": ["The test passes", "The test fails", "The test is skipped", "The test runs partially"],
+        "correct": "The test fails"
+    },
+    {
+        "question": "What is a common use case for Cucumber in agile development?",
+        "options": ["Unit testing", "Regression testing", "Acceptance testing", "All of the above"],
+        "correct": "Acceptance testing"
+    },
+    {
+        "question": "What type of framework is Cucumber?",
+        "options": ["Testing framework", "Behavior-driven framework", "Both a and b", "None of the above"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "How can you add custom reporting to Cucumber tests?",
+        "options": ["Using built-in reporting", "Integrating with third-party tools", "Custom code", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which programming paradigm does Cucumber support?",
+        "options": ["Object-oriented", "Functional", "Imperative", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the significance of 'Cucumber' in software development?",
+        "options": ["It helps to create documentation", "It automates testing", "It facilitates collaboration", "All of the above"],
+        "correct": "All of the above"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

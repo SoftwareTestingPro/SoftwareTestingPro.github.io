@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What is Maven primarily used for?",
+        "options": ["Project management", "Build automation", "Dependency management", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the file extension for a Maven project configuration file?",
+        "options": [".xml", ".pom", ".mvn", ".java"],
+        "correct": ".xml"
+    },
+    {
+        "question": "Which file is the heart of a Maven project?",
+        "options": ["settings.xml", "pom.xml", "build.xml", "project.xml"],
+        "correct": "pom.xml"
+    },
+    {
+        "question": "What does POM stand for in Maven?",
+        "options": ["Project Object Model", "Project Order Model", "Project Object Management", "Project Online Management"],
+        "correct": "Project Object Model"
+    },
+    {
+        "question": "Which of the following is a valid scope in Maven?",
+        "options": ["compile", "runtime", "test", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the default lifecycle phase in Maven?",
+        "options": ["install", "deploy", "validate", "package"],
+        "correct": "validate"
+    },
+    {
+        "question": "How do you define dependencies in a Maven project?",
+        "options": ["In the pom.xml file", "In the settings.xml file", "In the build.gradle file", "In the application.properties file"],
+        "correct": "In the pom.xml file"
+    },
+    {
+        "question": "Which command is used to compile a Maven project?",
+        "options": ["mvn compile", "mvn build", "mvn install", "mvn package"],
+        "correct": "mvn compile"
+    },
+    {
+        "question": "What is the purpose of the 'clean' phase in Maven?",
+        "options": ["To clean up project resources", "To remove target directory", "To clean project dependencies", "To refresh project settings"],
+        "correct": "To remove target directory"
+    },
+    {
+        "question": "What does the 'package' phase do in Maven?",
+        "options": ["Compiles the code", "Runs tests", "Creates a distributable JAR/WAR", "Installs the package in local repository"],
+        "correct": "Creates a distributable JAR/WAR"
+    },
+    {
+        "question": "Which command is used to run unit tests in Maven?",
+        "options": ["mvn test", "mvn run", "mvn execute", "mvn unit"],
+        "correct": "mvn test"
+    },
+    {
+        "question": "What is the purpose of Maven repositories?",
+        "options": ["To store project artifacts", "To manage project dependencies", "To share project resources", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the difference between 'compile' and 'provided' scope in Maven?",
+        "options": ["No difference", "Provided scope is for runtime only", "Compile is for testing only", "Provided is available during compilation only"],
+        "correct": "Provided is available during compilation only"
+    },
+    {
+        "question": "What command is used to create a new Maven project?",
+        "options": ["mvn new", "mvn create", "mvn archetype:generate", "mvn generate:archetype"],
+        "correct": "mvn archetype:generate"
+    },
+    {
+        "question": "Which of the following is not a built-in Maven lifecycle?",
+        "options": ["default", "clean", "site", "package"],
+        "correct": "package"
+    },
+    {
+        "question": "What is the use of the <dependencies> tag in pom.xml?",
+        "options": ["To specify project properties", "To list project dependencies", "To define build plugins", "To configure repository settings"],
+        "correct": "To list project dependencies"
+    },
+    {
+        "question": "Which Maven command installs the built artifact into the local repository?",
+        "options": ["mvn package", "mvn install", "mvn deploy", "mvn upload"],
+        "correct": "mvn install"
+    },
+    {
+        "question": "What is a Maven plugin?",
+        "options": ["A way to extend Maven's capabilities", "A type of dependency", "A project configuration file", "None of the above"],
+        "correct": "A way to extend Maven's capabilities"
+    },
+    {
+        "question": "How do you specify the version of a dependency in Maven?",
+        "options": ["Using the <version> tag", "Using the <dependencyVersion> tag", "Using the <libVersion> tag", "Using the <depVersion> tag"],
+        "correct": "Using the <version> tag"
+    },
+    {
+        "question": "What is the default directory for Maven project sources?",
+        "options": ["src/main/java", "src/main/resources", "src/test/java", "src/test/resources"],
+        "correct": "src/main/java"
+    },
+    {
+        "question": "What does the 'deploy' phase do in Maven?",
+        "options": ["Installs artifacts into the local repository", "Copies the artifact to the remote repository", "Compiles the project", "Runs tests"],
+        "correct": "Copies the artifact to the remote repository"
+    },
+    {
+        "question": "What is the purpose of the <build> section in pom.xml?",
+        "options": ["To configure project dependencies", "To define project properties", "To specify build plugins and settings", "To manage project repository"],
+        "correct": "To specify build plugins and settings"
+    },
+    {
+        "question": "Which command is used to create a JAR file in Maven?",
+        "options": ["mvn package", "mvn jar", "mvn build", "mvn compile"],
+        "correct": "mvn package"
+    },
+    {
+        "question": "What is the purpose of the <properties> section in pom.xml?",
+        "options": ["To define project dependencies", "To manage project configurations", "To set project versions", "To define build plugins"],
+        "correct": "To manage project configurations"
+    },
+    {
+        "question": "What is the command to view the effective POM of a Maven project?",
+        "options": ["mvn view:effective-pom", "mvn help:effective-pom", "mvn show:effective-pom", "mvn pom:effective"],
+        "correct": "mvn help:effective-pom"
+    },
+    {
+        "question": "What is a parent POM in Maven?",
+        "options": ["A POM that inherits properties", "A POM that aggregates multiple modules", "A POM that defines dependency versions", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which lifecycle phase is responsible for validating the project?",
+        "options": ["compile", "validate", "package", "install"],
+        "correct": "validate"
+    },
+    {
+        "question": "What command is used to generate a site for a Maven project?",
+        "options": ["mvn site", "mvn generate:site", "mvn build:site", "mvn create:site"],
+        "correct": "mvn site"
+    },
+    {
+        "question": "What is the purpose of the <repository> section in pom.xml?",
+        "options": ["To define project properties", "To specify external repositories", "To manage dependencies", "To define build settings"],
+        "correct": "To specify external repositories"
+    },
+    {
+        "question": "Which of the following is a common Maven lifecycle phase for integration testing?",
+        "options": ["install", "package", "test", "verify"],
+        "correct": "verify"
+    },
+    {
+        "question": "What is the command to update the dependencies in a Maven project?",
+        "options": ["mvn update", "mvn refresh", "mvn dependency:resolve", "mvn install"],
+        "correct": "mvn install"
+    },
+    {
+        "question": "How do you define a module in a multi-module Maven project?",
+        "options": ["In the parent pom.xml", "In the settings.xml", "In a separate pom.xml", "In the build.gradle"],
+        "correct": "In the parent pom.xml"
+    },
+    {
+        "question": "What is the purpose of the <plugin> section in pom.xml?",
+        "options": ["To define project dependencies", "To specify build plugins", "To manage project properties", "To define repositories"],
+        "correct": "To specify build plugins"
+    },
+    {
+        "question": "Which command is used to generate a JAR file from a Maven project?",
+        "options": ["mvn create:jar", "mvn generate:jar", "mvn package", "mvn compile:jar"],
+        "correct": "mvn package"
+    },
+    {
+        "question": "What does the <dependencyManagement> section do in pom.xml?",
+        "options": ["Defines dependency versions", "Overrides dependency scopes", "Specifies repository locations", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the <parent> tag in pom.xml?",
+        "options": ["To inherit properties from another POM", "To define project dependencies", "To set build plugins", "To specify repositories"],
+        "correct": "To inherit properties from another POM"
+    },
+    {
+        "question": "Which command runs a Maven project in offline mode?",
+        "options": ["mvn offline", "mvn -o", "mvn --offline", "mvn no-internet"],
+        "correct": "mvn -o"
+    },
+    {
+        "question": "What does the 'install' phase do in Maven?",
+        "options": ["Builds the project", "Packages the artifact", "Installs the artifact in the local repository", "Runs unit tests"],
+        "correct": "Installs the artifact in the local repository"
+    },
+    {
+        "question": "Which file is used for Maven settings?",
+        "options": ["settings.xml", "pom.xml", "build.xml", "config.xml"],
+        "correct": "settings.xml"
+    },
+    {
+        "question": "What command is used to build a Maven project without running tests?",
+        "options": ["mvn skip-tests", "mvn install -DskipTests", "mvn package -DskipTests", "mvn build -DskipTests"],
+        "correct": "mvn install -DskipTests"
+    },
+    {
+        "question": "What is the command to clean a Maven project?",
+        "options": ["mvn clear", "mvn clean", "mvn wipe", "mvn reset"],
+        "correct": "mvn clean"
+    },
+    {
+        "question": "What is the purpose of the <pluginRepositories> section in pom.xml?",
+        "options": ["To define repositories for plugins", "To manage project properties", "To specify build plugins", "To define project dependencies"],
+        "correct": "To define repositories for plugins"
+    },
+    {
+        "question": "Which command is used to show the effective POM?",
+        "options": ["mvn show:effective", "mvn help:effective-pom", "mvn effective-pom", "mvn display:pom"],
+        "correct": "mvn help:effective-pom"
+    },
+    {
+        "question": "What does the <parent> section in a child POM do?",
+        "options": ["Inherits configuration from the parent POM", "Overrides parent properties", "Defines child-specific dependencies", "Sets child-specific plugins"],
+        "correct": "Inherits configuration from the parent POM"
+    },
+    {
+        "question": "What is the default location for the compiled classes in a Maven project?",
+        "options": ["src/main/classes", "target/classes", "build/classes", "bin/classes"],
+        "correct": "target/classes"
+    },
+    {
+        "question": "Which command runs integration tests in Maven?",
+        "options": ["mvn integration-test", "mvn verify", "mvn test", "mvn install"],
+        "correct": "mvn verify"
+    },
+    {
+        "question": "What is the role of the <repositories> tag in pom.xml?",
+        "options": ["To define the location of project artifacts", "To manage project dependencies", "To specify external repositories", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the <dependency> tag specify?",
+        "options": ["Project properties", "Project dependencies", "Project plugins", "Project configurations"],
+        "correct": "Project dependencies"
+    },
+    {
+        "question": "Which phase comes after 'compile' in the Maven lifecycle?",
+        "options": ["test", "package", "install", "validate"],
+        "correct": "test"
+    },
+    {
+        "question": "What is the purpose of the <reporting> section in pom.xml?",
+        "options": ["To generate reports about the project", "To manage project dependencies", "To define build plugins", "To configure project properties"],
+        "correct": "To generate reports about the project"
+    },
+    {
+        "question": "Which command runs all phases up to 'package'?",
+        "options": ["mvn package", "mvn compile", "mvn install", "mvn validate"],
+        "correct": "mvn package"
+    },
+    {
+        "question": "What is the function of the <plugin> tag in pom.xml?",
+        "options": ["To define project dependencies", "To specify plugins for the build process", "To manage project properties", "To define repositories"],
+        "correct": "To specify plugins for the build process"
+    },
+    {
+        "question": "Which command is used to check for outdated dependencies in Maven?",
+        "options": ["mvn dependency:check", "mvn dependency:tree", "mvn versions:display-dependency-updates", "mvn update:dependencies"],
+        "correct": "mvn versions:display-dependency-updates"
+    },
+    {
+        "question": "How do you specify a dependency's version range in Maven?",
+        "options": ["Using square brackets", "Using parentheses", "Using a hyphen", "Using angle brackets"],
+        "correct": "Using square brackets"
+    },
+    {
+        "question": "What does the 'validate' phase do in Maven?",
+        "options": ["Checks project structure and configuration", "Compiles source code", "Runs unit tests", "Packages the project"],
+        "correct": "Checks project structure and configuration"
+    },
+    {
+        "question": "Which of the following is an optional phase in the Maven lifecycle?",
+        "options": ["clean", "package", "validate", "install"],
+        "correct": "package"
+    },
+    {
+        "question": "What is the command to generate a Javadoc for a Maven project?",
+        "options": ["mvn javadoc", "mvn generate:javadoc", "mvn site:javadoc", "mvn compile:javadoc"],
+        "correct": "mvn javadoc"
+    },
+    {
+        "question": "How can you specify the main class for a JAR file in Maven?",
+        "options": ["Using <mainClass> in the manifest", "Using <class> in pom.xml", "Using <entryClass> in pom.xml", "Using <jarClass> in the build section"],
+        "correct": "Using <mainClass> in the manifest"
+    },
+    {
+        "question": "What is the purpose of the <dependency> section in a parent POM?",
+        "options": ["To inherit dependencies", "To define project properties", "To specify repository locations", "To manage build plugins"],
+        "correct": "To inherit dependencies"
+    },
+    {
+        "question": "Which command generates source code for Maven projects?",
+        "options": ["mvn source", "mvn generate-sources", "mvn compile", "mvn package"],
+        "correct": "mvn generate-sources"
+    },
+    {
+        "question": "What does the <plugin> element allow you to do?",
+        "options": ["Add plugins to your project", "Define plugin properties", "Specify plugin dependencies", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which command installs a specific version of a dependency?",
+        "options": ["mvn install:dependency", "mvn dependency:install", "mvn install -Dversion=1.0.0", "mvn install -Ddependency=artifactId:groupId:version"],
+        "correct": "mvn install -Ddependency=artifactId:groupId:version"
+    },
+    {
+        "question": "What is the command to view the list of all Maven goals?",
+        "options": ["mvn help:goal", "mvn help:goals", "mvn goals:list", "mvn list:goals"],
+        "correct": "mvn help:goals"
+    },
+    {
+        "question": "How do you skip tests during a Maven build?",
+        "options": ["mvn install -DskipTests", "mvn install -DskipTests=true", "mvn install -DskipTests=false", "mvn install --skip-tests"],
+        "correct": "mvn install -DskipTests"
+    },
+    {
+        "question": "What is the purpose of the <pluginManagement> section in pom.xml?",
+        "options": ["To manage plugin versions", "To define plugin properties", "To specify repositories for plugins", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What command generates a WAR file in a Maven web application?",
+        "options": ["mvn package", "mvn war:war", "mvn compile", "mvn install"],
+        "correct": "mvn package"
+    },
+    {
+        "question": "What does the 'clean install' command do in Maven?",
+        "options": ["Cleans the project and installs it", "Runs tests and packages the project", "Only cleans the project", "Only installs the project"],
+        "correct": "Cleans the project and installs it"
+    },
+    {
+        "question": "Which section is used to define plugin repositories in pom.xml?",
+        "options": ["<pluginRepositories>", "<repositories>", "<build>", "<reporting>"],
+        "correct": "<pluginRepositories>"
+    },
+    {
+        "question": "What does the command 'mvn dependency:tree' do?",
+        "options": ["Displays the project dependency tree", "Installs dependencies", "Cleans the dependency cache", "Updates dependencies"],
+        "correct": "Displays the project dependency tree"
+    },
+    {
+        "question": "How do you specify the main class in a Maven JAR file?",
+        "options": ["In the <build> section", "In the <manifest> section", "In the <dependencies> section", "In the <pluginManagement> section"],
+        "correct": "In the <manifest> section"
+    },
+    {
+        "question": "What is the default plugin for compiling Java code in Maven?",
+        "options": ["maven-compiler-plugin", "maven-java-plugin", "maven-build-plugin", "maven-source-plugin"],
+        "correct": "maven-compiler-plugin"
+    },
+    {
+        "question": "What is the command to update the local repository with new dependencies?",
+        "options": ["mvn update", "mvn install", "mvn refresh", "mvn resolve"],
+        "correct": "mvn install"
+    },
+    {
+        "question": "What does the <repositories> tag allow you to do?",
+        "options": ["Define external repositories for dependencies", "Manage project properties", "Specify build plugins", "All of the above"],
+        "correct": "Define external repositories for dependencies"
+    },
+    {
+        "question": "Which lifecycle phase is responsible for packaging the project?",
+        "options": ["install", "package", "validate", "compile"],
+        "correct": "package"
+    },
+    {
+        "question": "What is the purpose of the <dependencyManagement> section?",
+        "options": ["To define versions of dependencies used in child POMs", "To list project dependencies", "To specify repository locations", "To manage build plugins"],
+        "correct": "To define versions of dependencies used in child POMs"
+    },
+    {
+        "question": "Which command runs the clean phase followed by the install phase?",
+        "options": ["mvn clean install", "mvn install clean", "mvn clean and install", "mvn install --clean"],
+        "correct": "mvn clean install"
+    },
+    {
+        "question": "What does the command 'mvn site:site' do?",
+        "options": ["Generates the project site documentation", "Builds the project", "Installs the project", "Runs tests"],
+        "correct": "Generates the project site documentation"
+    },
+    {
+        "question": "What is the command to view Maven settings?",
+        "options": ["mvn settings:show", "mvn settings:display", "mvn help:effective-settings", "mvn help:settings"],
+        "correct": "mvn help:effective-settings"
+    },
+    {
+        "question": "Which of the following is a valid Maven build lifecycle?",
+        "options": ["default", "test", "clean", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What command generates the project documentation in Maven?",
+        "options": ["mvn site", "mvn javadoc", "mvn generate-docs", "mvn package"],
+        "correct": "mvn site"
+    },
+    {
+        "question": "What is the role of the <properties> section in pom.xml?",
+        "options": ["To define project dependencies", "To manage plugin versions", "To set project-specific properties", "To define repositories"],
+        "correct": "To set project-specific properties"
+    },
+    {
+        "question": "Which command displays the project's dependency information?",
+        "options": ["mvn dependency:list", "mvn dependency:info", "mvn dependency:tree", "mvn help:dependencies"],
+        "correct": "mvn dependency:list"
+    },
+    {
+        "question": "How can you specify a dependency's exclusion in Maven?",
+        "options": ["Using <exclusions> in the dependency", "Using <exclude> in the dependency", "Using <omit> in the dependency", "Using <remove> in the dependency"],
+        "correct": "Using <exclusions> in the dependency"
+    },
+    {
+        "question": "What does the command 'mvn dependency:resolve' do?",
+        "options": ["Resolves the project's dependencies", "Installs dependencies", "Displays the dependency tree", "Cleans up the dependencies"],
+        "correct": "Resolves the project's dependencies"
+    },
+    {
+        "question": "What is the purpose of the <modules> section in a multi-module project?",
+        "options": ["To define child modules", "To specify project dependencies", "To set build plugins", "To manage project properties"],
+        "correct": "To define child modules"
+    },
+    {
+        "question": "Which of the following can be specified in the <build> section?",
+        "options": ["Source directory", "Plugin configurations", "Final name of the artifact", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the command to view Maven's global settings?",
+        "options": ["mvn settings:view", "mvn help:global-settings", "mvn help:settings", "mvn global:settings"],
+        "correct": "mvn help:global-settings"
+    },
+    {
+        "question": "What does the <repositories> tag allow you to do?",
+        "options": ["Define external repositories for dependencies", "Manage project properties", "Specify build plugins", "All of the above"],
+        "correct": "Define external repositories for dependencies"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

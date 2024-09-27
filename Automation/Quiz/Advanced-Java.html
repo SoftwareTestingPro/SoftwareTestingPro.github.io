@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "Which of the following is not a feature of Java?",
+        "options": ["Platform-independent", "Automatic memory management", "Multithreading", "Multiple inheritance via classes"],
+        "correct": "Multiple inheritance via classes"
+    },
+    {
+        "question": "Which package is required for working with Java's Collections Framework?",
+        "options": ["java.util", "java.collection", "java.collections", "java.framework"],
+        "correct": "java.util"
+    },
+    {
+        "question": "Which interface does the java.util.HashMap class implement?",
+        "options": ["Map", "List", "Set", "Collection"],
+        "correct": "Map"
+    },
+    {
+        "question": "Which of the following is a valid way to create a thread in Java?",
+        "options": ["Implementing the Runnable interface", "Extending the Thread class", "Using Executor framework", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the main purpose of the 'final' keyword in Java?",
+        "options": ["To restrict method overriding", "To restrict inheritance", "To declare constants", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which Java feature allows you to define a class without specifying its full name?",
+        "options": ["Imports", "Packages", "Namespaces", "Modules"],
+        "correct": "Imports"
+    },
+    {
+        "question": "What is the default value of a boolean variable in Java?",
+        "options": ["true", "false", "0", "null"],
+        "correct": "false"
+    },
+    {
+        "question": "Which of the following is an abstract class in Java?",
+        "options": ["String", "Collection", "Runnable", "Thread"],
+        "correct": "Collection"
+    },
+    {
+        "question": "Which Java keyword is used to refer to the current object?",
+        "options": ["this", "self", "current", "object"],
+        "correct": "this"
+    },
+    {
+        "question": "What is the purpose of the 'synchronized' keyword?",
+        "options": ["To create a thread", "To define a critical section", "To ensure data consistency", "Both b and c"],
+        "correct": "Both b and c"
+    },
+    {
+        "question": "Which of the following is not a valid collection type in Java?",
+        "options": ["List", "Map", "Set", "Array"],
+        "correct": "Array"
+    },
+    {
+        "question": "What is the purpose of the 'transient' keyword in Java?",
+        "options": ["To prevent serialization", "To declare constants", "To define a class", "To restrict inheritance"],
+        "correct": "To prevent serialization"
+    },
+    {
+        "question": "Which of the following is not a Java access modifier?",
+        "options": ["private", "protected", "static", "public"],
+        "correct": "static"
+    },
+    {
+        "question": "What does JVM stand for?",
+        "options": ["Java Variable Machine", "Java Virtual Machine", "Java Version Machine", "Java Visual Machine"],
+        "correct": "Java Virtual Machine"
+    },
+    {
+        "question": "Which of the following is used to handle exceptions in Java?",
+        "options": ["try-catch", "throw", "throws", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the output of 'System.out.println(0.1 + 0.2 == 0.3);'",
+        "options": ["true", "false", "Compilation error", "Runtime error"],
+        "correct": "false"
+    },
+    {
+        "question": "Which method is used to start a thread in Java?",
+        "options": ["run()", "start()", "execute()", "begin()"],
+        "correct": "start()"
+    },
+    {
+        "question": "What is the purpose of the 'volatile' keyword?",
+        "options": ["To make variables accessible to multiple threads", "To restrict variable access", "To define constants", "None of the above"],
+        "correct": "To make variables accessible to multiple threads"
+    },
+    {
+        "question": "Which interface in Java is used to implement a stack data structure?",
+        "options": ["Queue", "Deque", "List", "Stack"],
+        "correct": "Stack"
+    },
+    {
+        "question": "What does the 'throws' keyword indicate?",
+        "options": ["A method will not throw an exception", "A method might throw an exception", "A method is declared but not implemented", "None of the above"],
+        "correct": "A method might throw an exception"
+    },
+    {
+        "question": "Which of the following is a wrapper class in Java?",
+        "options": ["int", "String", "Integer", "char"],
+        "correct": "Integer"
+    },
+    {
+        "question": "What is the output of 'System.out.println(\"Hello\" + 5 + 10);'",
+        "options": ["Hello510", "15", "Hello15", "Compilation error"],
+        "correct": "Hello510"
+    },
+    {
+        "question": "What is an anonymous class in Java?",
+        "options": ["A class with no name", "A class without a constructor", "A class that cannot be instantiated", "A class with no fields"],
+        "correct": "A class with no name"
+    },
+    {
+        "question": "Which of the following is not a feature of Java?",
+        "options": ["Object-oriented", "Platform-dependent", "Multithreading", "Automatic memory management"],
+        "correct": "Platform-dependent"
+    },
+    {
+        "question": "What is the significance of the 'super' keyword?",
+        "options": ["To call parent class methods", "To call parent class constructors", "To access parent class variables", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the difference between '== 'and 'equals()' in Java?",
+        "options": ["'==' compares object references, 'equals()' compares values", "'==' compares values, 'equals()' compares object references", "'==' and 'equals()' are identical", "None of the above"],
+        "correct": "'==' compares object references, 'equals()' compares values"
+    },
+    {
+        "question": "What is a lambda expression in Java?",
+        "options": ["An anonymous method", "A functional interface", "A new way to create threads", "All of the above"],
+        "correct": "An anonymous method"
+    },
+    {
+        "question": "Which Java feature allows multiple classes to be used as an interface?",
+        "options": ["Interfaces", "Abstract classes", "Polymorphism", "Encapsulation"],
+        "correct": "Interfaces"
+    },
+    {
+        "question": "Which keyword is used to prevent method overriding?",
+        "options": ["final", "static", "abstract", "private"],
+        "correct": "final"
+    },
+    {
+        "question": "What is the purpose of the 'main' method in Java?",
+        "options": ["To start the execution of a program", "To define a class", "To declare variables", "To create objects"],
+        "correct": "To start the execution of a program"
+    },
+    {
+        "question": "Which of the following is not a part of the Java collection framework?",
+        "options": ["ArrayList", "LinkedList", "HashMap", "Vector"],
+        "correct": "None of the above"
+    },
+    {
+        "question": "What is the output of the following code snippet: 'int a = 10; System.out.println(a++);'",
+        "options": ["10", "11", "Compilation error", "Runtime error"],
+        "correct": "10"
+    },
+    {
+        "question": "Which of the following exceptions is unchecked in Java?",
+        "options": ["IOException", "SQLException", "NullPointerException", "ClassNotFoundException"],
+        "correct": "NullPointerException"
+    },
+    {
+        "question": "Which collection is best suited for a LIFO (Last In First Out) structure?",
+        "options": ["Queue", "Stack", "List", "Set"],
+        "correct": "Stack"
+    },
+    {
+        "question": "What is a functional interface?",
+        "options": ["An interface with multiple methods", "An interface with one abstract method", "An interface with default methods", "An interface with static methods"],
+        "correct": "An interface with one abstract method"
+    },
+    {
+        "question": "Which of the following is a Java concurrency utility?",
+        "options": ["Thread", "Runnable", "Executor", "Object"],
+        "correct": "Executor"
+    },
+    {
+        "question": "What is the purpose of the 'abstract' keyword?",
+        "options": ["To declare a class that cannot be instantiated", "To declare a method without implementation", "Both a and b", "None of the above"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "Which method is called when an object is created in Java?",
+        "options": ["initialize()", "create()", "constructor()", "new()"],
+        "correct": "constructor()"
+    },
+    {
+        "question": "What is the default access modifier for a class in Java?",
+        "options": ["public", "private", "protected", "default"],
+        "correct": "default"
+    },
+    {
+        "question": "What does the 'instanceof' operator do?",
+        "options": ["Checks if an object is an instance of a class", "Checks if a class is an instance of an object", "Creates a new instance of a class", "None of the above"],
+        "correct": "Checks if an object is an instance of a class"
+    },
+    {
+        "question": "Which keyword is used to create an instance of an interface?",
+        "options": ["new", "create", "interface", "implement"],
+        "correct": "None of the above"
+    },
+    {
+        "question": "What is the output of 'System.out.println(5 + 10 + \"Hello\");'",
+        "options": ["Hello15", "Hello510", "15Hello", "Compilation error"],
+        "correct": "Hello15"
+    },
+    {
+        "question": "Which class is used to read data from a file in Java?",
+        "options": ["FileReader", "BufferedReader", "Scanner", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which of the following is a characteristic of Java?",
+        "options": ["Static typing", "Dynamic binding", "Automatic garbage collection", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the output of 'System.out.println(\"5\" + 10);'",
+        "options": ["510", "15", "Compilation error", "Runtime error"],
+        "correct": "510"
+    },
+    {
+        "question": "Which of the following is true about Java?",
+        "options": ["Java is pass-by-value", "Java is pass-by-reference", "Java has pointers", "Java does not support multiple inheritance"],
+        "correct": "Java is pass-by-value"
+    },
+    {
+        "question": "Which of the following is a collection that allows duplicate elements?",
+        "options": ["Set", "Map", "List", "None of the above"],
+        "correct": "List"
+    },
+    {
+        "question": "What is the output of 'System.out.println(\"Hello\".length());'",
+        "options": ["4", "5", "6", "7"],
+        "correct": "5"
+    },
+    {
+        "question": "What is the primary purpose of the 'StringBuilder' class?",
+        "options": ["Immutable string storage", "Mutable string storage", "String comparison", "String manipulation"],
+        "correct": "Mutable string storage"
+    },
+    {
+        "question": "Which of the following is true about the 'String' class?",
+        "options": ["Strings are mutable", "Strings are immutable", "Strings can be changed", "None of the above"],
+        "correct": "Strings are immutable"
+    },
+    {
+        "question": "What is the output of 'System.out.println(\"Java\".charAt(1));'",
+        "options": ["J", "a", "v", "None of the above"],
+        "correct": "a"
+    },
+    {
+        "question": "Which of the following is not a method of the 'Math' class?",
+        "options": ["abs()", "max()", "sqrt()", "roundoff()"],
+        "correct": "roundoff()"
+    },
+    {
+        "question": "What is the function of the 'wait()' method in Java?",
+        "options": ["Pause the current thread", "Terminate the current thread", "Release the current thread", "None of the above"],
+        "correct": "Pause the current thread"
+    },
+    {
+        "question": "Which method is used to convert a string to an integer in Java?",
+        "options": ["parseInt()", "toInteger()", "convert()", "valueOf()"],
+        "correct": "parseInt()"
+    },
+    {
+        "question": "Which Java class is used to represent a date?",
+        "options": ["Date", "Calendar", "LocalDate", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the output of 'System.out.println(10 / 3);'",
+        "options": ["3", "3.0", "3.33", "3.333"],
+        "correct": "3"
+    },
+    {
+        "question": "Which of the following is true about exception handling in Java?",
+        "options": ["Checked exceptions must be handled", "Unchecked exceptions are mandatory to handle", "All exceptions are checked", "Exceptions cannot be caught"],
+        "correct": "Checked exceptions must be handled"
+    },
+    {
+        "question": "Which keyword is used to inherit a class in Java?",
+        "options": ["extends", "implements", "inherits", "uses"],
+        "correct": "extends"
+    },
+    {
+        "question": "What is the primary purpose of the 'Runnable' interface?",
+        "options": ["To represent a task that can be executed", "To create a thread", "To implement synchronization", "To handle exceptions"],
+        "correct": "To represent a task that can be executed"
+    },
+    {
+        "question": "Which of the following is not a type of Java exception?",
+        "options": ["Checked Exception", "Unchecked Exception", "Runtime Exception", "All are types of exceptions"],
+        "correct": "All are types of exceptions"
+    },
+    {
+        "question": "What does the 'break' statement do in Java?",
+        "options": ["Terminates a loop", "Exits a method", "Stops the program", "None of the above"],
+        "correct": "Terminates a loop"
+    },
+    {
+        "question": "Which of the following can be used to create a user-defined exception?",
+        "options": ["Extending Exception class", "Extending RuntimeException class", "Both a and b", "None of the above"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "What is the output of 'System.out.println(1 + \"1\");'",
+        "options": ["11", "2", "1", "Compilation error"],
+        "correct": "11"
+    },
+    {
+        "question": "Which of the following is a valid declaration of a method in Java?",
+        "options": ["public void methodName()", "void methodName public", "methodName void public", "public void methodName(int)"],
+        "correct": "public void methodName()"
+    },
+    {
+        "question": "Which of the following is not a valid keyword in Java?",
+        "options": ["int", "float", "double", "decimal"],
+        "correct": "decimal"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

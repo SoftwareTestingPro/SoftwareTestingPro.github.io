@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Testing Quiz Homepage">
+    <meta name="keywords" content="Programming, Automation, API, Practice Courses, Learning">
+    <meta name="author" content="Your Name">
+    <title>Testing Quiz Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: auto; /* Change to auto for better layout */
+            margin: 0;
+            padding: 20px; /* Added padding for better layout on mobile */
+        }
+        .input-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-container label {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1000px; /* Increased max width */
+            justify-content: center;
+        }
+        .box {
+            flex: 0 0 200px; /* Each box takes a fixed width of 200px */
+            height: 150px; /* Fixed height of 200px */
+            margin: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .box:hover {
+            filter: brightness(0.9);
+        }
+        .box span {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        footer {
+            position: absolute;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        footer a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .box {
+                flex: 0 0 100%; /* On small screens, each box takes the full width */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="input-container">
+        <label for="user-input">Select topic to start Quiz:</label>
+    </div>
+    <div class="container">
+        <a href="Selenium.html" class="box" title="Selenium Quiz">
+            Selenium
+        </a>
+        <a href="Cucumber.html" class="box" title="Cucumber">
+            Cucumber
+        </a>
+        <a href="Maven.html" class="box" title="Maven">
+            Maven
+        </a>
+        <a href="TestNG.html" class="box" title="TestNG">
+            TestNG
+        </a>
+        <a href="GIT.html" class="box" title="GIT">
+            GIT
+        </a>
+        <a href="Jenkins.html" class="box" title="Jenkins">
+            Jenkins
+        </a>
+        <a href="JIRA.html" class="box" title="JIRA">
+            JIRA
+        </a>
+        <a href="API.html" class="box" title="API">
+            API
+        </a>
+        <a href="Web-Services.html" class="box" title="Web Services">
+            Web Services
+        </a>
+        <a href="Rest-Assured.html" class="box" title="Rest Assured">
+            Rest Assured
+        </a>
+        <a href="Postman.html" class="box" title="Postman">
+            Postman
+        </a>
+        <a href="Functional-Testing.html" class="box" title="Functional Testing">
+            Functional Testing
+        </a>
+		<a href="Mobile-Testing.html" class="box" title="Mobile Testing">
+            Mobile Testing
+        </a>
+        <a href="Performance-Testing.html" class="box" title="Performance Testing">
+            Performance Testing
+        </a>
+        <a href="Load-Testing.html" class="box" title="Load Testing">
+            Load Testing
+        </a>
+        <a href="Basic-Java.html" class="box" title="Quiz">
+            Basic Java
+        </a>
+        <a href="Advanced-Java.html" class="box" title="Advanced Java">
+            Advanced Java
+        </a>
+		<a href="Playwright.html" class="box" title="Playwright">
+            Playwright
+        </a>
+		<a href="JavaScript.html" class="box" title="JavaScript">
+            JavaScript
+        </a>
+		<a href="TypeScript.html" class="box" title="TypeScript">
+            TypeScript
+        </a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                // Set initial random background color
+                setRandomColor(box);
+
+                // Change color on hover
+                box.addEventListener('mouseover', () => {
+                    setRandomColor(box);
+                });
+            });
+        });
+
+        function setRandomColor(element) {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            element.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+    </script>
+</body>
+</html>

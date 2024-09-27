@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What is the primary goal of performance testing?",
+        "options": ["To ensure the application can handle expected load", "To validate functionality", "To test security features", "None of the above"],
+        "correct": "To ensure the application can handle expected load"
+    },
+    {
+        "question": "Which of the following is NOT a type of performance testing?",
+        "options": ["Load Testing", "Stress Testing", "Usability Testing", "Scalability Testing"],
+        "correct": "Usability Testing"
+    },
+    {
+        "question": "What does 'Load Testing' assess?",
+        "options": ["Application behavior under expected load", "Security vulnerabilities", "Database performance", "None of the above"],
+        "correct": "Application behavior under expected load"
+    },
+    {
+        "question": "What is 'Stress Testing' used for?",
+        "options": ["To determine the application's breaking point", "To test functionality", "To assess security", "None of the above"],
+        "correct": "To determine the application's breaking point"
+    },
+    {
+        "question": "Which of the following tools is commonly used for performance testing?",
+        "options": ["JMeter", "Selenium", "Postman", "Cucumber"],
+        "correct": "JMeter"
+    },
+    {
+        "question": "What is 'Soak Testing'?",
+        "options": ["Testing the system under a sustained load for an extended period", "Testing security", "Load testing", "None of the above"],
+        "correct": "Testing the system under a sustained load for an extended period"
+    },
+    {
+        "question": "What does 'Scalability Testing' evaluate?",
+        "options": ["The application's ability to scale up or down", "User experience", "Security vulnerabilities", "None of the above"],
+        "correct": "The application's ability to scale up or down"
+    },
+    {
+        "question": "What is the purpose of 'Performance Metrics'?",
+        "options": ["To measure various aspects of application performance", "To validate functionality", "To test security", "None of the above"],
+        "correct": "To measure various aspects of application performance"
+    },
+    {
+        "question": "Which of the following is a key performance metric?",
+        "options": ["Response time", "Throughput", "Error rate", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does 'Throughput' refer to in performance testing?",
+        "options": ["The number of requests processed per time unit", "Response time", "Error rate", "None of the above"],
+        "correct": "The number of requests processed per time unit"
+    },
+    {
+        "question": "What is 'Response Time'?",
+        "options": ["The time taken for the system to respond to a request", "Total processing time", "Network latency", "None of the above"],
+        "correct": "The time taken for the system to respond to a request"
+    },
+    {
+        "question": "What is 'Benchmark Testing'?",
+        "options": ["Comparing application performance against standard criteria", "Security testing", "Load testing", "None of the above"],
+        "correct": "Comparing application performance against standard criteria"
+    },
+    {
+        "question": "What does 'Latency' measure?",
+        "options": ["The time delay before data transfer begins", "Total processing time", "Application throughput", "None of the above"],
+        "correct": "The time delay before data transfer begins"
+    },
+    {
+        "question": "What is 'Performance Profiling'?",
+        "options": ["Analyzing application performance characteristics", "Testing security", "Validating functionality", "None of the above"],
+        "correct": "Analyzing application performance characteristics"
+    },
+    {
+        "question": "Which of the following is a type of performance testing focused on network?",
+        "options": ["Network Performance Testing", "Load Testing", "Security Testing", "None of the above"],
+        "correct": "Network Performance Testing"
+    },
+    {
+        "question": "What does 'Bottleneck Analysis' involve?",
+        "options": ["Identifying performance limitations in the system", "Validating functionality", "Testing security", "None of the above"],
+        "correct": "Identifying performance limitations in the system"
+    },
+    {
+        "question": "What is the goal of 'Capacity Testing'?",
+        "options": ["To determine the maximum load the system can handle", "To assess security", "To validate functionalities", "None of the above"],
+        "correct": "To determine the maximum load the system can handle"
+    },
+    {
+        "question": "Which performance testing type is designed to test how the application performs under extreme conditions?",
+        "options": ["Stress Testing", "Load Testing", "Soak Testing", "None of the above"],
+        "correct": "Stress Testing"
+    },
+    {
+        "question": "What does 'Endurance Testing' assess?",
+        "options": ["The application’s performance under sustained use", "Response time", "Error rate", "None of the above"],
+        "correct": "The application’s performance under sustained use"
+    },
+    {
+        "question": "Which of the following is NOT a performance testing tool?",
+        "options": ["LoadRunner", "QTP", "Gatling", "JMeter"],
+        "correct": "QTP"
+    },
+    {
+        "question": "What is 'Volume Testing'?",
+        "options": ["Testing how the system behaves under a large volume of data", "Load testing", "Security testing", "None of the above"],
+        "correct": "Testing how the system behaves under a large volume of data"
+    },
+    {
+        "question": "What does 'Infrastructure Testing' focus on?",
+        "options": ["Testing the underlying architecture of the system", "Testing UI", "Testing security", "None of the above"],
+        "correct": "Testing the underlying architecture of the system"
+    },
+    {
+        "question": "What is the role of 'Test Environment' in performance testing?",
+        "options": ["To replicate production conditions for testing", "To validate functionality", "To test security", "None of the above"],
+        "correct": "To replicate production conditions for testing"
+    },
+    {
+        "question": "What is 'Cloud Load Testing'?",
+        "options": ["Performing load tests in a cloud environment", "Testing on local servers", "Testing in a lab environment", "None of the above"],
+        "correct": "Performing load tests in a cloud environment"
+    },
+    {
+        "question": "Which of the following is a performance testing challenge?",
+        "options": ["Identifying realistic user scenarios", "Automating test scripts", "Managing test data", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is 'Error Rate' in performance testing?",
+        "options": ["The percentage of failed requests compared to total requests", "Response time", "Throughput", "None of the above"],
+        "correct": "The percentage of failed requests compared to total requests"
+    },
+    {
+        "question": "What is 'Test Case Design' in performance testing?",
+        "options": ["Creating test cases to evaluate performance", "Creating security test cases", "Validating functionality", "None of the above"],
+        "correct": "Creating test cases to evaluate performance"
+    },
+    {
+        "question": "What does 'Performance Testing Strategy' involve?",
+        "options": ["Planning the approach for performance testing", "Planning the security testing", "Planning the automation testing", "None of the above"],
+        "correct": "Planning the approach for performance testing"
+    },
+    {
+        "question": "Which phase of the software development lifecycle is performance testing usually performed?",
+        "options": ["Testing phase", "Development phase", "Maintenance phase", "All of the above"],
+        "correct": "Testing phase"
+    },
+    {
+        "question": "What does 'Client-Server Performance Testing' assess?",
+        "options": ["The performance of the client-server architecture", "User experience", "Security vulnerabilities", "None of the above"],
+        "correct": "The performance of the client-server architecture"
+    },
+    {
+        "question": "What is 'Performance Benchmark'?",
+        "options": ["A standard used to measure application performance", "A testing tool", "A methodology", "None of the above"],
+        "correct": "A standard used to measure application performance"
+    },
+    {
+        "question": "What is 'Baseline Testing'?",
+        "options": ["Testing against a known standard performance level", "Performance testing", "Security testing", "None of the above"],
+        "correct": "Testing against a known standard performance level"
+    },
+    {
+        "question": "What does 'Application Performance Monitoring (APM)' do?",
+        "options": ["Tracks application performance in real time", "Tests functionality", "Validates security", "None of the above"],
+        "correct": "Tracks application performance in real time"
+    },
+    {
+        "question": "What is 'Test Data Management' in performance testing?",
+        "options": ["Managing data used in performance tests", "Managing test scripts", "Managing environments", "None of the above"],
+        "correct": "Managing data used in performance tests"
+    },
+    {
+        "question": "Which of the following is a performance tuning technique?",
+        "options": ["Database optimization", "Code refactoring", "Caching", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the significance of 'Performance Regression Testing'?",
+        "options": ["To ensure performance levels are maintained after changes", "To validate functionality", "To assess security", "None of the above"],
+        "correct": "To ensure performance levels are maintained after changes"
+    },
+    {
+        "question": "What is the role of 'Monitoring Tools' in performance testing?",
+        "options": ["To provide insights into application performance", "To validate security", "To test functionality", "None of the above"],
+        "correct": "To provide insights into application performance"
+    },
+    {
+        "question": "What does 'Performance Testing Report' typically include?",
+        "options": ["Summary of test results and insights", "User feedback", "Security findings", "None of the above"],
+        "correct": "Summary of test results and insights"
+    },
+    {
+        "question": "What is 'Performance Testing Automation'?",
+        "options": ["Automating performance testing processes", "Automating security testing", "Automating manual testing", "None of the above"],
+        "correct": "Automating performance testing processes"
+    },
+    {
+        "question": "Which of the following describes 'Real User Monitoring (RUM)'?",
+        "options": ["Monitoring actual user interactions with the application", "Monitoring server performance", "Testing security", "None of the above"],
+        "correct": "Monitoring actual user interactions with the application"
+    },
+    {
+        "question": "What is the purpose of 'Synthetic Monitoring'?",
+        "options": ["To simulate user interactions and measure performance", "To monitor security", "To validate functionality", "None of the above"],
+        "correct": "To simulate user interactions and measure performance"
+    },
+    {
+        "question": "What does 'Capacity Planning' involve?",
+        "options": ["Estimating future resource needs for applications", "Testing security", "Validating functionality", "None of the above"],
+        "correct": "Estimating future resource needs for applications"
+    },
+    {
+        "question": "What is 'Server Response Time'?",
+        "options": ["The time taken for the server to process a request", "Total application response time", "Network latency", "None of the above"],
+        "correct": "The time taken for the server to process a request"
+    },
+    {
+        "question": "Which of the following is a performance testing best practice?",
+        "options": ["Start testing early in the development cycle", "Test only in production", "Ignore monitoring tools", "None of the above"],
+        "correct": "Start testing early in the development cycle"
+    },
+    {
+        "question": "What is 'Performance Testing Lifecycle'?",
+        "options": ["The stages involved in conducting performance testing", "The process of software development", "The process of security testing", "None of the above"],
+        "correct": "The stages involved in conducting performance testing"
+    },
+    {
+        "question": "What is 'Network Load Testing'?",
+        "options": ["Testing the performance of a network under various conditions", "Testing application load", "Security testing", "None of the above"],
+        "correct": "Testing the performance of a network under various conditions"
+    },
+    {
+        "question": "What is the purpose of 'Performance Testing Checklist'?",
+        "options": ["To ensure all necessary aspects of performance testing are covered", "To validate functionality", "To assess security", "None of the above"],
+        "correct": "To ensure all necessary aspects of performance testing are covered"
+    },
+    {
+        "question": "What is the significance of 'Load Test Scripts'?",
+        "options": ["They simulate user behavior for load testing", "They validate functionality", "They test security", "None of the above"],
+        "correct": "They simulate user behavior for load testing"
+    },
+    {
+        "question": "What does 'Synthetic Transaction' in performance testing mean?",
+        "options": ["A scripted transaction that simulates user behavior", "A real transaction", "Security testing", "None of the above"],
+        "correct": "A scripted transaction that simulates user behavior"
+    },
+    {
+        "question": "What does 'Distributed Load Testing' refer to?",
+        "options": ["Testing an application by distributing the load across multiple machines", "Testing security", "Testing functionality", "None of the above"],
+        "correct": "Testing an application by distributing the load across multiple machines"
+    },
+    {
+        "question": "What is the primary goal of 'Performance Testing Tools'?",
+        "options": ["To facilitate the performance testing process", "To validate functionality", "To test security", "None of the above"],
+        "correct": "To facilitate the performance testing process"
+    },
+    {
+        "question": "What does 'Latency Measurement' track?",
+        "options": ["The time taken for data to travel between client and server", "Response time", "Throughput", "None of the above"],
+        "correct": "The time taken for data to travel between client and server"
+    },
+    {
+        "question": "What is 'API Performance Testing'?",
+        "options": ["Testing the performance of APIs under various loads", "Testing security of APIs", "Testing functionalities", "None of the above"],
+        "correct": "Testing the performance of APIs under various loads"
+    },
+    {
+        "question": "Which of the following performance metrics is important for web applications?",
+        "options": ["Page load time", "CPU usage", "Memory consumption", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does 'Performance Testing Report' help in?",
+        "options": ["Analyzing performance issues and planning improvements", "Validating security", "Testing functionality", "None of the above"],
+        "correct": "Analyzing performance issues and planning improvements"
+    },
+    {
+        "question": "What is 'Test Execution' in performance testing?",
+        "options": ["Running performance tests and analyzing results", "Testing security", "Validating functionalities", "None of the above"],
+        "correct": "Running performance tests and analyzing results"
+    },
+    {
+        "question": "What does 'Resource Utilization' measure in performance testing?",
+        "options": ["The extent to which system resources are used during testing", "Response time", "Throughput", "None of the above"],
+        "correct": "The extent to which system resources are used during testing"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

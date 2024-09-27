@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What is a web service?",
+        "options": ["A method of communication over the internet", "A web application", "A protocol for data transfer", "None of the above"],
+        "correct": "A method of communication over the internet"
+    },
+    {
+        "question": "Which protocol is commonly used for web services?",
+        "options": ["HTTP", "FTP", "SMTP", "POP3"],
+        "correct": "HTTP"
+    },
+    {
+        "question": "What is SOAP in web services?",
+        "options": ["A protocol for exchanging structured information", "A type of web service", "A programming language", "None of the above"],
+        "correct": "A protocol for exchanging structured information"
+    },
+    {
+        "question": "What does REST stand for?",
+        "options": ["Representational State Transfer", "Remote Execution State Transfer", "Resource Exchange State Transfer", "None of the above"],
+        "correct": "Representational State Transfer"
+    },
+    {
+        "question": "Which of the following is NOT a characteristic of RESTful services?",
+        "options": ["Statelessness", "Cacheable responses", "Use of XML only", "Uniform interface"],
+        "correct": "Use of XML only"
+    },
+    {
+        "question": "What is WSDL?",
+        "options": ["Web Services Description Language", "Web Service Data Language", "Web Service Definition Language", "None of the above"],
+        "correct": "Web Services Description Language"
+    },
+    {
+        "question": "Which format is commonly used for data exchange in RESTful services?",
+        "options": ["JSON", "XML", "HTML", "Both A and B"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What is the purpose of a UDDI?",
+        "options": ["To describe web services", "To publish and discover web services", "To connect web services", "None of the above"],
+        "correct": "To publish and discover web services"
+    },
+    {
+        "question": "What is the main advantage of using web services?",
+        "options": ["Interoperability", "Simplicity", "Low cost", "High security"],
+        "correct": "Interoperability"
+    },
+    {
+        "question": "Which of the following is an example of a RESTful HTTP method?",
+        "options": ["GET", "POST", "PUT", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is a resource in REST?",
+        "options": ["An endpoint for accessing data", "A type of database", "A programming interface", "None of the above"],
+        "correct": "An endpoint for accessing data"
+    },
+    {
+        "question": "What is the primary purpose of JSON in web services?",
+        "options": ["Data format for communication", "Programming language", "Web service protocol", "None of the above"],
+        "correct": "Data format for communication"
+    },
+    {
+        "question": "What does the `Content-Type` header indicate?",
+        "options": ["The type of content being sent", "The type of server", "The type of protocol", "None of the above"],
+        "correct": "The type of content being sent"
+    },
+    {
+        "question": "How is a web service typically accessed?",
+        "options": ["Through a web browser", "Using a URL", "Via an API", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the main function of an API?",
+        "options": ["To facilitate communication between software components", "To store data", "To secure web applications", "None of the above"],
+        "correct": "To facilitate communication between software components"
+    },
+    {
+        "question": "What does the `Status Code 200` indicate?",
+        "options": ["Success", "Client error", "Server error", "Unauthorized access"],
+        "correct": "Success"
+    },
+    {
+        "question": "Which of the following is a method of authenticating a web service?",
+        "options": ["Basic Auth", "OAuth", "JWT", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the `GET` method do in a web service?",
+        "options": ["Retrieves data", "Updates data", "Deletes data", "Creates data"],
+        "correct": "Retrieves data"
+    },
+    {
+        "question": "Which of the following tools can be used for testing web services?",
+        "options": ["Postman", "SoapUI", "Insomnia", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is CORS?",
+        "options": ["Cross-Origin Resource Sharing", "Content Origin Resource Sharing", "Cross-Origin Request Security", "None of the above"],
+        "correct": "Cross-Origin Resource Sharing"
+    },
+    {
+        "question": "Which of the following is true about SOAP web services?",
+        "options": ["They are stateless", "They use XML exclusively", "They are faster than REST", "None of the above"],
+        "correct": "They use XML exclusively"
+    },
+    {
+        "question": "What is the main drawback of SOAP?",
+        "options": ["Complexity", "Lack of standards", "Low security", "High performance"],
+        "correct": "Complexity"
+    },
+    {
+        "question": "What is a key characteristic of REST?",
+        "options": ["Stateful interactions", "Use of HTTP methods", "Complexity", "XML only"],
+        "correct": "Use of HTTP methods"
+    },
+    {
+        "question": "What is a common use case for web services?",
+        "options": ["Data exchange between applications", "User authentication", "Web scraping", "None of the above"],
+        "correct": "Data exchange between applications"
+    },
+    {
+        "question": "What is the primary format for SOAP messages?",
+        "options": ["JSON", "XML", "HTML", "Plain text"],
+        "correct": "XML"
+    },
+    {
+        "question": "What does the `PUT` method do in a web service?",
+        "options": ["Retrieves data", "Updates or replaces data", "Creates new data", "Deletes data"],
+        "correct": "Updates or replaces data"
+    },
+    {
+        "question": "Which of the following is a benefit of using web services?",
+        "options": ["Platform independence", "Scalability", "Reusability", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the `DELETE` method?",
+        "options": ["To retrieve data", "To remove data", "To update data", "To create data"],
+        "correct": "To remove data"
+    },
+    {
+        "question": "How do web services communicate?",
+        "options": ["XML", "JSON", "HTTP", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the primary purpose of the XML schema?",
+        "options": ["To define the structure of XML documents", "To provide validation", "To enhance performance", "Both A and B"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What does `XML-RPC` stand for?",
+        "options": ["XML Remote Procedure Call", "XML Random Procedure Call", "XML Reusable Procedure Call", "None of the above"],
+        "correct": "XML Remote Procedure Call"
+    },
+    {
+        "question": "What is the main difference between SOAP and REST?",
+        "options": ["Protocol vs architecture", "XML vs JSON", "Stateless vs stateful", "None of the above"],
+        "correct": "Protocol vs architecture"
+    },
+    {
+        "question": "What is an endpoint in web services?",
+        "options": ["A URL that serves as an entry point", "A response to a request", "A type of HTTP method", "None of the above"],
+        "correct": "A URL that serves as an entry point"
+    },
+    {
+        "question": "What is the main function of a web service client?",
+        "options": ["To consume web services", "To create web services", "To deploy web services", "None of the above"],
+        "correct": "To consume web services"
+    },
+    {
+        "question": "What does the `OPTIONS` method do?",
+        "options": ["Describes the communication options", "Retrieves data", "Updates data", "None of the above"],
+        "correct": "Describes the communication options"
+    },
+    {
+        "question": "What is the purpose of the `SOAPAction` HTTP header?",
+        "options": ["To indicate the intent of the SOAP request", "To specify the content type", "To authenticate the request", "None of the above"],
+        "correct": "To indicate the intent of the SOAP request"
+    },
+    {
+        "question": "What does the `401 Unauthorized` status code indicate?",
+        "options": ["Request succeeded", "Authentication required", "Client error", "Server error"],
+        "correct": "Authentication required"
+    },
+    {
+        "question": "What is the primary purpose of an API Gateway?",
+        "options": ["To manage API traffic", "To store data", "To create APIs", "None of the above"],
+        "correct": "To manage API traffic"
+    },
+    {
+        "question": "What is a common use case for SOAP web services?",
+        "options": ["Enterprise applications", "Mobile applications", "Public APIs", "None of the above"],
+        "correct": "Enterprise applications"
+    },
+    {
+        "question": "What is the role of the `Accept` header in a web service request?",
+        "options": ["To specify the type of response expected", "To indicate the type of request", "To authenticate the request", "None of the above"],
+        "correct": "To specify the type of response expected"
+    },
+    {
+        "question": "Which of the following is a characteristic of XML?",
+        "options": ["Self-descriptive", "Supports mixed content", "Extensible", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the main goal of web services?",
+        "options": ["Interoperability", "Efficiency", "Security", "None of the above"],
+        "correct": "Interoperability"
+    },
+    {
+        "question": "What is the function of a service registry?",
+        "options": ["To store web services", "To publish and discover services", "To manage service traffic", "None of the above"],
+        "correct": "To publish and discover services"
+    },
+    {
+        "question": "What is the primary benefit of using REST over SOAP?",
+        "options": ["Simplicity", "Support for multiple data formats", "Performance", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which format is NOT typically used for web service communication?",
+        "options": ["XML", "JSON", "YAML", "C++"],
+        "correct": "C++"
+    },
+    {
+        "question": "What is a common HTTP status code for a successful POST request?",
+        "options": ["200", "201", "204", "400"],
+        "correct": "201"
+    },
+    {
+        "question": "What does the `403 Forbidden` status code indicate?",
+        "options": ["Authentication required", "Access denied", "Request succeeded", "Client error"],
+        "correct": "Access denied"
+    },
+    {
+        "question": "What is the primary purpose of a JSON schema?",
+        "options": ["To validate JSON data", "To enhance performance", "To define API endpoints", "None of the above"],
+        "correct": "To validate JSON data"
+    },
+    {
+        "question": "Which HTTP method is used to update a resource?",
+        "options": ["GET", "POST", "PUT", "DELETE"],
+        "correct": "PUT"
+    },
+    {
+        "question": "What is the purpose of the `Response` object in web services?",
+        "options": ["To hold the data returned from the server", "To send data to the client", "To handle errors", "None of the above"],
+        "correct": "To hold the data returned from the server"
+    },
+    {
+        "question": "What is the main advantage of using XML over JSON?",
+        "options": ["Human-readable", "Supports namespaces", "Lighter weight", "Easier to parse"],
+        "correct": "Supports namespaces"
+    },
+    {
+        "question": "What does the `Content-Length` header specify?",
+        "options": ["The length of the response body", "The length of the request body", "The type of content", "None of the above"],
+        "correct": "The length of the response body"
+    },
+    {
+        "question": "What is the purpose of the `Cache-Control` header?",
+        "options": ["To manage caching policies", "To specify content type", "To authenticate requests", "None of the above"],
+        "correct": "To manage caching policies"
+    },
+    {
+        "question": "What is an example of an API versioning strategy?",
+        "options": ["URI versioning", "Parameter versioning", "Header versioning", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the `410 Gone` status code indicate?",
+        "options": ["Resource is no longer available", "Authentication required", "Request succeeded", "Client error"],
+        "correct": "Resource is no longer available"
+    },
+    {
+        "question": "What is a common challenge when using web services?",
+        "options": ["Security", "Performance", "Interoperability", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which of the following is a web service architectural style?",
+        "options": ["REST", "SOAP", "GraphQL", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is a benefit of using OpenAPI Specification?",
+        "options": ["Standardized API documentation", "Code generation", "Testing tools", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the `Host` header in an HTTP request?",
+        "options": ["To specify the domain name", "To authenticate the request", "To specify the content type", "None of the above"],
+        "correct": "To specify the domain name"
+    },
+    {
+        "question": "What does the `500 Internal Server Error` status code indicate?",
+        "options": ["Server encountered an unexpected condition", "Request succeeded", "Client error", "Authentication required"],
+        "correct": "Server encountered an unexpected condition"
+    },
+    {
+        "question": "What is a common design pattern used in web services?",
+        "options": ["MVC", "Singleton", "Observer", "None of the above"],
+        "correct": "MVC"
+    },
+    {
+        "question": "What does `API Throttling` mean?",
+        "options": ["Limiting the number of requests a client can make", "Increasing the speed of requests", "Blocking certain IP addresses", "None of the above"],
+        "correct": "Limiting the number of requests a client can make"
+    },
+    {
+        "question": "What is an `API Key` used for?",
+        "options": ["To authenticate a client", "To identify a user", "To secure data", "None of the above"],
+        "correct": "To authenticate a client"
+    },
+    {
+        "question": "What does the `CORS` policy control?",
+        "options": ["Cross-origin requests", "Data encryption", "Response formats", "None of the above"],
+        "correct": "Cross-origin requests"
+    },
+    {
+        "question": "What is the main function of a service mesh?",
+        "options": ["Managing service-to-service communication", "Storing data", "Creating APIs", "None of the above"],
+        "correct": "Managing service-to-service communication"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

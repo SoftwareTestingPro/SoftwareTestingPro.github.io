@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What is the correct syntax for referring to an external script called 'script.js'?",
+        "options": ["<script href='script.js'>", "<script src='script.js'>", "<script name='script.js'>", "<script file='script.js'>"],
+        "correct": "<script src='script.js'>"
+    },
+    {
+        "question": "Which company developed JavaScript?",
+        "options": ["Netscape", "Bell Labs", "Sun Microsystems", "IBM"],
+        "correct": "Netscape"
+    },
+    {
+        "question": "What is the purpose of the 'this' keyword in JavaScript?",
+        "options": ["It refers to the current object", "It refers to the global object", "It is used for comments", "It has no purpose"],
+        "correct": "It refers to the current object"
+    },
+    {
+        "question": "Which of the following is a JavaScript data type?",
+        "options": ["String", "Boolean", "Number", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which operator is used to assign a value to a variable?",
+        "options": ["=", "==", "===", "=>"],
+        "correct": "="
+    },
+    {
+        "question": "What is the output of 'console.log(typeof NaN)'?",
+        "options": ["number", "undefined", "NaN", "object"],
+        "correct": "number"
+    },
+    {
+        "question": "Which method is used to parse a JSON string?",
+        "options": ["JSON.parse()", "JSON.stringify()", "JSON.decode()", "JSON.load()"],
+        "correct": "JSON.parse()"
+    },
+    {
+        "question": "Which of the following is used to create a function in JavaScript?",
+        "options": ["function myFunction()", "function:myFunction()", "create myFunction()", "def myFunction()"],
+        "correct": "function myFunction()"
+    },
+    {
+        "question": "What will be the output of the following code: console.log(0.1 + 0.2 === 0.3)?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "false"
+    },
+    {
+        "question": "How do you create an array in JavaScript?",
+        "options": ["var arr = (1, 2, 3)", "var arr = [1, 2, 3]", "var arr = {1, 2, 3}", "var arr = 1, 2, 3"],
+        "correct": "var arr = [1, 2, 3]"
+    },
+    {
+        "question": "Which keyword is used to declare a variable in JavaScript?",
+        "options": ["var", "let", "const", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the 'Array.prototype.map()' method?",
+        "options": ["To create a new array with the results of calling a provided function on every element", "To filter elements from an array", "To add elements to the end of an array", "To reverse an array"],
+        "correct": "To create a new array with the results of calling a provided function on every element"
+    },
+    {
+        "question": "Which statement is used to stop a loop in JavaScript?",
+        "options": ["stop", "break", "end", "exit"],
+        "correct": "break"
+    },
+    {
+        "question": "How do you create a comment in JavaScript?",
+        "options": ["// this is a comment", "# this is a comment", "<!-- this is a comment -->", "/* this is a comment */"],
+        "correct": "// this is a comment"
+    },
+    {
+        "question": "What does the '=== operator' check?",
+        "options": ["Value and type equality", "Value equality only", "Type equality only", "None of the above"],
+        "correct": "Value and type equality"
+    },
+    {
+        "question": "What will the following code output: console.log(1 + '1')?",
+        "options": ["2", "11", "NaN", "undefined"],
+        "correct": "11"
+    },
+    {
+        "question": "Which of the following is NOT a primitive data type in JavaScript?",
+        "options": ["String", "Number", "Boolean", "Object"],
+        "correct": "Object"
+    },
+    {
+        "question": "How do you add an event listener in JavaScript?",
+        "options": ["element.addEventListener(event, function)", "element.on(event, function)", "element.attachEvent(event, function)", "element.listen(event, function)"],
+        "correct": "element.addEventListener(event, function)"
+    },
+    {
+        "question": "What is the default value of an uninitialized variable in JavaScript?",
+        "options": ["null", "undefined", "0", "'' (empty string)"],
+        "correct": "undefined"
+    },
+    {
+        "question": "Which of the following is a JavaScript framework?",
+        "options": ["Django", "Ruby on Rails", "React", "Laravel"],
+        "correct": "React"
+    },
+    {
+        "question": "What is 'hoisting' in JavaScript?",
+        "options": ["Moving declarations to the top of their scope", "Using variables before declaring them", "Both a and b", "None of the above"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "Which method can be used to convert a JSON object to a string?",
+        "options": ["JSON.parse()", "JSON.stringify()", "JSON.objectify()", "JSON.toString()"],
+        "correct": "JSON.stringify()"
+    },
+    {
+        "question": "What does the 'reduce' method do?",
+        "options": ["Executes a reducer function on each element of the array", "Filters the array", "Maps the array", "Reverses the array"],
+        "correct": "Executes a reducer function on each element of the array"
+    },
+    {
+        "question": "Which symbol is used for single-line comments in JavaScript?",
+        "options": ["//", "#", "/*", "--"],
+        "correct": "//"
+    },
+    {
+        "question": "What does 'console.log(typeof null)' return?",
+        "options": ["'object'", "'null'", "'undefined'", "'number'"],
+        "correct": "'object'"
+    },
+    {
+        "question": "Which function can be used to test if a string includes a certain character?",
+        "options": ["String.includes()", "String.has()", "String.contains()", "String.indexOf()"],
+        "correct": "String.includes()"
+    },
+    {
+        "question": "Which of the following statements is used to throw an exception?",
+        "options": ["throw", "catch", "try", "finally"],
+        "correct": "throw"
+    },
+    {
+        "question": "What does the 'Array.prototype.filter()' method do?",
+        "options": ["Creates a new array with all elements that pass the test implemented by the provided function", "Executes a provided function once for each array element", "Reverses the order of the elements", "Sorts the array"],
+        "correct": "Creates a new array with all elements that pass the test implemented by the provided function"
+    },
+    {
+        "question": "What is the difference between 'let' and 'var'?",
+        "options": ["'let' is block-scoped while 'var' is function-scoped", "'let' and 'var' are the same", "'var' is block-scoped while 'let' is function-scoped", "'let' is not hoisted while 'var' is"],
+        "correct": "'let' is block-scoped while 'var' is function-scoped"
+    },
+    {
+        "question": "What will 'console.log(2 == '2')' output?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "true"
+    },
+    {
+        "question": "Which of the following is used to declare a constant variable?",
+        "options": ["const", "let", "var", "define"],
+        "correct": "const"
+    },
+    {
+        "question": "What does the 'forEach()' method do?",
+        "options": ["Executes a provided function once for each array element", "Creates a new array with the results of calling a provided function", "Filters the array", "Reverses the array"],
+        "correct": "Executes a provided function once for each array element"
+    },
+    {
+        "question": "Which method is used to remove the last element from an array?",
+        "options": ["pop()", "shift()", "splice()", "slice()"],
+        "correct": "pop()"
+    },
+    {
+        "question": "What is the purpose of the 'try...catch' statement?",
+        "options": ["To handle exceptions", "To throw exceptions", "To declare functions", "None of the above"],
+        "correct": "To handle exceptions"
+    },
+    {
+        "question": "Which function can be used to merge two or more arrays?",
+        "options": ["Array.concat()", "Array.merge()", "Array.push()", "Array.join()"],
+        "correct": "Array.concat()"
+    },
+    {
+        "question": "Which method is used to join two or more arrays?",
+        "options": ["Array.concat()", "Array.join()", "Array.push()", "Array.append()"],
+        "correct": "Array.concat()"
+    },
+    {
+        "question": "What will the following code output: console.log(!!'hello')?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "true"
+    },
+    {
+        "question": "Which event occurs when the user clicks on an HTML element?",
+        "options": ["onclick", "onchange", "onmouseclick", "onhover"],
+        "correct": "onclick"
+    },
+    {
+        "question": "Which of the following is NOT a JavaScript framework?",
+        "options": ["React", "Angular", "Django", "Vue"],
+        "correct": "Django"
+    },
+    {
+        "question": "How can you convert a string to a number in JavaScript?",
+        "options": ["parseInt()", "parseFloat()", "Number()", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which method returns the number of characters in a string?",
+        "options": ["length()", "size()", "count()", "getSize()"],
+        "correct": "length()"
+    },
+    {
+        "question": "What is the output of the following code: console.log(typeof []);?",
+        "options": ["'array'", "'object'", "'undefined'", "'null'"],
+        "correct": "'object'"
+    },
+    {
+        "question": "What does the 'setTimeout()' function do?",
+        "options": ["Executes a function after a specified number of milliseconds", "Executes a function repeatedly", "Pauses the execution", "None of the above"],
+        "correct": "Executes a function after a specified number of milliseconds"
+    },
+    {
+        "question": "Which of the following methods can be used to manipulate the DOM?",
+        "options": ["getElementById()", "querySelector()", "appendChild()", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which of the following is a method to convert a string to uppercase?",
+        "options": ["toUpper()", "toUpperCase()", "upperCase()", "toUpperString()"],
+        "correct": "toUpperCase()"
+    },
+    {
+        "question": "How do you create a new object in JavaScript?",
+        "options": ["var obj = new Object();", "var obj = {}; ", "var obj = Object.create();", "Both a and b"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "What is 'JSON'?",
+        "options": ["JavaScript Object Notation", "JavaScript Object Name", "JavaScript Object Node", "None of the above"],
+        "correct": "JavaScript Object Notation"
+    },
+    {
+        "question": "Which of the following is a JavaScript operator?",
+        "options": ["+", "-", "*", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the output of 'console.log(2 + '2')'?",
+        "options": ["22", "4", "NaN", "undefined"],
+        "correct": "22"
+    },
+    {
+        "question": "Which symbol is used for comments in JavaScript?",
+        "options": ["//", "#", "/*", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How do you check if a variable is an array?",
+        "options": ["Array.isArray()", "isArray()", "instanceof Array", "Both a and c"],
+        "correct": "Both a and c"
+    },
+    {
+        "question": "Which of the following statements is used to catch an exception?",
+        "options": ["catch", "try", "throw", "finally"],
+        "correct": "catch"
+    },
+    {
+        "question": "What will 'console.log(null == undefined)' output?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "true"
+    },
+    {
+        "question": "What is the purpose of the 'async' keyword?",
+        "options": ["To define a function as asynchronous", "To pause the execution of a function", "To make a function synchronous", "None of the above"],
+        "correct": "To define a function as asynchronous"
+    },
+    {
+        "question": "What is the output of 'console.log(1 + 2 + '3')'?",
+        "options": ["33", "6", "15", "Error"],
+        "correct": "33"
+    },
+    {
+        "question": "What does the 'Array.prototype.splice()' method do?",
+        "options": ["Changes the contents of an array by removing or replacing existing elements", "Adds new items to an array", "Reverses the array", "Sorts the array"],
+        "correct": "Changes the contents of an array by removing or replacing existing elements"
+    },
+    {
+        "question": "Which method can be used to find the first index of an element in an array?",
+        "options": ["indexOf()", "find()", "firstIndex()", "All of the above"],
+        "correct": "indexOf()"
+    },
+    {
+        "question": "What is a closure in JavaScript?",
+        "options": ["A function having access to the parent scope", "A block of code that runs when an event occurs", "A method to declare a variable", "None of the above"],
+        "correct": "A function having access to the parent scope"
+    },
+    {
+        "question": "What will 'console.log(0.1 + 0.2 == 0.3)' output?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "false"
+    },
+    {
+        "question": "Which of the following is used to remove whitespace from both ends of a string?",
+        "options": ["trim()", "strip()", "cut()", "clean()"],
+        "correct": "trim()"
+    },
+    {
+        "question": "What is the purpose of the 'finally' block?",
+        "options": ["It always executes after try and catch blocks", "It handles exceptions", "It is used for conditional statements", "None of the above"],
+        "correct": "It always executes after try and catch blocks"
+    },
+    {
+        "question": "Which method is used to convert a string to an array?",
+        "options": ["split()", "join()", "toArray()", "arrayify()"],
+        "correct": "split()"
+    },
+    {
+        "question": "How do you create a new empty object in JavaScript?",
+        "options": ["var obj = Object.create();", "var obj = new Object();", "var obj = {}; ", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which statement is used to stop execution in a loop?",
+        "options": ["exit", "break", "stop", "continue"],
+        "correct": "break"
+    },
+    {
+        "question": "What will 'console.log(typeof {})' output?",
+        "options": ["'object'", "'array'", "'null'", "'undefined'"],
+        "correct": "'object'"
+    },
+    {
+        "question": "What does the 'window.onload' event do?",
+        "options": ["Executes a function when the entire page is loaded", "Executes a function when the document is ready", "Executes a function on button click", "None of the above"],
+        "correct": "Executes a function when the entire page is loaded"
+    },
+    {
+        "question": "How do you create a promise in JavaScript?",
+        "options": ["new Promise()", "Promise.create()", "Promise()", "None of the above"],
+        "correct": "new Promise()"
+    },
+    {
+        "question": "What is the output of 'console.log(typeof NaN)'?",
+        "options": ["'number'", "'undefined'", "'NaN'", "'object'"],
+        "correct": "'number'"
+    },
+    {
+        "question": "Which of the following is a valid way to declare a function?",
+        "options": ["function myFunction() {}", "myFunction() {}", "declare myFunction() {}", "All of the above"],
+        "correct": "function myFunction() {}"
+    },
+    {
+        "question": "What will 'console.log(3 === '3')' output?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "false"
+    },
+    {
+        "question": "Which method can be used to remove the first element from an array?",
+        "options": ["shift()", "pop()", "splice()", "slice()"],
+        "correct": "shift()"
+    },
+    {
+        "question": "Which of the following will NOT trigger an error?",
+        "options": ["console.log(1 / 0)", "console.log(null)", "console.log(undefined)", "console.log('Hello')"],
+        "correct": "console.log('Hello')"
+    },
+    {
+        "question": "Which of the following is a JavaScript package manager?",
+        "options": ["npm", "pip", "gem", "composer"],
+        "correct": "npm"
+    },
+    {
+        "question": "What does the 'map' method return?",
+        "options": ["A new array", "An object", "A string", "None of the above"],
+        "correct": "A new array"
+    },
+    {
+        "question": "What will the following code output: console.log('a' + + 'b')?",
+        "options": ["ab", "NaN", "aNaN", "undefined"],
+        "correct": "aNaN"
+    },
+    {
+        "question": "Which method is used to add an element to the end of an array?",
+        "options": ["push()", "pop()", "shift()", "unshift()"],
+        "correct": "push()"
+    },
+    {
+        "question": "Which of the following is a method to check the equality of two objects?",
+        "options": ["==", "===", "JSON.stringify(obj1) === JSON.stringify(obj2)", "Both b and c"],
+        "correct": "Both b and c"
+    },
+    {
+        "question": "What is 'Event Delegation' in JavaScript?",
+        "options": ["Handling events at a higher level in the DOM", "Using a single event listener for multiple elements", "Both a and b", "None of the above"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "What does 'localStorage' do?",
+        "options": ["Stores data with no expiration date", "Stores data that expires after the session ends", "Stores data in cookies", "None of the above"],
+        "correct": "Stores data with no expiration date"
+    },
+    {
+        "question": "Which method is used to retrieve an item from local storage?",
+        "options": ["localStorage.getItem()", "localStorage.retrieve()", "localStorage.read()", "localStorage.load()"],
+        "correct": "localStorage.getItem()"
+    },
+    {
+        "question": "What is the output of 'console.log(3 + 4 + '5')'?",
+        "options": ["12", "75", "34", "error"],
+        "correct": "75"
+    },
+    {
+        "question": "What is the purpose of the 'map' function?",
+        "options": ["To create a new array with the results of calling a provided function on every element", "To find the first element that satisfies a condition", "To reduce an array to a single value", "To filter elements from an array"],
+        "correct": "To create a new array with the results of calling a provided function on every element"
+    },
+    {
+        "question": "How do you create a closure in JavaScript?",
+        "options": ["By defining a function inside another function", "By using the 'let' keyword", "By using 'var'", "None of the above"],
+        "correct": "By defining a function inside another function"
+    },
+    {
+        "question": "What will 'console.log([] + {})' output?",
+        "options": ["[object Object]", "undefined", "[]", "error"],
+        "correct": "[object Object]"
+    },
+    {
+        "question": "Which method can be used to find the last index of an element in an array?",
+        "options": ["lastIndexOf()", "indexOf()", "findLast()", "All of the above"],
+        "correct": "lastIndexOf()"
+    },
+    {
+        "question": "What is the output of 'console.log(1 + '1' == 2)'?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "false"
+    },
+    {
+        "question": "Which method is used to copy an array?",
+        "options": ["Array.copy()", "Array.clone()", "slice()", "spread operator"],
+        "correct": "slice()"
+    },
+    {
+        "question": "Which of the following is used to declare a function expression?",
+        "options": ["var myFunction = function() {}", "function myFunction() {}", "myFunction: function() {}", "None of the above"],
+        "correct": "var myFunction = function() {}"
+    },
+    {
+        "question": "What does the 'filter' method do?",
+        "options": ["Creates a new array with all elements that pass the test implemented by the provided function", "Executes a function for each element", "Adds new items to an array", "Removes items from an array"],
+        "correct": "Creates a new array with all elements that pass the test implemented by the provided function"
+    },
+    {
+        "question": "What will 'console.log(5 == '5')' output?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "true"
+    },
+    {
+        "question": "How do you declare a single-line comment in JavaScript?",
+        "options": ["// This is a comment", "/* This is a comment */", "<!-- This is a comment -->", "# This is a comment"],
+        "correct": "// This is a comment"
+    },
+    {
+        "question": "What will 'console.log(typeof [1, 2, 3])' return?",
+        "options": ["'array'", "'object'", "'number'", "'undefined'"],
+        "correct": "'object'"
+    },
+    {
+        "question": "Which method is used to find an element in an array?",
+        "options": ["find()", "filter()", "indexOf()", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What will 'console.log(1 / 'one')' output?",
+        "options": ["NaN", "undefined", "0", "error"],
+        "correct": "NaN"
+    },
+    {
+        "question": "How do you declare an object in JavaScript?",
+        "options": ["var obj = new Object();", "var obj = {}; ", "var obj = Object.create();", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which method can be used to check if a property exists in an object?",
+        "options": ["hasOwnProperty()", "in operator", "Object.has()", "Both a and b"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "What will 'console.log([1] == [1])' output?",
+        "options": ["true", "false", "undefined", "error"],
+        "correct": "false"
+    },
+    {
+        "question": "What is the result of the expression 'true + true'?",
+        "options": ["2", "true", "false", "undefined"],
+        "correct": "2"
+    },
+    {
+        "question": "What will 'console.log((1 + 2) * 3)' output?",
+        "options": ["9", "6", "3", "undefined"],
+        "correct": "9"
+    },
+    {
+        "question": "What is the purpose of 'window.localStorage'?",
+        "options": ["To store data without expiration", "To store data that expires with the session", "Both a and b", "None of the above"],
+        "correct": "To store data without expiration"
+    },
+    {
+        "question": "Which of the following is a valid way to define a function?",
+        "options": ["function() {}", "var myFunction = function() {}", "Both a and b", "None of the above"],
+        "correct": "Both a and b"
+    },
+    {
+        "question": "What will 'console.log(typeof NaN)' output?",
+        "options": ["'number'", "'undefined'", "'null'", "'error'"],
+        "correct": "'number'"
+    },
+    {
+        "question": "Which of the following is a way to create a new array from an existing array?",
+        "options": ["map()", "filter()", "slice()", "All of the above"],
+        "correct": "All of the above"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What does Git primarily manage?",
+        "options": ["Files", "Directories", "Version Control", "Database Connections"],
+        "correct": "Version Control"
+    },
+    {
+        "question": "What is the command to initialize a new Git repository?",
+        "options": ["git start", "git init", "git new", "git create"],
+        "correct": "git init"
+    },
+    {
+        "question": "Which command is used to stage changes for the next commit?",
+        "options": ["git stage", "git add", "git commit", "git push"],
+        "correct": "git add"
+    },
+    {
+        "question": "How do you create a new branch in Git?",
+        "options": ["git branch <branch_name>", "git create <branch_name>", "git new branch <branch_name>", "git checkout <branch_name>"],
+        "correct": "git branch <branch_name>"
+    },
+    {
+        "question": "What command do you use to commit staged changes?",
+        "options": ["git commit -m", "git save", "git stage", "git push"],
+        "correct": "git commit -m"
+    },
+    {
+        "question": "What does the command 'git status' do?",
+        "options": ["Shows the current branch", "Displays changes to be committed", "Displays the status of the working directory", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which command is used to merge branches in Git?",
+        "options": ["git combine", "git merge", "git join", "git integrate"],
+        "correct": "git merge"
+    },
+    {
+        "question": "What command is used to view the commit history?",
+        "options": ["git history", "git log", "git commits", "git track"],
+        "correct": "git log"
+    },
+    {
+        "question": "How do you delete a branch in Git?",
+        "options": ["git remove <branch_name>", "git delete <branch_name>", "git branch -d <branch_name>", "git branch remove <branch_name>"],
+        "correct": "git branch -d <branch_name>"
+    },
+    {
+        "question": "What is the purpose of 'git pull'?",
+        "options": ["Fetch changes from a remote repository and merge", "Push local changes to a remote repository", "Initialize a new Git repository", "None of the above"],
+        "correct": "Fetch changes from a remote repository and merge"
+    },
+    {
+        "question": "What command do you use to push local changes to a remote repository?",
+        "options": ["git send", "git push", "git upload", "git transfer"],
+        "correct": "git push"
+    },
+    {
+        "question": "What is a Git repository?",
+        "options": ["A directory that stores all versions of your code", "A location on the internet for your files", "A cloud storage solution", "None of the above"],
+        "correct": "A directory that stores all versions of your code"
+    },
+    {
+        "question": "What is the default branch name in Git?",
+        "options": ["main", "master", "primary", "default"],
+        "correct": "master"
+    },
+    {
+        "question": "What does 'git clone' do?",
+        "options": ["Creates a new branch", "Downloads a repository from a remote server", "Commits changes to a repository", "None of the above"],
+        "correct": "Downloads a repository from a remote server"
+    },
+    {
+        "question": "Which command is used to create a tag in Git?",
+        "options": ["git tag <tag_name>", "git create tag <tag_name>", "git add tag <tag_name>", "git new tag <tag_name>"],
+        "correct": "git tag <tag_name>"
+    },
+    {
+        "question": "What is a conflict in Git?",
+        "options": ["When two branches are merged successfully", "When changes from different branches cannot be merged automatically", "When a commit fails", "None of the above"],
+        "correct": "When changes from different branches cannot be merged automatically"
+    },
+    {
+        "question": "What does 'git stash' do?",
+        "options": ["Saves changes temporarily", "Discards changes", "Commits changes", "None of the above"],
+        "correct": "Saves changes temporarily"
+    },
+    {
+        "question": "Which command can be used to see differences between the working directory and the staging area?",
+        "options": ["git diff", "git changes", "git status", "git log"],
+        "correct": "git diff"
+    },
+    {
+        "question": "What is a fork in Git?",
+        "options": ["A copy of a repository", "A branch in a repository", "A command", "None of the above"],
+        "correct": "A copy of a repository"
+    },
+    {
+        "question": "What is the purpose of the .gitignore file?",
+        "options": ["To specify files and directories to ignore in Git", "To track changes", "To list contributors", "None of the above"],
+        "correct": "To specify files and directories to ignore in Git"
+    },
+    {
+        "question": "What command would you use to check which branch you are currently on?",
+        "options": ["git branch", "git status", "git current", "git active"],
+        "correct": "git branch"
+    },
+    {
+        "question": "What is 'remote' in Git?",
+        "options": ["A copy of the local repository", "A repository hosted on the internet", "A feature in Git", "None of the above"],
+        "correct": "A repository hosted on the internet"
+    },
+    {
+        "question": "What is the purpose of the 'HEAD' pointer in Git?",
+        "options": ["It points to the latest commit", "It points to the first commit", "It points to the last branch", "None of the above"],
+        "correct": "It points to the latest commit"
+    },
+    {
+        "question": "How do you view all remote repositories?",
+        "options": ["git remote", "git remotes", "git remote -v", "git show remotes"],
+        "correct": "git remote -v"
+    },
+    {
+        "question": "What is the command to rename a branch in Git?",
+        "options": ["git rename <old_name> <new_name>", "git branch -m <old_name> <new_name>", "git move <old_name> <new_name>", "git branch rename <old_name> <new_name>"],
+        "correct": "git branch -m <old_name> <new_name>"
+    },
+    {
+        "question": "What is a commit message?",
+        "options": ["A message explaining the changes made in a commit", "A message to describe a branch", "A message for merging", "None of the above"],
+        "correct": "A message explaining the changes made in a commit"
+    },
+    {
+        "question": "Which of the following commands is used to revert a commit?",
+        "options": ["git undo <commit_id>", "git revert <commit_id>", "git rollback <commit_id>", "git reset <commit_id>"],
+        "correct": "git revert <commit_id>"
+    },
+    {
+        "question": "What is the purpose of 'git cherry-pick'?",
+        "options": ["To apply changes from one commit to another branch", "To create a new branch", "To delete a commit", "None of the above"],
+        "correct": "To apply changes from one commit to another branch"
+    },
+    {
+        "question": "Which command is used to remove files from the staging area?",
+        "options": ["git unstage", "git remove", "git rm", "git drop"],
+        "correct": "git reset <file_name>"
+    },
+    {
+        "question": "What is a commit?",
+        "options": ["A snapshot of changes made to files", "A branch", "A repository", "None of the above"],
+        "correct": "A snapshot of changes made to files"
+    },
+    {
+        "question": "What is the difference between 'git fetch' and 'git pull'?",
+        "options": ["Fetch retrieves updates; pull retrieves and merges updates", "Fetch merges updates; pull retrieves updates", "Both are the same", "None of the above"],
+        "correct": "Fetch retrieves updates; pull retrieves and merges updates"
+    },
+    {
+        "question": "What does 'git init' do?",
+        "options": ["Creates a new Git repository", "Initializes a remote repository", "Creates a new branch", "None of the above"],
+        "correct": "Creates a new Git repository"
+    },
+    {
+        "question": "Which command allows you to view differences between two commits?",
+        "options": ["git diff <commit_id1> <commit_id2>", "git changes <commit_id1> <commit_id2>", "git compare <commit_id1> <commit_id2>", "git log <commit_id1> <commit_id2>"],
+        "correct": "git diff <commit_id1> <commit_id2>"
+    },
+    {
+        "question": "What is 'git rebase' used for?",
+        "options": ["To combine multiple commits into one", "To apply changes from one branch onto another", "To remove commits", "None of the above"],
+        "correct": "To apply changes from one branch onto another"
+    },
+    {
+        "question": "Which command is used to check the current branch's upstream tracking branch?",
+        "options": ["git branch -u", "git branch --set-upstream", "git branch --track", "git status"],
+        "correct": "git status"
+    },
+    {
+        "question": "What command is used to apply changes from the stash?",
+        "options": ["git apply", "git stash pop", "git stash apply", "None of the above"],
+        "correct": "git stash apply"
+    },
+    {
+        "question": "What is the purpose of the 'git config' command?",
+        "options": ["To set configuration options for Git", "To initialize a repository", "To clone a repository", "None of the above"],
+        "correct": "To set configuration options for Git"
+    },
+    {
+        "question": "Which command shows the differences between staged and unstaged changes?",
+        "options": ["git diff", "git diff --staged", "git changes", "git status"],
+        "correct": "git diff"
+    },
+    {
+        "question": "What does the 'git blame' command do?",
+        "options": ["Shows which commit changed each line in a file", "Displays the commit history", "Shows the last commit", "None of the above"],
+        "correct": "Shows which commit changed each line in a file"
+    },
+    {
+        "question": "Which command is used to reset your current branch to a previous commit?",
+        "options": ["git reset --hard <commit_id>", "git revert <commit_id>", "git checkout <commit_id>", "git reset <commit_id>"],
+        "correct": "git reset --hard <commit_id>"
+    },
+    {
+        "question": "What is the purpose of 'git shortlog'?",
+        "options": ["To summarize the commit history", "To list all branches", "To show differences", "None of the above"],
+        "correct": "To summarize the commit history"
+    },
+    {
+        "question": "Which command allows you to see all branches, both local and remote?",
+        "options": ["git branch -a", "git branch --all", "git branches", "git list"],
+        "correct": "git branch -a"
+    },
+    {
+        "question": "What does the command 'git checkout -b <branch_name>' do?",
+        "options": ["Creates and switches to a new branch", "Switches to an existing branch", "Creates a new branch only", "None of the above"],
+        "correct": "Creates and switches to a new branch"
+    },
+    {
+        "question": "What is a bare repository in Git?",
+        "options": ["A repository without a working directory", "A repository that is empty", "A repository with no commits", "None of the above"],
+        "correct": "A repository without a working directory"
+    },
+    {
+        "question": "What does the 'git show' command do?",
+        "options": ["Displays information about a commit", "Shows the status of the repository", "Displays branch information", "None of the above"],
+        "correct": "Displays information about a commit"
+    },
+    {
+        "question": "What is a Git hook?",
+        "options": ["A script that runs at certain points in the Git workflow", "A command to fetch changes", "A branch", "None of the above"],
+        "correct": "A script that runs at certain points in the Git workflow"
+    },
+    {
+        "question": "What does the command 'git cherry' do?",
+        "options": ["Shows which commits are not in the upstream branch", "Merges changes", "Creates a new branch", "None of the above"],
+        "correct": "Shows which commits are not in the upstream branch"
+    },
+    {
+        "question": "What is the command to revert changes in the working directory to the last committed state?",
+        "options": ["git reset", "git checkout -- <file_name>", "git restore", "git revert"],
+        "correct": "git checkout -- <file_name>"
+    },
+    {
+        "question": "Which command do you use to configure a remote repository's URL?",
+        "options": ["git remote add", "git config remote.origin.url", "git set remote", "None of the above"],
+        "correct": "git remote add"
+    },
+    {
+        "question": "What does the command 'git reset --soft HEAD~1' do?",
+        "options": ["Resets the current branch to the previous commit but keeps changes staged", "Completely discards the last commit", "Reverts the last commit", "None of the above"],
+        "correct": "Resets the current branch to the previous commit but keeps changes staged"
+    },
+    {
+        "question": "What is a 'squash' in Git?",
+        "options": ["Combining multiple commits into a single commit", "Splitting a commit into multiple commits", "Deleting a commit", "None of the above"],
+        "correct": "Combining multiple commits into a single commit"
+    },
+    {
+        "question": "How do you temporarily switch to a different branch without committing changes?",
+        "options": ["git switch <branch_name>", "git checkout <branch_name>", "git branch <branch_name>", "None of the above"],
+        "correct": "git stash and then git checkout <branch_name>"
+    },
+    {
+        "question": "Which command do you use to view the changes in a file between two commits?",
+        "options": ["git diff <commit_id1> <commit_id2> -- <file_name>", "git changes <commit_id1> <commit_id2>", "git compare <commit_id1> <commit_id2> -- <file_name>", "git show <commit_id> -- <file_name>"],
+        "correct": "git diff <commit_id1> <commit_id2> -- <file_name>"
+    },
+    {
+        "question": "What does 'git remote remove <remote_name>' do?",
+        "options": ["Removes a remote repository from your Git configuration", "Deletes a local branch", "Commits changes", "None of the above"],
+        "correct": "Removes a remote repository from your Git configuration"
+    },
+    {
+        "question": "What command is used to compare changes between the working directory and the last commit?",
+        "options": ["git diff", "git status", "git log", "git compare"],
+        "correct": "git diff"
+    },
+    {
+        "question": "What is the purpose of 'git merge --no-ff'?",
+        "options": ["To create a merge commit even if the merge could be resolved as a fast-forward", "To perform a fast-forward merge", "To delete the branch after merging", "None of the above"],
+        "correct": "To create a merge commit even if the merge could be resolved as a fast-forward"
+    },
+    {
+        "question": "What does 'git clean' do?",
+        "options": ["Removes untracked files from the working directory", "Cleans up commit history", "Restores files", "None of the above"],
+        "correct": "Removes untracked files from the working directory"
+    },
+    {
+        "question": "Which command is used to see the most recent commits in a graph format?",
+        "options": ["git log --graph", "git log --pretty", "git show", "git status"],
+        "correct": "git log --graph"
+    },
+    {
+        "question": "What does 'git pull origin <branch_name>' do?",
+        "options": ["Fetches changes from the specified branch and merges", "Pushes local changes to the specified branch", "Initializes a new branch", "None of the above"],
+        "correct": "Fetches changes from the specified branch and merges"
+    },
+    {
+        "question": "What is the command to amend the last commit?",
+        "options": ["git amend", "git commit --amend", "git modify last", "None of the above"],
+        "correct": "git commit --amend"
+    },
+    {
+        "question": "Which command is used to check for changes in the working directory that have not been staged?",
+        "options": ["git status", "git diff", "git changes", "git untracked"],
+        "correct": "git status"
+    },
+    {
+        "question": "What does 'git rebase -i' allow you to do?",
+        "options": ["Interactively rebase commits", "Merge branches", "Reset commits", "None of the above"],
+        "correct": "Interactively rebase commits"
+    },
+    {
+        "question": "Which command can be used to create a new Git repository on GitHub?",
+        "options": ["git create", "git init", "git remote add", "None of the above"],
+        "correct": "None of the above"
+    },
+    {
+        "question": "What is the purpose of 'git diff --cached'?",
+        "options": ["To show changes between the staging area and the last commit", "To show untracked files", "To display the working directory changes", "None of the above"],
+        "correct": "To show changes between the staging area and the last commit"
+    },
+    {
+        "question": "What does 'git tag -d <tag_name>' do?",
+        "options": ["Deletes a tag", "Creates a tag", "Renames a tag", "None of the above"],
+        "correct": "Deletes a tag"
+    },
+    {
+        "question": "Which command is used to apply a patch created with 'git format-patch'?",
+        "options": ["git apply", "git patch", "git commit", "None of the above"],
+        "correct": "git apply"
+    },
+    {
+        "question": "What does 'git reflog' do?",
+        "options": ["Shows the reference logs for your branches", "Displays the commit history", "Shows changes", "None of the above"],
+        "correct": "Shows the reference logs for your branches"
+    },
+    {
+        "question": "Which command is used to view the changes made by a specific commit?",
+        "options": ["git show <commit_id>", "git view <commit_id>", "git log <commit_id>", "git changes <commit_id>"],
+        "correct": "git show <commit_id>"
+    },
+    {
+        "question": "What is the command to create a new remote called 'origin'?",
+        "options": ["git remote create origin <url>", "git remote add origin <url>", "git set remote origin <url>", "None of the above"],
+        "correct": "git remote add origin <url>"
+    },
+    {
+        "question": "What does 'git merge --abort' do?",
+        "options": ["Aborts the merge process", "Merges changes", "Commits changes", "None of the above"],
+        "correct": "Aborts the merge process"
+    },
+    {
+        "question": "What is a 'HEAD' in Git?",
+        "options": ["A reference to the latest commit", "A type of branch", "A remote repository", "None of the above"],
+        "correct": "A reference to the latest commit"
+    },
+    {
+        "question": "What does 'git fetch' do?",
+        "options": ["Downloads changes from a remote repository", "Uploads local changes to a remote repository", "Commits changes", "None of the above"],
+        "correct": "Downloads changes from a remote repository"
+    },
+    {
+        "question": "Which command is used to view all the tags in a repository?",
+        "options": ["git tags", "git show tags", "git tag", "git list tags"],
+        "correct": "git tag"
+    },
+    {
+        "question": "What does 'git push origin --delete <branch_name>' do?",
+        "options": ["Deletes a branch from the remote repository", "Deletes a branch locally", "Merges branches", "None of the above"],
+        "correct": "Deletes a branch from the remote repository"
+    },
+    {
+        "question": "Which command is used to switch branches in Git?",
+        "options": ["git switch", "git checkout", "git move", "None of the above"],
+        "correct": "git checkout"
+    },
+    {
+        "question": "What is the purpose of 'git commit --amend'?",
+        "options": ["To modify the last commit", "To create a new commit", "To delete a commit", "None of the above"],
+        "correct": "To modify the last commit"
+    },
+    {
+        "question": "What does 'git remote prune origin' do?",
+        "options": ["Removes deleted branches from the local list of remote branches", "Adds a new remote", "Commits changes", "None of the above"],
+        "correct": "Removes deleted branches from the local list of remote branches"
+    },
+    {
+        "question": "What is the command to see detailed information about your Git configuration?",
+        "options": ["git config --list", "git config", "git info", "None of the above"],
+        "correct": "git config --list"
+    },
+    {
+        "question": "What is the command to update your local repository with changes from the remote repository?",
+        "options": ["git fetch", "git pull", "git update", "None of the above"],
+        "correct": "git pull"
+    },
+    {
+        "question": "What does the command 'git reset HEAD~1' do?",
+        "options": ["Moves the current branch pointer to the previous commit", "Reverts changes", "Resets the index", "None of the above"],
+        "correct": "Moves the current branch pointer to the previous commit"
+    },
+    {
+        "question": "What does 'git tag <tag_name>' create?",
+        "options": ["A lightweight tag", "A versioned tag", "A branch", "None of the above"],
+        "correct": "A lightweight tag"
+    },
+    {
+        "question": "What does 'git merge --squash' do?",
+        "options": ["Combines commits into a single commit before merging", "Performs a fast-forward merge", "Reverts commits", "None of the above"],
+        "correct": "Combines commits into a single commit before merging"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What is functional testing?",
+        "options": ["Testing the functionality of an application", "Testing the performance of an application", "Testing the security of an application", "None of the above"],
+        "correct": "Testing the functionality of an application"
+    },
+    {
+        "question": "Which of the following is a type of functional testing?",
+        "options": ["Unit testing", "Integration testing", "System testing", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the main goal of functional testing?",
+        "options": ["To verify the system's performance", "To verify that the software functions as intended", "To ensure security vulnerabilities are addressed", "To test the load handling capacity"],
+        "correct": "To verify that the software functions as intended"
+    },
+    {
+        "question": "Which document is typically used to define the requirements for functional testing?",
+        "options": ["Test Plan", "Test Strategy", "Requirement Specification", "User Manual"],
+        "correct": "Requirement Specification"
+    },
+    {
+        "question": "What is black-box testing?",
+        "options": ["Testing based on internal code knowledge", "Testing without knowledge of internal workings", "Testing by analyzing the source code", "None of the above"],
+        "correct": "Testing without knowledge of internal workings"
+    },
+    {
+        "question": "Which of the following is NOT a functional testing technique?",
+        "options": ["Equivalence Partitioning", "Boundary Value Analysis", "Load Testing", "State Transition Testing"],
+        "correct": "Load Testing"
+    },
+    {
+        "question": "What does the term 'use case' refer to in functional testing?",
+        "options": ["A description of how users interact with the system", "A document outlining test strategies", "A specific test case", "None of the above"],
+        "correct": "A description of how users interact with the system"
+    },
+    {
+        "question": "What is the purpose of regression testing?",
+        "options": ["To validate new features", "To ensure existing functionality is not broken", "To improve performance", "To test security"],
+        "correct": "To ensure existing functionality is not broken"
+    },
+    {
+        "question": "Which of the following is a functional testing tool?",
+        "options": ["Selenium", "LoadRunner", "JMeter", "Postman"],
+        "correct": "Selenium"
+    },
+    {
+        "question": "Which testing technique is used to verify the interactions between different modules of an application?",
+        "options": ["Integration Testing", "System Testing", "Unit Testing", "Acceptance Testing"],
+        "correct": "Integration Testing"
+    },
+    {
+        "question": "What is the focus of system testing?",
+        "options": ["Testing individual components", "Testing the whole system for compliance with requirements", "Testing the application's performance under load", "None of the above"],
+        "correct": "Testing the whole system for compliance with requirements"
+    },
+    {
+        "question": "What is acceptance testing?",
+        "options": ["Testing done to determine if the system meets business requirements", "Testing to find defects in the code", "Testing to ensure performance", "None of the above"],
+        "correct": "Testing done to determine if the system meets business requirements"
+    },
+    {
+        "question": "What does a test case typically include?",
+        "options": ["Test steps", "Expected results", "Actual results", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of smoke testing?",
+        "options": ["To perform in-depth testing", "To verify if the build is stable enough for further testing", "To check performance", "To validate security"],
+        "correct": "To verify if the build is stable enough for further testing"
+    },
+    {
+        "question": "Which of the following is a non-functional requirement?",
+        "options": ["System must be responsive", "System must be easy to use", "System must meet specific functionality", "All of the above"],
+        "correct": "System must be responsive"
+    },
+    {
+        "question": "What is exploratory testing?",
+        "options": ["Testing without a formal test plan", "Testing with predefined test cases", "Testing to evaluate performance", "None of the above"],
+        "correct": "Testing without a formal test plan"
+    },
+    {
+        "question": "Which of the following is true about functional testing?",
+        "options": ["It focuses on user requirements", "It can be automated", "It is done at various levels", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the primary difference between functional and non-functional testing?",
+        "options": ["Functional testing verifies functionality; non-functional testing verifies performance, usability, etc.", "Functional testing is done first; non-functional testing is done last", "Functional testing is manual; non-functional testing is automated", "None of the above"],
+        "correct": "Functional testing verifies functionality; non-functional testing verifies performance, usability, etc."
+    },
+    {
+        "question": "What is the role of the QA team in functional testing?",
+        "options": ["To develop software", "To validate the functionality of the software", "To manage project timelines", "To design the UI"],
+        "correct": "To validate the functionality of the software"
+    },
+    {
+        "question": "What is boundary value analysis?",
+        "options": ["Testing at the limits of input values", "Testing at random values", "Testing with average values", "None of the above"],
+        "correct": "Testing at the limits of input values"
+    },
+    {
+        "question": "Which testing technique focuses on validating the interaction between integrated components?",
+        "options": ["Integration Testing", "System Testing", "Unit Testing", "Functional Testing"],
+        "correct": "Integration Testing"
+    },
+    {
+        "question": "What is the output of a functional test case?",
+        "options": ["Pass or Fail", "Speed", "Resource Usage", "Memory Consumption"],
+        "correct": "Pass or Fail"
+    },
+    {
+        "question": "Which of the following statements is true about test cases?",
+        "options": ["A test case should cover multiple requirements", "Test cases should be independent", "Test cases are optional", "None of the above"],
+        "correct": "Test cases should be independent"
+    },
+    {
+        "question": "What does 'test data' refer to?",
+        "options": ["Data used to execute tests", "Data generated by tests", "Data that contains bugs", "None of the above"],
+        "correct": "Data used to execute tests"
+    },
+    {
+        "question": "What is the purpose of user acceptance testing (UAT)?",
+        "options": ["To test the system performance", "To validate the software meets user requirements", "To test code functionality", "None of the above"],
+        "correct": "To validate the software meets user requirements"
+    },
+    {
+        "question": "What is the significance of requirement traceability?",
+        "options": ["To link requirements to test cases", "To evaluate software performance", "To determine project timelines", "None of the above"],
+        "correct": "To link requirements to test cases"
+    },
+    {
+        "question": "What is a test plan?",
+        "options": ["A document that outlines the testing approach", "A set of test cases", "A list of bugs", "None of the above"],
+        "correct": "A document that outlines the testing approach"
+    },
+    {
+        "question": "Which of the following testing phases comes first in the software development life cycle?",
+        "options": ["User Acceptance Testing", "Integration Testing", "Unit Testing", "System Testing"],
+        "correct": "Unit Testing"
+    },
+    {
+        "question": "What is the role of test automation in functional testing?",
+        "options": ["To completely replace manual testing", "To increase testing efficiency", "To decrease the number of tests", "None of the above"],
+        "correct": "To increase testing efficiency"
+    },
+    {
+        "question": "Which of the following is a disadvantage of manual testing?",
+        "options": ["Requires less time", "Is more prone to human error", "Can cover all possible test cases", "None of the above"],
+        "correct": "Is more prone to human error"
+    },
+    {
+        "question": "What does 'test coverage' refer to?",
+        "options": ["The percentage of requirements tested", "The amount of time spent testing", "The number of defects found", "None of the above"],
+        "correct": "The percentage of requirements tested"
+    },
+    {
+        "question": "Which of the following is not a part of the functional testing process?",
+        "options": ["Test Planning", "Test Execution", "Test Design", "Performance Testing"],
+        "correct": "Performance Testing"
+    },
+    {
+        "question": "What is a 'test environment'?",
+        "options": ["The setup required to conduct tests", "The environment where the software is developed", "The system used for documentation", "None of the above"],
+        "correct": "The setup required to conduct tests"
+    },
+    {
+        "question": "What does the term 'defect density' refer to?",
+        "options": ["The number of defects per unit size of the application", "The severity of defects", "The total number of defects", "None of the above"],
+        "correct": "The number of defects per unit size of the application"
+    },
+    {
+        "question": "What is a 'bug report'?",
+        "options": ["A document that outlines a software defect", "A report that contains test results", "A list of features", "None of the above"],
+        "correct": "A document that outlines a software defect"
+    },
+    {
+        "question": "Which type of testing verifies the performance and scalability of the application?",
+        "options": ["Functional Testing", "Load Testing", "Unit Testing", "Smoke Testing"],
+        "correct": "Load Testing"
+    },
+    {
+        "question": "What is the primary goal of testing?",
+        "options": ["To find defects", "To ensure the product is user-friendly", "To optimize performance", "All of the above"],
+        "correct": "To find defects"
+    },
+    {
+        "question": "Which of the following is a valid reason for performing functional testing?",
+        "options": ["To confirm the software meets specified requirements", "To ensure software security", "To improve software performance", "None of the above"],
+        "correct": "To confirm the software meets specified requirements"
+    },
+    {
+        "question": "What does 'test execution' involve?",
+        "options": ["Running test cases", "Planning the testing process", "Documenting the results", "None of the above"],
+        "correct": "Running test cases"
+    },
+    {
+        "question": "What is the outcome of a failed test case?",
+        "options": ["The test case is marked as passed", "A defect is reported", "The software is released", "None of the above"],
+        "correct": "A defect is reported"
+    },
+    {
+        "question": "Which of the following best describes the term 'test script'?",
+        "options": ["A document outlining test strategies", "A set of instructions for automated testing", "A list of bugs", "None of the above"],
+        "correct": "A set of instructions for automated testing"
+    },
+    {
+        "question": "What does 'cross-browser testing' entail?",
+        "options": ["Testing a website in different browsers", "Testing a website's performance", "Testing security vulnerabilities", "None of the above"],
+        "correct": "Testing a website in different browsers"
+    },
+    {
+        "question": "Which of the following is an advantage of automated testing?",
+        "options": ["Faster execution of tests", "More flexible test execution", "Greater test accuracy", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is 'negative testing'?",
+        "options": ["Testing with invalid input to check how the system responds", "Testing to confirm a feature works", "Testing to ensure performance under load", "None of the above"],
+        "correct": "Testing with invalid input to check how the system responds"
+    },
+    {
+        "question": "What is a 'test scenario'?",
+        "options": ["A high-level description of a test case", "A detailed list of steps to execute", "The outcome of a test", "None of the above"],
+        "correct": "A high-level description of a test case"
+    },
+    {
+        "question": "Which of the following best describes 'test metrics'?",
+        "options": ["Quantitative measures of testing progress", "Qualitative measures of software quality", "A list of all test cases", "None of the above"],
+        "correct": "Quantitative measures of testing progress"
+    },
+    {
+        "question": "What is a 'test closure'?",
+        "options": ["The final stage of testing where results are evaluated", "The process of ending a test", "The creation of a test report", "None of the above"],
+        "correct": "The final stage of testing where results are evaluated"
+    },
+    {
+        "question": "What does 'test iteration' refer to?",
+        "options": ["Re-running tests multiple times", "Executing tests in a sequence", "Conducting multiple test cycles", "None of the above"],
+        "correct": "Conducting multiple test cycles"
+    },
+    {
+        "question": "Which of the following is true about functional testing?",
+        "options": ["It is only done once", "It is done at the end of the project", "It can be performed at different levels", "None of the above"],
+        "correct": "It can be performed at different levels"
+    },
+    {
+        "question": "What is the purpose of a 'test summary report'?",
+        "options": ["To provide a summary of testing activities and results", "To list all bugs found", "To document user requirements", "None of the above"],
+        "correct": "To provide a summary of testing activities and results"
+    },
+    {
+        "question": "What does 'test strategy' outline?",
+        "options": ["The overall approach to testing", "The individual test cases", "The software requirements", "None of the above"],
+        "correct": "The overall approach to testing"
+    },
+    {
+        "question": "Which of the following is a primary benefit of functional testing?",
+        "options": ["Ensures software meets user expectations", "Reduces the time to market", "Increases software performance", "None of the above"],
+        "correct": "Ensures software meets user expectations"
+    },
+    {
+        "question": "What does 'test execution' not include?",
+        "options": ["Running tests", "Logging defects", "Planning tests", "Collecting results"],
+        "correct": "Planning tests"
+    },
+    {
+        "question": "What is the role of documentation in functional testing?",
+        "options": ["To outline test cases and results", "To track bugs", "To communicate with stakeholders", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which type of testing focuses on system behavior under normal and abnormal conditions?",
+        "options": ["Functional Testing", "Performance Testing", "Stress Testing", "Security Testing"],
+        "correct": "Functional Testing"
+    },
+    {
+        "question": "What is the goal of test automation?",
+        "options": ["To replace manual testing completely", "To reduce the time spent on testing", "To increase the number of tests", "None of the above"],
+        "correct": "To reduce the time spent on testing"
+    },
+    {
+        "question": "What is a common tool used for functional testing?",
+        "options": ["JMeter", "Selenium", "LoadRunner", "Appium"],
+        "correct": "Selenium"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

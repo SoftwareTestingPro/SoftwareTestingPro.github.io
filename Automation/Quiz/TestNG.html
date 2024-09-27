@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What does TestNG stand for?",
+        "options": ["Test Next Generation", "Testing and Next Generation", "Test New Generation", "Test and Next"],
+        "correct": "Test Next Generation"
+    },
+    {
+        "question": "Which of the following is NOT a feature of TestNG?",
+        "options": ["Annotations", "Parallel execution", "Data-driven testing", "UI testing"],
+        "correct": "UI testing"
+    },
+    {
+        "question": "Which annotation is used to mark a method as a test in TestNG?",
+        "options": ["@Test", "@BeforeTest", "@BeforeSuite", "@TestMethod"],
+        "correct": "@Test"
+    },
+    {
+        "question": "What is the purpose of the @BeforeClass annotation?",
+        "options": ["Runs before each test method", "Runs once before the class", "Runs after the class", "None of the above"],
+        "correct": "Runs once before the class"
+    },
+    {
+        "question": "How can you group tests in TestNG?",
+        "options": ["Using groups attribute", "Using priority", "Using dependencies", "None of the above"],
+        "correct": "Using groups attribute"
+    },
+    {
+        "question": "Which annotation is used to define a method that should be run after all tests in a class?",
+        "options": ["@AfterSuite", "@AfterClass", "@AfterTest", "@AfterMethod"],
+        "correct": "@AfterClass"
+    },
+    {
+        "question": "How can you skip a test in TestNG?",
+        "options": ["Using @Skip annotation", "Throwing SkipException", "Using @Ignore", "None of the above"],
+        "correct": "Throwing SkipException"
+    },
+    {
+        "question": "What file format is used for TestNG XML configuration?",
+        "options": [".json", ".xml", ".yaml", ".txt"],
+        "correct": ".xml"
+    },
+    {
+        "question": "Which method is used to assert values in TestNG?",
+        "options": ["AssertEquals()", "AssertTrue()", "AssertFalse()", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the @DataProvider annotation do?",
+        "options": ["Provides test data to test methods", "Provides configuration data", "Runs tests in parallel", "None of the above"],
+        "correct": "Provides test data to test methods"
+    },
+    {
+        "question": "How do you run tests in parallel in TestNG?",
+        "options": ["By setting thread count in XML", "Using @Parallel annotation", "By using priority", "None of the above"],
+        "correct": "By setting thread count in XML"
+    },
+    {
+        "question": "What is the purpose of the @Test(priority=1) annotation?",
+        "options": ["To run the test first", "To run the test last", "To run the test second", "None of the above"],
+        "correct": "To run the test first"
+    },
+    {
+        "question": "Which of the following can be used to run TestNG tests?",
+        "options": ["Command line", "Eclipse", "IDE", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the @BeforeSuite annotation do?",
+        "options": ["Runs before the entire suite", "Runs before a test method", "Runs after all tests", "None of the above"],
+        "correct": "Runs before the entire suite"
+    },
+    {
+        "question": "Which of the following annotations is used to execute a method after all tests in a suite?",
+        "options": ["@AfterSuite", "@AfterClass", "@AfterTest", "@AfterMethod"],
+        "correct": "@AfterSuite"
+    },
+    {
+        "question": "How do you define a test method with multiple parameters in TestNG?",
+        "options": ["Using @DataProvider", "Using @TestParams", "Using constructor", "None of the above"],
+        "correct": "Using @DataProvider"
+    },
+    {
+        "question": "What is the use of the @Listeners annotation?",
+        "options": ["To specify test listeners", "To specify data providers", "To define groups", "None of the above"],
+        "correct": "To specify test listeners"
+    },
+    {
+        "question": "Which method is called when a test fails in TestNG?",
+        "options": ["onTestFailure()", "onTestSuccess()", "onTestStart()", "None of the above"],
+        "correct": "onTestFailure()"
+    },
+    {
+        "question": "How can you run specific test groups in TestNG?",
+        "options": ["Using XML configuration", "Using @Groups annotation", "Using priority", "None of the above"],
+        "correct": "Using XML configuration"
+    },
+    {
+        "question": "What is the default behavior when a test method throws an exception?",
+        "options": ["Test fails", "Test passes", "Test is skipped", "None of the above"],
+        "correct": "Test fails"
+    },
+    {
+        "question": "What is the function of the @AfterMethod annotation?",
+        "options": ["Runs after each test method", "Runs before each test method", "Runs after the class", "None of the above"],
+        "correct": "Runs after each test method"
+    },
+    {
+        "question": "Which TestNG feature allows you to run tests in a specific order?",
+        "options": ["priority", "sequence", "order", "None of the above"],
+        "correct": "priority"
+    },
+    {
+        "question": "What type of assertion is provided by TestNG?",
+        "options": ["Hard assertion", "Soft assertion", "Both A and B", "None of the above"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What does the @BeforeTest annotation do?",
+        "options": ["Runs before any test method", "Runs before each class", "Runs after all tests", "None of the above"],
+        "correct": "Runs before any test method"
+    },
+    {
+        "question": "Which of the following is NOT a valid TestNG assertion method?",
+        "options": ["assertEquals()", "assertTrue()", "assertFail()", "assertNotNull()"],
+        "correct": "assertFail()"
+    },
+    {
+        "question": "How can you create a dependency between test methods in TestNG?",
+        "options": ["Using dependsOnMethods", "Using priority", "Using groups", "None of the above"],
+        "correct": "Using dependsOnMethods"
+    },
+    {
+        "question": "What is the correct way to skip a test method in TestNG?",
+        "options": ["Using @Skip annotation", "Throwing SkipException", "Using @Ignore", "None of the above"],
+        "correct": "Throwing SkipException"
+    },
+    {
+        "question": "How do you run TestNG tests using Maven?",
+        "options": ["By using `mvn test` command", "By using `testng.xml`", "By using `mvn install`", "None of the above"],
+        "correct": "By using `mvn test` command"
+    },
+    {
+        "question": "Which file defines the suite of tests to be run in TestNG?",
+        "options": ["testng.xml", "suite.xml", "tests.xml", "None of the above"],
+        "correct": "testng.xml"
+    },
+    {
+        "question": "What is the purpose of the @BeforeGroups annotation?",
+        "options": ["Runs before each group of tests", "Runs after each group of tests", "Runs before the entire suite", "None of the above"],
+        "correct": "Runs before each group of tests"
+    },
+    {
+        "question": "How can you test a class with multiple test cases using TestNG?",
+        "options": ["Define multiple methods with @Test", "Use data providers", "Use @Parameters", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the primary purpose of using TestNG?",
+        "options": ["To enhance Selenium", "To improve test execution", "To support BDD", "To provide reporting"],
+        "correct": "To improve test execution"
+    },
+    {
+        "question": "Which of the following is a valid TestNG configuration option?",
+        "options": ["thread-count", "parallel", "data-provider", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the @AfterGroups annotation?",
+        "options": ["Runs after each group of tests", "Runs after the entire suite", "Runs before a specific test", "None of the above"],
+        "correct": "Runs after each group of tests"
+    },
+    {
+        "question": "How do you run only failed tests in TestNG?",
+        "options": ["Using `mvn test -Dtest=FailedTests`", "Using `testng.xml`", "Using `@Test(retryAnalyzer)`", "None of the above"],
+        "correct": "Using `@Test(retryAnalyzer)`"
+    },
+    {
+        "question": "What is the function of the @Test(invocationCount=3) annotation?",
+        "options": ["Runs the test method three times", "Runs the test method once", "Runs the test method in parallel", "None of the above"],
+        "correct": "Runs the test method three times"
+    },
+    {
+        "question": "Which method is used to assert two objects in TestNG?",
+        "options": ["assertSame()", "assertEquals()", "assertIdentical()", "None of the above"],
+        "correct": "assertEquals()"
+    },
+    {
+        "question": "What does the @Test(enabled=false) annotation do?",
+        "options": ["Disables the test", "Enables the test", "Marks the test as ignored", "None of the above"],
+        "correct": "Disables the test"
+    },
+    {
+        "question": "How do you specify the test method's timeout in TestNG?",
+        "options": ["@Test(timeout=1000)", "@Test(timeout=1)", "@Test(time=1000)", "None of the above"],
+        "correct": "@Test(timeout=1000)"
+    },
+    {
+        "question": "What is the output format of TestNG reports?",
+        "options": ["HTML", "XML", "JUnit", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which annotation is used to set up resources needed for tests?",
+        "options": ["@BeforeClass", "@BeforeTest", "@BeforeSuite", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which of the following can be used for logging in TestNG?",
+        "options": ["Reporter.log()", "System.out.println()", "Logger", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What happens when you have a test that depends on a skipped test?",
+        "options": ["The test runs", "The test is skipped", "The test fails", "None of the above"],
+        "correct": "The test is skipped"
+    },
+    {
+        "question": "How can you include or exclude tests in the TestNG XML file?",
+        "options": ["Using include/exclude tags", "Using priority", "Using test groups", "None of the above"],
+        "correct": "Using include/exclude tags"
+    },
+    {
+        "question": "Which class in TestNG is used for grouping tests?",
+        "options": ["ITestListener", "ITestNGMethod", "ITestContext", "None of the above"],
+        "correct": "ITestContext"
+    },
+    {
+        "question": "How can you retrieve the current test name in TestNG?",
+        "options": ["Using getName()", "Using getTestName()", "Using getMethod().getMethodName()", "None of the above"],
+        "correct": "Using getMethod().getMethodName()"
+    },
+    {
+        "question": "What is the default priority of a test in TestNG?",
+        "options": ["1", "0", "5", "No priority"],
+        "correct": "No priority"
+    },
+    {
+        "question": "How do you specify the maximum number of threads in a TestNG suite?",
+        "options": ["Using thread-count attribute", "Using max-thread attribute", "Using parallel attribute", "None of the above"],
+        "correct": "Using thread-count attribute"
+    },
+    {
+        "question": "Which assertion should be used to verify that an object is null?",
+        "options": ["assertNotNull()", "assertIsNull()", "assertNull()", "None of the above"],
+        "correct": "assertNull()"
+    },
+    {
+        "question": "Which annotation is used to perform a cleanup after all tests in a class?",
+        "options": ["@AfterClass", "@AfterSuite", "@AfterMethod", "@AfterTest"],
+        "correct": "@AfterClass"
+    },
+    {
+        "question": "What does the `@Parameters` annotation do?",
+        "options": ["Passes parameters to test methods", "Defines test methods", "Runs tests in parallel", "None of the above"],
+        "correct": "Passes parameters to test methods"
+    },
+    {
+        "question": "What is the correct way to create a test class in TestNG?",
+        "options": ["Public class TestClass", "TestClass class", "class TestNG", "None of the above"],
+        "correct": "Public class TestClass"
+    },
+    {
+        "question": "How can you define multiple data providers for a single test method?",
+        "options": ["By using multiple @DataProvider annotations", "Using one @DataProvider", "Using groups", "None of the above"],
+        "correct": "By using multiple @DataProvider annotations"
+    },
+    {
+        "question": "What does `@AfterClass` do?",
+        "options": ["Executes after all methods in the current class", "Executes before all methods in the current class", "Executes after the test suite", "None of the above"],
+        "correct": "Executes after all methods in the current class"
+    },
+    {
+        "question": "How can you include comments in a TestNG XML file?",
+        "options": ["<!-- comment -->", "// comment", "/* comment */", "None of the above"],
+        "correct": "<!-- comment -->"
+    },
+    {
+        "question": "What is the purpose of the `@DataProvider(name=\"data\")`?",
+        "options": ["To provide a name to the data provider", "To specify data for tests", "Both A and B", "None of the above"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What happens if a test fails in TestNG?",
+        "options": ["The remaining tests run", "All tests stop", "The entire suite fails", "None of the above"],
+        "correct": "The remaining tests run"
+    },
+    {
+        "question": "What is the purpose of the `@BeforeMethod` annotation?",
+        "options": ["Runs before each test method", "Runs once before the class", "Runs after each test method", "None of the above"],
+        "correct": "Runs before each test method"
+    },
+    {
+        "question": "Which of the following allows you to run tests in a specific order?",
+        "options": ["dependsOnMethods", "dependsOnGroups", "priority", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does TestNG use for reporting test results?",
+        "options": ["HTML reports", "XML reports", "Both A and B", "None of the above"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "Which annotation is used to indicate a method is a configuration method?",
+        "options": ["@Test", "@BeforeMethod", "@AfterMethod", "@BeforeClass"],
+        "correct": "@BeforeClass"
+    },
+    {
+        "question": "What is the use of `retryAnalyzer` in TestNG?",
+        "options": ["To retry failed tests", "To skip tests", "To group tests", "None of the above"],
+        "correct": "To retry failed tests"
+    },
+    {
+        "question": "How can you run a test method in a separate thread?",
+        "options": ["By using @Test(threadPoolSize)", "Using XML configuration", "Both A and B", "None of the above"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What is the function of the `@AfterSuite` annotation?",
+        "options": ["Runs after the entire test suite", "Runs before any test method", "Runs after each test method", "None of the above"],
+        "correct": "Runs after the entire test suite"
+    },
+    {
+        "question": "How can you manage dependencies between test methods?",
+        "options": ["Using dependsOnMethods", "Using groups", "Both A and B", "None of the above"],
+        "correct": "Both A and B"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

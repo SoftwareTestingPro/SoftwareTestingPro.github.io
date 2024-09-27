@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What is Postman primarily used for?",
+        "options": ["API development", "Web development", "Database management", "Mobile development"],
+        "correct": "API development"
+    },
+    {
+        "question": "Which of the following is a valid HTTP method?",
+        "options": ["GET", "POST", "PUT", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How do you save a request in Postman?",
+        "options": ["File > Save", "Click the Save button", "Ctrl + S", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of a collection in Postman?",
+        "options": ["To organize requests", "To store environment variables", "To manage workspaces", "None of the above"],
+        "correct": "To organize requests"
+    },
+    {
+        "question": "What is an environment in Postman?",
+        "options": ["A set of variables", "A user interface", "A database", "None of the above"],
+        "correct": "A set of variables"
+    },
+    {
+        "question": "Which format does Postman use for data interchange?",
+        "options": ["XML", "JSON", "CSV", "Both JSON and XML"],
+        "correct": "Both JSON and XML"
+    },
+    {
+        "question": "How can you run multiple requests in Postman?",
+        "options": ["Using collections", "Using scripts", "Using environments", "All of the above"],
+        "correct": "Using collections"
+    },
+    {
+        "question": "What is the purpose of Postman tests?",
+        "options": ["To validate API responses", "To document APIs", "To generate API keys", "None of the above"],
+        "correct": "To validate API responses"
+    },
+    {
+        "question": "Which tab in Postman is used to write tests?",
+        "options": ["Tests", "Pre-request Script", "Body", "Headers"],
+        "correct": "Tests"
+    },
+    {
+        "question": "What does the `pm` object represent in Postman scripts?",
+        "options": ["Postman API", "Postman Manager", "Postman Module", "Postman Method"],
+        "correct": "Postman API"
+    },
+    {
+        "question": "What is the default timeout for a request in Postman?",
+        "options": ["30 seconds", "60 seconds", "90 seconds", "No timeout"],
+        "correct": "30 seconds"
+    },
+    {
+        "question": "How can you share a Postman collection?",
+        "options": ["Export it", "Share a link", "Use Postman Teams", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is a mock server in Postman?",
+        "options": ["A server that simulates API responses", "A server that stores requests", "A server for running tests", "None of the above"],
+        "correct": "A server that simulates API responses"
+    },
+    {
+        "question": "Which feature allows you to automate API testing in Postman?",
+        "options": ["Postman Monitor", "Postman Runner", "Postman Sync", "Postman Share"],
+        "correct": "Postman Runner"
+    },
+    {
+        "question": "What type of authorization can you use in Postman?",
+        "options": ["Basic", "Bearer Token", "OAuth 2.0", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the Pre-request Script tab?",
+        "options": ["To run scripts before a request", "To validate responses", "To set up environments", "None of the above"],
+        "correct": "To run scripts before a request"
+    },
+    {
+        "question": "Which of the following is true about Postman environments?",
+        "options": ["They store user credentials", "They allow switching between sets of variables", "They cannot be edited", "All of the above"],
+        "correct": "They allow switching between sets of variables"
+    },
+    {
+        "question": "What is the use of the `pm.response` object?",
+        "options": ["To access response data", "To validate request parameters", "To modify request headers", "None of the above"],
+        "correct": "To access response data"
+    },
+    {
+        "question": "How can you run a collection using the command line?",
+        "options": ["Using Postman CLI", "Using Newman", "Using cURL", "None of the above"],
+        "correct": "Using Newman"
+    },
+    {
+        "question": "Which of the following is NOT a type of API?",
+        "options": ["REST", "SOAP", "GraphQL", "FTP"],
+        "correct": "FTP"
+    },
+    {
+        "question": "What is the function of the `pm.expect()` method?",
+        "options": ["To make assertions in tests", "To log information", "To define variables", "None of the above"],
+        "correct": "To make assertions in tests"
+    },
+    {
+        "question": "What is the purpose of collection variables?",
+        "options": ["To store data specific to a collection", "To store global data", "To store environment-specific data", "None of the above"],
+        "correct": "To store data specific to a collection"
+    },
+    {
+        "question": "How do you create a new request in Postman?",
+        "options": ["Click on New > Request", "Use the shortcut Ctrl + N", "Open an existing request", "None of the above"],
+        "correct": "Click on New > Request"
+    },
+    {
+        "question": "Which of the following formats can you import into Postman?",
+        "options": ["JSON", "CSV", "OpenAPI", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the Console in Postman?",
+        "options": ["To debug requests and scripts", "To view API documentation", "To create new requests", "None of the above"],
+        "correct": "To debug requests and scripts"
+    },
+    {
+        "question": "What does the `pm.environment.get('variableName')` function do?",
+        "options": ["Retrieves the value of an environment variable", "Sets a global variable", "Creates a new variable", "None of the above"],
+        "correct": "Retrieves the value of an environment variable"
+    },
+    {
+        "question": "What is a data file in Postman?",
+        "options": ["A file containing multiple requests", "A file containing data to run tests", "A file for saving variables", "None of the above"],
+        "correct": "A file containing data to run tests"
+    },
+    {
+        "question": "How do you send form data in a POST request?",
+        "options": ["Select the form-data option in the Body tab", "Send as JSON", "Send as URL encoded", "Both form-data and URL encoded"],
+        "correct": "Select the form-data option in the Body tab"
+    },
+    {
+        "question": "Which response code indicates a successful request?",
+        "options": ["200", "404", "500", "403"],
+        "correct": "200"
+    },
+    {
+        "question": "What does the term 'API' stand for?",
+        "options": ["Application Programming Interface", "Application Programming Interaction", "Applied Programming Interface", "None of the above"],
+        "correct": "Application Programming Interface"
+    },
+    {
+        "question": "Which of the following is NOT a feature of Postman?",
+        "options": ["API documentation", "API mock servers", "Version control", "Real-time collaboration"],
+        "correct": "Version control"
+    },
+    {
+        "question": "How do you import a collection into Postman?",
+        "options": ["File > Import", "Drag and drop the file", "Click on New > Collection", "None of the above"],
+        "correct": "File > Import"
+    },
+    {
+        "question": "What does the `pm.request` object represent?",
+        "options": ["The current request", "The current response", "The current environment", "None of the above"],
+        "correct": "The current request"
+    },
+    {
+        "question": "Which of the following is a valid response body type in Postman?",
+        "options": ["Text", "HTML", "Binary", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is a test script in Postman?",
+        "options": ["Code that runs after a request is sent", "Code that runs before a request is sent", "Code that validates API responses", "Both A and C"],
+        "correct": "Both A and C"
+    },
+    {
+        "question": "How do you set a variable in Postman?",
+        "options": ["Using `pm.environment.set('key', 'value')`", "Using `pm.set('key', 'value')`", "Using `setVariable('key', 'value')`", "None of the above"],
+        "correct": "Using `pm.environment.set('key', 'value')`"
+    },
+    {
+        "question": "What is the maximum number of requests you can add to a single Postman collection?",
+        "options": ["100", "500", "1000", "No limit"],
+        "correct": "No limit"
+    },
+    {
+        "question": "How do you handle API versioning in Postman?",
+        "options": ["By creating separate collections", "By using environment variables", "By adding version numbers in the request URLs", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the 'Tests' tab in Postman allow you to do?",
+        "options": ["Write scripts to validate responses", "View response headers", "Edit request URLs", "None of the above"],
+        "correct": "Write scripts to validate responses"
+    },
+    {
+        "question": "Which of the following is NOT a feature of Postman Pro?",
+        "options": ["Version control", "Collaboration tools", "Mock servers", "Data validation"],
+        "correct": "Data validation"
+    },
+    {
+        "question": "What does the term 'endpoint' refer to in API terminology?",
+        "options": ["The URL where the API can be accessed", "The data format of the response", "The authentication method used", "None of the above"],
+        "correct": "The URL where the API can be accessed"
+    },
+    {
+        "question": "Which type of request would you use to retrieve data from an API?",
+        "options": ["POST", "GET", "DELETE", "PUT"],
+        "correct": "GET"
+    },
+    {
+        "question": "How do you view response time in Postman?",
+        "options": ["In the response section", "In the Console", "In the Collection Runner", "None of the above"],
+        "correct": "In the response section"
+    },
+    {
+        "question": "What is the use of the 'Body' tab in Postman?",
+        "options": ["To set request headers", "To specify the request method", "To provide the data to be sent with the request", "None of the above"],
+        "correct": "To provide the data to be sent with the request"
+    },
+    {
+        "question": "What does Postman allow you to do with API responses?",
+        "options": ["View response headers", "View response body", "Assert response values", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which option is used to send a request with a file in Postman?",
+        "options": ["Form-data", "Binary", "GraphQL", "Both Form-data and Binary"],
+        "correct": "Both Form-data and Binary"
+    },
+    {
+        "question": "What is a 'workspace' in Postman?",
+        "options": ["A place to organize requests", "A collaboration space", "An area for API documentation", "Both A and B"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What does the 'History' tab in Postman display?",
+        "options": ["All previous requests made", "All saved collections", "All responses received", "None of the above"],
+        "correct": "All previous requests made"
+    },
+    {
+        "question": "What is the function of the Postman API?",
+        "options": ["To manage collections and environments programmatically", "To create requests", "To view API documentation", "None of the above"],
+        "correct": "To manage collections and environments programmatically"
+    },
+    {
+        "question": "How can you add comments to your Postman scripts?",
+        "options": ["Using `//` for single-line comments", "Using `/* */` for multi-line comments", "Both A and B", "None of the above"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What is the purpose of the `pm.response.to.have.status(200)` assertion?",
+        "options": ["To check if the response status is 200", "To log the response", "To validate request headers", "None of the above"],
+        "correct": "To check if the response status is 200"
+    },
+    {
+        "question": "Which feature allows you to document your APIs within Postman?",
+        "options": ["API Builder", "API Documentation", "API Mocking", "None of the above"],
+        "correct": "API Documentation"
+    },
+    {
+        "question": "What does the term 'request payload' refer to?",
+        "options": ["The data sent with the request", "The response from the server", "The headers of the request", "None of the above"],
+        "correct": "The data sent with the request"
+    },
+    {
+        "question": "How can you send an array of JSON objects in Postman?",
+        "options": ["Using form-data", "Using raw JSON", "Using URL parameters", "None of the above"],
+        "correct": "Using raw JSON"
+    },
+    {
+        "question": "What type of content is typically sent in the 'Content-Type' header?",
+        "options": ["application/json", "text/html", "image/jpeg", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How do you monitor API performance in Postman?",
+        "options": ["Using Postman Monitor", "Using Newman", "Using collection runner", "None of the above"],
+        "correct": "Using Postman Monitor"
+    },
+    {
+        "question": "What does `pm.environment.unset('variableName')` do?",
+        "options": ["Deletes an environment variable", "Retrieves an environment variable", "Sets an environment variable", "None of the above"],
+        "correct": "Deletes an environment variable"
+    },
+    {
+        "question": "What is a Postman workspace used for?",
+        "options": ["Collaboration", "Request organization", "Environment management", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How do you enable SSL certificate verification in Postman?",
+        "options": ["In settings", "In the request", "SSL is always enabled", "None of the above"],
+        "correct": "In settings"
+    },
+    {
+        "question": "What does the 'Preview' tab in Postman show?",
+        "options": ["Formatted response", "Raw response", "Response headers", "None of the above"],
+        "correct": "Formatted response"
+    },
+    {
+        "question": "What is the function of the 'Settings' in Postman?",
+        "options": ["To configure the application", "To manage API keys", "To change themes", "None of the above"],
+        "correct": "To configure the application"
+    },
+    {
+        "question": "What is the advantage of using Postman workspaces?",
+        "options": ["Separation of projects", "Team collaboration", "Better organization", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How do you create a new environment in Postman?",
+        "options": ["Click on the Environment dropdown > Add", "Click on New > Environment", "Both A and B", "None of the above"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What is the purpose of using Postman Monitors?",
+        "options": ["To automate tests", "To schedule requests", "To track API performance", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What does the 'Runner' feature in Postman allow you to do?",
+        "options": ["Run a single request", "Run a collection of requests", "View previous requests", "None of the above"],
+        "correct": "Run a collection of requests"
+    },
+    {
+        "question": "How can you view detailed information about a request in Postman?",
+        "options": ["Using the console", "Viewing the request history", "Using the 'Preview' tab", "None of the above"],
+        "correct": "Using the console"
+    },
+    {
+        "question": "What does the 'Collection Runner' do?",
+        "options": ["Runs multiple requests", "Exports collections", "Imports collections", "None of the above"],
+        "correct": "Runs multiple requests"
+    },
+    {
+        "question": "How can you use Postman to generate code snippets?",
+        "options": ["Using the Code button in the request", "Using the Console", "Using the Import feature", "None of the above"],
+        "correct": "Using the Code button in the request"
+    },
+    {
+        "question": "What does 'Mock Server' in Postman do?",
+        "options": ["Simulates an API", "Creates a database", "Hosts API documentation", "None of the above"],
+        "correct": "Simulates an API"
+    },
+    {
+        "question": "How can you test an API that requires authentication in Postman?",
+        "options": ["Add authentication details in the Authorization tab", "Include them in the URL", "Set them in the Body", "None of the above"],
+        "correct": "Add authentication details in the Authorization tab"
+    },
+    {
+        "question": "What is the function of the `pm.response.json()` method?",
+        "options": ["Parses the JSON response", "Converts the response to XML", "Validates response status", "None of the above"],
+        "correct": "Parses the JSON response"
+    },
+    {
+        "question": "What does Postman use to display response headers?",
+        "options": ["Headers tab", "Preview tab", "Body tab", "Console"],
+        "correct": "Headers tab"
+    },
+    {
+        "question": "How do you set global variables in Postman?",
+        "options": ["Using `pm.globals.set('key', 'value')`", "Using the Settings menu", "Both A and B", "None of the above"],
+        "correct": "Both A and B"
+    },
+    {
+        "question": "What is the purpose of the Postman workspace?",
+        "options": ["To organize collections", "To manage variables", "To collaborate with team members", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which type of authentication does Postman support?",
+        "options": ["Basic", "OAuth 1.0", "OAuth 2.0", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "How can you add documentation to your Postman collection?",
+        "options": ["Using the Description field", "In the Tests tab", "In the Body of requests", "None of the above"],
+        "correct": "Using the Description field"
+    },
+    {
+        "question": "What does the 'Pre-request Script' allow you to do?",
+        "options": ["Write scripts that execute before a request is sent", "Log response details", "Create collections", "None of the above"],
+        "correct": "Write scripts that execute before a request is sent"
+    },
+    {
+        "question": "What does Postman use to test APIs?",
+        "options": ["JavaScript", "Python", "Ruby", "None of the above"],
+        "correct": "JavaScript"
+    },
+    {
+        "question": "What does the `pm.expect(pm.response.code).to.equal(200)` assertion check?",
+        "options": ["If the response code is 200", "If the request was sent", "If the environment is set", "None of the above"],
+        "correct": "If the response code is 200"
+    },
+    {
+        "question": "How can you send a request to an API that requires a specific header?",
+        "options": ["Add headers in the Headers tab", "Include headers in the Body", "Both A and B", "None of the above"],
+        "correct": "Add headers in the Headers tab"
+    },
+    {
+        "question": "What is the 'Documentation' feature in Postman used for?",
+        "options": ["To generate API documentation", "To run tests", "To manage variables", "None of the above"],
+        "correct": "To generate API documentation"
+    },
+    {
+        "question": "How can you export a collection from Postman?",
+        "options": ["File > Export", "Click on the collection and select Export", "Right-click the collection", "None of the above"],
+        "correct": "Click on the collection and select Export"
+    },
+    {
+        "question": "What is the role of the 'Tests' tab in Postman?",
+        "options": ["To write test scripts for the API", "To view the response", "To edit request parameters", "None of the above"],
+        "correct": "To write test scripts for the API"
+    },
+    {
+        "question": "How can you enable or disable SSL certificate verification in Postman?",
+        "options": ["In settings", "In request", "In console", "None of the above"],
+        "correct": "In settings"
+    },
+    {
+        "question": "Which feature in Postman allows you to run tests in the background?",
+        "options": ["Newman", "Runner", "Monitor", "All of the above"],
+        "correct": "Monitor"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "Which of the following is a valid way to launch a browser in Selenium?",
+        "options": ["WebDriver driver = new FirefoxDriver();", "WebDriver driver = new Chrome();", "WebDriver driver = new IE();", "WebDriver driver = new SafariDriver();"],
+        "correct": "WebDriver driver = new FirefoxDriver();"
+    },
+    {
+        "question": "What is the primary purpose of the Selenium WebDriver?",
+        "options": ["To perform load testing", "To automate web applications for testing purposes", "To automate mobile applications", "To create web applications"],
+        "correct": "To automate web applications for testing purposes"
+    },
+    {
+        "question": "In Selenium 4, which method is used to get the current URL of the page?",
+        "options": ["driver.getCurrentUrl()", "driver.getUrl()", "driver.currentUrl()", "driver.getCurrentPageUrl()"],
+        "correct": "driver.getCurrentUrl()"
+    },
+    {
+        "question": "Which locator is NOT supported by Selenium?",
+        "options": ["ID", "Name", "Class Name", "Font"],
+        "correct": "Font"
+    },
+    {
+        "question": "What is the default wait time in Selenium WebDriver?",
+        "options": ["0 seconds", "30 seconds", "10 seconds", "60 seconds"],
+        "correct": "0 seconds"
+    },
+    {
+        "question": "Which of the following capabilities is introduced in Selenium 4?",
+        "options": ["Relative Locators", "Shadow DOM support", "Unified API", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the purpose of the WebDriverWait class in Selenium?",
+        "options": ["To pause the execution for a specific time", "To wait for a certain condition to occur before proceeding", "To handle exceptions", "To manage test execution"],
+        "correct": "To wait for a certain condition to occur before proceeding"
+    },
+    {
+        "question": "Which command is used to close the current browser window in Selenium?",
+        "options": ["driver.quit()", "driver.close()", "driver.exit()", "driver.stop()"],
+        "correct": "driver.close()"
+    },
+    {
+        "question": "In Selenium 4, how can you interact with elements in the shadow DOM?",
+        "options": ["Using traditional locators", "Using the shadowRoot property", "Using JavaScriptExecutor", "Using XPath only"],
+        "correct": "Using the shadowRoot property"
+    },
+    {
+        "question": "Which of the following is a feature of Selenium Grid?",
+        "options": ["Parallel execution of tests", "Test case management", "Browser automation on mobile devices", "None of the above"],
+        "correct": "Parallel execution of tests"
+    },
+    {
+        "question": "What is the function of the 'findElement' method in Selenium?",
+        "options": ["To find an element on the page", "To locate multiple elements", "To retrieve element attributes", "To click on an element"],
+        "correct": "To find an element on the page"
+    },
+    {
+        "question": "What is the use of the 'Actions' class in Selenium?",
+        "options": ["To perform keyboard and mouse actions", "To perform file upload", "To take screenshots", "To manage cookies"],
+        "correct": "To perform keyboard and mouse actions"
+    },
+    {
+        "question": "Which WebDriver method would you use to navigate to a specific URL?",
+        "options": ["driver.open()", "driver.get()", "driver.navigateTo()", "driver.goTo()"],
+        "correct": "driver.get()"
+    },
+    {
+        "question": "Which of the following is NOT a type of wait in Selenium?",
+        "options": ["Implicit Wait", "Explicit Wait", "Fluent Wait", "Static Wait"],
+        "correct": "Static Wait"
+    },
+    {
+        "question": "In Selenium 4, which feature allows you to identify elements relative to other elements?",
+        "options": ["Relative Locators", "Explicit Locators", "Dynamic Locators", "Relative Elements"],
+        "correct": "Relative Locators"
+    },
+    {
+        "question": "What is the purpose of the 'switchTo()' method in Selenium?",
+        "options": ["To switch to a different browser window", "To switch between frames or windows", "To handle alerts", "To change browser settings"],
+        "correct": "To switch between frames or windows"
+    },
+    {
+        "question": "Which of the following browsers is NOT natively supported by Selenium WebDriver?",
+        "options": ["Chrome", "Firefox", "Safari", "Opera"],
+        "correct": "Opera"
+    },
+    {
+        "question": "What method would you use to maximize the browser window in Selenium?",
+        "options": ["driver.maximize()", "driver.manage().window().maximize()", "driver.window().maximize()", "driver.setWindowSize()"],
+        "correct": "driver.manage().window().maximize()"
+    },
+    {
+        "question": "What is the purpose of the 'getText()' method in Selenium?",
+        "options": ["To retrieve the text of an element", "To get the inner HTML of an element", "To get the value of an input field", "To retrieve the CSS style of an element"],
+        "correct": "To retrieve the text of an element"
+    },
+    {
+        "question": "Which of the following is true about Selenium?",
+        "options": ["It can automate desktop applications.", "It is only used for functional testing.", "It supports multiple programming languages.", "It can only run on Windows."],
+        "correct": "It supports multiple programming languages."
+    },
+    {
+        "question": "What is the use of the 'JavaScriptExecutor' interface?",
+        "options": ["To execute JavaScript code in the context of the browser", "To interact with JavaScript pop-ups", "To handle asynchronous events", "To manage browser sessions"],
+        "correct": "To execute JavaScript code in the context of the browser"
+    },
+    {
+        "question": "Which of the following is NOT a supported programming language for Selenium?",
+        "options": ["Python", "Java", "Ruby", "HTML"],
+        "correct": "HTML"
+    },
+    {
+        "question": "Which method is used to submit a form in Selenium WebDriver?",
+        "options": ["submit()", "sendKeys()", "enter()", "click()"],
+        "correct": "submit()"
+    },
+    {
+        "question": "What is the difference between 'driver.close()' and 'driver.quit()'?",
+        "options": ["They are the same", "'close()' closes the current window, 'quit()' closes all windows", "'close()' quits the driver, 'quit()' closes the current window", "'close()' waits for elements to load"],
+        "correct": "'close()' closes the current window, 'quit()' closes all windows"
+    },
+    {
+        "question": "Which locator would you use to find elements by their tag name?",
+        "options": ["By.id()", "By.name()", "By.className()", "By.tagName()"],
+        "correct": "By.tagName()"
+    },
+    {
+        "question": "In Selenium 4, how do you handle alerts?",
+        "options": ["Using the Alert interface", "Using the Alert class", "Using the driver.alert()", "Using the driver.switchTo().alert()"],
+        "correct": "Using the driver.switchTo().alert()"
+    },
+    {
+        "question": "What is the default behavior of 'implicitlyWait()'?",
+        "options": ["Waits indefinitely", "Waits for the entire test duration", "Waits for the specified time only when searching for elements", "Waits only for visible elements"],
+        "correct": "Waits for the specified time only when searching for elements"
+    },
+    {
+        "question": "Which command is used to retrieve the title of the current page?",
+        "options": ["driver.getTitle()", "driver.title()", "driver.getPageTitle()", "driver.currentTitle()"],
+        "correct": "driver.getTitle()"
+    },
+    {
+        "question": "What is the role of the 'EventFiringWebDriver' class?",
+        "options": ["To record and replay tests", "To handle events during WebDriver execution", "To manage multiple browser windows", "To create test reports"],
+        "correct": "To handle events during WebDriver execution"
+    },
+    {
+        "question": "Which of the following is a correct syntax to define an implicit wait?",
+        "options": ["driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);", "driver.setImplicitWait(10);", "driver.manage().timeouts().wait(10);", "driver.implicitlyWait(10);"],
+        "correct": "driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);"
+    },
+    {
+        "question": "In Selenium, which of the following can you use to perform keyboard actions?",
+        "options": ["Keys class", "Keyboard class", "Actions class", "Robot class"],
+        "correct": "Actions class"
+    },
+    {
+        "question": "Which of the following is an interface in Selenium?",
+        "options": ["WebDriver", "Browser", "WebElement", "None of the above"],
+        "correct": "WebDriver"
+    },
+    {
+        "question": "In Selenium 4, which method is used to navigate back in the browser history?",
+        "options": ["driver.navigate.back()", "driver.goBack()", "driver.navigate().back()", "driver.back()"],
+        "correct": "driver.navigate().back()"
+    },
+    {
+        "question": "What is the purpose of the 'navigate()' method in WebDriver?",
+        "options": ["To perform actions like back, forward, refresh", "To retrieve the URL of the current page", "To maximize the browser window", "To close the current window"],
+        "correct": "To perform actions like back, forward, refresh"
+    },
+    {
+        "question": "Which Selenium component is used for mobile application testing?",
+        "options": ["Selenium Grid", "Selenium IDE", "Appium", "Selenium WebDriver"],
+        "correct": "Appium"
+    },
+    {
+        "question": "In which format does Selenium WebDriver return the element attributes?",
+        "options": ["String", "Integer", "Object", "Array"],
+        "correct": "String"
+    },
+    {
+        "question": "Which annotation is used in TestNG to denote the test method?",
+        "options": ["@Test", "@BeforeTest", "@AfterTest", "@Suite"],
+        "correct": "@Test"
+    },
+    {
+        "question": "How can you take a screenshot of the current page in Selenium?",
+        "options": ["Using the Screenshot class", "Using TakesScreenshot interface", "Using driver.takeScreenshot()", "Using driver.getScreenshot()"],
+        "correct": "Using TakesScreenshot interface"
+    },
+    {
+        "question": "Which of the following is true about Selenium IDE?",
+        "options": ["It requires coding skills.", "It can only run on Firefox.", "It is a record and playback tool.", "It supports only Java."],
+        "correct": "It is a record and playback tool."
+    },
+    {
+        "question": "What is the significance of the 'Thread.sleep()' method?",
+        "options": ["To pause execution for a specified time", "To wait for an element to load", "To wait for a JavaScript alert", "To manage network calls"],
+        "correct": "To pause execution for a specified time"
+    },
+    {
+        "question": "Which of the following is a feature of Selenium WebDriver?",
+        "options": ["Supports only Chrome", "Can simulate keyboard and mouse events", "Does not support multiple languages", "Is only for web applications"],
+        "correct": "Can simulate keyboard and mouse events"
+    },
+    {
+        "question": "What is the correct way to find an element by its CSS selector?",
+        "options": ["driver.findElement(By.cssSelector('selector'))", "driver.findElement(By.selector('selector'))", "driver.findElement(By.css('selector'))", "driver.findElement(By.CSSSelector('selector'))"],
+        "correct": "driver.findElement(By.cssSelector('selector'))"
+    },
+    {
+        "question": "Which method is used to retrieve cookies in Selenium?",
+        "options": ["driver.getCookies()", "driver.manage().getCookies()", "driver.getAllCookies()", "driver.getCookie()"],
+        "correct": "driver.manage().getCookies()"
+    },
+    {
+        "question": "Which WebDriver method is used to refresh the current page?",
+        "options": ["driver.refresh()", "driver.getRefresh()", "driver.navigate().refresh()", "driver.navigate().to()"],
+        "correct": "driver.navigate().refresh()"
+    },
+    {
+        "question": "What does the 'selectByVisibleText()' method do?",
+        "options": ["Selects an option in a dropdown based on the visible text", "Selects an option in a dropdown based on the index", "Selects an option in a dropdown based on the value", "Selects an option in a dropdown based on the title"],
+        "correct": "Selects an option in a dropdown based on the visible text"
+    },
+    {
+        "question": "Which of the following is NOT a way to wait in Selenium WebDriver?",
+        "options": ["Implicit wait", "Explicit wait", "Fluent wait", "Dynamic wait"],
+        "correct": "Dynamic wait"
+    },
+    {
+        "question": "In Selenium, how can you handle dropdowns?",
+        "options": ["Using the Select class", "Using the Dropdown class", "Using the List class", "Using the Options class"],
+        "correct": "Using the Select class"
+    },
+    {
+        "question": "What is the return type of the 'getPageSource()' method?",
+        "options": ["String", "WebElement", "Document", "HTML"],
+        "correct": "String"
+    },
+    {
+        "question": "Which command is used to simulate pressing a keyboard key?",
+        "options": ["driver.pressKey()", "driver.sendKeys()", "driver.keyPress()", "driver.type()"],
+        "correct": "driver.sendKeys()"
+    },
+    {
+        "question": "What type of testing is Selenium primarily used for?",
+        "options": ["Unit testing", "Integration testing", "Functional testing", "Performance testing"],
+        "correct": "Functional testing"
+    },
+    {
+        "question": "Which of the following is an assertion framework used with Selenium?",
+        "options": ["JUnit", "TestNG", "AssertJ", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "In Selenium WebDriver, what does the 'executeScript' method do?",
+        "options": ["Executes JavaScript in the context of the browser", "Executes Selenium commands", "Executes SQL queries", "Executes Java code"],
+        "correct": "Executes JavaScript in the context of the browser"
+    },
+    {
+        "question": "Which WebDriver method is used to switch to an alert box?",
+        "options": ["driver.switchTo().alert()", "driver.switchTo().popup()", "driver.switchTo().dialog()", "driver.alert()"],
+        "correct": "driver.switchTo().alert()"
+    },
+    {
+        "question": "Which of the following is true about Selenium WebDriver?",
+        "options": ["It supports only web applications.", "It cannot interact with Flash content.", "It supports multiple browsers.", "It can only run on Windows."],
+        "correct": "It supports multiple browsers."
+    },
+    {
+        "question": "What is the main advantage of using Selenium Grid?",
+        "options": ["Run tests on a single machine", "Run tests in parallel on multiple machines", "Run tests on mobile devices", "None of the above"],
+        "correct": "Run tests in parallel on multiple machines"
+    },
+    {
+        "question": "What is the role of the 'setImplicitWait' method?",
+        "options": ["To set the maximum wait time for finding elements", "To pause execution for a specific time", "To wait for an alert to appear", "To set the default timeout for the browser"],
+        "correct": "To set the maximum wait time for finding elements"
+    },
+    {
+        "question": "Which WebDriver method would you use to navigate forward?",
+        "options": ["driver.navigate.forward()", "driver.goForward()", "driver.navigate().forward()", "driver.forward()"],
+        "correct": "driver.navigate().forward()"
+    },
+    {
+        "question": "What type of exceptions can be thrown by Selenium WebDriver?",
+        "options": ["NoSuchElementException", "TimeoutException", "ElementNotVisibleException", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which method is used to take a screenshot in Selenium?",
+        "options": ["driver.captureScreenshot()", "driver.getScreenshotAs()", "driver.takeScreenshot()", "driver.saveScreenshot()"],
+        "correct": "driver.getScreenshotAs()"
+    },
+    {
+        "question": "Which of the following is NOT a type of locator strategy in Selenium?",
+        "options": ["ID", "Name", "XPath", "Style"],
+        "correct": "Style"
+    },
+    {
+        "question": "In Selenium 4, which feature helps in automating the download of files?",
+        "options": ["Automatic Download", "FileDownload API", "Auto-Downloading API", "Download Options"],
+        "correct": "FileDownload API"
+    },
+    {
+        "question": "Which method would you use to retrieve an element's attribute value?",
+        "options": ["getAttribute()", "getValue()", "getElementValue()", "getProperty()"],
+        "correct": "getAttribute()"
+    },
+    {
+        "question": "What is the purpose of the 'windowHandles' property?",
+        "options": ["To retrieve the list of all open windows", "To switch to the first window", "To close all windows", "To refresh the current window"],
+        "correct": "To retrieve the list of all open windows"
+    },
+    {
+        "question": "Which of the following can be used to execute JavaScript commands?",
+        "options": ["JavaScriptExecutor", "WebDriver", "RemoteWebDriver", "JavaScript"],
+        "correct": "JavaScriptExecutor"
+    },
+    {
+        "question": "Which of the following is a valid way to implement waits in Selenium?",
+        "options": ["ImplicitWait", "WaitForElement", "ExplicitWait", "FluentWait"],
+        "correct": "ExplicitWait"
+    },
+    {
+        "question": "In Selenium WebDriver, what does the 'get()' method do?",
+        "options": ["Navigates to the specified URL", "Retrieves the current URL", "Retrieves the page source", "Closes the browser"],
+        "correct": "Navigates to the specified URL"
+    },
+    {
+        "question": "Which class is used to handle file upload in Selenium?",
+        "options": ["FileUpload", "UploadHandler", "Robot", "None of the above"],
+        "correct": "Robot"
+    },
+    {
+        "question": "In which environment does Selenium Grid allow you to execute tests?",
+        "options": ["Remote environment", "Local environment", "Both remote and local", "Only on localhost"],
+        "correct": "Both remote and local"
+    },
+    {
+        "question": "Which method is used to find multiple elements in Selenium?",
+        "options": ["findElements()", "getElements()", "findAll()", "getAllElements()"],
+        "correct": "findElements()"
+    },
+    {
+        "question": "What does the 'clear()' method do?",
+        "options": ["Clears the text of an input field", "Clears the browser cache", "Clears cookies", "Clears all elements from the DOM"],
+        "correct": "Clears the text of an input field"
+    },
+    {
+        "question": "Which of the following allows you to handle frames in Selenium?",
+        "options": ["switchTo().frame()", "frame().switch()", "changeTo().frame()", "select().frame()"],
+        "correct": "switchTo().frame()"
+    },
+    {
+        "question": "What type of browser is supported by Selenium?",
+        "options": ["Headless browsers", "GUI browsers", "Both headless and GUI browsers", "Only GUI browsers"],
+        "correct": "Both headless and GUI browsers"
+    },
+    {
+        "question": "What is the default timeout for Selenium commands?",
+        "options": ["30 seconds", "60 seconds", "0 seconds", "10 seconds"],
+        "correct": "0 seconds"
+    },
+    {
+        "question": "Which of the following WebDriver methods is used to check if an element is displayed?",
+        "options": ["isDisplayed()", "isVisible()", "isPresent()", "isLocated()"],
+        "correct": "isDisplayed()"
+    },
+    {
+        "question": "In Selenium, which interface is used to simulate mouse events?",
+        "options": ["MouseEvents", "MouseActions", "Actions", "EventHandler"],
+        "correct": "Actions"
+    },
+    {
+        "question": "What is the purpose of the 'WebElement' interface?",
+        "options": ["To represent an HTML element", "To manage WebDriver sessions", "To perform file operations", "To handle events"],
+        "correct": "To represent an HTML element"
+    },
+    {
+        "question": "In which scenario would you use the 'Robot' class in Selenium?",
+        "options": ["For handling keyboard events", "For uploading files", "For handling JavaScript alerts", "For managing browser windows"],
+        "correct": "For handling keyboard events"
+    },
+    {
+        "question": "What method would you use to clear the text of an input field?",
+        "options": ["clearText()", "removeText()", "clear()", "reset()"],
+        "correct": "clear()"
+    },
+    {
+        "question": "What type of element can you not click on in Selenium?",
+        "options": ["Links", "Buttons", "Hidden elements", "Input fields"],
+        "correct": "Hidden elements"
+    },
+    {
+        "question": "What type of testing is Selenium NOT typically used for?",
+        "options": ["Functional testing", "Performance testing", "End-to-end testing", "Regression testing"],
+        "correct": "Performance testing"
+    },
+    {
+        "question": "Which of the following is used to retrieve the URL of the current page?",
+        "options": ["getUrl()", "currentUrl()", "getCurrentUrl()", "getPageUrl()"],
+        "correct": "getCurrentUrl()"
+    },
+    {
+        "question": "What is the correct way to locate an element using XPath?",
+        "options": ["driver.findElement(By.xpath('expression'))", "driver.findElement(By.xPath('expression'))", "driver.xpath('expression')", "driver.findElement(By.xpath('expression'))"],
+        "correct": "driver.findElement(By.xpath('expression'))"
+    },
+    {
+        "question": "In Selenium 4, which feature helps improve the efficiency of test execution?",
+        "options": ["Selenium Grid", "Parallel Testing", "RemoteWebDriver", "None of the above"],
+        "correct": "Parallel Testing"
+    },
+    {
+        "question": "Which method would you use to scroll the page in Selenium?",
+        "options": ["scrollTo()", "scrollBy()", "executeScript()", "scrollDown()"],
+        "correct": "executeScript()"
+    },
+    {
+        "question": "Which of the following is NOT a valid way to create a WebDriver instance?",
+        "options": ["new ChromeDriver()", "new FirefoxDriver()", "new SafariDriver()", "new OperaDriver()"],
+        "correct": "new OperaDriver()"
+    },
+    {
+        "question": "What does the 'navigate().refresh()' method do?",
+        "options": ["Refreshes the current page", "Navigates to the previous page", "Opens a new window", "Closes the current window"],
+        "correct": "Refreshes the current page"
+    },
+    {
+        "question": "In Selenium, how can you wait for an element to be clickable?",
+        "options": ["Using Thread.sleep()", "Using Implicit wait", "Using Explicit wait", "Using Fluent wait"],
+        "correct": "Using Explicit wait"
+    },
+    {
+        "question": "Which method is used to retrieve the value of an input field?",
+        "options": ["getValue()", "getText()", "getAttribute('value')", "getInputValue()"],
+        "correct": "getAttribute('value')"
+    },
+    {
+        "question": "What is the use of the 'TestNG' framework with Selenium?",
+        "options": ["To manage browser windows", "To create and manage test cases", "To perform load testing", "To simulate user interactions"],
+        "correct": "To create and manage test cases"
+    },
+    {
+        "question": "Which of the following is a valid method for clicking an element?",
+        "options": ["element.click()", "driver.clickElement()", "driver.findElement().click()", "element.clickElement()"],
+        "correct": "driver.findElement().click()"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>

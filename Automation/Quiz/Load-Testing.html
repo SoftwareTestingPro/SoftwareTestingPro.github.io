@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+    {
+        "question": "What is Load Testing primarily used for?",
+        "options": ["To determine system performance under expected load", "To identify memory leaks", "To validate security", "To test application functionality"],
+        "correct": "To determine system performance under expected load"
+    },
+    {
+        "question": "Which of the following tools is commonly used for Load Testing?",
+        "options": ["JMeter", "Postman", "Selenium", "JUnit"],
+        "correct": "JMeter"
+    },
+    {
+        "question": "What is a key metric measured during Load Testing?",
+        "options": ["Response time", "Number of bugs", "Code coverage", "User satisfaction"],
+        "correct": "Response time"
+    },
+    {
+        "question": "What does the term 'Throughput' refer to in Load Testing?",
+        "options": ["Number of requests processed in a given time", "Time taken to execute a request", "Total number of users", "Data transfer rate"],
+        "correct": "Number of requests processed in a given time"
+    },
+    {
+        "question": "What is the purpose of a Load Testing tool?",
+        "options": ["To simulate user traffic", "To debug code", "To perform unit tests", "To conduct security tests"],
+        "correct": "To simulate user traffic"
+    },
+    {
+        "question": "What does the term 'Concurrency' mean in Load Testing?",
+        "options": ["Simultaneous users accessing the application", "Time taken for a single user to perform an action", "Data processed in a single request", "None of the above"],
+        "correct": "Simultaneous users accessing the application"
+    },
+    {
+        "question": "What is the main goal of performance testing?",
+        "options": ["To ensure application meets performance requirements", "To check for functional defects", "To analyze user experience", "To measure code quality"],
+        "correct": "To ensure application meets performance requirements"
+    },
+    {
+        "question": "Which of the following is NOT a type of Load Testing?",
+        "options": ["Volume Testing", "Stress Testing", "Spike Testing", "Integration Testing"],
+        "correct": "Integration Testing"
+    },
+    {
+        "question": "What is Stress Testing?",
+        "options": ["Testing beyond normal load conditions", "Testing under normal load conditions", "Testing user interfaces", "Testing database performance"],
+        "correct": "Testing beyond normal load conditions"
+    },
+    {
+        "question": "What does 'Response Time' measure in Load Testing?",
+        "options": ["Time taken for a request to return a response", "Time taken to send a request", "Total execution time of the application", "None of the above"],
+        "correct": "Time taken for a request to return a response"
+    },
+    {
+        "question": "What is a 'Load Test Scenario'?",
+        "options": ["A description of how to conduct load tests", "A specific condition under which tests are run", "A user story", "None of the above"],
+        "correct": "A specific condition under which tests are run"
+    },
+    {
+        "question": "What does 'Baseline Performance' refer to?",
+        "options": ["Standard performance metrics for comparison", "Worst-case scenario", "Best-case scenario", "None of the above"],
+        "correct": "Standard performance metrics for comparison"
+    },
+    {
+        "question": "What is 'Peak Load' in Load Testing?",
+        "options": ["The maximum expected load on the system", "The minimum expected load", "The average load", "None of the above"],
+        "correct": "The maximum expected load on the system"
+    },
+    {
+        "question": "Which factor can affect the results of Load Testing?",
+        "options": ["Network latency", "Server configuration", "Database performance", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the role of 'Scripting' in Load Testing?",
+        "options": ["To automate test scenarios", "To write user stories", "To design the user interface", "None of the above"],
+        "correct": "To automate test scenarios"
+    },
+    {
+        "question": "What does 'Latency' refer to in Load Testing?",
+        "options": ["Time delay in communication", "Number of users", "Volume of data", "None of the above"],
+        "correct": "Time delay in communication"
+    },
+    {
+        "question": "What is 'Soak Testing'?",
+        "options": ["Testing with a prolonged load", "Testing with no load", "Testing the system under stress", "None of the above"],
+        "correct": "Testing with a prolonged load"
+    },
+    {
+        "question": "Which of the following best describes 'Endurance Testing'?",
+        "options": ["Testing the system for a prolonged period under normal load", "Testing system under maximum load", "Testing for quick spikes", "None of the above"],
+        "correct": "Testing the system for a prolonged period under normal load"
+    },
+    {
+        "question": "What is a common result of Load Testing?",
+        "options": ["Performance bottlenecks", "Code defects", "Improved UI", "All of the above"],
+        "correct": "Performance bottlenecks"
+    },
+    {
+        "question": "What is 'Volume Testing'?",
+        "options": ["Testing with a high volume of data", "Testing with a low volume of data", "Testing with user load", "None of the above"],
+        "correct": "Testing with a high volume of data"
+    },
+    {
+        "question": "Which of the following is a typical Load Testing tool?",
+        "options": ["LoadRunner", "SoapUI", "JUnit", "Appium"],
+        "correct": "LoadRunner"
+    },
+    {
+        "question": "What does 'Load Profile' refer to?",
+        "options": ["Expected load patterns", "User behavior analysis", "Performance benchmarks", "None of the above"],
+        "correct": "Expected load patterns"
+    },
+    {
+        "question": "What is the significance of 'Thresholds' in Load Testing?",
+        "options": ["To determine acceptable performance levels", "To set user limits", "To define security parameters", "None of the above"],
+        "correct": "To determine acceptable performance levels"
+    },
+    {
+        "question": "Which protocol is often used in Load Testing?",
+        "options": ["HTTP", "FTP", "SMTP", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is the main objective of 'Performance Testing'?",
+        "options": ["To evaluate speed, scalability, and stability", "To ensure code quality", "To validate functionality", "None of the above"],
+        "correct": "To evaluate speed, scalability, and stability"
+    },
+    {
+        "question": "What is the role of 'Test Environment' in Load Testing?",
+        "options": ["To simulate production conditions", "To perform security tests", "To execute unit tests", "None of the above"],
+        "correct": "To simulate production conditions"
+    },
+    {
+        "question": "What does 'Scalability Testing' measure?",
+        "options": ["Ability to handle increased load", "Time taken to respond", "Cost of operation", "None of the above"],
+        "correct": "Ability to handle increased load"
+    },
+    {
+        "question": "What is 'Testing the Load Balancer' used for?",
+        "options": ["To distribute load across multiple servers", "To identify server bottlenecks", "To analyze traffic patterns", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "Which type of testing involves simulating a sudden spike in traffic?",
+        "options": ["Spike Testing", "Stress Testing", "Endurance Testing", "None of the above"],
+        "correct": "Spike Testing"
+    },
+    {
+        "question": "What is the key objective of 'Capacity Testing'?",
+        "options": ["To determine maximum user capacity", "To validate functional requirements", "To check for memory leaks", "None of the above"],
+        "correct": "To determine maximum user capacity"
+    },
+    {
+        "question": "What does 'Resource Utilization' refer to?",
+        "options": ["Measurement of CPU, memory, and network usage", "Performance metrics", "Response time", "None of the above"],
+        "correct": "Measurement of CPU, memory, and network usage"
+    },
+    {
+        "question": "Which of the following tools is NOT typically used for Load Testing?",
+        "options": ["JMeter", "LoadRunner", "Selenium", "Gatling"],
+        "correct": "Selenium"
+    },
+    {
+        "question": "What does 'Transaction Response Time' measure?",
+        "options": ["Time taken for a specific operation", "Overall system response time", "Time taken to load a page", "None of the above"],
+        "correct": "Time taken for a specific operation"
+    },
+    {
+        "question": "Which of the following best describes 'Network Stress Testing'?",
+        "options": ["Testing network performance under high load", "Testing application features", "Testing user interfaces", "None of the above"],
+        "correct": "Testing network performance under high load"
+    },
+    {
+        "question": "What is 'Web Server Load Testing' used for?",
+        "options": ["To analyze server performance", "To evaluate database response", "To validate user input", "None of the above"],
+        "correct": "To analyze server performance"
+    },
+    {
+        "question": "What is the significance of 'Error Rate' in Load Testing?",
+        "options": ["To measure how many requests result in errors", "To evaluate system stability", "To assess user satisfaction", "None of the above"],
+        "correct": "To measure how many requests result in errors"
+    },
+    {
+        "question": "What is the purpose of 'Test Scripts' in Load Testing?",
+        "options": ["To automate the execution of test cases", "To manually run tests", "To document test cases", "None of the above"],
+        "correct": "To automate the execution of test cases"
+    },
+    {
+        "question": "What is 'End-to-End Load Testing'?",
+        "options": ["Testing the complete application flow under load", "Testing specific modules", "Testing UI only", "None of the above"],
+        "correct": "Testing the complete application flow under load"
+    },
+    {
+        "question": "What does 'Server Response Time' indicate?",
+        "options": ["The time taken by the server to process a request", "Total execution time of the application", "User response time", "None of the above"],
+        "correct": "The time taken by the server to process a request"
+    },
+    {
+        "question": "What does 'Load Testing Strategy' encompass?",
+        "options": ["Planning and executing load tests", "Choosing the right tools", "Defining metrics", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is a common challenge in Load Testing?",
+        "options": ["Simulating real user behavior", "Measuring performance metrics", "Analyzing results", "None of the above"],
+        "correct": "Simulating real user behavior"
+    },
+    {
+        "question": "Which environment is preferable for Load Testing?",
+        "options": ["A separate staging environment", "Production environment", "Development environment", "None of the above"],
+        "correct": "A separate staging environment"
+    },
+    {
+        "question": "What is 'Simulated Load'?",
+        "options": ["The load generated by Load Testing tools", "The actual load on the application", "User-generated load", "None of the above"],
+        "correct": "The load generated by Load Testing tools"
+    },
+    {
+        "question": "What does 'Warm-up Time' refer to in Load Testing?",
+        "options": ["Time taken to stabilize the system before testing", "Time taken to initiate tests", "Time taken for server recovery", "None of the above"],
+        "correct": "Time taken to stabilize the system before testing"
+    },
+    {
+        "question": "What is a 'Load Test Report'?",
+        "options": ["A document summarizing the test results", "A detailed test plan", "A bug report", "None of the above"],
+        "correct": "A document summarizing the test results"
+    },
+    {
+        "question": "What is the importance of 'User Profiles' in Load Testing?",
+        "options": ["To mimic different types of users during tests", "To define security roles", "To manage access control", "None of the above"],
+        "correct": "To mimic different types of users during tests"
+    },
+    {
+        "question": "What is 'Performance Benchmarking'?",
+        "options": ["Comparing performance metrics against standards", "Identifying defects", "Testing security measures", "None of the above"],
+        "correct": "Comparing performance metrics against standards"
+    },
+    {
+        "question": "Which of the following is NOT a benefit of Load Testing?",
+        "options": ["Identifying performance bottlenecks", "Enhancing user experience", "Validating security", "Determining scalability limits"],
+        "correct": "Validating security"
+    },
+    {
+        "question": "What does 'Load Test Configuration' refer to?",
+        "options": ["Settings that determine how tests are executed", "The test plan", "The development environment", "None of the above"],
+        "correct": "Settings that determine how tests are executed"
+    },
+    {
+        "question": "What is 'Response Time Measurement' critical for?",
+        "options": ["Determining user satisfaction", "Identifying bugs", "Performance evaluation", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is 'Testing for Memory Leaks' in the context of Load Testing?",
+        "options": ["Identifying memory not released after use", "Measuring response time", "Validating database performance", "None of the above"],
+        "correct": "Identifying memory not released after use"
+    },
+    {
+        "question": "What does 'Load Test Duration' signify?",
+        "options": ["Total time for which load is applied during testing", "Total time for setup", "Execution time for a single transaction", "None of the above"],
+        "correct": "Total time for which load is applied during testing"
+    },
+    {
+        "question": "Which type of Load Testing focuses on user experience under varying load conditions?",
+        "options": ["User Experience Testing", "Endurance Testing", "Load Testing", "None of the above"],
+        "correct": "User Experience Testing"
+    },
+    {
+        "question": "What is the impact of 'Network Configuration' on Load Testing?",
+        "options": ["It can affect latency and response time", "It has no impact", "It only affects server performance", "None of the above"],
+        "correct": "It can affect latency and response time"
+    },
+    {
+        "question": "What is 'Synthetic Load Testing'?",
+        "options": ["Simulating user activity for performance testing", "Testing with real users", "Performance testing with no load", "None of the above"],
+        "correct": "Simulating user activity for performance testing"
+    },
+    {
+        "question": "What does 'Data Integrity Testing' involve during Load Testing?",
+        "options": ["Ensuring data is accurate and consistent under load", "Testing data entry forms", "Validating database schema", "None of the above"],
+        "correct": "Ensuring data is accurate and consistent under load"
+    },
+    {
+        "question": "Which of the following is a common result of Load Testing?",
+        "options": ["Performance degradation", "Enhanced security", "Improved user interface", "None of the above"],
+        "correct": "Performance degradation"
+    },
+    {
+        "question": "What is the goal of 'Web Application Load Testing'?",
+        "options": ["To ensure web applications can handle expected user loads", "To evaluate security features", "To test database interactions", "None of the above"],
+        "correct": "To ensure web applications can handle expected user loads"
+    },
+    {
+        "question": "What is 'Distributed Load Testing'?",
+        "options": ["Testing the application from multiple geographic locations", "Testing with multiple users from one location", "Testing on a local machine only", "None of the above"],
+        "correct": "Testing the application from multiple geographic locations"
+    },
+    {
+        "question": "What does 'Session Management Testing' focus on?",
+        "options": ["Testing how sessions are handled under load", "Testing user login functionality", "Testing database connections", "None of the above"],
+        "correct": "Testing how sessions are handled under load"
+    },
+    {
+        "question": "What is the purpose of 'Performance Metrics' in Load Testing?",
+        "options": ["To evaluate the performance of the application", "To document bugs", "To measure user satisfaction", "None of the above"],
+        "correct": "To evaluate the performance of the application"
+    },
+    {
+        "question": "What does 'Fault Tolerance Testing' assess?",
+        "options": ["System's ability to continue operation despite errors", "User interface design", "Code quality", "None of the above"],
+        "correct": "System's ability to continue operation despite errors"
+    },
+    {
+        "question": "Which of the following metrics is critical for Load Testing?",
+        "options": ["Average response time", "User satisfaction score", "Code quality", "All of the above"],
+        "correct": "Average response time"
+    },
+    {
+        "question": "What is 'Test Data Preparation'?",
+        "options": ["Creating data for testing scenarios", "Preparing test scripts", "Configuring test tools", "None of the above"],
+        "correct": "Creating data for testing scenarios"
+    },
+    {
+        "question": "What does 'Monitoring Tools' refer to in Load Testing?",
+        "options": ["Tools that provide real-time performance data", "Tools for writing test scripts", "Tools for managing user roles", "None of the above"],
+        "correct": "Tools that provide real-time performance data"
+    },
+    {
+        "question": "What is the significance of 'Load Testing Framework'?",
+        "options": ["Guidelines and tools for conducting Load Tests", "Code quality standards", "Documentation guidelines", "None of the above"],
+        "correct": "Guidelines and tools for conducting Load Tests"
+    },
+    {
+        "question": "What is 'Request Rate' in Load Testing?",
+        "options": ["Number of requests sent per second", "Total time taken for requests", "Number of users accessing the application", "None of the above"],
+        "correct": "Number of requests sent per second"
+    },
+    {
+        "question": "What does 'Stability Testing' measure?",
+        "options": ["How well the system performs under sustained load", "Overall application speed", "Response time for individual requests", "None of the above"],
+        "correct": "How well the system performs under sustained load"
+    },
+    {
+        "question": "What is the primary goal of 'Capacity Planning'?",
+        "options": ["To ensure the system can handle expected traffic", "To test security features", "To document bugs", "None of the above"],
+        "correct": "To ensure the system can handle expected traffic"
+    },
+    {
+        "question": "What does 'Failover Testing' assess?",
+        "options": ["System's ability to recover from failures", "User interface functionality", "Code performance", "None of the above"],
+        "correct": "System's ability to recover from failures"
+    },
+    {
+        "question": "What is 'Load Testing Best Practices' aimed at?",
+        "options": ["Improving the effectiveness of Load Testing", "Creating user stories", "Developing the application", "None of the above"],
+        "correct": "Improving the effectiveness of Load Testing"
+    },
+    {
+        "question": "Which metric is used to assess user experience during Load Testing?",
+        "options": ["Response time", "Code coverage", "Database size", "None of the above"],
+        "correct": "Response time"
+    },
+    {
+        "question": "What is the significance of 'Threshold Testing'?",
+        "options": ["To determine system limits", "To validate user roles", "To check security", "None of the above"],
+        "correct": "To determine system limits"
+    },
+    {
+        "question": "What does 'Capacity Testing' specifically evaluate?",
+        "options": ["The maximum load the system can handle", "User satisfaction", "Database performance", "None of the above"],
+        "correct": "The maximum load the system can handle"
+    },
+    {
+        "question": "What is 'Dynamic Load Testing'?",
+        "options": ["Testing with varying user loads", "Testing with static user loads", "Testing without any load", "None of the above"],
+        "correct": "Testing with varying user loads"
+    },
+    {
+        "question": "What is 'User Load Simulation'?",
+        "options": ["Mimicking the behavior of users during Load Testing", "Measuring application speed", "Analyzing bugs", "None of the above"],
+        "correct": "Mimicking the behavior of users during Load Testing"
+    },
+    {
+        "question": "What does 'Test Execution Plan' outline?",
+        "options": ["Steps for conducting Load Tests", "Test case descriptions", "User stories", "None of the above"],
+        "correct": "Steps for conducting Load Tests"
+    },
+    {
+        "question": "Which factor is crucial for Load Test Success?",
+        "options": ["Clear objectives", "Proper tool selection", "Realistic load scenarios", "All of the above"],
+        "correct": "All of the above"
+    },
+    {
+        "question": "What is 'Load Testing Automation'?",
+        "options": ["Automating the execution of Load Tests", "Automating user input", "Automating application development", "None of the above"],
+        "correct": "Automating the execution of Load Tests"
+    }
+];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>
