@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f0f4f7;
+        }
+        .container {
+            border: 2px solid #ccc;
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            margin-bottom: 10px;
+            display: block;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+        }
+        .failure {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            margin: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f1f3f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .score strong {
+            font-size: 20px;
+            color: #28a745;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .action-buttons button + button {
+            margin-left: 10px;
+        }
+        .result-container {
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: #e7f5ff;
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .result-container p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-container .banner {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .harder {
+            color: #e74c3c;
+        }
+        .well {
+            color: #f39c12;
+        }
+        .champ {
+            color: #2ecc71;
+        }
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                width: 85%; /* 90% width for mobile devices and tablets */
+                padding: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            label, input[type="text"] {
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+            }
+
+            .material-icons {
+                font-size: 18px; /* Adjust icons for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="score" id="score-display">Correct Answers: 0/0 (0%)</div>
+
+<div class="container" id="quiz-container">
+    <div id="question-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <div class="action-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <button id="result-btn" onclick="showResult()" style="display:none;" disabled>Result</button>
+    </div>
+
+    <div class="message" id="result"></div>
+</div>
+
+<div id="result-container" class="result-container" style="display: none;">
+    <p id="result-summary"></p>
+    <p id="result-banner" class="banner"></p>
+    <button id="home-btn" onclick="navigateHome()">Go to Homepage</button> <!-- Added homepage button -->
+</div>
+
+<script>
+    const questions = [
+	{
+        "question": "What is the correct syntax for referring to an external script called 'script.js'?",
+        "options": ["script href='script.js'", "script src='script.js'", "script name='script.js'", "script file='script.js'"],
+        "correct": "script src='script.js'"
+    }
+	];
+
+    let shuffledQuestions = [];
+    let currentQuestionIndex = 0;
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    function shuffleQuestions() {
+        shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleOptions(options) {
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+        const questionData = shuffledQuestions[currentQuestionIndex];
+        const questionContainer = document.getElementById('question-container');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.textContent = '';
+
+        let questionHTML = `<h3>${questionData.question}</h3>`;
+        questionHTML += `<div class="options">`;
+        
+        const shuffledOptions = shuffleOptions(questionData.options);
+        shuffledOptions.forEach(option => {
+            questionHTML += `<label><input type="radio" name="mcq" value="${option}"> ${option}</label>`;
+        });
+        
+        questionHTML += `</div>`;
+        
+        questionContainer.innerHTML = questionHTML;
+
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('result-btn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="mcq"]:checked');
+        const resultDiv = document.getElementById('result');
+        const correctAnswer = shuffledQuestions[currentQuestionIndex].correct;
+
+        if (selectedOption) {
+            document.querySelectorAll('input[name="mcq"]').forEach(radio => {
+                radio.disabled = true;
+            });
+            document.getElementById('submit-btn').disabled = true;
+
+            totalAttempts++;
+            if (selectedOption.value === correctAnswer) {
+                resultDiv.textContent = 'Success! Correct Answer.';
+                resultDiv.className = 'message success';
+                correctAnswers++;
+            } else {
+                resultDiv.textContent = 'Failure! Incorrect Answer.';
+                resultDiv.className = 'message failure';
+            }
+
+            updateScore();
+
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('result-btn').disabled = false;
+                document.getElementById('result-btn').style.display = 'inline-block';
+            }
+        } else {
+            resultDiv.textContent = 'Please select an answer.';
+            resultDiv.className = 'message failure';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+
+        const resultSummary = document.getElementById('result-summary');
+        const resultBanner = document.getElementById('result-banner');
+        const percentage = ((correctAnswers / totalAttempts) * 100).toFixed(2);
+
+        resultSummary.innerHTML = `You have correctly answered <strong>${correctAnswers}</strong> questions out of <strong>${totalAttempts}</strong> total questions.`;
+
+        if (percentage < 75) {
+            resultBanner.textContent = "You need to work harder.";
+            resultBanner.className = "banner harder";
+        } else if (percentage >= 75 && percentage < 90) {
+            resultBanner.textContent = "You did well!";
+            resultBanner.className = "banner well";
+        } else if (percentage >= 90) {
+            resultBanner.textContent = "You are a champ!";
+            resultBanner.className = "banner champ";
+        }
+
+        document.getElementById('result-container').style.display = 'block';
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `Correct Answers: ${correctAnswers}/${totalAttempts} (${((correctAnswers / totalAttempts) * 100).toFixed(2)}%)`;
+    }
+
+    function navigateHome() {
+        window.location.href = '../../index.html'; // Change to your homepage URL
+    }
+
+    function startQuiz() {
+        shuffleQuestions();
+        loadQuestion();
+    }
+
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>
