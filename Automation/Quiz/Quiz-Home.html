@@ -80,10 +80,14 @@
             text-decoration: underline;
         }
         @media (max-width: 600px) {
-            .box {
-                flex: 0 0 100%; /* On small screens, each box takes the full width */
-            }
-        }
+		.container {
+        justify-content: flex-start; /* Align items to the start */
+		}
+		.box {
+        flex: 1 1 40%; /* Each box takes up about 45% of the width, allowing two per row */
+        max-width: 40%; /* Ensure boxes don't exceed the intended size */
+    }
+}
     </style>
 </head>
 <body>
