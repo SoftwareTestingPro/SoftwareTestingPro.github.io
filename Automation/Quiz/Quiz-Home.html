@@ -15,34 +15,40 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: auto; /* Change to auto for better layout */
+            height: auto;
             margin: 0;
-            padding: 20px; /* Added padding for better layout on mobile */
+            padding: 20px;
         }
+
         .input-container {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .input-container label {
             font-size: 20px;
             margin-bottom: 10px;
             display: block;
         }
+
         .container {
             display: flex;
             flex-wrap: wrap;
-            max-width: 1000px; /* Increased max width */
+            max-width: 1000px;
             justify-content: center;
+            gap: 10px; /* Consistent gap between boxes */
         }
+
         .box {
-            flex: 0 0 200px; /* Each box takes a fixed width of 200px */
-            height: 150px; /* Fixed height of 200px */
-            margin: 10px;
+            flex: 1 1 200px; /* Default size for larger screens */
+            max-width: 200px; /* Ensure boxes don't stretch too wide on larger screens */
+            height: 130px;
+            margin: 5px;
             border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #fff;
             text-decoration: none;
@@ -51,9 +57,11 @@
             position: relative;
             overflow: hidden;
         }
+
         .box:hover {
             filter: brightness(0.9);
         }
+
         .box span {
             position: absolute;
             bottom: 10px;
@@ -64,30 +72,46 @@
             border-radius: 5px;
             font-size: 14px;
         }
+
         footer {
             position: absolute;
             bottom: 10px;
             text-align: center;
             width: 100%;
         }
+
         footer a {
             color: #333;
             text-decoration: none;
             margin: 0 15px;
             font-size: 16px;
         }
+
         footer a:hover {
             text-decoration: underline;
         }
-        @media (max-width: 600px) {
-		.container {
-        justify-content: flex-start; /* Align items to the start */
-		}
-		.box {
-        flex: 1 1 40%; /* Each box takes up about 45% of the width, allowing two per row */
-        max-width: 40%; /* Ensure boxes don't exceed the intended size */
-    }
-}
+
+        @media (max-width: 1024px) {
+            .box {
+                flex: 1 1 calc(33.33% - 20px); /* Display 3 boxes per row on medium-sized screens */
+                max-width: calc(33.33% - 20px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .box {
+                flex: 1 1 calc(50% - 10px); /* Display 2 boxes per row on smaller devices */
+                max-width: calc(50% - 10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .box {
+                flex: 1 1 40%; /* Box width is 35% of the screen width */
+                max-width: 40%; /* Maintain the width at 35% */
+                height: calc(40vw); /* Box height is equal to its width to make it square */
+            }
+        }
     </style>
 </head>
 <body>
@@ -95,66 +119,26 @@
         <label for="user-input">Select topic to start Quiz:</label>
     </div>
     <div class="container">
-        <a href="Selenium.html" class="box" title="Selenium Quiz">
-            Selenium
-        </a>
-        <a href="Cucumber.html" class="box" title="Cucumber">
-            Cucumber
-        </a>
-        <a href="Maven.html" class="box" title="Maven">
-            Maven
-        </a>
-        <a href="TestNG.html" class="box" title="TestNG">
-            TestNG
-        </a>
-        <a href="GIT.html" class="box" title="GIT">
-            GIT
-        </a>
-        <a href="Jenkins.html" class="box" title="Jenkins">
-            Jenkins
-        </a>
-        <a href="JIRA.html" class="box" title="JIRA">
-            JIRA
-        </a>
-        <a href="API.html" class="box" title="API">
-            API
-        </a>
-        <a href="Web-Services.html" class="box" title="Web Services">
-            Web Services
-        </a>
-        <a href="Rest-Assured.html" class="box" title="Rest Assured">
-            Rest Assured
-        </a>
-        <a href="Postman.html" class="box" title="Postman">
-            Postman
-        </a>
-        <a href="Functional-Testing.html" class="box" title="Functional Testing">
-            Functional Testing
-        </a>
-		<a href="Mobile-Testing.html" class="box" title="Mobile Testing">
-            Mobile Testing
-        </a>
-        <a href="Performance-Testing.html" class="box" title="Performance Testing">
-            Performance Testing
-        </a>
-        <a href="Load-Testing.html" class="box" title="Load Testing">
-            Load Testing
-        </a>
-        <a href="Basic-Java.html" class="box" title="Basic Java">
-            Basic Java
-        </a>
-        <a href="Advanced-Java.html" class="box" title="Advanced Java">
-            Advanced Java
-        </a>
-		<a href="Playwright.html" class="box" title="Playwright">
-            Playwright
-        </a>
-		<a href="JavaScript.html" class="box" title="JavaScript">
-            JavaScript
-        </a>
-		<a href="TypeScript.html" class="box" title="TypeScript">
-            TypeScript
-        </a>
+        <a href="Selenium.html" class="box" title="Selenium Quiz">Selenium</a>
+        <a href="Cucumber.html" class="box" title="Cucumber">Cucumber</a>
+        <a href="Maven.html" class="box" title="Maven">Maven</a>
+        <a href="TestNG.html" class="box" title="TestNG">TestNG</a>
+        <a href="GIT.html" class="box" title="GIT">GIT</a>
+        <a href="Jenkins.html" class="box" title="Jenkins">Jenkins</a>
+        <a href="JIRA.html" class="box" title="JIRA">JIRA</a>
+        <a href="API.html" class="box" title="API">API</a>
+        <a href="Web-Services.html" class="box" title="Web Services">Web Services</a>
+        <a href="Rest-Assured.html" class="box" title="Rest Assured">Rest Assured</a>
+        <a href="Postman.html" class="box" title="Postman">Postman</a>
+        <a href="Functional-Testing.html" class="box" title="Functional Testing">Functional Testing</a>
+        <a href="Mobile-Testing.html" class="box" title="Mobile Testing">Mobile Testing</a>
+        <a href="Performance-Testing.html" class="box" title="Performance Testing">Performance Testing</a>
+        <a href="Load-Testing.html" class="box" title="Load Testing">Load Testing</a>
+        <a href="Basic-Java.html" class="box" title="Basic Java">Basic Java</a>
+        <a href="Advanced-Java.html" class="box" title="Advanced Java">Advanced Java</a>
+        <a href="Playwright.html" class="box" title="Playwright">Playwright</a>
+        <a href="JavaScript.html" class="box" title="JavaScript">JavaScript</a>
+        <a href="TypeScript.html" class="box" title="TypeScript">TypeScript</a>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
