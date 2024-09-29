@@ -17,11 +17,12 @@
         #feedback {
             font-size: 48px;
             position: fixed;
-            top: calc(50% - 180px);
+            top: calc(50% - 280px); /* Adjusted to move emoji higher */
             left: 50%;
             transform: translateX(-50%);
             display: none;
             animation: bounce 1s infinite;
+            z-index: 2; /* Ensured it is above everything */
         }
 
         .container {
@@ -37,15 +38,17 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 1; /* Lower z-index than feedback */
         }
 
         .score {
             margin-bottom: 10px;
             font-weight: bold;
             position: fixed;
-            top: calc(50% - 130px);
+            top: calc(50% - 200px); /* Adjusted to move above the container */
             left: 50%;
             transform: translateX(-50%);
+            z-index: 1; /* Lower z-index than feedback */
         }
 
         .instructions {
@@ -67,6 +70,11 @@
             border-radius: 5px;
             background-color: #fafafa;
             transition: background-color 0.3s;
+            height: 80px; /* Increased height */
+            display: flex; /* Use flexbox for centering */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            font-weight: bold; /* Bold text for mobile */
         }
 
         .equation:hover {
@@ -82,15 +90,16 @@
         #next-btn {
             display: inline-block;
             margin-top: 10px;
-            padding: 8px 12px;
+            padding: 12px 16px; /* Increased padding for larger size */
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-size: 18px; /* Increased font size */
         }
-		
+
         #next-btn:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
@@ -121,7 +130,15 @@
             .container {
                 max-width: 90%;
                 padding: 15px;
-				font-weight: bold;
+            }
+
+            .equation {
+                height: 80px; /* Keep height for mobile */
+            }
+
+            #next-btn {
+                padding: 16px 24px; /* Increased padding for larger size on mobile */
+                font-size: 20px; /* Increased font size on mobile */
             }
         }
     </style>
