@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odd One Out - Objects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        #feedback {
+            font-size: 48px;
+            position: fixed;
+            top: calc(50% - 180px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            animation: bounce 1s infinite;
+        }
+
+        .container {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .score {
+            margin-bottom: 10px;
+            font-weight: bold;
+            position: fixed;
+            top: calc(50% - 130px);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .instructions {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .objects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .object {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+            transition: background-color 0.3s;
+        }
+
+        .object:hover {
+            background-color: #e0e0e0;
+        }
+
+        .object.disabled {
+            pointer-events: none;
+            color: #888;
+            background-color: #eaeaea;
+        }
+
+        #next-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #next-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #next-btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            #feedback {
+                font-size: 36px;
+            }
+
+            .score {
+                font-size: 16px;
+            }
+
+            .container {
+                max-width: 90%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="feedback">👎</div>
+<div class="score" id="score">Correct Answers: 0 / 0</div>
+<div class="container">
+    <div class="instructions">Find the object that doesn't belong:</div>
+    <div id="objects" class="objects-grid"></div>
+    <button id="next-btn" disabled>Next</button>
+</div>
+
+<script>
+    let correctCount = 0;
+    let totalCount = 0;
+
+    const nextButton = document.getElementById('next-btn');
+
+    // Predefined categories of objects with at least 20 values each
+    const categories = {
+        musicalInstruments: ['Guitar', 'Violin', 'Flute', 'Drums', 'Piano', 'Saxophone', 'Trumpet', 'Cello', 'Clarinet', 'Harp', 
+                             'Trombone', 'Bassoon', 'Accordion', 'Banjo', 'Mandolin', 'Tuba', 'Ocarina', 'Marimba', 'Ukulele', 'Viola'],
+        sports: ['Soccer', 'Basketball', 'Tennis', 'Cricket', 'Baseball', 'Rugby', 'Golf', 'Hockey', 'Volleyball', 'Badminton',
+                 'Boxing', 'Swimming', 'Cycling', 'Running', 'Surfing', 'Skiing', 'Skateboarding', 'Wrestling', 'Martial Arts', 'Gymnastics'],
+        countries: ['USA', 'Canada', 'Japan', 'Brazil', 'Germany', 'France', 'Italy', 'Spain', 'Australia', 'India',
+                    'China', 'Russia', 'Mexico', 'South Africa', 'Argentina', 'UK', 'Netherlands', 'Sweden', 'Norway', 'South Korea', 'Turkey'],
+        shapes: ['Circle', 'Square', 'Triangle', 'Rectangle', 'Hexagon', 'Pentagon', 'Octagon', 'Ellipse', 'Rhombus', 'Trapezoid',
+                 'Diamond', 'Parallelogram', 'Cube', 'Sphere', 'Cylinder', 'Cone', 'Tetrahedron', 'Pyramid', 'Prism', 'Star']
+    };
+
+    // Function to pick a random key from an object
+    function getRandomCategory(categoriesObj) {
+        const keys = Object.keys(categoriesObj);
+        return keys[Math.floor(Math.random() * keys.length)];
+    }
+
+    // Function to generate objects (3 similar and 1 odd one out)
+    function generateObjects() {
+        const objectsContainer = document.getElementById('objects');
+        objectsContainer.innerHTML = '';
+
+        nextButton.disabled = true; // Disable next button initially
+
+        // Select one category for the similar objects
+        const categoryKey = getRandomCategory(categories);
+        const similarObjects = categories[categoryKey];
+
+        // Select an odd category for the odd one out object
+        let oddCategoryKey;
+        do {
+            oddCategoryKey = getRandomCategory(categories);
+        } while (oddCategoryKey === categoryKey); // Ensure the odd category is different
+
+        const oddObject = categories[oddCategoryKey][Math.floor(Math.random() * categories[oddCategoryKey].length)];
+
+        // Shuffle the similar objects and add the odd one out
+        const objects = [...similarObjects.slice(0, 3), oddObject];
+        shuffleArray(objects);
+
+        // Display objects in the grid
+        objects.forEach((obj, index) => {
+            const objDiv = document.createElement('div');
+            objDiv.className = 'object';
+            objDiv.textContent = obj;
+            objDiv.onclick = () => handleAnswer(obj === oddObject, objDiv);
+            objectsContainer.appendChild(objDiv);
+        });
+    }
+
+    // Function to handle answer selection
+    function handleAnswer(isOddOneOut, selectedDiv) {
+        const feedback = document.getElementById('feedback');
+        totalCount++;
+        if (isOddOneOut) {
+            correctCount++;
+            feedback.textContent = '👍';
+        } else {
+            feedback.textContent = '👎';
+        }
+        feedback.style.display = 'block';
+        disableAllObjects();
+        updateScore();
+        nextButton.disabled = false; // Enable the Next button once an object is selected
+    }
+
+    // Function to disable all objects
+    function disableAllObjects() {
+        const objects = document.querySelectorAll('.object');
+        objects.forEach(obj => obj.classList.add('disabled'));
+    }
+
+    // Function to update the score
+    function updateScore() {
+        const score = document.getElementById('score');
+        score.textContent = `Correct Answers: ${correctCount} / ${totalCount}`;
+    }
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Next button event listener
+    nextButton.addEventListener('click', () => {
+        document.getElementById('feedback').style.display = 'none';
+        generateObjects();
+    });
+
+    // Initialize the game
+    generateObjects();
+</script>
+
+</body>
+</html>

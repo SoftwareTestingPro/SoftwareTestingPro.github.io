@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Exam - Shape Sequence</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px; /* Added padding for mobile responsiveness */
+            overflow: hidden;
+        }
+
+        #feedback {
+            font-size: 48px; /* Double size */
+            position: fixed;
+            top: calc(50% - 180px); /* Adjusted position to be higher */
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            animation: bounce 1s infinite; /* Add bounce animation */
+        }
+
+        .container {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px; /* Limit max width for mobile */
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .score {
+            margin-bottom: 10px;
+            font-weight: bold;
+            position: fixed;
+            top: calc(50% - 130px); /* Adjusted position to place below emoji */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .instructions {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .option {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+            transition: background-color 0.3s;
+        }
+
+        .option:hover {
+            background-color: #e0e0e0;
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            color: #888;
+            background-color: #eaeaea;
+        }
+
+        #next-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #next-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Animation keyframes */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 480px) {
+            #feedback {
+                font-size: 36px; /* Adjust emoji size for mobile */
+            }
+
+            .score {
+                font-size: 16px; /* Adjust score size for mobile */
+            }
+
+            .container {
+                max-width: 90%; /* Increase max width for small screens */
+                padding: 15px; /* Adjust padding for small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="feedback">👎</div> <!-- Swapped emoji display -->
+<div class="score" id="score">Correct Answers: 0 / 0</div> <!-- Score display -->
+<div class="container">
+    <div class="instructions">Select the correct shape:</div> <!-- Instructions -->
+    <div id="sequence" class="sequence"> <!-- Sequence will be generated here --> </div>
+    <div id="options" class="options-grid">
+        <!-- Options will be generated here -->
+    </div>
+    <button id="next-btn">Next</button>
+</div>
+
+<script>
+    let correctCount = 0;
+    let totalCount = 0;
+
+    // Function to generate random shape sequences
+    function generateRandomSequence() {
+        const shapes = ["🔴", "🔵", "🟢", "🟡", "🟣", "⚫", "⚪"];
+        const sequence = [];
+        
+        // Generate a sequence of shapes
+        for (let i = 0; i < 4; i++) {
+            sequence.push(shapes[Math.floor(Math.random() * shapes.length)]);
+        }
+
+        // Determine the next shape based on the sequence
+        const nextShape = shapes[Math.floor(Math.random() * shapes.length)];
+        sequence.push(nextShape); // Add next shape to sequence
+
+        // Create incorrect options
+        const options = [nextShape];
+        while (options.length < 4) {
+            const incorrectShape = shapes[Math.floor(Math.random() * shapes.length)];
+            if (!options.includes(incorrectShape)) {
+                options.push(incorrectShape);
+            }
+        }
+
+        // Shuffle options
+        shuffleArray(options);
+
+        return { sequence, options, nextShape };
+    }
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Function to generate a new sequence and options
+    function generateQuestion() {
+        const sequenceContainer = document.getElementById('sequence');
+        const optionsContainer = document.getElementById('options');
+
+        // Get a random sequence
+        const { sequence, options, nextShape } = generateRandomSequence();
+
+        sequenceContainer.textContent = sequence.join(" "); // Display sequence
+
+        // Clear previous options
+        optionsContainer.innerHTML = '';
+
+        // Add options to the container
+        options.forEach((option) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option';
+            optionDiv.textContent = option;
+            optionDiv.onclick = () => handleAnswer(option === nextShape, optionDiv);
+            optionsContainer.appendChild(optionDiv);
+        });
+    }
+
+    // Function to handle answer selection
+    function handleAnswer(isCorrect, selectedDiv) {
+        const feedback = document.getElementById('feedback');
+        totalCount++;
+        if (isCorrect) {
+            correctCount++;
+            feedback.textContent = '👍'; // Thumbs up for correct answer
+        } else {
+            feedback.textContent = '👎'; // Thumbs down for incorrect answer
+        }
+        disableAllOptions(); // Disable all options after clicking
+        feedback.style.display = 'block';
+        updateScore();
+    }
+
+    // Function to disable all option choices
+    function disableAllOptions() {
+        const options = document.querySelectorAll('.option');
+        options.forEach(opt => opt.classList.add('disabled'));
+    }
+
+    // Function to update the score display
+    function updateScore() {
+        const score = document.getElementById('score');
+        score.textContent = `Correct Answers: ${correctCount} / ${totalCount}`;
+    }
+
+    // Event listener for the Next button
+    document.getElementById('next-btn').addEventListener('click', () => {
+        document.getElementById('feedback').style.display = 'none';
+        generateQuestion();
+    });
+
+    // Initialize the game
+    generateQuestion();
+</script>
+
+</body>
+</html>

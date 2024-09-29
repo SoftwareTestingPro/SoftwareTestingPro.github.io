@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odd One Out - Subcategory Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        #feedback {
+            font-size: 48px;
+            position: fixed;
+            top: calc(50% - 180px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            animation: bounce 1s infinite;
+        }
+
+        .container {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .score {
+            margin-bottom: 10px;
+            font-weight: bold;
+            position: fixed;
+            top: calc(50% - 130px);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .instructions {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .objects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .object {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+            transition: background-color 0.3s;
+        }
+
+        .object:hover {
+            background-color: #e0e0e0;
+        }
+
+        .object.disabled {
+            pointer-events: none;
+            color: #888;
+            background-color: #eaeaea;
+        }
+
+        #next-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #next-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #next-btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            #feedback {
+                font-size: 36px;
+            }
+
+            .score {
+                font-size: 16px;
+            }
+
+            .container {
+                max-width: 90%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="feedback">👎</div>
+<div class="score" id="score">Correct Answers: 0 / 0</div>
+<div class="container">
+    <div class="instructions">Find the object that doesn't belong:</div>
+    <div id="objects" class="objects-grid"></div>
+    <button id="next-btn" disabled>Next</button>
+</div>
+
+<script>
+    let correctCount = 0;
+    let totalCount = 0;
+
+    const nextButton = document.getElementById('next-btn');
+
+    // Predefined categories with subcategories
+    const categories = {
+    "Emotions": {
+        "Positive Emotions": [
+            "Happiness", "Joy", "Love", "Contentment", "Excitement", 
+            "Gratitude", "Hope", "Relief", "Pride", "Amusement", 
+            "Satisfaction", "Inspiration", "Affection", "Passion", 
+            "Calm", "Euphoria", "Enthusiasm", "Cheerfulness", "Serenity", "Optimism"
+        ],
+        "Negative Emotions": [
+            "Anger", "Sadness", "Fear", "Anxiety", "Jealousy", 
+            "Guilt", "Shame", "Regret", "Disgust", "Frustration", 
+            "Loneliness", "Resentment", "Hopelessness", "Despair", 
+            "Envy", "Insecurity", "Alienation", "Bitterness", "Rage", "Apathy"
+        ],
+        "Neutral Emotions": [
+            "Curiosity", "Surprise", "Confusion", "Interest", "Anticipation", 
+            "Acceptance", "Boredom", "Indifference", "Disappointment", 
+            "Nostalgia", "Skepticism", "Tension", "Detachment", 
+            "Ambivalence", "Arousal", "Melancholy", "Withdrawal", 
+            "Vulnerability", "Hesitation", "Intrigue"
+        ]
+    },    
+    "Professions": {
+        "Healthcare": [
+            "Doctor", "Nurse", "Pharmacist", "Dentist", "Surgeon", 
+            "Radiologist", "Anesthesiologist", "Physiotherapist", "Psychologist", 
+            "Chiropractor", "Optometrist", "Paramedic", "Medical Assistant", 
+            "Veterinarian", "Occupational Therapist", "Lab Technician", 
+            "Health Educator", "Dietitian", "Speech Therapist", "EMT"
+        ],
+        "Education": [
+            "Teacher", "Professor", "Lecturer", "Tutor", "Principal", 
+            "Educational Consultant", "School Counselor", "Librarian", 
+            "Instructional Designer", "Special Education Teacher", "Coach", 
+            "Curriculum Developer", "Substitute Teacher", "Researcher", 
+            "Adult Educator", "Education Administrator", "Home School Teacher", 
+            "Academic Advisor", "Teacher Aide", "Childcare Worker"
+        ],
+        "Technology": [
+            "Software Engineer", "Data Scientist", "Web Developer", "IT Support", 
+            "Network Administrator", "System Analyst", "Cybersecurity Specialist", 
+            "Database Administrator", "Product Manager", "UX/UI Designer", 
+            "Game Developer", "Cloud Architect", "DevOps Engineer", 
+            "Hardware Engineer", "Quality Assurance Tester", "Project Manager", 
+            "Technical Writer", "SEO Specialist", "Data Analyst", "Business Analyst"
+        ]
+    },
+    "Famous Landmarks": {
+        "Architectural Marvels": [
+            "Eiffel Tower", "Great Wall of China", "Colosseum", "Leaning Tower of Pisa", 
+            "Taj Mahal", "Sydney Opera House", "Burj Khalifa", "Machu Picchu", 
+            "Angkor Wat", "Statue of Liberty", "Big Ben", "Golden Gate Bridge", 
+            "Notre-Dame Cathedral", "Acropolis", "Sagrada Familia", "Brandenburg Gate", 
+            "St. Basil's Cathedral", "Petronas Towers", "Pyramids of Giza", "Chichen Itza"
+        ],
+        "Natural Wonders": [
+            "Grand Canyon", "Great Barrier Reef", "Niagara Falls", "Mount Everest", 
+            "Yellowstone National Park", "Amazon Rainforest", "Sahara Desert", 
+            "Yosemite Valley", "Northern Lights", "Victoria Falls", "Galápagos Islands", 
+            "Death Valley", "Redwoods National Park", "Angel Falls", 
+            "Banff National Park", "Stonehenge", "Great Salt Lake", 
+            "Matterhorn", "Mount Kilimanjaro", "Antelope Canyon"
+        ],
+        "Historical Sites": [
+            "Stonehenge", "Pompeii", "Machu Picchu", "Easter Island", 
+            "Acropolis", "Pyramids of Giza", "Colosseum", "Alhambra", 
+            "Angkor Wat", "Great Wall of China", "Taj Mahal", "Parthenon", 
+            "Mont Saint-Michel", "Terracotta Army", "Petra", "Chichen Itza", 
+            "Mesa Verde", "Chernobyl", "Independence Hall", "Carthage"
+        ]
+    },
+    "Insects": {
+        "Butterflies": [
+            "Monarch", "Swallowtail", "Painted Lady", "Blue Morpho", 
+            "Zebra Swallowtail", "Red Admiral", "Cabbage White", 
+            "Tiger Swallowtail", "Common Buckeye", "Eastern Tiger Swallowtail", 
+            "Clouded Sulphur", "Mourning Cloak", "Admiral", 
+            "Red-Spotted Purple", "Giant Swallowtail", "Common Yellow Swallowtail", 
+            "Gulf Fritillary", "Lacewing Butterfly", "Skipper", "Glasswing Butterfly"
+        ],
+        "Beetles": [
+            "Ladybug", "Japanese Beetle", "Firefly", "Stag Beetle", 
+            "Rove Beetle", "Rhinoceros Beetle", "Goliath Beetle", 
+            "Click Beetle", "Ground Beetle", "Weevil", "Scarab Beetle", 
+            "Bombardier Beetle", "Tiger Beetle", "Darkling Beetle", 
+            "Jewel Beetle", "Water Beetle", "Longhorn Beetle", 
+            "Leaf Beetle", "Ladybird Beetle", "Powderpost Beetle"
+        ],
+        "Bees": [
+            "Honeybee", "Bumblebee", "Carpenter Bee", "Leafcutter Bee", 
+            "Mason Bee", "Sweat Bee", "Mining Bee", "Digger Bee", 
+            "Orchid Bee", "Long-Horned Bee", "Plasterer Bee", "Green Metallic Bee", 
+            "Blue Mason Bee", "Red Mason Bee", "Wool Carder Bee", 
+            "Pollen Bee", "Small Carpenter Bee", "Sand Bee", "Squash Bee", "Halictid Bee"
+        ]
+    },
+    "Colors": {
+        "Warm Colors": [
+            "Red", "Orange", "Yellow", "Crimson", "Magenta", 
+            "Coral", "Gold", "Amber", "Peach", "Salmon", 
+            "Brick Red", "Burnt Orange", "Maroon", "Terra Cotta", 
+            "Scarlet", "Rose", "Cherry", "Flame", "Copper", "Cantaloupe"
+        ],
+        "Cool Colors": [
+            "Blue", "Green", "Purple", "Turquoise", "Teal", 
+            "Cyan", "Lavender", "Indigo", "Aqua", "Navy", 
+            "Violet", "Periwinkle", "Mint", "Seafoam", 
+            "Sapphire", "Emerald", "Forest Green", "Sky Blue", 
+            "Plum", "Lilac", "Teal"
+        ],
+        "Neutral Colors": [
+            "White", "Black", "Gray", "Beige", "Tan", 
+            "Brown", "Ivory", "Charcoal", "Cream", "Olive", 
+            "Taupe", "Mauve", "Slate", "Sand", "Cocoa", 
+            "Ecru", "Umber", "Blush", "Pewter", "Almond"
+        ]
+    },
+    "Sports": {
+        "Team Sports": [
+            "Soccer", "Basketball", "Football", "Baseball", "Hockey", 
+            "Rugby", "Volleyball", "Cricket", "Lacrosse", "Handball", 
+            "Netball", "Water Polo", "Ultimate Frisbee", "Softball", 
+            "Australian Rules Football", "Field Hockey", "Futsal", 
+            "Dodgeball", "Kickball", "Ice Hockey", "Curling"
+        ],
+        "Individual Sports": [
+            "Tennis", "Golf", "Boxing", "Swimming", "Running", 
+            "Cycling", "Martial Arts", "Gymnastics", "Wrestling", 
+            "Rock Climbing", "Skiing", "Snowboarding", "Surfing", 
+            "Table Tennis", "Badminton", "Sailing", "Horse Racing", 
+            "Archery", "Fencing", "Weightlifting", "Triathlon"
+        ],
+        "Motor Sports": [
+            "Formula 1", "NASCAR", "Motorcycle Racing", "IndyCar", 
+            "Rally Racing", "Drag Racing", "Touring Car Racing", "Off-Road Racing", 
+            "Kart Racing", "Speedway", "Superbike Racing", "Dirt Track Racing", 
+            "Endurance Racing", "Pikes Peak International Hill Climb", "Isle of Man TT", 
+            "Motocross", "Supercross", "Land Sailing", "Truck Racing", "Powerboat Racing"
+        ]
+    },
+    "Countries": {
+        "European Countries": [
+            "France", "Germany", "Italy", "Spain", "United Kingdom", 
+            "Netherlands", "Belgium", "Switzerland", "Austria", 
+            "Greece", "Sweden", "Norway", "Denmark", "Finland", 
+            "Portugal", "Poland", "Czech Republic", "Hungary", "Ireland", "Romania"
+        ],
+        "Asian Countries": [
+            "China", "Japan", "India", "South Korea", "Indonesia", 
+            "Pakistan", "Bangladesh", "Vietnam", "Philippines", 
+            "Thailand", "Malaysia", "Singapore", "Nepal", "Sri Lanka", 
+            "Iran", "Iraq", "Afghanistan", "Israel", "Saudi Arabia", "United Arab Emirates"
+        ],
+        "African Countries": [
+            "Nigeria", "Kenya", "Egypt", "South Africa", "Ethiopia", 
+            "Ghana", "Tanzania", "Uganda", "Mozambique", "Madagascar", 
+            "Algeria", "Angola", "Sudan", "Mali", "Zambia", 
+            "Zimbabwe", "Namibia", "Botswana", "Senegal", "Côte d'Ivoire"
+        ]
+    },
+    "Cuisines": {
+        "Asian Cuisine": [
+            "Chinese", "Japanese", "Thai", "Indian", "Korean", 
+            "Vietnamese", "Malaysian", "Indonesian", "Filipino", 
+            "Singaporean", "Sri Lankan", "Cambodian", "Mongolian", 
+            "Laotian", "Nepalese", "Bangladeshi", "Burmese", "Taiwanese", 
+            "Pakistani", "Hong Kong"
+        ],
+        "European Cuisine": [
+            "Italian", "French", "Spanish", "Greek", "German", 
+            "British", "Dutch", "Russian", "Scandinavian", "Portuguese", 
+            "Belgian", "Swiss", "Austrian", "Hungarian", "Czech", 
+            "Irish", "Finnish", "Romanian", "Bulgarian", "Ukrainian"
+        ],
+        "Middle Eastern Cuisine": [
+            "Lebanese", "Turkish", "Persian", "Israeli", "Moroccan", 
+            "Egyptian", "Syrian", "Iraqi", "Jordanian", "Emirati", 
+            "Omani", "Qatari", "Bahraini", "Saudi", "Kuwaiti", 
+            "Palestinian", "Yemeni", "Armenian", "Kurdish", "Afghan"
+        ]
+    },
+    "Vehicles": {
+        "Land Vehicles": [
+            "Car", "Truck", "Motorcycle", "Bicycle", "Bus", 
+            "Train", "Scooter", "Van", "ATV", "Tractor", 
+            "Segway", "Go-Kart", "Unicycle", "Horse", "Limo", 
+            "Rickshaw", "Trolley", "Tank", "Ambulance", "Fire Engine"
+        ],
+        "Water Vehicles": [
+            "Boat", "Ship", "Submarine", "Yacht", "Canoe", 
+            "Kayak", "Sailboat", "Ferry", "Cargo Ship", "Fishing Boat", 
+            "Barge", "Speedboat", "Tugboat", "Catamaran", "Houseboat", 
+            "Driftboat", "Dinghy", "Paddleboat", "Raft", "Cruise Ship"
+        ],
+        "Air Vehicles": [
+            "Airplane", "Helicopter", "Glider", "Hot Air Balloon", 
+            "Drone", "Jetpack", "Hang Glider", "Blimp", "Fighter Jet", 
+            "Cargo Plane", "Seaplane", "Biplane", "Cessna", "Chopper", 
+            "Learjet", "Airship", "Space Shuttle", "Satellites", 
+            "Ultralight Aircraft", "Regional Jet", "Executive Jet"
+        ]
+    },	
+    "Musical Instruments": {
+        "Strings": [
+            "Violin", "Viola", "Cello", "Double Bass", "Guitar", 
+            "Harp", "Mandolin", "Ukulele", "Zither", "Banjo", 
+            "Lute", "Sitar", "Bouzouki", "Bass Guitar", "Electric Violin", 
+            "Erhu", "Rabab", "Hardanger Fiddle", "Charango", "Koto"
+        ],
+        "Percussion": [
+            "Drum", "Tambourine", "Marimba", "Conga", "Bongos", 
+            "Cajón", "Djembe", "Timpani", "Xylophone", "Steel Drum", 
+            "Snare Drum", "Bass Drum", "Handpan", "Guiro", "Frame Drum", 
+            "Cello", "Tabla", "Shaker", "Claves", "Wood Block"
+        ],
+        "Woodwinds": [
+            "Flute", "Clarinet", "Oboe", "Bassoon", "Saxophone", 
+            "Piccolo", "English Horn", "Recorder", "Contrabassoon", "Harmonium", 
+            "Fagottino", "Shakuhachi", "Pan Flute", "Irish Whistle", "Bass Clarinet", 
+            "Soprano Saxophone", "Tenor Saxophone", "Althorn", "E-flat Clarinet", "Musette"
+        ]
+    },
+    "Fruits": {
+        "Citrus Fruits": [
+            "Orange", "Lemon", "Lime", "Grapefruit", "Tangerine", 
+            "Mandarins", "Pomelo", "Kumquat", "Yuzu", "Blood Orange", 
+            "Bergamot", "Calamondin", "Citron", "Kaffir Lime", "Buddha's Hand", 
+            "Finger Lime", "Sweet Lemon", "Key Lime", "Citron", "Citronette"
+        ],
+        "Berries": [
+            "Strawberry", "Blueberry", "Raspberry", "Blackberry", "Cranberry", 
+            "Gooseberry", "Elderberry", "Huckleberry", "Mulberry", "Boysenberry", 
+            "Marionberry", "Cloudberry", "Lingonberry", "Bilberry", "Serviceberry", 
+            "Salal Berry", "Chokeberry", "Wineberry", "Barberry", "Jostaberry"
+        ],
+        "Tropical Fruits": [
+            "Banana", "Mango", "Pineapple", "Papaya", "Coconut", 
+            "Passionfruit", "Dragonfruit", "Starfruit", "Guava", "Lychee", 
+            "Durian", "Rambutan", "Sapodilla", "Mangosteen", "Longan", 
+            "Jackfruit", "Soursop", "Cherimoya", "Breadfruit", "Langsat"
+        ]
+    },
+    "Birds": {
+        "Songbirds": [
+            "Sparrow", "Robin", "Finch", "Warbler", "Goldfinch", 
+            "Wren", "Nightingale", "Blackbird", "Bluebird", "Mockingbird", 
+            "Oriole", "Meadowlark", "Red-winged Blackbird", "Indigo Bunting", "Chipping Sparrow", 
+            "House Sparrow", "Swallow", "Bush-Tit", "Cedar Waxwing", "Song Sparrow"
+        ],
+        "Birds of Prey": [
+            "Eagle", "Hawk", "Falcon", "Osprey", "Kestrel", 
+            "Vulture", "Harrier", "Buzzard", "Condor", "Bateleur", 
+            "Golden Eagle", "Red-tailed Hawk", "Peregrine Falcon", "Merlins", "Secretary Bird", 
+            "White-tailed Eagle", "Goshawk", "Black Kite", "Steppe Eagle", "Eurasian Sparrowhawk"
+        ],
+        "Waterfowl": [
+            "Duck", "Swan", "Goose", "Teal", "Mandarin Duck", 
+            "Pintail", "Eider", "Barnacle Goose", "Grebe", "Merganser", 
+            "Plover", "Coot", "Moorhen", "Shelduck", "Egyptian Goose", 
+            "Canada Goose", "Whistling Duck", "Northern Shoveler", "Fulvous Whistling Duck", "Black-headed Gull"
+        ]
+    },
+    "Animals": {
+        "Mammals": [
+            "Lion", "Tiger", "Elephant", "Bear", "Dolphin", 
+            "Whale", "Giraffe", "Kangaroo", "Hippopotamus", "Rhinoceros", 
+            "Gorilla", "Chimpanzee", "Panda", "Koala", "Bison", 
+            "Cheetah", "Leopard", "Elk", "Antelope", "Sloth"
+        ],
+        "Reptiles": [
+            "Crocodile", "Alligator", "Iguana", "Gecko", "Komodo Dragon", 
+            "Chameleon", "Python", "Viper", "Tortoise", "Monitor Lizard", 
+            "Gila Monster", "Anaconda", "Coral Snake", "King Cobra", "Horned Lizard", 
+            "Frilled Lizard", "Sea Turtle", "Box Turtle", "Nile Monitor", "Bearded Dragon"
+        ],
+        "Birds": [
+            "Parrot", "Eagle", "Falcon", "Sparrow", "Penguin", 
+            "Ostrich", "Pelican", "Flamingo", "Peacock", "Hummingbird", 
+            "Woodpecker", "Robin", "Canary", "Pigeon", "Stork", 
+            "Heron", "Crow", "Seagull", "Quail", "Dove"
+        ]
+    },
+    "Vehicles": {
+        "Land Vehicles": [
+            "Car", "Truck", "Motorcycle", "Bicycle", "Bus", 
+            "Van", "Tractor", "Moped", "Scooter", "Segway", 
+            "Golf Cart", "ATV", "Tank", "Limo", "Convertible", 
+            "Pickup Truck", "R.V.", "Hatchback", "Minivan", "Coupe"
+        ],
+        "Water Vehicles": [
+            "Yacht", "Sailboat", "Submarine", "Ferry", "Cargo Ship", 
+            "Fishing Boat", "Cruise Ship", "Jet Ski", "Canoe", "Kayak", 
+            "Hovercraft", "Tanker", "Barge", "Longboat", "Catamaran", 
+            "Motorboat", "Skiff", "Raft", "Paddleboat"
+        ],
+        "Air Vehicles": [
+            "Airplane", "Helicopter", "Glider", "Hot Air Balloon", "Drone", 
+            "Hang Glider", "Biplane", "Fighter Jet", "Seaplane", "Blimp", 
+            "Cessna", "Learjet", "Concorde", "Crop Duster", "Space Shuttle", 
+            "Zeppelin", "Ultralight", "Paraglider", "Bomber", "Airship"
+        ]
+    },
+    "Sports": {
+        "Ball Sports": [
+            "Soccer", "Basketball", "Volleyball", "Baseball", "Cricket", 
+            "Tennis", "Golf", "Handball", "Rugby", "Table Tennis", 
+            "Badminton", "American Football", "Lacrosse", "Water Polo", "Softball", 
+            "Beach Volleyball", "Futsal", "Squash", "Curling", "Korfball"
+        ],
+        "Combat Sports": [
+            "Boxing", "Wrestling", "Judo", "Karate", "Taekwondo", 
+            "Kickboxing", "MMA", "Muay Thai", "Aikido", "Capoeira", 
+            "Kendo", "Sambo", "BJJ", "Sanda", "Savate", 
+            "Pankration", "Lethwei", "Grappling", "Ninjutsu"
+        ],
+        "Racing Sports": [
+            "Formula 1", "NASCAR", "Motorcycle Racing", "Bicycle Racing", "Horse Racing", 
+            "Go-Karting", "Drag Racing", "Speed Skating", "Sailing", "Rowing", 
+            "Marathon Running", "Ironman", "Triathlon", "Rally Racing", "Jet Ski Racing", 
+            "Off-Road Racing", "Touring Car Racing", "Cross Country Running", "Bobsledding", "Skiing"
+        ]
+    },
+    "Food": {
+        "Vegetarian": [
+            "Salad", "Vegetable Stir-Fry", "Vegetable Curry", "Pasta Primavera", "Veggie Burger", 
+            "Stuffed Peppers", "Quinoa Bowl", "Veggie Sushi", "Cauliflower Tacos", "Eggplant Parmesan", 
+            "Chickpea Salad", "Lentil Soup", "Mushroom Risotto", "Zucchini Noodles", "Falafel Wrap", 
+            "Vegetable Lasagna", "Sweet Potato Hash", "Veggie Pizza", "Vegetable Frittata", "Minestrone Soup"
+        ],
+        "Non-Vegetarian": [
+            "Grilled Chicken", "Beef Stir-Fry", "Fish Tacos", "Pork Chops", "Chicken Curry", 
+            "Meatballs", "Shrimp Scampi", "Lamb Chops", "Steak Fajitas", "Teriyaki Salmon", 
+            "Chicken Alfredo", "Bacon-Wrapped Scallops", "Pork Ribs", "Crab Cakes", "Chicken Parmesan", 
+            "Duck Confit", "Barbecue Chicken", "Stuffed Chicken Breast", "Fish & Chips", "Lamb Kofta"
+        ],
+        "Desserts": [
+            "Chocolate Cake", "Cheesecake", "Apple Pie", "Tiramisu", "Brownies", 
+            "Ice Cream", "Pudding", "Cupcakes", "Cookies", "Fruit Tart", 
+            "Pavlova", "Lemon Meringue Pie", "Banoffee Pie", "Mousse", "Crème Brûlée", 
+            "Tarts", "Baklava", "Churros", "Panna Cotta", "Profiteroles"
+        ]
+    },
+    "Gardening": {
+        "Flowers": [
+            "Roses", "Tulips", "Daisies", "Sunflowers", "Lilies", 
+            "Orchids", "Marigolds", "Pansies", "Petunias", "Geraniums", 
+            "Lavender", "Chrysanthemums", "Carnations", "Hydrangeas", "Peonies", 
+            "Iris", "Poppies", "Asters", "Daffodils", "Snapdragons"
+        ],
+        "Vegetables": [
+            "Tomatoes", "Carrots", "Lettuce", "Cucumbers", "Peppers", 
+            "Zucchini", "Spinach", "Eggplant", "Radishes", "Beets", 
+            "Broccoli", "Cabbage", "Cauliflower", "Onions", "Garlic", 
+            "Pumpkins", "Squash", "Green Beans", "Peas", "Asparagus"
+        ],
+        "Herbs": [
+            "Basil", "Parsley", "Cilantro", "Rosemary", "Thyme", 
+            "Mint", "Oregano", "Chives", "Sage", "Dill", 
+            "Tarragon", "Chervil", "Fennel", "Lavender", "Bay Leaf", 
+            "Marjoram", "Lemon Balm", "Catnip", "Sweet Woodruff", "Sorrel"
+        ]
+    },
+    "Science": {
+        "Biology": [
+            "Botany", "Zoology", "Microbiology", "Genetics", "Ecology", 
+            "Evolutionary Biology", "Cell Biology", "Physiology", "Molecular Biology", "Entomology", 
+            "Marine Biology", "Ornithology", "Biochemistry", "Immunology", "Neuroscience", 
+            "Biophysics", "Mycology", "Horticulture", "Pharmacology", "Paleontology"
+        ],
+        "Physics": [
+            "Classical Mechanics", "Thermodynamics", "Quantum Mechanics", "Electromagnetism", "Relativity", 
+            "Astrophysics", "Particle Physics", "Nuclear Physics", "Optics", "Solid State Physics", 
+            "Fluid Mechanics", "Plasma Physics", "Biophysics", "Acoustics", "Geophysics", 
+            "Astrophysics", "Statistical Mechanics", "Condensed Matter Physics", "Mathematical Physics", "Cosmology"
+        ],
+        "Chemistry": [
+            "Organic Chemistry", "Inorganic Chemistry", "Physical Chemistry", "Analytical Chemistry", "Biochemistry", 
+            "Materials Science", "Environmental Chemistry", "Theoretical Chemistry", "Polymer Chemistry", "Industrial Chemistry", 
+            "Computational Chemistry", "Nuclear Chemistry", "Forensic Chemistry", "Medicinal Chemistry", "Supramolecular Chemistry", 
+            "Nanotechnology", "Photochemistry", "Electrochemistry", "Green Chemistry", "Astrochemistry"
+        ]
+    },
+    "Technology": {
+        "Hardware": [
+            "Computer", "Smartphone", "Tablet", "Laptop", "Server", 
+            "Router", "Printer", "Hard Drive", "Motherboard", "Graphics Card", 
+            "SSD", "Peripheral", "Wearable Tech", "Virtual Reality Headset", "Smartwatch", 
+            "Drone", "3D Printer", "IoT Device", "Smart Home Device", "Gaming Console"
+        ],
+        "Software": [
+            "Operating System", "Application", "Database", "Web Browser", "Game", 
+            "Utility Software", "Middleware", "IDE", "Virtual Machine", "Cloud Service", 
+            "Mobile App", "Enterprise Software", "Open-source Software", "Firmware", "Malware", 
+            "Antivirus Software", "Web Application", "Content Management System", "Graphics Software", "Simulation Software"
+        ],
+        "Networking": [
+            "LAN", "WAN", "VPN", "Firewall", "Router", 
+            "Switch", "Network Protocol", "Internet", "Ethernet", "Wi-Fi", 
+            "Network Security", "TCP/IP", "VoIP", "Network Topology", "Network Design", 
+            "Network Management", "Network Monitoring", "Wireless Network", "Intrusion Detection System", "DNS"
+        ]
+    },
+    "Health": {
+        "Nutrition": [
+            "Macronutrients", "Micronutrients", "Dietary Fiber", "Vitamins", "Minerals", 
+            "Antioxidants", "Hydration", "Balanced Diet", "Food Pyramid", "Superfoods", 
+            "Healthy Fats", "Lean Proteins", "Carbohydrates", "Whole Grains", "Plant-based Diet", 
+            "Low-carb Diet", "Mediterranean Diet", "Paleo Diet", "Keto Diet", "Intermittent Fasting"
+        ],
+        "Fitness": [
+            "Aerobic Exercise", "Strength Training", "Flexibility Training", "HIIT", "Pilates", 
+            "Yoga", "CrossFit", "Running", "Cycling", "Swimming", 
+            "Dance", "Boxing", "Sports", "Calisthenics", "Walking", 
+            "Martial Arts", "Rock Climbing", "Rowing", "Hiking", "Jump Rope"
+        ],
+        "Mental Health": [
+            "Anxiety", "Depression", "Stress Management", "Mindfulness", "Coping Strategies", 
+            "Therapy", "Counseling", "Support Groups", "Meditation", "Breathing Exercises", 
+            "Self-Care", "Journaling", "Cognitive Behavioral Therapy", "Emotional Intelligence", "Resilience", 
+            "Positive Psychology", "Mental Wellness", "Mental Disorders", "Addiction", "Sleep Hygiene"
+        ]
+    }
+};
+
+    // Function to pick a random key from an object
+    function getRandomCategory(categoriesObj) {
+        const keys = Object.keys(categoriesObj);
+        return keys[Math.floor(Math.random() * keys.length)];
+    }
+
+    // Function to generate objects (3 similar and 1 odd one out)
+    function generateObjects() {
+        const objectsContainer = document.getElementById('objects');
+        objectsContainer.innerHTML = '';
+
+        nextButton.disabled = true; // Disable next button initially
+
+        // Select one category for the similar objects
+        const categoryKey = getRandomCategory(categories);
+        const subCategoryKey = getRandomCategory(categories[categoryKey]);
+        const similarObjects = categories[categoryKey][subCategoryKey];
+
+        // Select an odd sub-category for the odd one out
+        let oddSubCategoryKey;
+        do {
+            oddSubCategoryKey = getRandomCategory(categories[categoryKey]);
+        } while (oddSubCategoryKey === subCategoryKey); // Ensure the odd sub-category is different
+
+        const oddObject = categories[categoryKey][oddSubCategoryKey][Math.floor(Math.random() * categories[categoryKey][oddSubCategoryKey].length)];
+
+        // Shuffle the similar objects and add the odd one out
+        const objects = [...similarObjects.slice(0, 3), oddObject];
+        shuffleArray(objects);
+
+        // Display objects in the grid
+        objects.forEach((obj) => {
+            const objDiv = document.createElement('div');
+            objDiv.className = 'object';
+            objDiv.textContent = obj;
+            objDiv.onclick = () => handleAnswer(obj === oddObject, objDiv);
+            objectsContainer.appendChild(objDiv);
+        });
+    }
+
+    // Function to handle answer selection
+    function handleAnswer(isOddOneOut, selectedDiv) {
+        const feedback = document.getElementById('feedback');
+        totalCount++;
+        if (isOddOneOut) {
+            correctCount++;
+            feedback.textContent = '👍';
+        } else {
+            feedback.textContent = '👎';
+        }
+        feedback.style.display = 'block';
+        disableAllObjects();
+        updateScore();
+        nextButton.disabled = false; // Enable the Next button once an object is selected
+    }
+
+    // Function to disable all objects
+    function disableAllObjects() {
+        const objects = document.querySelectorAll('.object');
+        objects.forEach(obj => obj.classList.add('disabled'));
+    }
+
+    // Function to update the score
+    function updateScore() {
+        const score = document.getElementById('score');
+        score.textContent = `Correct Answers: ${correctCount} / ${totalCount}`;
+    }
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Event listener for the Next button
+    nextButton.addEventListener('click', () => {
+        document.getElementById('feedback').style.display = 'none';
+        generateObjects();
+    });
+
+    // Initialize the game
+    generateObjects();
+</script>
+
+</body>
+</html>

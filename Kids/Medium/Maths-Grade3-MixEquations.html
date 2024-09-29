@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible=IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Odd One Out</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px; /* Added padding for mobile responsiveness */
+            overflow: hidden;
+        }
+
+        #feedback {
+            font-size: 48px; /* Double size */
+            position: fixed;
+            top: calc(50% - 180px); /* Adjusted position to be higher */
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            animation: bounce 1s infinite; /* Add bounce animation */
+        }
+
+        .container {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px; /* Limit max width for mobile */
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .score {
+            margin-bottom: 10px;
+            font-weight: bold;
+            position: fixed;
+            top: calc(50% - 130px); /* Adjusted position to place below emoji */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .instructions {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .equations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .equation {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+            transition: background-color 0.3s;
+        }
+
+        .equation:hover {
+            background-color: #e0e0e0;
+        }
+
+        .equation.disabled {
+            pointer-events: none;
+            color: #888;
+            background-color: #eaeaea;
+        }
+
+        #next-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #next-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Animation keyframes */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 480px) {
+            #feedback {
+                font-size: 36px; /* Adjust emoji size for mobile */
+            }
+
+            .score {
+                font-size: 16px; /* Adjust score size for mobile */
+            }
+
+            .container {
+                max-width: 90%; /* Increase max width for small screens */
+                padding: 15px; /* Adjust padding for small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="feedback">👎</div> <!-- Swapped emoji display -->
+<div class="score" id="score">Correct Answers: 0 / 0</div> <!-- Score display -->
+<div class="container">
+    <div class="instructions">Find the incorrect equation:</div> <!-- Instructions -->
+    <div id="equations" class="equations-grid">
+        <!-- Equations will be generated here -->
+    </div>
+    <button id="next-btn">Next</button>
+</div>
+
+<script>
+    let correctCount = 0;
+    let totalCount = 0;
+
+    // Function to generate random number between min and max
+    function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Function to format the result with or without decimals based on value
+    function formatResult(value) {
+        return value % 1 === 0 ? value.toString() : value.toFixed(2); // Show decimals only if not .00
+    }
+
+    // Function to generate a correct math equation
+    function generateCorrectEquation() {
+        const num1 = getRandomNumber(1, 10);
+        const num2 = getRandomNumber(1, 10);
+        const operators = ['+', '-', '*', '/'];
+        const operator = operators[getRandomNumber(0, operators.length - 1)];
+        let answer;
+
+        switch (operator) {
+            case '+':
+                answer = num1 + num2;
+                break;
+            case '-':
+                answer = num1 - num2;
+                break;
+            case '*':
+                answer = num1 * num2;
+                break;
+            case '/':
+                answer = num1 / num2;
+                break;
+        }
+
+        return {
+            equation: `${num1} ${operator} ${num2} = ${formatResult(answer)}`,
+            isCorrect: true
+        };
+    }
+
+    // Function to generate an incorrect math equation
+    function generateIncorrectEquation() {
+        const correctEquation = generateCorrectEquation();
+        let incorrectAnswer = eval(correctEquation.equation.split('=')[0]);
+
+        // Alter the correct answer slightly to make it incorrect
+        incorrectAnswer += getRandomNumber(1, 3); // add a random number between 1 and 3 to make it incorrect
+
+        return {
+            equation: `${correctEquation.equation.split('=')[0]} = ${formatResult(incorrectAnswer)}`,
+            isCorrect: false
+        };
+    }
+
+    // Function to generate equations with three correct and one incorrect
+    function generateEquations() {
+        const equationsContainer = document.getElementById('equations');
+        equationsContainer.innerHTML = '';
+
+        // Generate three correct equations
+        const equations = Array.from({ length: 3 }, generateCorrectEquation);
+
+        // Generate one incorrect equation
+        const incorrectEquation = generateIncorrectEquation();
+
+        // Insert the incorrect equation at a random position
+        const incorrectIndex = getRandomNumber(0, 3);
+        equations.splice(incorrectIndex, 0, incorrectEquation);
+
+        // Display equations in a 2x2 grid
+        equations.forEach((eq) => {
+            const eqDiv = document.createElement('div');
+            eqDiv.className = 'equation';
+            eqDiv.textContent = eq.equation;
+            eqDiv.onclick = () => handleAnswer(eq.isCorrect, eqDiv);
+            equationsContainer.appendChild(eqDiv);
+        });
+    }
+
+    // Function to handle answer selection
+    function handleAnswer(isCorrect, selectedDiv) {
+        const feedback = document.getElementById('feedback');
+        totalCount++;
+        // Increment correctCount if the user selects the incorrect equation
+        if (!isCorrect) {
+            correctCount++; // Consider selecting incorrect equation as a correct answer
+        }
+        disableAllEquations(); // Disable all equations after clicking
+        feedback.style.display = 'block';
+        feedback.textContent = isCorrect ? '👎' : '👍'; // Swapped emoji logic
+        updateScore();
+    }
+
+    // Function to disable all equation options
+    function disableAllEquations() {
+        const equations = document.querySelectorAll('.equation');
+        equations.forEach(eq => eq.classList.add('disabled'));
+    }
+
+    // Function to update the score display
+    function updateScore() {
+        const score = document.getElementById('score');
+        score.textContent = `Correct Answers: ${correctCount} / ${totalCount}`;
+    }
+
+    // Event listener for the Next button
+    document.getElementById('next-btn').addEventListener('click', () => {
+        document.getElementById('feedback').style.display = 'none';
+        generateEquations();
+    });
+
+    // Initialize the game
+    generateEquations();
+</script>
+
+</body>
+</html>

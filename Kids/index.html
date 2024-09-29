@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore various practice courses including Programming, Automation, and API. Click on the boxes to start learning.">
+    <meta name="keywords" content="Programming, Automation, API, Practice Courses, Learning">
+    <meta name="author" content="Your Name">
+    <title>Test Automation Homepage</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .input-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-container label {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 600px;
+            justify-content: center;
+        }
+        .box {
+            width: 200px;
+            height: 150px;
+            margin: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .box:hover {
+            filter: brightness(0.9);
+        }
+        .box span {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .box {
+                width: 150px;
+                height: 120px;
+                font-size: 16px;
+            }
+        }
+        footer {
+            position: absolute;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        footer a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="input-container">
+        <label for="user-input">Select Difficulty Level:</label>
+    </div>
+    <div class="container">
+        <a href="Easy/index.html" class="box" aria-label="Easy Level" title="Easy Level">Easy<span>Level: Easy</span></a>
+        <a href="Medium/index.html" class="box" aria-label="Medium Level" title="Medium Level">Medium<span>Level: Medium</span></a>
+        <a href="Hard/index.html" class="box" aria-label="Hard Level" title="Hard Level">Hard<span>Level: Hard</span></a>
+    </div>
+
+    <footer>
+        <a href="../Developer.html">About Developer</a>
+        <a href="https://forms.gle/GFYLiy6VJ8b2BEKj6">Contact</a>        
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                // Set initial random background color
+                setRandomColor(box);
+
+                // Change color on hover
+                box.addEventListener('mouseover', () => {
+                    setRandomColor(box);
+                });
+            });
+        });
+
+        function setRandomColor(element) {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            element.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+    </script>
+</body>
+</html>
