@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match the Following</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .item, .label {
+            background-color: #e9ecef;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px;
+            cursor: pointer;
+            text-align: center;
+            width: 150px;
+        }
+        .item:hover, .label:hover {
+            background-color: #d0d4d6;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        #successMessage {
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+
+<h2>Drag and Drop Items To Match the Following</h2>
+<div class="container">
+    <div class="column" id="leftColumn">
+        <!-- Left items will be inserted here -->
+    </div>
+    <div class="column" id="rightColumn">
+        <div class="label" data-type="number">Number</div>
+        <div class="label" data-type="string">String</div>
+        <div class="label" data-type="alphanumeric">Alphanumeric</div>
+    </div>
+</div>
+<p id="successMessage">All items matched successfully!</p>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(function() {
+        const items = [
+            Math.floor(Math.random() * 100), // Random number
+            getRandomString(5),               // Random string
+            getRandomAlphanumeric(5)          // Random alphanumeric
+        ];
+
+        // Shuffle items to display them in random order
+        items.sort(() => Math.random() - 0.5);
+
+        // Insert items into the left column
+        const leftColumn = $('#leftColumn');
+        items.forEach(item => {
+            const itemBox = $('<div class="item"></div>').text(item).draggable({
+                revert: 'invalid',
+                helper: 'clone',
+                start: function(event, ui) {
+                    $(this).css('opacity', 0.5);
+                },
+                stop: function(event, ui) {
+                    $(this).css('opacity', 1);
+                }
+            });
+            leftColumn.append(itemBox);
+        });
+
+        // Keep track of matched items
+        let matchedCount = 0;
+
+        // Make right labels droppable
+        $('.label').droppable({
+            accept: '.item',
+            drop: function(event, ui) {
+                const leftItem = ui.draggable.text();
+                const rightLabelType = $(this).data('type');
+
+                const isNumber = !isNaN(leftItem);
+                const isString = /^[a-zA-Z]+$/.test(leftItem);
+                const isAlphanumeric = /^[A-Za-z0-9]+$/.test(leftItem);
+
+                // Check if the types match
+                if ((rightLabelType === 'number' && isNumber) ||
+                    (rightLabelType === 'string' && isString) ||
+                    (rightLabelType === 'alphanumeric' && isAlphanumeric)) {
+                    
+                    $(this).text(leftItem + ' matched!'); // Display match
+                    $(this).css('background-color', '#a3e4d7'); // Change color on match
+                    ui.draggable.draggable('disable'); // Disable dragging for matched item
+                    $(this).droppable('disable'); // Disable dropping on this label
+                    matchedCount++;
+
+                    // Check if all items are matched
+                    if (matchedCount === items.length) {
+                        $('#successMessage').show(); // Show success message
+                    }
+                } else {
+                    alert('This item does not match the selected label.');
+                }
+            }
+        });
+    });
+
+    function getRandomString(length) {
+        const characters = 'abcdefghijklmnopqrstuvwxyz';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    function getRandomAlphanumeric(length) {
+        const characters = 'ABCDEFGHabcdefgh0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+</script>
+
+</body>
+</html>
