@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 350px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h3 {
+            margin-top: 0;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .key {
+            font-weight: bold;
+            font-size: 14px;
+            color: #555;
+        }
+        .value {
+            font-size: 16px;
+        }
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        label {
+            font-size: 16px;
+        }
+        input[type="text"] {
+            padding: 5px;
+            width: 50%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #28a745;
+        }
+        .message.failure {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="orderSummary">
+    <!-- Order details will be populated here by JavaScript -->
+    <div class="input-row">
+        <label for="orderInput">Enter Order Number:</label>
+        <input type="text" id="orderInput" name="orderInput" placeholder="Order Number">
+    </div>
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+    // Function to generate a random 10-digit number
+    function generateRandomNumber() {
+        return Math.floor(1000000000 + Math.random() * 9000000000);
+    }
+
+    // Function to generate a random cost between $50 and $500
+    function generateRandomCost() {
+        return "$" + (50 + Math.random() * 450).toFixed(2);
+    }
+
+    // Function to generate a random alphanumeric ID
+    function generateRandomId() {
+        return Math.random().toString(36).substr(2, 10); // 10-character random string
+    }
+
+    // List of random product names
+    const productNames = ["Wireless Mouse", "Bluetooth Headphones", "USB-C Cable", "Laptop Stand", "Smartwatch"];
+    
+    // Function to shuffle the display order of items
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Function to populate order summary
+    let orderNumber;  // Declare a global variable to store the order number
+    function populateOrderSummary() {
+        orderNumber = generateRandomNumber();
+        const orderTotal = generateRandomCost();
+        const productName = productNames[Math.floor(Math.random() * productNames.length)];
+
+        const orderItems = [
+            `<div class="item">
+                <div id="${generateRandomId()}" class="key">Order Number:</div>
+                <div id="${generateRandomId()}" class="value">${orderNumber}</div>
+             </div>`,
+            `<div class="item">
+                <div id="${generateRandomId()}" class="key">Order Total:</div>
+                <div id="${generateRandomId()}" class="value">${orderTotal}</div>
+             </div>`,
+            `<div class="item">
+                <div id="${generateRandomId()}" class="key">Product Name:</div>
+                <div id="${generateRandomId()}" class="value">${productName}</div>
+             </div>`
+        ];
+
+        shuffle(orderItems);
+
+        document.getElementById("orderSummary").insertAdjacentHTML('afterbegin', orderItems.join(""));
+    }
+
+    // Function to check if the input matches the order number
+    document.getElementById("orderInput").addEventListener("input", function () {
+        const input = document.getElementById("orderInput").value;
+        const messageElement = document.getElementById("message");
+
+        if (input == orderNumber) {
+            messageElement.textContent = "Success: Order number matches!";
+            messageElement.className = "message success";
+        } else if (input === "") {
+            messageElement.textContent = "";
+        } else {
+            messageElement.textContent = "Failure: Order number does not match.";
+            messageElement.className = "message failure";
+        }
+    });
+
+    // Populate the order summary on page load
+    window.onload = populateOrderSummary;
+</script>
+
+</body>
+</html>
