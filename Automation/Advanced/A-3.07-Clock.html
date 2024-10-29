@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Analog clock displaying the current time with an input field to print the displayed time in HH:MM:SS format.">
-    <meta name="keywords" content="analog clock, current time, time format, input field, JavaScript clock">
+    <meta name="description" content="Analog clock displaying a random time with an input field to print the displayed time in HH:MM:SS format.">
+    <meta name="keywords" content="analog clock, random time, time format, input field, JavaScript clock">
     <meta name="author" content="Your Name">
     <title>Analog Clock</title>
     <style>
@@ -106,27 +106,35 @@
         <input type="text" id="user-input" name="user-input" placeholder="HH:MM:SS" maxlength="8">
     </div>
 
-    <!-- Bootstrap JS and dependencies (optional) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     <script>
-        function updateClock() {
-            const now = new Date();
-            const seconds = now.getSeconds();
-            const minutes = now.getMinutes();
-            const hours = now.getHours();
+        // Generate a random starting time
+        let currentHours = Math.floor(Math.random() * 24);
+        let currentMinutes = Math.floor(Math.random() * 60);
+        let currentSeconds = Math.floor(Math.random() * 60);
 
-            const secondsDegrees = ((seconds / 60) * 360);
-            const minutesDegrees = ((minutes / 60) * 360) + ((seconds / 60) * 6);
-            const hoursDegrees = ((hours % 12) / 12) * 360 + ((minutes / 60) * 30);
+        // Update clock hands based on current time
+        function updateClock() {
+            // Increment time by 1 second
+            currentSeconds++;
+            if (currentSeconds >= 60) {
+                currentSeconds = 0;
+                currentMinutes++;
+                if (currentMinutes >= 60) {
+                    currentMinutes = 0;
+                    currentHours = (currentHours + 1) % 24;
+                }
+            }
+
+            const secondsDegrees = (currentSeconds / 60) * 360;
+            const minutesDegrees = (currentMinutes / 60) * 360 + (currentSeconds / 60) * 6;
+            const hoursDegrees = ((currentHours % 12) / 12) * 360 + (currentMinutes / 60) * 30;
 
             document.getElementById('second').style.transform = `rotate(${secondsDegrees}deg)`;
             document.getElementById('minute').style.transform = `rotate(${minutesDegrees}deg)`;
             document.getElementById('hour').style.transform = `rotate(${hoursDegrees}deg)`;
         }
 
+        // Format user input time
         function formatTime(value) {
             let time = value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
             if (time.length > 6) time = time.slice(0, 6); // Limit length to 6 digits
@@ -135,6 +143,7 @@
             return `${time.slice(0, 2)}:${time.slice(2, 4)}:${time.slice(4)}`; // HH:MM:SS
         }
 
+        // Validate input to ensure it's in HH:MM:SS format
         function validateInput() {
             const input = document.getElementById('user-input');
             input.value = formatTime(input.value);
@@ -156,8 +165,9 @@
 
         document.getElementById('user-input').addEventListener('input', validateInput);
 
+        // Update clock every second
         setInterval(updateClock, 1000);
-        updateClock(); // Initial call to set the correct time immediately
+        updateClock(); // Initial call to set the random time immediately
     </script>
 </body>
 </html>
