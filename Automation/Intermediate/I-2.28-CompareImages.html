@@ -79,8 +79,8 @@
 
     <div class="container">
         <div class="image-container">
-            <div id="image1" class="image-box"></div>
-            <div id="image2" class="image-box"></div>
+            <div id="randomId1" class="image-box randomClass1"></div>
+            <div id="randomId2" class="image-box randomClass2"></div>
         </div>
         <label id="label">Are both images the same?</label>
         <div class="buttons">
@@ -97,16 +97,23 @@
         // Randomly decide if images should be the same or different
         let isSame = Math.random() < 0.5;
 
+        // Generate random IDs and classes for images
+        const generateRandomString = (prefix) => `${prefix}-${Math.floor(Math.random() * 10000)}`;
+
         // Function to randomly set images via CSS classes
         function setImages() {
-            const img1 = document.getElementById('image1');
-            const img2 = document.getElementById('image2');
+            const img1 = document.getElementById('randomId1');
+            const img2 = document.getElementById('randomId2');
+            
+            // Assign random IDs to image elements
+            img1.id = generateRandomString('image');
+            img2.id = generateRandomString('image');
 
             if (isSame) {
                 // Same images
                 const randomClass = imageClasses[Math.floor(Math.random() * imageClasses.length)];
-                img1.classList.add(randomClass);
-                img2.classList.add(randomClass);
+                img1.className = `image-box ${randomClass}`;
+                img2.className = `image-box ${randomClass}`;
             } else {
                 // Different images
                 const randomClass1 = imageClasses[Math.floor(Math.random() * imageClasses.length)];
@@ -117,8 +124,8 @@
                     randomClass2 = imageClasses[Math.floor(Math.random() * imageClasses.length)];
                 }
 
-                img1.classList.add(randomClass1);
-                img2.classList.add(randomClass2);
+                img1.className = `image-box ${randomClass1}`;
+                img2.className = `image-box ${randomClass2}`;
             }
         }
 
