@@ -8,12 +8,22 @@
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #87CEEB;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
+        }
+        .container {
+            width: 800px;
+            background-color: #fff;
+            border: 2px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         canvas {
             background-color: #87CEEB;
@@ -26,6 +36,7 @@
             font-size: 24px;
             color: #4caf50;
             display: none;
+            white-space: nowrap; /* Prevents line breaks */
         }
         .label {
             margin-top: 20px;
@@ -36,9 +47,11 @@
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
-    <div class="message" id="congratulationMessage">Congratulations! You reached the top platform!</div>
-    <h3 class="label">Use the spacebar and arrow keys to reach to top platform and verify congratulations message.</h3>
+    <div class="container">
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+        <div class="message" id="congratulationMessage">Congratulations! You reached the top platform!</div>
+        <h3 class="label">Use the spacebar and arrow keys to reach the top platform and verify the congratulations message.</h3>
+    </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -92,7 +105,7 @@
             }
 
             if (keys['Space'] && !player.jumping && player.grounded) {
-                player.speedY = -10;
+                player.speedY = -12; // Increase jump height
                 player.jumping = true;
                 player.grounded = false;
             }
@@ -106,17 +119,20 @@
             player.grounded = false;
             let topPlatformReached = false;
             platforms.forEach(platform => {
+                // Check if the player is falling onto the platform
                 if (player.y + player.height > platform.y && 
                     player.y + player.height < platform.y + platform.height &&
                     player.x + player.width > platform.x &&
-                    player.x < platform.x + platform.width) {
-                    player.y = platform.y - player.height;
-                    player.speedY = 0;
-                    player.jumping = false;
-                    player.grounded = true;
+                    player.x < platform.x + platform.width &&
+                    player.speedY >= 0) {  // Ensure player is falling down
+
+                    player.y = platform.y - player.height; // Position player on top of the platform
+                    player.speedY = 0; // Reset vertical speed
+                    player.jumping = false; // Reset jumping state
+                    player.grounded = true; // Player is now grounded
 
                     if (platform.isTopPlatform) {
-                        topPlatformReached = true;
+                        topPlatformReached = true; // Check if top platform is reached
                     }
                 }
             });
