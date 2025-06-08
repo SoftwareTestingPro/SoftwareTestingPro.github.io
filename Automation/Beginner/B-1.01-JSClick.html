@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Click Only</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .box {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        #jsOnlyButton {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: not-allowed; /* Initially disabled */
+            border-radius: 5px;
+            opacity: 0.5; /* Make it appear inactive */
+        }
+
+        .activate-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .message {
+            display: none;
+            color: green;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <p>Click "Activate" to enable the button.</p>
+        <button class="activate-btn" onclick="enableButton()">Activate</button>
+        <button id="jsOnlyButton" disabled>Click via JavaScript</button>
+        <div id="successMessage" class="message">Success! JavaScript triggered the button.</div>
+    </div>
+
+    <script>
+        function enableButton() {
+            let button = document.getElementById("jsOnlyButton");
+            button.disabled = false;
+            button.style.cursor = "pointer";
+            button.style.opacity = "1"; // Make it look active
+        }
+
+        document.getElementById("jsOnlyButton").addEventListener("click", function() {
+            document.getElementById("successMessage").style.display = "block";
+        });
+    </script>
+</body>
+</html>
