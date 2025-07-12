@@ -116,20 +116,19 @@
             dateInput.showPicker();
         });
         
-        dateInput.addEventListener('change', () => {
-            if (isPickerClicked) {
-                const selectedDate = dateInput.value;
-                
-                if (selectedDate === today) {
-                    messageElement.textContent = 'Success! You selected today\'s date.';
-                    messageElement.className = 'message success';
-                } else {
-                    messageElement.textContent = 'Error! You selected a different date.';
-                    messageElement.className = 'message error';
-                }
-                isPickerClicked = false;
-            }
-        });
+		dateInput.addEventListener('change', () => {
+			const selectedDate = dateInput.value;
+
+			if (selectedDate === today) {
+				messageElement.textContent = 'Success! You selected today\'s date.';
+				messageElement.className = 'message success';
+			} else {
+				messageElement.textContent = 'Error! You selected a different date.';
+				messageElement.className = 'message error';
+			}
+
+			isPickerClicked = false; // Optional: reset if you still want to track clicks
+		});
     </script>
 </body>
 </html>
