@@ -35,23 +35,9 @@
       transform-origin: 0% 50%;
     }
 
-    .hour {
-      width: 35%;
-      height: 8px;
-      background-color: #333;
-    }
-
-    .minute {
-      width: 45%;
-      height: 6px;
-      background-color: #666;
-    }
-
-    .second {
-      width: 50%;
-      height: 4px;
-      background-color: red;
-    }
+    .hour { width: 35%; height: 8px; background-color: #333; }
+    .minute { width: 45%; height: 6px; background-color: #666; }
+    .second { width: 50%; height: 4px; background-color: red; }
 
     .center-point {
       width: 12px;
@@ -96,8 +82,8 @@
   </div>
 
   <div class="input-container">
-    <label for="user-input">Enter time in 12-hour HH:MM:SS format</label>
-    <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8">
+    <label for="user-input">Enter time in HH:MM:SS format (12-hour)</label>
+    <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" />
     <div id="validation-message"></div>
   </div>
 
@@ -105,10 +91,6 @@
     let currentHours = Math.floor(Math.random() * 12) + 1;
     let currentMinutes = Math.floor(Math.random() * 60);
     let currentSeconds = Math.floor(Math.random() * 60);
-
-    function pad(num) {
-      return num < 10 ? "0" + num : "" + num;
-    }
 
     function updateClock() {
       currentSeconds++;
@@ -131,7 +113,6 @@
     }
 
     function formatTime(value) {
-      // If already formatted correctly, leave it
       if (/^\d{2}:\d{2}:\d{2}$/.test(value)) return value;
 
       let digits = value.replace(/[^0-9]/g, '').padStart(6, '0').slice(0, 6);
@@ -139,35 +120,34 @@
     }
 
     function validateInput() {
-    	  const input = document.getElementById('user-input');
-    	  const message = document.getElementById('validation-message');
+      const input = document.getElementById('user-input');
+      const message = document.getElementById('validation-message');
 
-    	  // Preserve valid HH:MM:SS strings
-    	  if (!/^\d{2}:\d{2}:\d{2}$/.test(input.value)) {
-    	    input.value = formatTime(input.value);
-    	  }
+      // Only format if input isn't already in HH:MM:SS
+      if (!/^\d{2}:\d{2}:\d{2}$/.test(input.value)) {
+        input.value = formatTime(input.value);
+      }
 
-    	  const [hhStr, mmStr, ssStr] = input.value.split(':');
+      const [hhStr, mmStr, ssStr] = input.value.split(':');
+      const hh = parseInt(hhStr, 10);
+      const mm = parseInt(mmStr, 10);
+      const ss = parseInt(ssStr, 10);
 
-    	  const hh = parseInt(hhStr, 10);
-    	  const mm = parseInt(mmStr, 10);
-    	  const ss = parseInt(ssStr, 10);
+      if (
+        hhStr.length === 2 && mmStr.length === 2 && ssStr.length === 2 &&
+        hh >= 1 && hh <= 12 &&
+        mm >= 0 && mm <= 59 &&
+        ss >= 0 && ss <= 59
+      ) {
+        message.textContent = "✅ Valid time format (12-hour)";
+        message.style.color = "green";
+      } else {
+        message.textContent = "❌ Invalid! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
+        message.style.color = "red";
+      }
+    }
 
-    	  if (
-    	    hhStr.length === 2 && mmStr.length === 2 && ssStr.length === 2 &&
-    	    hh >= 1 && hh <= 12 &&
-    	    mm >= 0 && mm <= 59 &&
-    	    ss >= 0 && ss <= 59
-    	  ) {
-    	    message.textContent = "✅ Valid time format (12-hour)";
-    	    message.style.color = "green";
-    	  } else {
-    	    message.textContent = "❌ Invalid! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
-    	    message.style.color = "red";
-    	  }
-    	}
-
-    document.getElementById('user-input').addEventListener('input', validateInput);
+    document.getElementById('user-input').addEventListener('blur', validateInput);
     setInterval(updateClock, 1000);
     updateClock();
   </script>
