@@ -107,7 +107,7 @@
     let currentSeconds = Math.floor(Math.random() * 60);
 
     function pad(num) {
-      return num < 10 ? "0" + num : num;
+      return num < 10 ? "0" + num : "" + num;
     }
 
     function updateClock() {
@@ -131,6 +131,9 @@
     }
 
     function formatTime(value) {
+      // If already formatted correctly, leave it
+      if (/^\d{2}:\d{2}:\d{2}$/.test(value)) return value;
+
       let digits = value.replace(/[^0-9]/g, '').padStart(6, '0').slice(0, 6);
       return `${digits.slice(0,2)}:${digits.slice(2,4)}:${digits.slice(4,6)}`;
     }
@@ -141,18 +144,16 @@
       input.value = formatTime(input.value);
 
       const parts = input.value.split(':').map(Number);
-      const [hh, mm, ss] = parts;
-
       if (
         parts.length === 3 &&
-        hh >= 1 && hh <= 12 &&
-        mm >= 0 && mm <= 59 &&
-        ss >= 0 && ss <= 59
+        parts[0] >= 1 && parts[0] <= 12 &&
+        parts[1] >= 0 && parts[1] <= 59 &&
+        parts[2] >= 0 && parts[2] <= 59
       ) {
         message.textContent = "✅ Valid time format (12-hour)";
         message.style.color = "green";
       } else {
-        message.textContent = "❌ Invalid! Use HH:MM:SS with HH in 01–12 range.";
+        message.textContent = "❌ Invalid! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
         message.style.color = "red";
       }
     }
