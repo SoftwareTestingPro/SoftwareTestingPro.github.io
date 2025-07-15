@@ -139,24 +139,33 @@
     }
 
     function validateInput() {
-      const input = document.getElementById('user-input');
-      const message = document.getElementById('validation-message');
-      input.value = formatTime(input.value);
+    	  const input = document.getElementById('user-input');
+    	  const message = document.getElementById('validation-message');
 
-      const parts = input.value.split(':').map(Number);
-      if (
-        parts.length === 3 &&
-        parts[0] >= 1 && parts[0] <= 12 &&
-        parts[1] >= 0 && parts[1] <= 59 &&
-        parts[2] >= 0 && parts[2] <= 59
-      ) {
-        message.textContent = "✅ Valid time format (12-hour)";
-        message.style.color = "green";
-      } else {
-        message.textContent = "❌ Invalid! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
-        message.style.color = "red";
-      }
-    }
+    	  // Preserve valid HH:MM:SS strings
+    	  if (!/^\d{2}:\d{2}:\d{2}$/.test(input.value)) {
+    	    input.value = formatTime(input.value);
+    	  }
+
+    	  const [hhStr, mmStr, ssStr] = input.value.split(':');
+
+    	  const hh = parseInt(hhStr, 10);
+    	  const mm = parseInt(mmStr, 10);
+    	  const ss = parseInt(ssStr, 10);
+
+    	  if (
+    	    hhStr.length === 2 && mmStr.length === 2 && ssStr.length === 2 &&
+    	    hh >= 1 && hh <= 12 &&
+    	    mm >= 0 && mm <= 59 &&
+    	    ss >= 0 && ss <= 59
+    	  ) {
+    	    message.textContent = "✅ Valid time format (12-hour)";
+    	    message.style.color = "green";
+    	  } else {
+    	    message.textContent = "❌ Invalid! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
+    	    message.style.color = "red";
+    	  }
+    	}
 
     document.getElementById('user-input').addEventListener('input', validateInput);
     setInterval(updateClock, 1000);
