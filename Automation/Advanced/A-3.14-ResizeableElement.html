@@ -36,7 +36,7 @@
             height: 200px;
             position: relative;
             box-sizing: border-box;
-            padding: 20px;
+            padding: 0px;
             overflow: auto;
         }
 
@@ -80,8 +80,8 @@
         const successMessage = document.getElementById('successMessage');
 
         function updateSizeDisplay() {
-            const width = resizable.clientWidth;
-            const height = resizable.clientHeight;
+            const width = resizable.offsetWidth;
+            const height = resizable.offsetHeight;
             sizeDisplay.textContent = `Size: ${width}px x ${height}px`;
             successMessage.style.display = (width === 256 && height === 256) ? 'block' : 'none';
         }
