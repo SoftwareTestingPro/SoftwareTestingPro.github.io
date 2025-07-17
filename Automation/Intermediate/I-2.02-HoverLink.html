@@ -1,109 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouse Hover and Click a Link</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .container-box {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 90%; /* Make the container responsive */
-            width: 400px; /* Default width for larger screens */
-            text-align: center;
-        }
-        .text-above {
-            margin-bottom: 10px;
-        }
-        .image-container {
-            position: relative;
-            display: inline-block;
-            width: 100%; /* Make the image container responsive */
-            max-width: 300px; /* Ensure it doesn't get too large */
-            margin: 0 auto 20px; /* Center align and add margin below */
-        }
-        .image-container img {
-            width: 100%; /* Scale the image with the container */
-            height: auto;
-            border-radius: 5px;
-            transition: transform 0.3s ease;
-        }
-        .image-container:hover img {
-            transform: scale(1.1);
-        }
-        .image-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            color: #fff;
-            padding: 10px 0;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .image-container:hover .image-overlay {
-            opacity: 1;
-        }
-        .alert {
-            display: none;
-        }
-        @media (max-width: 576px) {
-            .container-box {
-                padding: 15px;
-                width: 100%; /* Full width on small screens */
-            }
-            .image-container {
-                max-width: 100%; /* Full width on small screens */
-            }
-            .text-above h4 {
-                font-size: 16px; /* Smaller font size on small screens */
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mouse Hover and Click a Link</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+    .container-box {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      max-width: 90%;
+      width: 400px;
+      text-align: center;
+    }
+    .text-above {
+      margin-bottom: 10px;
+    }
+    .image-container {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto 20px;
+    }
+    .image-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+    }
+    .image-container:hover img {
+      transform: scale(1.1);
+    }
+    .image-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      padding: 10px 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .image-container:hover .image-overlay {
+      opacity: 1;
+    }
+    .alert {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="container-box">
-        <div class="text-above">
-            <h4>Mouse hover over image and click on the link</h4>
-        </div>
-
-        <div class="image-container">
-            <img id="flagImage" src="https://img1.hscicdn.com/image/upload/f_auto,t_ds_square_w_640,q_50/lsci/db/PICTURES/CMS/316400/316486.png" alt="Sachin Tendulkar">
-            <div class="image-overlay">
-                <a href="#" style="color:white;" onclick="displaySuccessMessage(event)">Who am I?</a>
-            </div>
-        </div>
-
-        <div class="alert alert-success mt-3" id="successMessage"></div>
+  <div class="container-box">
+    <div class="text-above">
+      <h4>Mouse hover over image and click on the link</h4>
     </div>
 
-    <script>
-        function displaySuccessMessage(event) {
-            event.preventDefault();
-            const successMessage = document.getElementById('successMessage');
-            successMessage.textContent = 'This is Sachin Tendulkar, an Indian cricketer.';
-            successMessage.style.display = 'block';
-        }
-    </script>
+    <div class="image-container" id="imageContainer">
+      <img id="flagImage" src="https://img1.hscicdn.com/image/upload/f_auto,t_ds_square_w_640,q_50/lsci/db/PICTURES/CMS/316400/316486.png" alt="Sachin Tendulkar">
+      <div class="image-overlay" id="imageOverlay"></div>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <div class="alert alert-success mt-3" id="successMessage"></div>
+  </div>
+
+  <script>
+    const imageContainer = document.getElementById('imageContainer');
+    const imageOverlay = document.getElementById('imageOverlay');
+    const successMessage = document.getElementById('successMessage');
+
+    imageContainer.addEventListener('mouseenter', () => {
+      const link = document.createElement('a');
+      link.href = '#';
+      link.style.color = 'white';
+      link.textContent = 'Who is He ?';
+      link.onclick = displaySuccessMessage;
+      imageOverlay.innerHTML = ''; // clear previous
+      imageOverlay.appendChild(link);
+    });
+
+    imageContainer.addEventListener('mouseleave', () => {
+      imageOverlay.innerHTML = ''; // hide link on mouse out
+    });
+
+    function displaySuccessMessage(event) {
+      event.preventDefault();
+      successMessage.textContent = 'This is Sachin Tendulkar, an Indian cricketer.';
+      successMessage.style.display = 'block';
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
