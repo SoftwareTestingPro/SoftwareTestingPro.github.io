@@ -1,89 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drag and Drop Example</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            width: 300px;
-            height: 200px;
-            border: 2px dashed #007BFF;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            margin: 0 20px;
-            position: relative;
-        }
-        .draggable {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: move;
-            text-align: center;
-            width: 100px;
-            margin: 0 auto;
-            user-select: none;
-        }
-        .dropzone {
-            border: 2px dashed #28A745;
-        }
-        .success-message {
-            padding: 10px;
-            margin-top: 20px;
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drag and Drop Centered</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    #message {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .container-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .container {
+      width: 300px;
+      height: 200px;
+      border: 2px dashed #007BFF;
+      border-radius: 10px;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .draggable {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: move;
+      text-align: center;
+      width: 100px;
+      user-select: none;
+    }
+
+    .dropzone {
+      border: 2px dashed #28A745;
+    }
+
+    .success-message {
+      padding: 10px;
+      margin-top: 20px;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
+  <div id="message">Drag and Drop the button 'Drag Me' to other container</div>
+
+  <div class="container-wrapper">
     <div class="container" id="container1">
-        <div class="draggable" id="draggableText" draggable="true">Drag Me</div>
+      <div class="draggable" id="draggableText" draggable="true">Drag Me</div>
     </div>
     <div class="container dropzone" id="container2">
-        Drop Here
+      Drop Here
     </div>
+  </div>
 
-    <script>
-        const draggableText = document.getElementById('draggableText');
-        const container2 = document.getElementById('container2');
+  <script>
+    const draggableText = document.getElementById('draggableText');
+    const container2 = document.getElementById('container2');
 
-        draggableText.addEventListener('dragstart', (event) => {
-            event.dataTransfer.setData('text/plain', event.target.id);
-        });
+    draggableText.addEventListener('dragstart', (event) => {
+      event.dataTransfer.setData('text/plain', event.target.id);
+    });
 
-        container2.addEventListener('dragover', (event) => {
-            event.preventDefault();
-        });
+    container2.addEventListener('dragover', (event) => {
+      event.preventDefault();
+    });
 
-        container2.addEventListener('drop', (event) => {
-            event.preventDefault();
-            const data = event.dataTransfer.getData('text/plain');
-            const draggedElement = document.getElementById(data);
+    container2.addEventListener('drop', (event) => {
+      event.preventDefault();
+      const data = event.dataTransfer.getData('text/plain');
+      const dragged = document.getElementById(data);
 
-            // Append the dragged element to the drop zone
-            container2.appendChild(draggedElement);
-            
-            // Create and append success message
-            const successMessage = document.createElement('div');
-            successMessage.className = 'success-message';
-            successMessage.textContent = 'Success! The text has been dropped.';
-            container2.appendChild(successMessage);
-        });
-    </script>
+      container2.appendChild(dragged);
+
+      const oldMsg = container2.querySelector('.success-message');
+      if (oldMsg) oldMsg.remove();
+
+      const success = document.createElement('div');
+      success.className = 'success-message';
+      success.textContent = '✅ Success! The text has been dropped.';
+      container2.appendChild(success);
+    });
+  </script>
 </body>
 </html>
