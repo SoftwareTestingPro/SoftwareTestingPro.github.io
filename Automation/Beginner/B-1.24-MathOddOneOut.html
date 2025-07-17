@@ -72,7 +72,7 @@
 <body>
 
 <div class="container">
-  <h2>Math Odd One Out Game</h2>
+  <h2>Select Incorrect Equation</h2>
   <div class="buttons" id="buttonContainer"></div>
   <div id="message"></div>
 </div>
@@ -114,7 +114,7 @@
     // Check if this is the incorrect equation
     button.onclick = () => {
       if (equation === incorrectEquation) {
-        document.getElementById('message').innerHTML = '<span style="color: green;">Success! You found the odd one out!</span>';
+        document.getElementById('message').innerHTML = '<span style="color: green;">Success! You selected incorrect equation.</span>';
       } else {
         document.getElementById('message').innerHTML = '<span style="color: red;">Failure! Try again.</span>';
       }

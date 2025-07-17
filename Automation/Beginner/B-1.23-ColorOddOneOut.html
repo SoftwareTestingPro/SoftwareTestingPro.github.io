@@ -60,7 +60,7 @@
 <body>
 
 <div class="container">
-  <h2>Color Odd One Out Game</h2>
+  <h2>Select Odd Colour Tile</h2>
   <div class="buttons" id="buttonContainer"></div>
   <div id="message"></div>
 </div>
@@ -100,7 +100,7 @@
   function checkOddOneOut(isOddOneOut) {
     const messageDiv = document.getElementById('message');
     if (isOddOneOut) {
-      messageDiv.innerHTML = '<span style="color: green;">Success! You found the odd color out!</span>';
+      messageDiv.innerHTML = '<span style="color: green;">Success! You selected odd colored tile.</span>';
     } else {
       messageDiv.innerHTML = '<span style="color: red;">Failure! Try again.</span>';
     }
