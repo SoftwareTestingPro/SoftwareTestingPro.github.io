@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Secure Input Field</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      width: 300px;
+    }
+
+    .protected-input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #007bff;
+      border-radius: 6px;
+      background-color: #fff;
+      z-index: 1;
+      position: relative;
+    }
+
+    /* Overlay blocks keyboard focus and automation */
+    .shield {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      background: transparent;
+      pointer-events: auto;  /* catch clicks */
+    }
+
+    #successMessage {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      display: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Enter Your Country Name</h2>
+  <div class="input-wrapper" id="wrapper">
+    <input type="text" id="secureInput" class="protected-input" placeholder="Try typing..." />
+    <div class="shield" id="shield"></div>
+  </div>
+  <div id="successMessage"></div>
+
+  <script>
+    const input = document.getElementById("secureInput");
+    const shield = document.getElementById("shield");
+    const successMessage = document.getElementById("successMessage");
+
+    // Block all key events unless shield is removed
+    input.addEventListener("keydown", (e) => {
+      if (shield.style.display !== "none") {
+        e.preventDefault();
+      }
+    });
+
+    // Remove shield on real mouse interaction
+    shield.addEventListener("mouseenter", () => {
+      shield.style.display = "none";
+      input.focus();
+    });
+
+    input.addEventListener("input", () => {
+      successMessage.textContent = `✅ You typed: ${input.value}`;
+      successMessage.style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
