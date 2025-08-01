@@ -45,13 +45,12 @@
 <body>
     <div class="container">
         <div class="header">Highlight Text Example</div>
-        <p><span class="highlight-text"> This is Highlighted text.</span></p>
-        <p id="textToHighlight">Highlight this text same as above.</p>
+        <span class="highlight-text"> This is Highlighted text.</span><br><br>
+        <span id="textToHighlight">Highlight this text same as above.</span>
         <div id="successMessage" class="success">Success! The text has been highlighted.</div>
     </div>
 
     <script>
-        // Highlight the second text via user JavaScript code
         function highlightSecondText() {
             var textToHighlight = document.getElementById("textToHighlight");
             textToHighlight.classList.add("highlight-text");
@@ -59,9 +58,6 @@
             var successMessage = document.getElementById("successMessage");
             successMessage.style.display = "block";
         }
-        
-        // Example function call (user can trigger this via their own JS code)
-        // highlightSecondText(); // Uncomment this line in your JS to trigger the highlight
     </script>
 </body>
 </html>

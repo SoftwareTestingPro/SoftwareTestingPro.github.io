@@ -45,6 +45,12 @@
             margin-bottom: 20px;
         }
 
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .validate-btn {
             background-color: #007bff;
             color: #fff;
@@ -87,7 +93,6 @@
 </div>
 
 <script>
-    // Function to generate random item names
     function generateRandomName() {
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         let name = "";
@@ -97,40 +102,48 @@
         return Math.random() < 0.5 ? name.toUpperCase() : name;
     }
 
-    // Generate 5 checkboxes with random names, ensuring at least one is in uppercase
     const checkboxContainer = document.getElementById('checkboxContainer');
     const checkboxData = [];
 
-    for (let i = 0; i < 5; i++) {
-        const name = generateRandomName();
-        const isUpperCase = name === name.toUpperCase();
-        checkboxData.push({ name, isUpperCase });
-        const checkboxItem = document.createElement('div');
-        checkboxItem.innerHTML = `
-            <label>
-                <input type="checkbox" class="checkbox-item" data-uppercase="${isUpperCase}">
-                ${name}
-            </label>
-        `;
-        checkboxContainer.appendChild(checkboxItem);
-    }
+for (let i = 0; i < 5; i++) {
+    let name = generateRandomName();
+    let isUpperCase = name === name.toUpperCase();
+    checkboxData.push({ name, isUpperCase });
 
-    // Ensure at least one checkbox name is uppercase
+    const row = document.createElement('div');
+    row.className = 'checkbox-row';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'checkbox-item';
+    checkbox.setAttribute('data-index', i);
+    checkbox.setAttribute('value', name);
+    checkbox.setAttribute('title', name); // optional tooltip
+
+    const labelText = document.createElement('span');
+    labelText.textContent = name;
+
+    row.appendChild(checkbox);
+    row.appendChild(labelText);
+    checkboxContainer.appendChild(row);
+}
+
+    // Ensure at least one uppercase item exists
     if (!checkboxData.some(item => item.isUpperCase)) {
         checkboxData[0].name = checkboxData[0].name.toUpperCase();
-        checkboxContainer.children[0].querySelector("label").innerHTML = `
-            <input type="checkbox" class="checkbox-item" data-uppercase="true">
-            ${checkboxData[0].name}
-        `;
+        checkboxData[0].isUpperCase = true;
+        const firstLabel = checkboxContainer.children[0].querySelector('span');
+        firstLabel.textContent = checkboxData[0].name;
     }
 
-    // Function to validate if all uppercase items are selected
     function validateSelection() {
         const checkboxes = document.querySelectorAll('.checkbox-item');
         let isValid = true;
 
         checkboxes.forEach(checkbox => {
-            const isUpperCase = checkbox.getAttribute('data-uppercase') === 'true';
+            const index = parseInt(checkbox.getAttribute('data-index'));
+            const isUpperCase = checkboxData[index].isUpperCase;
+
             if (isUpperCase && !checkbox.checked) {
                 isValid = false;
             } else if (!isUpperCase && checkbox.checked) {

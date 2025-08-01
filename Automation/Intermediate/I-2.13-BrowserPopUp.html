@@ -76,28 +76,60 @@
         let displayedQuote = "";
 
         function openQuoteWindow() {
-            const quotes = [
-                "Life is what happens when you're busy making other plans. – John Lennon",
-                "The purpose of our lives is to be happy. – Dalai Lama",
-                "Get busy living or get busy dying. – Stephen King",
-                "You only live once, but if you do it right, once is enough. – Mae West",
-                "Many of life’s failures are people who did not realize how close they were to success when they gave up. – Thomas A. Edison"
-            ];
+    const quotes = [
+        "Life is what happens when you're busy making other plans. – John Lennon",
+        "The purpose of our lives is to be happy. – Dalai Lama",
+        "Get busy living or get busy dying. – Stephen King",
+        "You only live once, but if you do it right, once is enough. – Mae West",
+        "Many of life’s failures are people who did not realize how close they were to success when they gave up. – Thomas A. Edison"
+    ];
 
-            displayedQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            const quoteWindow = window.open("", "quoteWindow", "width=400,height=200");
-            quoteWindow.document.write(`<p style="font-family: Arial, sans-serif; font-size: 1.2em; margin: 20px;">${displayedQuote}</p>`);
-            
-            const inputField = document.getElementById('userInput');
-            inputField.disabled = false; // Enable the input field after the quote is displayed
-            inputField.value = ''; // Clear the input field
-            inputField.focus(); // Focus on the input field
+    displayedQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    const quoteWindow = window.open("", "quoteWindow", "width=400,height=200");
 
-            const resultDiv = document.getElementById('result');
-            resultDiv.textContent = ''; // Clear previous result messages
-            resultDiv.className = 'message';
-        }
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Life Quote</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f9f9f9;
+                    margin: 0;
+                    padding: 20px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                p {
+                    font-size: 1.2em;
+                    color: #333;
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <p>${displayedQuote}</p>
+        </body>
+        </html>
+    `;
 
+    quoteWindow.document.open();
+    quoteWindow.document.write(htmlContent);
+    quoteWindow.document.close();
+
+    const inputField = document.getElementById('userInput');
+    inputField.disabled = false;
+    inputField.value = '';
+    inputField.focus();
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.textContent = '';
+    resultDiv.className = 'message';
+}
         document.getElementById('userInput').addEventListener('input', function() {
             const userInput = document.getElementById('userInput').value;
             const resultDiv = document.getElementById('result');

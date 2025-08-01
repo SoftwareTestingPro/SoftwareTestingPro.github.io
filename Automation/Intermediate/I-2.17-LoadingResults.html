@@ -15,7 +15,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            text-align: center; /* Center text alignment globally */
+            text-align: center;
         }
 
         .thumbnails-label {
@@ -40,7 +40,7 @@
             border: 2px solid #ddd;
             opacity: 0;
             transition: opacity 1s ease;
-            margin: 0 10px; /* Add margin between thumbnails */
+            margin: 0 10px;
         }
 
         .thumbnail img {
@@ -103,10 +103,12 @@
 </head>
 <body>
     <div id="mainContent">
-        <div class="thumbnails-label" id="thumbnailsLabel">Fetch ISBNs of Thumbnails Displayed in next screen</div>
-        
+        <div class="thumbnails-label" id="thumbnailsLabel">
+            Fetch ISBNs of Thumbnails Displayed in next screens, Store and Input them in last page
+        </div>
+
         <div class="thumbnails" id="thumbnailContainer"></div>
-        
+
         <div class="input-container" id="inputContainer">
             <div id="inputFields"></div>
             <div id="message" class="message"></div>
@@ -115,64 +117,53 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const mainContent = document.getElementById('mainContent');
             const thumbnailContainer = document.getElementById('thumbnailContainer');
             const thumbnailsLabel = document.getElementById('thumbnailsLabel');
             const inputContainer = document.getElementById('inputContainer');
             const inputFields = document.getElementById('inputFields');
             const messageElement = document.getElementById('message');
-            const isbnList = [
-                '978-3-1234-5678-9',
-                '978-1-2345-6789-0',
-                '978-0-1234-5678-9',
-                '978-4-5678-9012-3'
-            ];
+
+            const generatedISBNs = [];
 
             function generateRandomISBN() {
                 return `978-${Math.floor(Math.random() * 10)}-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9 + 1)}`;
             }
 
             function displayThumbnail(index) {
-                if (index >= isbnList.length) {
+                if (index >= 4) {
                     hideThumbnails();
                     return;
                 }
+
+                const randomISBN = generateRandomISBN();
+                generatedISBNs.push(randomISBN);
 
                 const thumbnail = document.createElement('div');
                 thumbnail.className = 'thumbnail';
                 thumbnail.innerHTML = `
                     <img src="https://picsum.photos/150/150?random=${index + 1}" alt="Thumbnail ${index + 1}">
-                    <div class="isbn" id="isbn-${index}">ISBN: ${generateRandomISBN()}</div>
+                    <div class="isbn" id="isbn-${index}">ISBN: ${randomISBN}</div>
                 `;
                 thumbnailContainer.appendChild(thumbnail);
 
-                // Show the thumbnail
                 setTimeout(() => {
-                    thumbnail.style.opacity = '1'; // Fade in
+                    thumbnail.style.opacity = '1';
                 }, 100);
 
                 setTimeout(() => {
-                    // Hide the current thumbnail and update ISBN with the next one
-                    thumbnail.style.opacity = '0'; // Fade out
+                    thumbnail.style.opacity = '0';
                     setTimeout(() => {
                         thumbnail.style.display = 'none';
                         thumbnailContainer.removeChild(thumbnail);
-
-                        // Update the ISBN text with the next one
-                        const isbnElement = document.getElementById(`isbn-${index}`);
-                        if (isbnElement) {
-                            isbnElement.textContent = `ISBN: ${isbnList[index]}`;
-                        }
-
                         displayThumbnail(index + 1);
-                    }, 1000); // Transition time for thumbnail disappearing
-                }, Math.floor(Math.random() * (10000 - 2000 + 1)) + 2000); // Random loading time between 2 and 10 seconds
+                    }, 1000);
+                }, Math.floor(Math.random() * (10000 - 2000 + 1)) + 2000);
             }
 
             function hideThumbnails() {
                 setTimeout(() => {
                     inputContainer.style.display = 'block';
-                    isbnList.forEach((isbn, index) => {
+                    generatedISBNs.forEach((isbn, index) => {
                         const row = document.createElement('div');
                         row.innerHTML = `
                             <label for="input-${index}">ISBN ${index + 1}:</label>
@@ -184,13 +175,13 @@
                     document.querySelectorAll('.input-container input').forEach(input => {
                         input.addEventListener('input', validateInputs);
                     });
-                }, 2000); // Delay to show the remaining thumbnails transition
+                }, 2000);
             }
 
             function validateInputs() {
                 let allCorrect = true;
                 document.querySelectorAll('.input-container input').forEach((input, index) => {
-                    if (input.value !== isbnList[index]) {
+                    if (input.value !== generatedISBNs[index]) {
                         allCorrect = false;
                     }
                 });
@@ -208,8 +199,8 @@
                 setTimeout(() => {
                     thumbnailsLabel.style.display = 'none';
                     displayThumbnail(0);
-                }, 1000); // Transition time to hide the label
-            }, 5000); // Show label for 5 seconds
+                }, 1000);
+            }, 5000);
         });
     </script>
 </body>
