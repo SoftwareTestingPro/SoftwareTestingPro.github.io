@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Press A Key</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Keystroke Test</h1>
+    <p>Press the "<strong>A</strong>" key on your keyboard.</p>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    document.addEventListener('keydown', function(event) {
+      const message = document.getElementById('message');
+      if (event.key.toLowerCase() === 'a') {
+        message.textContent = '✅ Success! You pressed the "A" key.';
+        message.className = 'message success';
+      } else {
+        message.textContent = `❌ Error! You pressed "${event.key}". Try again.`;
+        message.className = 'message error';
+      }
+    });
+  </script>
+</body>
+</html>
