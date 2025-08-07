@@ -1,172 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Match Game</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta 
+    name="viewport" 
+    content="width=device-width, initial-scale=1.0" 
+  />
+  <title>Obfuscated Image Match Game</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
 
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
+    .container {
+      text-align: center;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
 
-        .image-container {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
+    .image-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
 
-        .image-box {
-            width: 100px;
-            height: 100px;
-            border: 2px solid #007bff;
-            border-radius: 5px;
-            background-size: cover;
-            background-position: center;
-        }
+    /* style all images the same */
+    .image-container img {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #007bff;
+      border-radius: 5px;
+      object-fit: cover;
+    }
 
-        .buttons {
-            margin-top: 20px;
-        }
+    .buttons {
+      margin-top: 20px;
+    }
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            margin: 5px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: #fff;
-            transition: background-color 0.3s;
-        }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      margin: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      transition: background-color 0.3s;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    button:hover {
+      background-color: #0056b3;
+    }
 
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
 
-        .success {
-            color: green;
-        }
+    .success {
+      color: green;
+    }
 
-        .failure {
-            color: red;
-        }
-    </style>
+    .failure {
+      color: red;
+    }
+  </style>
 </head>
 <body>
-
-    <div class="container">
-        <div class="image-container">
-            <div id="randomId1" class="image-box randomClass1"></div>
-            <div id="randomId2" class="image-box randomClass2"></div>
-        </div>
-        <label id="label">Are both images the same?</label>
-        <div class="buttons">
-            <button onclick="checkAnswer(true)">Yes</button>
-            <button onclick="checkAnswer(false)">No</button>
-        </div>
-        <div id="message" class="message"></div>
+  <div class="container">
+    <div class="image-container">
+      <img />
+      <img />
     </div>
+    <label>Are both images the same?</label>
+    <div class="buttons">
+      <button onclick="checkAnswer(true)">Yes</button>
+      <button onclick="checkAnswer(false)">No</button>
+    </div>
+    <div id="message" class="message"></div>
+  </div>
 
-    <script>
-        // Array of image classes (images are added via CSS)
-        const imageClasses = ['image1', 'image2', 'image3', 'image4', 'image5'];
+  <script>
+    // real URLs (never shown directly in the DOM)
+    const imageUrls = [
+      'https://picsum.photos/seed/pic1/100',
+      'https://picsum.photos/seed/pic2/100',
+      'https://picsum.photos/seed/pic3/100',
+      'https://picsum.photos/seed/pic4/100',
+      'https://picsum.photos/seed/pic5/100'
+    ];
 
-        // Randomly decide if images should be the same or different
-        let isSame = Math.random() < 0.5;
+    // randomly decide if they match
+    const isSame = Math.random() < 0.5;
 
-        // Generate random IDs and classes for images
-        const generateRandomString = (prefix) => `${prefix}-${Math.floor(Math.random() * 10000)}`;
+    // pick URL(s)
+    let url1, url2;
+    if (isSame) {
+      url1 = url2 = imageUrls[
+        Math.floor(Math.random() * imageUrls.length)
+      ];
+    } else {
+      url1 = imageUrls[
+        Math.floor(Math.random() * imageUrls.length)
+      ];
+      do {
+        url2 = imageUrls[
+          Math.floor(Math.random() * imageUrls.length)
+        ];
+      } while (url1 === url2);
+    }
 
-        // Function to randomly set images via CSS classes
-        function setImages() {
-            const img1 = document.getElementById('randomId1');
-            const img2 = document.getElementById('randomId2');
-            
-            // Assign random IDs to image elements
-            img1.id = generateRandomString('image');
-            img2.id = generateRandomString('image');
+    // fetch both, convert to blob URLs, then assign
+    function setImages() {
+      const imgs = document.querySelectorAll('.image-container img');
+      const fetchBlob = (url) =>
+        fetch(url)
+          .then((r) => r.blob())
+          .then((blob) => URL.createObjectURL(blob));
 
-            if (isSame) {
-                // Same images
-                const randomClass = imageClasses[Math.floor(Math.random() * imageClasses.length)];
-                img1.className = `image-box ${randomClass}`;
-                img2.className = `image-box ${randomClass}`;
-            } else {
-                // Different images
-                const randomClass1 = imageClasses[Math.floor(Math.random() * imageClasses.length)];
-                let randomClass2 = imageClasses[Math.floor(Math.random() * imageClasses.length)];
-                
-                // Ensure images are different
-                while (randomClass1 === randomClass2) {
-                    randomClass2 = imageClasses[Math.floor(Math.random() * imageClasses.length)];
-                }
+      Promise.all([fetchBlob(url1), fetchBlob(url2)])
+        .then(([blobUrl1, blobUrl2]) => {
+          imgs[0].src = blobUrl1;
+          imgs[1].src = blobUrl2;
+        })
+        .catch((err) => console.error('Image load error:', err));
+    }
 
-                img1.className = `image-box ${randomClass1}`;
-                img2.className = `image-box ${randomClass2}`;
-            }
-        }
+    function checkAnswer(userSaysSame) {
+      const msg = document.getElementById('message');
+      if (userSaysSame === isSame) {
+        msg.textContent = 'Success! You guessed correctly!';
+        msg.className = 'message success';
+      } else {
+        msg.textContent = 'Failure! Your guess was wrong.';
+        msg.className = 'message failure';
+      }
+    }
 
-        // Function to check user's answer
-        function checkAnswer(userSaysSame) {
-            const messageElement = document.getElementById('message');
-            if (userSaysSame === isSame) {
-                messageElement.textContent = 'Success! You guessed correctly!';
-                messageElement.className = 'message success';
-            } else {
-                messageElement.textContent = 'Failure! Your guess was wrong.';
-                messageElement.className = 'message failure';
-            }
-        }
-
-        // Initialize images on page load
-        window.onload = setImages;
-    </script>
-
-    <style>
-        /* Add the images using CSS classes */
-        .image1 {
-            background-image: url('https://picsum.photos/seed/pic1/100');
-        }
-
-        .image2 {
-            background-image: url('https://picsum.photos/seed/pic2/100');
-        }
-
-        .image3 {
-            background-image: url('https://picsum.photos/seed/pic3/100');
-        }
-
-        .image4 {
-            background-image: url('https://picsum.photos/seed/pic4/100');
-        }
-
-        .image5 {
-            background-image: url('https://picsum.photos/seed/pic5/100');
-        }
-    </style>
-
+    window.onload = setImages;
+  </script>
 </body>
 </html>
