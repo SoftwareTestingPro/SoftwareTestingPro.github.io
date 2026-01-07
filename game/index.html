@@ -1,209 +1,358 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Mobile Challenge Game</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body {
+  :root{
+    --accent:#ff6b6b;
+    --bg1:#4facfe;
+    --bg2:#00f2fe;
+    --white-trans: rgba(255,255,255,0.95);
+  }
+
+  html,body{ height:100%; margin:0; }
+
+  body{
     font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
     color:#fff;
-    height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
   }
+
   .container {
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    width:100%;max-width:400px;padding:20px;background:none;box-shadow:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    max-width:420px;
+    padding:20px;
+    box-sizing:border-box;
+    position:relative;
+    min-height:680px;
   }
+
+  h1{ margin:8px 0 12px 0; font-size:1.15rem; }
+
   input,select,button {
     padding:12px;border:none;border-radius:8px;font-size:1rem;
+    box-sizing:border-box;
   }
-  input,select {background:rgba(255,255,255,0.9);color:#333;}
-  button {background:#ff6b6b;color:#fff;font-weight:bold;cursor:pointer;}
-  button:hover {background:#ff4757;}
+  input,select {background:var(--white-trans);color:#222;}
+  button {cursor:pointer;}
+
   .hidden {display:none;}
 
+  /* Landing controls */
   #landingControls {display:flex;gap:10px;width:100%;}
   #numPlayers {flex:3;}
-  #nextBtn {flex:7;}
+  #nextBtn {flex:7;background:var(--accent);color:#fff;font-weight:bold;border-radius:8px;}
 
   .playerRow {display:flex;gap:10px;width:100%;margin-bottom:12px;}
   .playerRow input {flex:7;}
   .playerRow select {flex:3;}
 
-  #taskDisplay {
-    position:absolute;top:30%;left:50%;transform:translateX(-50%);
-    font-size:2rem;text-align:center;font-weight:bold;width:80%;
-    font-family:'Trebuchet MS',sans-serif;text-shadow:2px 2px 4px rgba(0,0,0,0.4);
-    letter-spacing:1px;
-  }
-
-  #nextTaskBtn {
-    position:absolute;top:50%;left:50%;transform:translateX(-50%);
-    width:80px;height:80px;background:#ff6b6b;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;font-size:1.2rem;
-    cursor:pointer;animation:beat 1s infinite;
-  }
-  @keyframes beat {
-    0%,100%{transform:translateX(-50%) scale(1);}
-    50%{transform:translateX(-50%) scale(1.2);}
-  }
-
+  /* Top base indicator */
   #baseIndicator {
-    position:absolute;top:10%;left:50%;transform:translateX(-50%);
-    display:flex;justify-content:center;width:100%;max-width:400px;
+    position:absolute;top:12px;left:50%;transform:translateX(-50%);
+    width:100%;max-width:420px;display:flex;justify-content:center;
   }
-  #baseIndicator .baseBtn {
-    flex:1;text-align:center;background:#ff6b6b;padding:8px;border-radius:8px;
-    font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:6px;
+  .baseBtnTop{
+    display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+    background:transparent;border:2px solid var(--accent);color:#fff;font-weight:700;
+  }
+  .baseBtnTop .emoji{ font-size:1.8rem; display:inline-block; animation:bounce 2.2s infinite; }
+
+  /* Task display */
+  #taskDisplay {
+    position:absolute;top:28%;left:50%;transform:translateX(-50%);
+    font-size:2rem;text-align:center;font-weight:800;width:86%;
+    font-family:'Trebuchet MS',sans-serif;text-shadow:2px 2px 6px rgba(0,0,0,0.35);
+    padding:6px 10px;box-sizing:border-box;
   }
 
-  #baseSwitch {
-    position:absolute;bottom:10%;left:50%;transform:translateX(-50%);
-    display:flex;justify-content:space-between;width:100%;max-width:400px;
+  /* Circular heart button with interactive beating animation */
+  .heart-wrap {
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    top:50%;
+    width:110px;
+    height:110px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:5;
   }
-  #baseSwitch button, #baseIndicator .baseBtn { 
-  background:transparent; border:2px solid #ff6b6b; color:#fff; font-size:1.1rem; 
+
+  .heart-circle {
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ff9aa2,#ff6b6b);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 12px 30px rgba(0,0,0,0.28), 0 0 18px rgba(255,107,107,0.08) inset;
+    transition:transform .18s ease, box-shadow .18s ease;
+    cursor:pointer;
+    border:0;
+    outline:none;
+    animation:heartBeat 1000ms infinite ease-in-out;
+  }
+
+  .heart-circle:active { transform:scale(0.96); }
+
+  .heart-emoji {
+    font-size:34px;
+    line-height:1;
+    transform:translateY(0);
+    text-shadow:0 4px 10px rgba(0,0,0,0.25);
+    pointer-events:none;
+  }
+
+  /* stronger pulse when clicked */
+  .heart-circle.pulse-strong {
+    animation:heartPulseStrong 520ms ease-in-out;
+  }
+
+  @keyframes heartBeat {
+    0%   { transform:scale(1); }
+    25%  { transform:scale(1.06); }
+    50%  { transform:scale(1.12); }
+    75%  { transform:scale(1.06); }
+    100% { transform:scale(1); }
+  }
+
+  @keyframes heartPulseStrong {
+    0% { transform:scale(1); }
+    30% { transform:scale(1.28); }
+    60% { transform:scale(0.96); }
+    100% { transform:scale(1); }
+  }
+
+  /* bottom base switch */
+  #baseSwitch {
+    position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+    display:flex;gap:10px;width:100%;max-width:420px;padding:0 8px;box-sizing:border-box;
+  }
+  #baseSwitch button {
+    flex:1;padding:10px;border-radius:10px;font-size:0.95rem;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:transparent;border:2px solid var(--accent);color:#fff;font-weight:700;
+    transition:transform .18s ease, box-shadow .25s ease;
+  }
+  #baseSwitch button .emoji { display:inline-block; font-size:1.8rem; animation:bounce 2.2s infinite; }
+
+  /* hover effects */
+  #baseSwitch button:hover, .baseBtnTop:hover { transform:scale(1.06); box-shadow:0 10px 22px rgba(255,107,107,0.18); }
+  #baseSwitch button:active, .baseBtnTop:active { transform:scale(0.98); }
+
+  /* small animations */
+  @keyframes bounce { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
+
+  /* responsive */
+  @media (max-width:360px){
+    #taskDisplay{ font-size:1.6rem; top:24%; }
+    .heart-wrap{ width:96px; height:96px; top:48%; }
+    .heart-circle{ width:80px; height:80px; }
+    .heart-emoji{ font-size:28px; }
+    #baseSwitch button .emoji{ font-size:1.05rem; }
+    .baseBtnTop .emoji{ font-size:1.05rem; }
   }
 </style>
 </head>
 <body>
-<div class="container" id="landingScreen">
-  <h1>Set Players</h1>
-  <div id="landingControls">
-    <input type="number" id="numPlayers" min="1" max="10" required>
-    <button id="nextBtn" onclick="createPlayerInputs()">Next</button>
+  <!-- Landing Screen -->
+  <div class="container" id="landingScreen">
+    <h1>Set Players</h1>
+    <div id="landingControls">
+      <input id="numPlayers" type="number" min="1" max="10" placeholder="Number of players" />
+      <button id="nextBtn" onclick="createPlayerInputs()">Next</button>
+    </div>
   </div>
-</div>
 
-<div class="container hidden" id="playerScreen">
-  <h1>Enter Player Details</h1>
-  <div id="players"></div>
-  <button onclick="savePlayers()">Save Players</button>
-</div>
+  <!-- Player Setup Screen -->
+  <div class="container hidden" id="playerScreen">
+    <h1>Enter Player Details</h1>
+    <div id="players"></div>
+    <div style="width:100%; margin-top:8px;">
+      <button style="width:100%; background:var(--accent); color:#fff; font-weight:700; padding:10px; border-radius:10px;" onclick="savePlayers()">Save Players</button>
+    </div>
+  </div>
 
-<div class="container hidden" id="startScreen">
-  <button onclick="startGame()" style="width:40vw;height:40vw;">Start Game</button>
-</div>
+  <!-- Start Screen -->
+  <div class="container hidden" id="startScreen">
+    <button style="width:40vw;height:40vw;background:var(--accent);color:#fff;font-weight:700;border-radius:50%;" onclick="startGame()">Start</button>
+  </div>
 
-<div class="container hidden" id="gameScreen">
-  <div id="baseIndicator"></div>
-  <div id="taskDisplay"></div>
-  <div id="nextTaskBtn" onclick="nextTask()">❤️</div>
-  <div id="baseSwitch"></div>
-</div>
+  <!-- Game Screen -->
+  <div class="container hidden" id="gameScreen">
+    <div id="baseIndicator"></div>
+    <div id="taskDisplay"></div>
+
+    <!-- circular heart button -->
+    <div class="heart-wrap">
+      <button id="nextTaskBtn" class="heart-circle" aria-label="Next task" onclick="onHeartClick()">
+        <span class="heart-emoji">❤️</span>
+      </button>
+    </div>
+
+    <div id="baseSwitch"></div>
+  </div>
 
 <script>
-let currentPlayerIndex=0,currentBase=1;
-let maleIndex=0,femaleIndex=0;
+let currentPlayerIndex = 0;
+let currentBase = 1;
+let maleIndex = 0, femaleIndex = 0;
 
-const baseTasks={
-  1:["Do a funny dance!","Tell a joke.","Sing a song.","Act like a celeb.","PAIR:Dance together"],
-  2:["Share a fact.","Imitate an animal.","Say a tongue twister.","Describe dream vacation.","PAIR:Sing duet"],
-  3:["Do 10 jumping jacks.","Pretend robot.","Whistle a tune.","Balance on one foot.","PAIR:Act a scene"],
-  4:["Name 3 countries A.","Alphabet backwards.","Guess color.","Make a poem.","PAIR:Play charades"]
+const baseTasks = {
+  1: ["Do a funny dance!","Tell a joke.","Sing a song.","Act like a celeb.","PAIR:Dance together"],
+  2: ["Share a fact.","Imitate an animal.","Say a tongue twister.","Describe dream vacation.","PAIR:Sing duet"],
+  3: ["Do 10 jumping jacks.","Pretend robot.","Whistle a tune.","Balance on one foot.","PAIR:Act a scene"],
+  4: ["Name 3 countries starting with A.","Alphabet backwards.","Guess color.","Make a poem.","PAIR:Play charades"]
 };
 
-const baseIcons={1:"🥳",2:"🤓",3:"🫦",4:"👙"};
+const baseIcons = {1:"🥳",2:"🤓",3:"🫦",4:"👙"};
 
 function createPlayerInputs(){
-  const num=document.getElementById('numPlayers').value;
-  if(!num||num<1){alert("Enter valid number.");return;}
-  const c=document.getElementById('players');c.innerHTML='';
+  const num = parseInt(document.getElementById('numPlayers').value, 10);
+  if(!num || num < 1){
+    alert('Enter a valid number of players (1-10).');
+    return;
+  }
+  const container = document.getElementById('players');
+  container.innerHTML = '';
   for(let i=0;i<num;i++){
-    c.innerHTML+=`
-      <div class="playerRow">
-        <input type="text" id="name${i}" placeholder="Player ${i+1} Name" required>
-        <select id="gender${i}" required>
-          <option value="">Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-      </div>`;
+    const row = document.createElement('div');
+    row.className = 'playerRow';
+    row.innerHTML = `
+      <input id="name${i}" type="text" placeholder="Player ${i+1} Name" />
+      <select id="gender${i}">
+        <option value="">Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    `;
+    container.appendChild(row);
   }
   document.getElementById('landingScreen').classList.add('hidden');
   document.getElementById('playerScreen').classList.remove('hidden');
 }
 
 function savePlayers(){
-  const num=document.getElementById('numPlayers').value;const players=[];
+  const num = parseInt(document.getElementById('numPlayers').value, 10);
+  const players = [];
   for(let i=0;i<num;i++){
-    const name=document.getElementById(`name${i}`).value.trim();
-    const gender=document.getElementById(`gender${i}`).value;
-    if(!name||!gender){alert("All fields mandatory.");return;}
-    players.push({name,gender});
+    const name = (document.getElementById(`name${i}`).value || '').trim();
+    const gender = (document.getElementById(`gender${i}`).value || '').trim();
+    if(!name || !gender){
+      alert('All fields are mandatory. Fill name and gender for each player.');
+      return;
+    }
+    players.push({name, gender});
   }
-  localStorage.setItem('players',JSON.stringify(players));
+  localStorage.setItem('players', JSON.stringify(players));
   document.getElementById('playerScreen').classList.add('hidden');
   document.getElementById('startScreen').classList.remove('hidden');
 }
 
 function startGame(){
+  currentPlayerIndex = 0;
+  currentBase = 1;
+  maleIndex = 0;
+  femaleIndex = 0;
+  updateBaseIndicator();
+  updateBaseSwitch();
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('gameScreen').classList.remove('hidden');
-  currentPlayerIndex=0;currentBase=1;maleIndex=0;femaleIndex=0;
-  updateBaseIndicator();updateBaseSwitch();nextTask();
+  nextTask();
+}
+
+/* heart click: strong pulse then next task */
+function onHeartClick(){
+  const btn = document.getElementById('nextTaskBtn');
+  btn.classList.add('pulse-strong');
+  setTimeout(()=> btn.classList.remove('pulse-strong'), 520);
+  nextTask();
 }
 
 function nextTask(){
-  const players=JSON.parse(localStorage.getItem('players'))||[];
-  if(players.length===0){document.getElementById('taskDisplay').innerText="No players saved!";return;}
-  const taskList=baseTasks[currentBase];
-  const task=taskList[Math.floor(Math.random()*taskList.length)];
-  const currentPlayer=players[currentPlayerIndex];
+  const players = JSON.parse(localStorage.getItem('players') || '[]');
+  if(!players || players.length === 0){
+    document.getElementById('taskDisplay').innerText = 'No players saved!';
+    return;
+  }
 
-  if(task.startsWith("PAIR:")){
-    let partner=null;
-    if(currentPlayer.gender==="male"){
-      const females=players.filter(p=>p.gender==="female");
-      if(females.length>0){
-        partner=females[femaleIndex % females.length];
+  const tasks = baseTasks[currentBase] || [];
+  const task = tasks[Math.floor(Math.random() * tasks.length)];
+  const currentPlayer = players[currentPlayerIndex];
+
+  if(task.startsWith('PAIR:')){
+    let partner = null;
+    if(currentPlayer.gender === 'male'){
+      const females = players.filter(p => p.gender === 'female');
+      if(females.length > 0){
+        partner = females[femaleIndex % females.length];
         femaleIndex++;
       }
-    } else if(currentPlayer.gender==="female"){
-      const males=players.filter(p=>p.gender==="male");
-      if(males.length>0){
-        partner=males[maleIndex % males.length];
+    } else if(currentPlayer.gender === 'female'){
+      const males = players.filter(p => p.gender === 'male');
+      if(males.length > 0){
+        partner = males[maleIndex % males.length];
         maleIndex++;
       }
     }
+
     if(partner){
-      document.getElementById('taskDisplay').innerText=
-        `${currentPlayer.name} to ${task.replace("PAIR:","").toLowerCase()} with ${partner.name}`;
+      document.getElementById('taskDisplay').innerText =
+        `${currentPlayer.name} to ${task.replace('PAIR:','').toLowerCase()} with ${partner.name}`;
     } else {
-      document.getElementById('taskDisplay').innerText=
+      document.getElementById('taskDisplay').innerText =
         `No opposite gender partner available for ${currentPlayer.name}'s task.`;
     }
   } else {
-    document.getElementById('taskDisplay').innerText=`${currentPlayer.name}: ${task}`;
+    document.getElementById('taskDisplay').innerText = `${currentPlayer.name}: ${task}`;
   }
-  currentPlayerIndex=(currentPlayerIndex+1)%players.length;
+
+  currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
 }
 
 function switchBase(base){
-  currentBase=base;
-  updateBaseIndicator();updateBaseSwitch();nextTask();
+  currentBase = base;
+  updateBaseIndicator();
+  updateBaseSwitch();
+  nextTask();
 }
 
 function updateBaseIndicator(){
   document.getElementById('baseIndicator').innerHTML=
-    `<div class="baseBtn">${baseIcons[currentBase]} Base ${currentBase}</div>`;
+    `<div class="baseBtnTop"><span class="emoji">${baseIcons[currentBase]}</span><span>Base ${currentBase}</span></div>`;
 }
 
 function updateBaseSwitch(){
-  const switchDiv=document.getElementById('baseSwitch');switchDiv.innerHTML='';
+  const switchDiv = document.getElementById('baseSwitch');
+  switchDiv.innerHTML = '';
   [1,2,3,4].forEach(b=>{
-    if(b!==currentBase){
-      const btn=document.createElement('button');
-      btn.innerHTML=`${baseIcons[b]} Base ${b}`;
-      btn.onclick=()=>switchBase(b);
-      switchDiv.appendChild(btn);
-    }
+    if(b === currentBase) return;
+    const btn = document.createElement('button');
+    btn.innerHTML = `<span class="emoji">${baseIcons[b]}</span> Base ${b}`;
+    btn.onclick = ()=> switchBase(b);
+    switchDiv.appendChild(btn);
   });
 }
+
+/* initialize */
+(function init(){
+  const players = JSON.parse(localStorage.getItem('players') || '[]');
+  if(players && players.length > 0) document.getElementById('numPlayers').value = players.length;
+  updateBaseIndicator();
+  updateBaseSwitch();
+})();
 </script>
 </body>
 </html>
