@@ -103,6 +103,7 @@
 
 <script>
 let currentPlayerIndex=0,currentBase=1;
+let maleIndex=0,femaleIndex=0; // round robin indices for partners
 
 const baseTasks={
   1:["Do a funny dance!","Tell a joke.","Sing a song.","Act like a celeb.","PAIR:Dance together"],
@@ -148,7 +149,7 @@ function savePlayers(){
 function startGame(){
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('gameScreen').classList.remove('hidden');
-  currentPlayerIndex=0;currentBase=1;
+  currentPlayerIndex=0;currentBase=1;maleIndex=0;femaleIndex=0;
   updateBaseIndicator();updateBaseSwitch();nextTask();
 }
 
@@ -161,14 +162,21 @@ function nextTask(){
   const currentPlayer=players[currentPlayerIndex];
 
   if(task.startsWith("PAIR:")){
-    let oppositeGroup=[];
+    let partner=null;
     if(currentPlayer.gender==="male"){
-      oppositeGroup=players.filter(p=>p.gender==="female");
+      const females=players.filter(p=>p.gender==="female");
+      if(females.length>0){
+        partner=females[femaleIndex % females.length];
+        femaleIndex++;
+      }
     } else if(currentPlayer.gender==="female"){
-      oppositeGroup=players.filter(p=>p.gender==="male");
+      const males=players.filter(p=>p.gender==="male");
+      if(males.length>0){
+        partner=males[maleIndex % males.length];
+        maleIndex++;
+      }
     }
-    if(oppositeGroup.length>0){
-      const partner=oppositeGroup[Math.floor(Math.random()*oppositeGroup.length)];
+    if(partner){
       document.getElementById('taskDisplay').innerText=
         `${currentPlayer.name} to ${task.replace("PAIR:","").toLowerCase()} with ${partner.name}`;
     } else {
@@ -176,7 +184,7 @@ function nextTask(){
         `No opposite gender partner available for ${currentPlayer.name}'s task.`;
     }
   } else {
-    document.getElementById('taskDisplay').innerText=`${currentPlayer.name}: ${task}`;
+    document.getElementById('taskDisplay').innerText=`${currentPlayer.name}, ${task}`;
   }
 
   currentPlayerIndex=(currentPlayerIndex+1)%players.length;
