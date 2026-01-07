@@ -26,30 +26,23 @@
   button:hover {background:#ff4757;}
   .hidden {display:none;}
 
-  /* Landing page input + button side by side */
-  #landingControls {
-    display:flex;gap:10px;width:100%;
-  }
-  #numPlayers {flex:3;} /* 30% */
-  #nextBtn {flex:7;}    /* 70% */
+  #landingControls {display:flex;gap:10px;width:100%;}
+  #numPlayers {flex:3;}
+  #nextBtn {flex:7;}
 
-  /* Player details input + select side by side */
-  .playerRow {
-    display:flex;gap:10px;width:100%;margin-bottom:12px;
-  }
+  .playerRow {display:flex;gap:10px;width:100%;margin-bottom:12px;}
   .playerRow input {flex:7;}
   .playerRow select {flex:3;}
 
-  /* Task styling */
   #taskDisplay {
-    position:absolute;top:33%;left:50%;transform:translateX(-50%);
+    position:absolute;top:30%;left:50%;transform:translateX(-50%);
     font-size:2rem;text-align:center;font-weight:bold;width:80%;
-    font-family:'Trebuchet MS',sans-serif;
-    text-shadow:2px 2px 4px rgba(0,0,0,0.4);
+    font-family:'Trebuchet MS',sans-serif;text-shadow:2px 2px 4px rgba(0,0,0,0.4);
     letter-spacing:1px;
   }
+
   #nextTaskBtn {
-    position:absolute;top:66%;left:50%;transform:translateX(-50%);
+    position:absolute;top:50%;left:50%;transform:translateX(-50%);
     width:80px;height:80px;background:#ff6b6b;border-radius:50%;
     display:flex;align-items:center;justify-content:center;font-size:1.2rem;
     cursor:pointer;animation:beat 1s infinite;
@@ -58,22 +51,26 @@
     0%,100%{transform:translateX(-50%) scale(1);}
     50%{transform:translateX(-50%) scale(1.2);}
   }
+
   #baseIndicator {
     position:absolute;top:10%;left:50%;transform:translateX(-50%);
-    font-size:1.2rem;font-weight:bold;display:flex;align-items:center;gap:10px;
+    display:flex;justify-content:center;width:100%;max-width:400px;
   }
+  #baseIndicator .baseBtn {
+    flex:1;text-align:center;background:#ff6b6b;padding:8px;border-radius:8px;
+    font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+
   #baseSwitch {
     position:absolute;bottom:10%;left:50%;transform:translateX(-50%);
-    display:flex;gap:10px;
+    display:flex;justify-content:space-between;width:100%;max-width:400px;
   }
-  #baseSwitch button {
-    width:auto;padding:8px 12px;border-radius:8px;font-size:0.9rem;
-    display:flex;align-items:center;gap:6px;
+  #baseSwitch button, #baseIndicator .baseBtn { 
+  background:transparent; border:2px solid #ff6b6b; color:#fff; font-size:1.1rem; 
   }
 </style>
 </head>
 <body>
-<!-- Landing Screen -->
 <div class="container" id="landingScreen">
   <h1>Set Players</h1>
   <div id="landingControls">
@@ -82,19 +79,16 @@
   </div>
 </div>
 
-<!-- Player Setup Screen -->
 <div class="container hidden" id="playerScreen">
   <h1>Enter Player Details</h1>
   <div id="players"></div>
   <button onclick="savePlayers()">Save Players</button>
 </div>
 
-<!-- Start Screen -->
 <div class="container hidden" id="startScreen">
   <button onclick="startGame()" style="width:40vw;height:40vw;">Start Game</button>
 </div>
 
-<!-- Game Screen -->
 <div class="container hidden" id="gameScreen">
   <div id="baseIndicator"></div>
   <div id="taskDisplay"></div>
@@ -104,7 +98,7 @@
 
 <script>
 let currentPlayerIndex=0,currentBase=1;
-let maleIndex=0,femaleIndex=0; // round robin indices for partners
+let maleIndex=0,femaleIndex=0;
 
 const baseTasks={
   1:["Do a funny dance!","Tell a joke.","Sing a song.","Act like a celeb.","PAIR:Dance together"],
@@ -113,7 +107,6 @@ const baseTasks={
   4:["Name 3 countries A.","Alphabet backwards.","Guess color.","Make a poem.","PAIR:Play charades"]
 };
 
-// ✅ Updated icons
 const baseIcons={1:"🥳",2:"🤓",3:"🫦",4:"👙"};
 
 function createPlayerInputs(){
@@ -160,7 +153,6 @@ function nextTask(){
   if(players.length===0){document.getElementById('taskDisplay').innerText="No players saved!";return;}
   const taskList=baseTasks[currentBase];
   const task=taskList[Math.floor(Math.random()*taskList.length)];
-
   const currentPlayer=players[currentPlayerIndex];
 
   if(task.startsWith("PAIR:")){
@@ -188,7 +180,6 @@ function nextTask(){
   } else {
     document.getElementById('taskDisplay').innerText=`${currentPlayer.name}: ${task}`;
   }
-
   currentPlayerIndex=(currentPlayerIndex+1)%players.length;
 }
 
@@ -198,7 +189,8 @@ function switchBase(base){
 }
 
 function updateBaseIndicator(){
-  document.getElementById('baseIndicator').innerHTML=`Base ${currentBase} <div id="baseIndicatorIcon">${baseIcons[currentBase]}</div>`;
+  document.getElementById('baseIndicator').innerHTML=
+    `<div class="baseBtn">${baseIcons[currentBase]} Base ${currentBase}</div>`;
 }
 
 function updateBaseSwitch(){
@@ -206,7 +198,7 @@ function updateBaseSwitch(){
   [1,2,3,4].forEach(b=>{
     if(b!==currentBase){
       const btn=document.createElement('button');
-      btn.innerHTML=`${baseIcons[b]} Base ${b}`; // show icon + name
+      btn.innerHTML=`${baseIcons[b]} Base ${b}`;
       btn.onclick=()=>switchBase(b);
       switchDiv.appendChild(btn);
     }
