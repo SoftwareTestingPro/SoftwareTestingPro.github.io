@@ -19,15 +19,34 @@
     width:100%;max-width:400px;padding:20px;background:none;box-shadow:none;
   }
   input,select,button {
-    width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:8px;font-size:1rem;
+    padding:12px;border:none;border-radius:8px;font-size:1rem;
   }
   input,select {background:rgba(255,255,255,0.9);color:#333;}
   button {background:#ff6b6b;color:#fff;font-weight:bold;cursor:pointer;}
   button:hover {background:#ff4757;}
   .hidden {display:none;}
+
+  /* Landing page input + button side by side */
+  #landingControls {
+    display:flex;gap:10px;width:100%;
+  }
+  #numPlayers {flex:3;} /* 30% */
+  #nextBtn {flex:7;}    /* 70% */
+
+  /* Player details input + select side by side */
+  .playerRow {
+    display:flex;gap:10px;width:100%;margin-bottom:12px;
+  }
+  .playerRow input {flex:7;}
+  .playerRow select {flex:3;}
+
+  /* Task styling */
   #taskDisplay {
     position:absolute;top:33%;left:50%;transform:translateX(-50%);
-    font-size:1.4rem;text-align:center;font-weight:bold;width:80%;
+    font-size:2rem;text-align:center;font-weight:bold;width:80%;
+    font-family:'Trebuchet MS',sans-serif;
+    text-shadow:2px 2px 4px rgba(0,0,0,0.4);
+    letter-spacing:1px;
   }
   #nextTaskBtn {
     position:absolute;top:66%;left:50%;transform:translateX(-50%);
@@ -56,9 +75,10 @@
 <!-- Landing Screen -->
 <div class="container" id="landingScreen">
   <h1>Set Players</h1>
-  <label for="numPlayers">Number of Players:</label>
-  <input type="number" id="numPlayers" min="1" max="10" required>
-  <button onclick="createPlayerInputs()">Next</button>
+  <div id="landingControls">
+    <input type="number" id="numPlayers" min="1" max="10" required>
+    <button id="nextBtn" onclick="createPlayerInputs()">Next</button>
+  </div>
 </div>
 
 <!-- Player Setup Screen -->
@@ -84,7 +104,6 @@
 <script>
 let currentPlayerIndex=0,currentBase=1;
 
-// Task sets: include normal tasks and pair tasks (marked with PAIR:)
 const baseTasks={
   1:["Do a funny dance!","Tell a joke.","Sing a song.","Act like a celeb.","PAIR:Dance together"],
   2:["Share a fact.","Imitate an animal.","Say a tongue twister.","Describe dream vacation.","PAIR:Sing duet"],
@@ -92,7 +111,6 @@ const baseTasks={
   4:["Name 3 countries A.","Alphabet backwards.","Guess color.","Make a poem.","PAIR:Play charades"]
 };
 
-// distinct icons for each base
 const baseIcons={1:"🔥",2:"⭐",3:"🎵",4:"⚡"};
 
 function createPlayerInputs(){
@@ -100,10 +118,15 @@ function createPlayerInputs(){
   if(!num||num<1){alert("Enter valid number.");return;}
   const c=document.getElementById('players');c.innerHTML='';
   for(let i=0;i<num;i++){
-    c.innerHTML+=`<label>Player ${i+1} Name:</label><input type="text" id="name${i}" required>
-    <label>Gender:</label><select id="gender${i}" required>
-      <option value="">Select</option><option value="male">Male</option>
-      <option value="female">Female</option><option value="other">Other</option></select>`;
+    c.innerHTML+=`
+      <div class="playerRow">
+        <input type="text" id="name${i}" placeholder="Player ${i+1} Name" required>
+        <select id="gender${i}" required>
+          <option value="">Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>`;
   }
   document.getElementById('landingScreen').classList.add('hidden');
   document.getElementById('playerScreen').classList.remove('hidden');
