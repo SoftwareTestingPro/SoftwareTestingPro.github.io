@@ -67,7 +67,8 @@
     display:flex;gap:10px;
   }
   #baseSwitch button {
-    width:80px;height:40px;border-radius:8px;font-size:0.9rem;
+    width:auto;padding:8px 12px;border-radius:8px;font-size:0.9rem;
+    display:flex;align-items:center;gap:6px;
   }
 </style>
 </head>
@@ -112,6 +113,7 @@ const baseTasks={
   4:["Name 3 countries A.","Alphabet backwards.","Guess color.","Make a poem.","PAIR:Play charades"]
 };
 
+// ✅ Updated icons
 const baseIcons={1:"🥳",2:"🤓",3:"🫦",4:"👙"};
 
 function createPlayerInputs(){
@@ -184,7 +186,7 @@ function nextTask(){
         `No opposite gender partner available for ${currentPlayer.name}'s task.`;
     }
   } else {
-    document.getElementById('taskDisplay').innerText=`${currentPlayer.name}, ${task}`;
+    document.getElementById('taskDisplay').innerText=`${currentPlayer.name}: ${task}`;
   }
 
   currentPlayerIndex=(currentPlayerIndex+1)%players.length;
@@ -204,7 +206,7 @@ function updateBaseSwitch(){
   [1,2,3,4].forEach(b=>{
     if(b!==currentBase){
       const btn=document.createElement('button');
-      btn.innerText=`Base ${b}`;
+      btn.innerHTML=`${baseIcons[b]} Base ${b}`; // show icon + name
       btn.onclick=()=>switchBase(b);
       switchDiv.appendChild(btn);
     }
