@@ -49,8 +49,8 @@
 
   /* Landing controls */
   #landingControls {display:flex;gap:10px;width:100%;}
-  #numPlayers {flex:3;}
-  #nextBtn {flex:7;background:var(--accent);color:#fff;font-weight:bold;border-radius:8px;}
+  #numPlayers {flex:4;}
+  #nextBtn {flex:6;background:var(--accent);color:#fff;font-weight:bold;border-radius:8px;}
 
   .playerRow {display:flex;gap:10px;width:100%;margin-bottom:12px;}
   .playerRow input {flex:7;}
@@ -169,9 +169,9 @@
 <body>
   <!-- Landing Screen -->
   <div class="container" id="landingScreen">
-    <h1>Set Players</h1>
+    <h1>Set Number of Players</h1>
     <div id="landingControls">
-      <input id="numPlayers" type="number" min="1" max="10" placeholder="Number of players" />
+	  <input id="numPlayers" type="number" min="1" max="10" placeholder="Total players" autocomplete="off" />
       <button id="nextBtn" onclick="createPlayerInputs()">Next</button>
     </div>
   </div>
@@ -212,7 +212,9 @@ let maleIndex = 0, femaleIndex = 0;
 
 const baseTasks = {
   1: [
-    "Truth: Favorite party drink?",
+    "{p1}, ask {p2} to say something in your ear.",
+	"Who among {p1} and {p2} is more shy",
+	"Truth: Favorite party drink?",
     "Dare: Do a goofy dance for 5 seconds.",
     "Truth: Who here would survive a zombie apocalypse?",
     "Dare: Strike a superhero pose.",
@@ -252,15 +254,14 @@ const baseTasks = {
     "Dare: Clap rhythmically.",
     "Truth: Morning shower or night shower?",
     "Dare: Say tongue twister fast.",
-    "PAIR:Dare: High-five then spin",
-    "PAIR:Truth: Who met first?",
-    "PAIR:Dare: Funny synchronized walk",
-    "PAIR:Truth: Who’s more competitive?",
-    "PAIR:Dare: Mirror each other for 10s",
-    "PAIR:Truth: Who laughs more?",
-    "PAIR:Dare: Victory pose together",
-    "PAIR:Truth: Who would host a party?",
-    "PAIR:Dare: Air guitar duet"
+    "{p1}Dare: High-five then spin",
+    "{p1}Truth: Who met first?",
+    "{p1}Dare: Funny synchronized walk",
+    "{p1}Truth: Who’s more competitive?",
+    "{p1}Dare: Mirror each other for 10s",
+    "{p1}Truth: Who laughs more?",
+    "{p1}Dare: Victory pose together",
+    "{p1}Truth: Who would host a party?"
   ],
     2: [
     "Truth: Who here has the best style?",
@@ -301,16 +302,16 @@ const baseTasks = {
     "Dare: Wink + smile combo.",
     "Truth: Romantic movie lover?",
     "Dare: Pose like a heartbreaker.",
-    "PAIR:Dare: Compliment each other",
-    "PAIR:Truth: Who flirts more?",
-    "PAIR:Dare: Slow walk together",
-    "PAIR:Truth: Who made first move?",
-    "PAIR:Dare: Back-to-back pose",
-    "PAIR:Truth: Who plans dates?",
-    "PAIR:Dare: Synchronized wink",
-    "PAIR:Truth: Who gets jealous easier?",
-    "PAIR:Dare: Hold hands for 10s",
-    "PAIR:Drink: Take 2 sips together"
+    "{p1}Dare: Compliment each other",
+    "{p1}Truth: Who flirts more?",
+    "{p1}Dare: Slow walk together",
+    "{p1}Truth: Who made first move?",
+    "{p1}Dare: Back-to-back pose",
+    "{p1}Truth: Who plans dates?",
+    "{p1}Dare: Synchronized wink",
+    "{p1}Truth: Who gets jealous easier?",
+    "{p1}Dare: Hold hands for 10s",
+    "{p1}Drink: Take 2 sips together"
   ],
     3: [
     "Truth: Favorite part of flirting?",
@@ -343,17 +344,17 @@ const baseTasks = {
     "Dare: Sit however feels bold.",
     "Truth: Favorite party memory?",
     "Dare: Lean in and pause.",
-    "PAIR: Sneak hands into shirt",
-    "PAIR:Truth: Who leads?",
-    "PAIR:Dare: Forehead touch 5s",
-    "PAIR:Truth: Who flirts better?",
-    "PAIR:Dare: Arm around shoulders",
-    "PAIR:Truth: Who blushes first?",
-    "PAIR:Dare: Mirror poses",
-    "PAIR:Truth: Who gets attention?",
-    "PAIR:Dare: Sit close for a round",
-	"PAIR:Dare: Sit on lap for a round",
-    "PAIR:Drink: Take 3 sips together",
+    "{p1} Sneak hands into shirt",
+    "{p1}Truth: Who leads?",
+    "{p1}Dare: Forehead touch 5s",
+    "{p1}Truth: Who flirts better?",
+    "{p1}Dare: Arm around shoulders",
+    "{p1}Truth: Who blushes first?",
+    "{p1}Dare: Mirror poses",
+    "{p1}Truth: Who gets attention?",
+    "{p1}Dare: Sit close for a round",
+	"{p1}Dare: Sit on lap for a round",
+    "{p1}Drink: Take 3 sips together",
     "Drink: Take 2 sips if nervous",
     "Drink: Cheers with someone",
     "Drink: Last to sip removes item",
@@ -392,17 +393,17 @@ const baseTasks = {
     "Dare: Hold eye contact 15s.",
     "Truth: Favorite reaction to get?",
     "Dare: Slow walk across room.",
-    "PAIR:Dare: Slow dance 20s",
-    "PAIR:Truth: Who’s more daring?",
-    "PAIR:Dare: Sit very close",
-    "PAIR:Truth: Who enjoys teasing?",
-    "PAIR:Dare: Arms around waist",
-    "PAIR:Truth: Who started stripping?",
-    "PAIR:Dare: Cheek-to-cheek pose",
-    "PAIR:Truth: Who’s more confident?",
-    "PAIR:Dare: Shared dramatic pose",
-    "PAIR:Dare: Whisper to each other",
-    "PAIR:Drink: 4 sips together",
+    "{p1}Dare: Slow dance 20s",
+    "{p1}Truth: Who’s more daring?",
+    "{p1}Dare: Sit very close",
+    "{p1}Truth: Who enjoys teasing?",
+    "{p1}Dare: Arms around waist",
+    "{p1}Truth: Who started stripping?",
+    "{p1}Dare: Cheek-to-cheek pose",
+    "{p1}Truth: Who’s more confident?",
+    "{p1}Dare: Shared dramatic pose",
+    "{p1}Dare: Whisper to each other",
+    "{p1}Drink: 4 sips together",
     "Drink: Remove + sip",
     "Drink: Everyone cheers",
     "Drink: Loser drinks 3",
@@ -493,33 +494,36 @@ function nextTask(){
   const task = tasks[Math.floor(Math.random() * tasks.length)];
   const currentPlayer = players[currentPlayerIndex];
 
-  if(task.startsWith('PAIR:')){
-    let partner = null;
-    if(currentPlayer.gender === 'male'){
-      const females = players.filter(p => p.gender === 'female');
-      if(females.length > 0){
-        partner = females[femaleIndex % females.length];
-        femaleIndex++;
-      }
-    } else if(currentPlayer.gender === 'female'){
-      const males = players.filter(p => p.gender === 'male');
-      if(males.length > 0){
-        partner = males[maleIndex % males.length];
-        maleIndex++;
-      }
-    }
+if (task.includes('{p1}') || task.includes('{p2}')) {
+  let partner = null;
 
-    if(partner){
-      document.getElementById('taskDisplay').innerText =
-        `${currentPlayer.name} to ${task.replace('PAIR:','').toLowerCase()} with ${partner.name}`;
-    } else {
-      document.getElementById('taskDisplay').innerText =
-        `No opposite gender partner available for ${currentPlayer.name}'s task.`;
+  if (currentPlayer.gender === 'male') {
+    const females = players.filter(p => p.gender === 'female');
+    if (females.length > 0) {
+      partner = females[femaleIndex % females.length];
+      femaleIndex++;
     }
-  } else {
-    document.getElementById('taskDisplay').innerText = `${currentPlayer.name}: ${task}`;
+  } else if (currentPlayer.gender === 'female') {
+    const males = players.filter(p => p.gender === 'male');
+    if (males.length > 0) {
+      partner = males[maleIndex % males.length];
+      maleIndex++;
+    }
   }
 
+  if (partner) {
+    const taskText = task
+      .replaceAll('{p1}', currentPlayer.name)
+      .replaceAll('{p2}', partner.name);
+    document.getElementById('taskDisplay').innerText = taskText;
+  } else {
+    document.getElementById('taskDisplay').innerText =
+      `No opposite gender partner available for ${currentPlayer.name}'s task.`;
+  }
+} else {
+  document.getElementById('taskDisplay').innerText =
+    `${currentPlayer.name}: ${task}`;
+}
   currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
 }
 
