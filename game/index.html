@@ -1,563 +1,1569 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mobile Challenge Game</title>
-<style>
-  :root{
-    --accent:#ff6b6b;
-    --bg1:#4facfe;
-    --bg2:#00f2fe;
-    --white-trans: rgba(255,255,255,0.95);
-  }
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Mobile Challenge Game</title>
+    <style>
+        :root{
+          --accent:#ff6b6b;
+          --bg1:#4facfe;
+          --bg2:#00f2fe;
+          --white-trans: rgba(255,255,255,0.95);
+        }
 
-  html,body{ height:100%; margin:0; }
+        html,body{ height:100%; margin:0; }
 
-  body{
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,var(--bg1),var(--bg2));
-    color:#fff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-  }
+        body{
+          font-family:'Segoe UI',sans-serif;
+          background:linear-gradient(135deg,var(--bg1),var(--bg2));
+          color:#fff;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+        }
 
-  .container {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    width:100%;
-    max-width:420px;
-    padding:20px;
-    box-sizing:border-box;
-    position:relative;
-    min-height:680px;
-  }
+        .container {
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          justify-content:center;
+          width:100%;
+          max-width:420px;
+          padding:20px;
+          box-sizing:border-box;
+          position:relative;
+          min-height:680px;
+        }
 
-  h1{ margin:8px 0 12px 0; font-size:1.15rem; }
+        h1{ margin:8px 0 12px 0; font-size:1.15rem; }
 
-  input,select,button {
-    padding:12px;border:none;border-radius:8px;font-size:1rem;
-    box-sizing:border-box;
-  }
-  input,select {background:var(--white-trans);color:#222;}
-  button {cursor:pointer;}
+        input,select,button {
+          padding:12px;border:none;border-radius:8px;font-size:1rem;
+          box-sizing:border-box;
+        }
+        input,select {background:var(--white-trans);color:#222;}
+        button {cursor:pointer;}
 
-  .hidden {display:none;}
+        .hidden {display:none;}
 
-  /* Landing controls */
-  #landingControls {display:flex;gap:10px;width:100%;}
-  #numPlayers {flex:4;}
-  #nextBtn {flex:6;background:var(--accent);color:#fff;font-weight:bold;border-radius:8px;}
+        /* Landing controls */
+        #landingControls {display:flex;gap:10px;width:100%;}
+        #numPlayers {flex:4;}
+        #nextBtn {flex:6;background:var(--accent);color:#fff;font-weight:bold;border-radius:8px;}
 
-  .playerRow {display:flex;gap:10px;width:100%;margin-bottom:12px;}
-  .playerRow input {flex:7;}
-  .playerRow select {flex:3;}
+        .playerRow {display:flex;gap:10px;width:100%;margin-bottom:12px;}
+        .playerRow input {flex:7;}
+        .playerRow select {flex:3;}
 
-  /* Top base indicator */
-  #baseIndicator {
-    position:absolute;top:12px;left:50%;transform:translateX(-50%);
-    width:100%;max-width:420px;display:flex;justify-content:center;
-  }
-  .baseBtnTop{
-    display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
-    background:transparent;border:2px solid var(--accent);color:#fff;font-weight:700;
-  }
-  .baseBtnTop .emoji{ font-size:1.8rem; display:inline-block; animation:bounce 2.2s infinite; }
+        /* Top base indicator */
+        #baseIndicator {
+          position:absolute;top:12px;left:50%;transform:translateX(-50%);
+          width:100%;max-width:420px;display:flex;justify-content:center;
+        }
+        .baseBtnTop{
+          display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+          background:transparent;border:2px solid var(--accent);color:#fff;font-weight:700;
+        }
+        .baseBtnTop .emoji{ font-size:1.8rem; display:inline-block; animation:bounce 2.2s infinite; }
 
-  /* Task display */
-  #taskDisplay {
-    position:absolute;top:28%;left:50%;transform:translateX(-50%);
-    font-size:2rem;text-align:center;font-weight:800;width:86%;
-    font-family:'Trebuchet MS',sans-serif;text-shadow:2px 2px 6px rgba(0,0,0,0.35);
-    padding:6px 10px;box-sizing:border-box;
-  }
+        /* Task display */
+        #taskDisplay {
+          position:absolute;top:28%;left:50%;transform:translateX(-50%);
+          font-size:2rem;text-align:center;font-weight:800;width:86%;
+          font-family:'Trebuchet MS',sans-serif;text-shadow:2px 2px 6px rgba(0,0,0,0.35);
+          padding:6px 10px;box-sizing:border-box;
+        }
 
-  /* Circular heart button with interactive beating animation */
-  .heart-wrap {
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    top:50%;
-    width:110px;
-    height:110px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:5;
-  }
+        /* Circular heart button with interactive beating animation */
+        .heart-wrap {
+          position:absolute;
+          left:50%;
+          transform:translateX(-50%);
+          top:50%;
+          width:110px;
+          height:110px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          z-index:5;
+        }
 
-  .heart-circle {
-    width:96px;
-    height:96px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#ff9aa2,#ff6b6b);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 12px 30px rgba(0,0,0,0.28), 0 0 18px rgba(255,107,107,0.08) inset;
-    transition:transform .18s ease, box-shadow .18s ease;
-    cursor:pointer;
-    border:0;
-    outline:none;
-    animation:heartBeat 1000ms infinite ease-in-out;
-  }
+        .heart-circle {
+          width:96px;
+          height:96px;
+          border-radius:50%;
+          background:linear-gradient(135deg,#ff9aa2,#ff6b6b);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          box-shadow:0 12px 30px rgba(0,0,0,0.28), 0 0 18px rgba(255,107,107,0.08) inset;
+          transition:transform .18s ease, box-shadow .18s ease;
+          cursor:pointer;
+          border:0;
+          outline:none;
+          animation:heartBeat 1000ms infinite ease-in-out;
+        }
 
-  .heart-circle:active { transform:scale(0.96); }
+        .heart-circle:active { transform:scale(0.96); }
 
-  .heart-emoji {
-    font-size:34px;
-    line-height:1;
-    transform:translateY(0);
-    text-shadow:0 4px 10px rgba(0,0,0,0.25);
-    pointer-events:none;
-  }
+        .heart-emoji {
+          font-size:34px;
+          line-height:1;
+          transform:translateY(0);
+          text-shadow:0 4px 10px rgba(0,0,0,0.25);
+          pointer-events:none;
+        }
 
-  /* stronger pulse when clicked */
-  .heart-circle.pulse-strong {
-    animation:heartPulseStrong 520ms ease-in-out;
-  }
+        /* stronger pulse when clicked */
+        .heart-circle.pulse-strong {
+          animation:heartPulseStrong 520ms ease-in-out;
+        }
 
-  @keyframes heartBeat {
-    0%   { transform:scale(1); }
-    25%  { transform:scale(1.06); }
-    50%  { transform:scale(1.12); }
-    75%  { transform:scale(1.06); }
-    100% { transform:scale(1); }
-  }
+        @keyframes heartBeat {
+          0%   { transform:scale(1); }
+          25%  { transform:scale(1.06); }
+          50%  { transform:scale(1.12); }
+          75%  { transform:scale(1.06); }
+          100% { transform:scale(1); }
+        }
 
-  @keyframes heartPulseStrong {
-    0% { transform:scale(1); }
-    30% { transform:scale(1.28); }
-    60% { transform:scale(0.96); }
-    100% { transform:scale(1); }
-  }
+        @keyframes heartPulseStrong {
+          0% { transform:scale(1); }
+          30% { transform:scale(1.28); }
+          60% { transform:scale(0.96); }
+          100% { transform:scale(1); }
+        }
 
-  /* bottom base switch */
-  #baseSwitch {
-    position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
-    display:flex;gap:10px;width:100%;max-width:420px;padding:0 8px;box-sizing:border-box;
-  }
-  #baseSwitch button {
-    flex:1;padding:10px;border-radius:10px;font-size:0.95rem;
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    background:transparent;border:2px solid var(--accent);color:#fff;font-weight:700;
-    transition:transform .18s ease, box-shadow .25s ease;
-  }
-  #baseSwitch button .emoji { display:inline-block; font-size:1.8rem; animation:bounce 2.2s infinite; }
+        /* bottom base switch */
+        #baseSwitch {
+          position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+          display:flex;gap:10px;width:100%;max-width:420px;padding:0 8px;box-sizing:border-box;
+        }
+        #baseSwitch button {
+          flex:1;padding:10px;border-radius:10px;font-size:0.95rem;
+          display:flex;align-items:center;justify-content:center;gap:8px;
+          background:transparent;border:2px solid var(--accent);color:#fff;font-weight:700;
+          transition:transform .18s ease, box-shadow .25s ease;
+        }
+        #baseSwitch button .emoji { display:inline-block; font-size:1.8rem; animation:bounce 2.2s infinite; }
 
-  /* hover effects */
-  #baseSwitch button:hover, .baseBtnTop:hover { transform:scale(1.06); box-shadow:0 10px 22px rgba(255,107,107,0.18); }
-  #baseSwitch button:active, .baseBtnTop:active { transform:scale(0.98); }
+        /* hover effects */
+        #baseSwitch button:hover, .baseBtnTop:hover { transform:scale(1.06); box-shadow:0 10px 22px rgba(255,107,107,0.18); }
+        #baseSwitch button:active, .baseBtnTop:active { transform:scale(0.98); }
 
-  /* small animations */
-  @keyframes bounce { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
+        /* small animations */
+        @keyframes bounce { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
 
-  /* responsive */
-  @media (max-width:360px){
-    #taskDisplay{ font-size:1.6rem; top:24%; }
-    .heart-wrap{ width:96px; height:96px; top:48%; }
-    .heart-circle{ width:80px; height:80px; }
-    .heart-emoji{ font-size:28px; }
-    #baseSwitch button .emoji{ font-size:1.05rem; }
-    .baseBtnTop .emoji{ font-size:1.05rem; }
-  }
-</style>
+        /* responsive */
+        @media (max-width:360px){
+          #taskDisplay{ font-size:1.6rem; top:24%; }
+          .heart-wrap{ width:96px; height:96px; top:28%; }
+          .heart-circle{ width:80px; height:80px; }
+          .heart-emoji{ font-size:28px; }
+          #baseSwitch button .emoji{ font-size:1.05rem; }
+          .baseBtnTop .emoji{ font-size:1.05rem; }
+        }
+    </style>
 </head>
 <body>
-  <!-- Landing Screen -->
-  <div class="container" id="landingScreen">
+<!-- Landing Screen -->
+<div class="container" id="landingScreen">
     <h1>Set Number of Players</h1>
     <div id="landingControls">
-	  <input id="numPlayers" type="number" min="1" max="10" placeholder="Total players" autocomplete="off" />
-      <button id="nextBtn" onclick="createPlayerInputs()">Next</button>
+        <input id="numPlayers" type="number" min="1" max="10" placeholder="Total players" autocomplete="off"/>
+        <button id="nextBtn" onclick="createPlayerInputs()">Next</button>
     </div>
-  </div>
+</div>
 
-  <!-- Player Setup Screen -->
-  <div class="container hidden" id="playerScreen">
+<!-- Player Setup Screen -->
+<div class="container hidden" id="playerScreen">
     <h1>Enter Player Details</h1>
     <div id="players"></div>
     <div style="width:100%; margin-top:8px;">
-      <button style="width:100%; background:var(--accent); color:#fff; font-weight:700; padding:10px; border-radius:10px;" onclick="savePlayers()">Save Players</button>
+        <button style="width:100%; background:var(--accent); color:#fff; font-weight:700; padding:10px; border-radius:10px;"
+                onclick="savePlayers()">Save Players
+        </button>
     </div>
-  </div>
+</div>
 
-  <!-- Start Screen -->
-  <div class="container hidden" id="startScreen">
-    <button style="width:40vw;height:40vw;background:var(--accent);color:#fff;font-weight:700;border-radius:50%;" onclick="startGame()">Start</button>
-  </div>
+<!-- Start Screen -->
+<div class="container hidden" id="startScreen">
+    <button style="width:40vw;height:40vw;background:var(--accent);color:#fff;font-weight:700;border-radius:50%;"
+            onclick="startGame()">Start
+    </button>
+</div>
 
-  <!-- Game Screen -->
-  <div class="container hidden" id="gameScreen">
+<!-- Game Screen -->
+<div class="container hidden" id="gameScreen">
     <div id="baseIndicator"></div>
     <div id="taskDisplay"></div>
 
     <!-- circular heart button -->
     <div class="heart-wrap">
-      <button id="nextTaskBtn" class="heart-circle" aria-label="Next task" onclick="onHeartClick()">
-        <span class="heart-emoji">❤️</span>
-      </button>
+        <button id="nextTaskBtn" class="heart-circle" aria-label="Next task" onclick="onHeartClick()">
+            <span class="heart-emoji">❤️</span>
+        </button>
     </div>
 
     <div id="baseSwitch"></div>
-  </div>
+</div>
 
 <script>
-let currentPlayerIndex = 0;
-let currentBase = 1;
-let maleIndex = 0, femaleIndex = 0;
+    let currentPlayerIndex = 0;
+    let currentBase = 1;
+    let maleIndex = 0, femaleIndex = 0;
 
-const baseTasks = {
-  1: [
-    "{p1}, ask {p2} to say something in your ear.",
-	"Who among {p1} and {p2} is more shy",
-	"Truth: Favorite party drink?",
-    "Dare: Do a goofy dance for 5 seconds.",
-    "Truth: Who here would survive a zombie apocalypse?",
-    "Dare: Strike a superhero pose.",
-    "Truth: Favorite movie genre?",
-    "Dare: Walk like a runway model.",
-    "Truth: Morning or night person?",
-    "Dare: Do 10 jumping jacks.",
-    "Truth: Cats or dogs?",
-    "Dare: Say the alphabet backward to M.",
-    "Truth: Favorite vacation spot?",
-    "Dare: Do your best robot impression.",
-    "Truth: Coffee or tea?",
-    "Dare: Act like a famous celebrity.",
-    "Truth: Sweet or salty snacks?",
-    "Dare: Balance on one foot for 10 seconds.",
-    "Truth: Favorite song right now?",
-    "Dare: Fake laugh dramatically.",
-    "Truth: Board games or video games?",
-    "Dare: Do a silly victory dance.",
-    "Truth: Favorite emoji?",
-    "Dare: Speak in an accent for 1 round.",
-    "Truth: Early bird or night owl?",
-    "Dare: Pretend you're a news reporter.",
-    "Truth: Favorite comfort food?",
-    "Dare: Moonwalk attempt.",
-    "Truth: Would you skydive?",
-    "Dare: Do a fake workout move.",
-    "Truth: Favorite season?",
-    "Dare: Make animal sounds.",
-    "Truth: Pizza topping you hate?",
-    "Dare: Do finger guns at everyone.",
-    "Truth: Beach or mountains?",
-    "Dare: Bow like royalty.",
-    "Truth: Introvert or extrovert?",
-    "Dare: Dramatic sigh.",
-    "Truth: Favorite dessert?",
-    "Dare: Clap rhythmically.",
-    "Truth: Morning shower or night shower?",
-    "Dare: Say tongue twister fast.",
-    "{p1}Dare: High-five then spin",
-    "{p1}Truth: Who met first?",
-    "{p1}Dare: Funny synchronized walk",
-    "{p1}Truth: Who’s more competitive?",
-    "{p1}Dare: Mirror each other for 10s",
-    "{p1}Truth: Who laughs more?",
-    "{p1}Dare: Victory pose together",
-    "{p1}Truth: Who would host a party?"
-  ],
-    2: [
-    "Truth: Who here has the best style?",
-    "Dare: Compliment the person to your right.",
-    "Truth: Ever had a crush on a friend?",
-    "Dare: Do a slow spin.",
-    "Truth: Most confident feature?",
-    "Dare: Flirty wink at everyone.",
-    "Truth: Love at first sight—real?",
-    "Dare: Pose like a magazine cover.",
-    "Truth: Who would you dance with first?",
-    "Dare: Shoulder shimmy dance.",
-    "Truth: Ever flirted to get something?",
-    "Dare: Whisper a compliment to someone.",
-    "Truth: Biggest turn-on (PG)?",
-    "Dare: Sit confidently for 10s.",
-    "Truth: Romantic or spontaneous?",
-    "Dare: Do a confident walk.",
-    "Truth: Who here would be a great date?",
-    "Dare: Blow a kiss across the room.",
-    "Truth: First impression matters?",
-    "Dare: Strike a seductive pose (clothed).",
-    "Truth: Favorite way to relax?",
-    "Dare: Trace a heart in the air.",
-    "Truth: Ever been caught staring?",
-    "Dare: Hair flip or hat tip.",
-    "Truth: Compliments or gifts?",
-    "Dare: Lean casually and pose.",
-    "Truth: Who’s the smoothest talker?",
-    "Dare: Slow clap for yourself.",
-    "Truth: Favorite flirting style?",
-    "Dare: Dance without moving feet.",
-    "Truth: Would you kiss on first date?",
-    "Dare: Sit closer to someone.",
-    "Truth: Who has best smile?",
-    "Dare: Bite your lip playfully.",
-    "Truth: Texting or calling?",
-    "Dare: Wink + smile combo.",
-    "Truth: Romantic movie lover?",
-    "Dare: Pose like a heartbreaker.",
-    "{p1}Dare: Compliment each other",
-    "{p1}Truth: Who flirts more?",
-    "{p1}Dare: Slow walk together",
-    "{p1}Truth: Who made first move?",
-    "{p1}Dare: Back-to-back pose",
-    "{p1}Truth: Who plans dates?",
-    "{p1}Dare: Synchronized wink",
-    "{p1}Truth: Who gets jealous easier?",
-    "{p1}Dare: Hold hands for 10s",
-    "{p1}Drink: Take 2 sips together"
-  ],
-    3: [
-    "Truth: Favorite part of flirting?",
-    "Dare: Whisper something playful.",
-    "Truth: Ever been caught checking someone out?",
-    "Dare: Slow dance alone for 10s.",
-    "Truth: Confident when dressed up?",
-    "Dare: Remove an accessory.",
-    "Truth: Compliments make you blush?",
-    "Dare: Sit on edge of chair confidently.",
-    "Truth: Ever played strip games before?",
-    "Dare: Pose like a calendar model.",
-    "Truth: Would you model if asked?",
-    "Dare: Trace a line down your arm.",
-    "Truth: Favorite date idea?",
-    "Dare: Make eye contact for 10s.",
-    "Truth: Flirting skill 1–10?",
-    "Dare: Turn around slowly.",
-    "Truth: Who here has most confidence?",
-    "Dare: Undo a button (if applicable).",
-    "Truth: Ever broken a heart?",
-    "Dare: Do a dramatic stretch.",
-    "Truth: Compliment or tease?",
-    "Dare: Pose like a statue.",
-    "Truth: Ever been dared to strip?",
-    "Dare: Remove shoes or socks.",
-    "Truth: Who makes you nervous?",
-    "Dare: Smile without breaking eye contact.",
-    "Truth: Attraction grows or instant?",
-    "Dare: Sit however feels bold.",
-    "Truth: Favorite party memory?",
-    "Dare: Lean in and pause.",
-    "{p1} Sneak hands into shirt",
-    "{p1}Truth: Who leads?",
-    "{p1}Dare: Forehead touch 5s",
-    "{p1}Truth: Who flirts better?",
-    "{p1}Dare: Arm around shoulders",
-    "{p1}Truth: Who blushes first?",
-    "{p1}Dare: Mirror poses",
-    "{p1}Truth: Who gets attention?",
-    "{p1}Dare: Sit close for a round",
-	"{p1}Dare: Sit on lap for a round",
-    "{p1}Drink: Take 3 sips together",
-    "Drink: Take 2 sips if nervous",
-    "Drink: Cheers with someone",
-    "Drink: Last to sip removes item",
-    "Drink: Skip = 3 sips",
-    "Drink: Winner assigns sip",
-    "Drink: Everyone sip",
-    "Drink: Nearest player sips",
-    "Drink: Compliment = sip",
-    "Drink: Refusal = double sip",
-    "Drink: Confidence toast"
-  ],
-    4: [
-    "Truth: Favorite thing about your body?",
-    "Dare: Slow turn showing confidence.",
-    "Truth: Ever enjoyed being teased?",
-    "Dare: Remove one clothing item.",
-    "Truth: What makes you feel sexy?",
-    "Dare: Pose like a magazine spread.",
-    "Truth: Confident when eyes are on you?",
-    "Dare: Sit however feels daring.",
-    "Truth: Ever been the center of attention?",
-    "Dare: Bite lip + eye contact.",
-    "Truth: Compliments make you blush?",
-    "Dare: Let others choose your pose.",
-    "Truth: Favorite kind of attention?",
-    "Dare: Slowly stand and stretch.",
-    "Truth: Ever played strip poker?",
-    "Dare: Undo or remove accessory/clothing.",
-    "Truth: Confidence level right now?",
-    "Dare: Turn back to group dramatically.",
-    "Truth: Ever felt powerful flirting?",
-    "Dare: Sit on someone’s chair edge (consensual).",
-    "Truth: Do you like being watched?",
-    "Dare: Whisper a tease.",
-    "Truth: Bold or mysterious?",
-    "Dare: Hold eye contact 15s.",
-    "Truth: Favorite reaction to get?",
-    "Dare: Slow walk across room.",
-    "{p1}Dare: Slow dance 20s",
-    "{p1}Truth: Who’s more daring?",
-    "{p1}Dare: Sit very close",
-    "{p1}Truth: Who enjoys teasing?",
-    "{p1}Dare: Arms around waist",
-    "{p1}Truth: Who started stripping?",
-    "{p1}Dare: Cheek-to-cheek pose",
-    "{p1}Truth: Who’s more confident?",
-    "{p1}Dare: Shared dramatic pose",
-    "{p1}Dare: Whisper to each other",
-    "{p1}Drink: 4 sips together",
-    "Drink: Remove + sip",
-    "Drink: Everyone cheers",
-    "Drink: Loser drinks 3",
-    "Drink: Winner assigns 2 sips",
-    "Drink: Confidence toast",
-    "Drink: Refusal = strip + sip",
-    "Drink: Boldest player sips",
-    "Drink: Last to react drinks",
-    "Drink: Eye contact sip",
-    "Drink: Compliment earns sip",
-    "Drink: Tease earns sip",
-    "Drink: Everyone sip"
-  ]
-};
+    const baseTasks = {
+      1: [
+        "{p1}, ask {p2} to name one thing they like about {p1} and say why.",
+        "{p1}, ask {p2} what their favorite game is and why they love it.",
+        "{p1}, ask {p2} to tell a happy memory from school.",
+        "{p1}, ask {p2} what makes them laugh out loud.",
+        "{p1}, ask {p2} to share a small goal they have this year.",
+        "{p1}, ask {p2} to describe their best friend and why that friend is special.",
+        "Hey {p1}, can you tell us about a time you helped someone for real?",
+        "Hey {p1}, your dare is to tell your funniest joke to the group.",
+        "{p1}, ask {p2} what book or cartoon they like the most and why.",
+        "{p1}, ask {p2} to name a food that makes them happy and explain it.",
+        "Hey {p1}, can you tell one thing most people here would not guess about you?",
+        "Hey {p1}, your dare is to make up a short cheer for the group.",
+        "{p1}, ask {p2} to say one thing they want to learn this year.",
+        "{p1}, ask {p2} to tell about a time they felt proud of themselves.",
+        "Hey {p1}, can you share a small secret that is kind and safe to tell?",
+        "Hey {p1}, your dare is to describe your dream pet in a fun way.",
+        "{p1}, ask {p2} what they do to feel calm when they are sad.",
+        "{p1}, ask {p2} to tell about their favorite family tradition.",
+        "Hey {p1}, can you say a compliment to {p2} and tell why you picked it?",
+        "Hey {p1}, your dare is to describe your favorite place like a short story.",
+        "{p1}, ask {p2} what makes a day perfect for them.",
+        "{p1}, ask {p2} to name a skill they wish to get better at.",
+        "Hey {p1}, can you tell us about a time you learned something new and felt good?",
+        "Hey {p1}, you got a dare to invent a new holiday and explain how to celebrate it.",
+        "{p1}, ask {p2} which song makes them smile and why.",
+        "{p1}, ask {p2} to share a memory that always makes them giggle.",
+        "Hey {p1}, can you tell the group one thing you are thankful for today?",
+        "Hey {p1}, your dare is to make up a short rhyme about friendship.",
+        "{p1}, ask {p2} what kind deed someone did for them that they will not forget.",
+        "{p1}, ask {p2} to name a favorite teacher or coach and why they liked them.",
+        "Hey {p1}, can you tell about a time you tried something new and what happened?",
+        "Hey {p1}, your dare is to describe your favorite game as if telling it to a new friend.",
+        "{p1}, ask {p2} to share one thing that makes them brave.",
+        "{p1}, ask {p2} to tell a short story about a funny mistake that became a good memory.",
+        "Hey {p1}, can you say one kind thing you will try to do this week?",
+        "Hey {p1}, your dare is to explain your favorite hobby like you are teaching it to someone new.",
+        "{p1}, ask {p2} which movie character they would be friends with and why.",
+        "{p1}, ask {p2} to tell one thing they do to cheer up a friend.",
+        "Hey {p1}, can you share a small dream you have for the future?",
+        "Hey {p1}, you got a dare to make up a short secret handshake idea (describe it with words).",
+        "{p1}, ask {p2} to name a flavor of ice cream they would make and what it would be called.",
+        "{p1}, ask {p2} to tell about a time someone made them feel proud.",
+        "Hey {p1}, can you tell us one thing you are really good at?",
+        "Hey {p1}, your dare is to tell a one-minute story about a time you changed your mind and why.",
+        "{p1}, ask {p2} to share a question they would love to ask {p1}.",
+        "{p1}, ask {p2} to give one piece of friendly advice to {p1}.",
+        "Hey {p1}, can you say what makes you a good friend in one sentence?",
+        "Hey {p1}, your dare is to make up a happy chant the group can say together.",
+        "{p1}, ask {p2} to tell one small habit that helps them stay happy.",
+        "{p1}, ask {p2} to name a place they want to visit and why they chose it.",
+        "Hey {p1}, can you tell us about your favorite outdoor game?",
+        "Hey {p1}, your dare is to describe your favorite snack as if it were a superhero.",
+        "{p1}, ask {p2} to name a color that makes them feel calm and why.",
+        "{p1}, ask {p2} to tell one thing they do to help at home.",
+        "Hey {p1}, can you share a time you felt brave for a little bit?",
+        "Hey {p1}, your dare is to make up a funny weather report for today.",
+        "{p1}, ask {p2} what kind of animal they would be and why.",
+        "{p1}, ask {p2} to describe their perfect birthday party.",
+        "Hey {p1}, can you say one thing you like about school?",
+        "Hey {p1}, your dare is to make up a short cheer for {p2}.",
+        "{p1}, ask {p2} to tell about a time they made someone laugh.",
+        "{p1}, ask {p2} to name a hobby they want to try.",
+        "Hey {p1}, can you tell us a happy memory from a family trip?",
+        "Hey {p1}, your dare is to tell a short riddle and let others guess.",
+        "{p1}, ask {p2} what makes them feel proud at the end of the day.",
+        "{p1}, ask {p2} to share a tiny habit that helps them study or focus.",
+        "Hey {p1}, can you tell us a simple recipe you like (no oven or knives)?",
+        "Hey {p1}, your dare is to say three nice things about the person to your left.",
+        "{p1}, ask {p2} what kind of invention they would make and why.",
+        "{p1}, ask {p2} to tell about a time they were kind to a stranger.",
+        "Hey {p1}, can you say one thing you want to get better at this month?",
+        "Hey {p1}, your dare is to make a short story that starts with \"Once upon a time\".",
+        "{p1}, ask {p2} to name a silly talent they have.",
+        "{p1}, ask {p2} to describe their favorite outfit and why they like it.",
+        "Hey {p1}, can you tell us a time you helped a friend?",
+        "Hey {p1}, your dare is to teach the group a fun handshake step with words.",
+        "{p1}, ask {p2} to tell what bedtime routine helps them sleep well.",
+        "{p1}, ask {p2} to share a small secret about a hobby they enjoy.",
+        "Hey {p1}, can you say what makes you smile every morning?",
+        "Hey {p1}, your dare is to describe your favorite toy as if it were alive.",
+        "{p1}, ask {p2} to name a song that makes them dance and why.",
+        "{p1}, ask {p2} to tell a memory of a funny school day.",
+        "Hey {p1}, can you share a kind goal you have for a friend this week?",
+        "Hey {p1}, your dare is to make up a silly new word and its meaning.",
+        "{p1}, ask {p2} to describe a time they felt helped by someone.",
+        "{p1}, ask {p2} to say one thing they like about their neighborhood.",
+        "Hey {p1}, can you tell about a time you felt surprised in a good way?",
+        "Hey {p1}, your dare is to explain your favorite game rules to someone who never played.",
+        "{p1}, ask {p2} to name a snack they would share and why.",
+        "{p1}, ask {p2} to tell a short story about a pet or animal they like.",
+        "Hey {p1}, can you say one honest thing you learned from a mistake?",
+        "Hey {p1}, your dare is to make up a 30-second commercial for a pretend toy.",
+        "{p1}, ask {p2} to share a small habit that makes them feel brave.",
+        "{p1}, ask {p2} to tell about a time they made a friend laugh when they were sad.",
+        "Hey {p1}, can you name a game you like to play with your family?",
+        "Hey {p1}, your dare is to describe your favorite season and what you do then.",
+        "{p1}, ask {p2} to say one thing they would teach a younger sibling.",
+        "{p1}, ask {p2} to tell about a time they felt proud of trying hard.",
+        "Hey {p1}, can you tell a short memory from a picnic or park visit?",
+        "Hey {p1}, your dare is to make up a silly mascot for your team and describe it.",
+        "{p1}, ask {p2} to share a thing that helps them feel less worried.",
+        "{p1}, ask {p2} to tell one favorite thing they like at school lunch.",
+        "Hey {p1}, can you say one way you like to help at home?",
+        "Hey {p1}, your dare is to make up a two-line song about friendship and sing it.",
+        "{p1}, ask {p2} to name a game they are proud they learned to play.",
+        "{p1}, ask {p2} to describe a time they felt surprised by kindness.",
+        "Hey {p1}, can you tell about a favorite rainy day activity?",
+        "Hey {p1}, your dare is to describe how you would plan a fun picnic.",
+        "{p1}, ask {p2} what small plan they have for this weekend and why.",
+        "{p1}, ask {p2} to share a time they tried to be brave and it helped.",
+        "Hey {p1}, can you tell a memory of a holiday you liked?",
+        "Hey {p1}, your dare is to make up a short cheer that includes everyone's name.",
+        "{p1}, ask {p2} to name a fun fact about their family.",
+        "{p1}, ask {p2} to tell about a time they felt proud at school.",
+        "Hey {p1}, can you say something kind you will do for a friend this week?",
+        "Hey {p1}, your dare is to explain your favorite craft or drawing idea.",
+        "{p1}, ask {p2} to share one thing that makes them calm before bed.",
+        "{p1}, ask {p2} to tell a tiny story about a neighbor who was kind.",
+        "Hey {p1}, can you name a place that makes you feel happy and why?",
+        "Hey {p1}, your dare is to make up a short mystery and let others guess the answer.",
+        "{p1}, ask {p2} to say one thing that makes a great friend.",
+        "{p1}, ask {p2} to describe their favorite outdoor spot to play.",
+        "Hey {p1}, can you tell about a small project you did that you liked?",
+        "Hey {p1}, your dare is to pretend to be a weather reporter and tell today's weather in a fun way.",
+        "{p1}, ask {p2} to name a book they would read again and why.",
+        "{p1}, ask {p2} to tell one thing they find easy to do and one thing they find hard.",
+        "Hey {p1}, can you say one thing you are thankful for about your school?",
+        "Hey {p1}, your dare is to make a 30-second story that starts with a silly sound.",
+        "{p1}, ask {p2} to share a favorite joke or riddle they know.",
+        "{p1}, ask {p2} to tell about a time they felt proud of helping at home.",
+        "Hey {p1}, can you tell a small memory that makes you smile from your childhood?",
+        "Hey {p1}, your dare is to describe your favorite superhero and why you like them.",
+        "{p1}, ask {p2} to say one habit that helps them when they study.",
+        "{p1}, ask {p2} to share a short tip for making a new friend.",
+        "Hey {p1}, can you tell about a kind thing someone did for you this month?",
+        "Hey {p1}, your dare is to invent a fun new playground game and explain the rules.",
+        "{p1}, ask {p2} to name a song lyric they like and say why.",
+        "{p1}, ask {p2} to tell a small moment when they felt proud of trying again.",
+        "Hey {p1}, can you share one small goal for being kinder this week?",
+        "Hey {p1}, your dare is to pretend to be your favorite animal and describe it with words.",
+        "{p1}, ask {p2} to tell one thing they would put in a time capsule.",
+        "{p1}, ask {p2} to name a sport they enjoy and why they like it.",
+        "Hey {p1}, can you tell a memory of helping someone and how it felt?",
+        "Hey {p1}, your dare is to make up a short list of three things that make you brave.",
+        "{p1}, ask {p2} to share one way they relax after a long day.",
+        "{p1}, ask {p2} to tell about a small art or craft they like to make.",
+        "Hey {p1}, can you say one kind thing you admire about someone here?",
+        "Hey {p1}, your dare is to imagine your perfect school day and describe it.",
+        "{p1}, ask {p2} to name a game they'd teach someone new and why.",
+        "{p1}, ask {p2} to tell one thing they hope to do next summer.",
+        "Hey {p1}, can you share a time you said sorry and how it felt?",
+        "Hey {p1}, your dare is to make up a short poem about sunshine.",
+        "{p1}, ask {p2} to tell one way they help their family at home.",
+        "{p1}, ask {p2} to name a TV or cartoon character they would like to be friends with.",
+        "Hey {p1}, can you tell about a small achievement you felt proud of this week?",
+        "Hey {p1}, your dare is to describe your favorite snack using only three words.",
+        "{p1}, ask {p2} to share a tip for keeping a room tidy.",
+        "{p1}, ask {p2} to tell about a time they found something surprising and fun.",
+        "Hey {p1}, can you say one thing that makes you laugh every time?",
+        "Hey {p1}, your dare is to invent a silly handshake name and tell how it goes.",
+        "{p1}, ask {p2} to name a place they'd like to visit with friends and why.",
+        "{p1}, ask {p2} to tell one thing they learned recently that was interesting.",
+        "Hey {p1}, can you share a time you felt proud of being kind?",
+        "Hey {p1}, your dare is to make up a short song about being a good friend.",
+        "{p1}, ask {p2} to tell one small thing they do to stay organized.",
+        "{p1}, ask {p2} to name a vegetable or fruit they like and why.",
+        "Hey {p1}, can you say one thing that helps you when you feel nervous?",
+        "Hey {p1}, your dare is to pretend you are a pirate and say a friendly pirate line.",
+        "{p1}, ask {p2} to share a memory of a fun day with family.",
+        "{p1}, ask {p2} to tell one thing they would pack for a short trip and why.",
+        "Hey {p1}, can you tell about a time you cheered for someone and how it felt?",
+        "Hey {p1}, your dare is to describe your favorite pastime as if it were a game show prize.",
+        "{p1}, ask {p2} to name a classroom subject they enjoy and why.",
+        "{p1}, ask {p2} to share one small challenge they solved recently.",
+        "Hey {p1}, can you say one way you try to be fair to friends?",
+        "Hey {p1}, your dare is to tell a short story that ends with a happy surprise.",
+        "{p1}, ask {p2} to tell a thing that makes them feel excited for the weekend.",
+        "{p1}, ask {p2} to name a song they would sing at a talent show and why.",
+        "Hey {p1}, can you tell about a time you made someone smile?",
+        "Hey {p1}, your dare is to describe a magical pet you would want and what it can do.",
+        "{p1}, ask {p2} to say one small way they show thanks to someone.",
+        "{p1}, ask {p2} to tell one hobby that makes them feel calm.",
+        "Hey {p1}, can you share a memory of learning something new and fun?",
+        "Hey {p1}, your dare is to invent a friendly robot name and what it helps you do.",
+        "{p1}, ask {p2} to name a game they played as a child that they still like.",
+        "{p1}, ask {p2} to tell one thing that cheers them up on tough days.",
+        "Hey {p1}, can you say one thing you would like to teach others?",
+        "Hey {p1}, your dare is to make up a tiny cheer that includes clapping and words.",
+        "{p1}, ask {p2} to share one small dream they have for their future.",
+        "{p1}, ask {p2} to tell one thing that makes them proud of their family.",
+        "Hey {p1}, can you describe your favorite hat or pair of shoes and why you like it?",
+        "Hey {p1}, your dare is to tell a short happy story about a friendly dragon.",
+        "{p1}, ask {p2} to name a place that feels cozy to them and why.",
+        "{p1}, ask {p2} to tell about a time they showed courage, even a little.",
+        "Hey {p1}, can you share one song that always makes you cheerful?",
+        "Hey {p1}, your dare is to describe a funny imaginary friend and what they do.",
+        "{p1}, ask {p2} to tell one way they help their classmates or friends.",
+        "{p1}, ask {p2} to name a movie they like to watch again and why.",
+        "Hey {p1}, can you say one thing that kept you learning this week?",
+        "Hey {p1}, your dare is to invent a fun name for your group and say it loudly."
+      ],
+        2: [
+        "{p1}, give {p2} a gentle shoulder massage for 30 seconds.",
+        "{p1}, ask {p2} to give you a gentle shoulder massage for 30 seconds.",
+        "{p1}, grab {p2} by the collar and pull them close for 10 seconds.",
+        "{p1}, ask {p2} to grab you by the collar and pull you close for 10 seconds.",
+        "{p1}, dance with {p2} for 30 seconds while your hands are on their waist.",
+        "{p1}, ask {p2} to dance with you for 30 seconds with their hands on your waist.",
+        "{p1}, tickle {p2}’s ribs with your fingers for 20 seconds.",
+        "{p1}, ask {p2} to tickle your ribs with their fingers for 20 seconds.",
+        "{p1}, place {p2}’s hands on your hips and sway for 30 seconds.",
+        "{p1}, ask {p2} to place your hands on their hips and sway for 30 seconds.",
+        "{p1}, whisper something naughty in {p2}’s ear for 15 seconds.",
+        "{p1}, ask {p2} to whisper something naughty in your ear for 15 seconds.",
+        "{p1}, use your lips to explore {p2}’s neck for 20 seconds.",
+        "{p1}, ask {p2} to use their lips to explore your neck for 20 seconds.",
+        "{p1}, slide onto {p2}’s lap for one full round.",
+        "{p1}, ask {p2} to slide onto your lap for one full round.",
+        "{p1}, tickle {p2} using only your fingernails for 20 seconds.",
+        "{p1}, ask {p2} to tickle you using only their fingernails for 20 seconds.",
+        "{p1}, give {p2} a firm thigh massage for 30 seconds.",
+        "{p1}, ask {p2} to give you a firm thigh massage for 30 seconds.",
+        "{p1}, trace {p2}’s jawline with your thumb and then kiss their cheek.",
+        "{p1}, ask {p2} to trace your jawline with their thumb and kiss your cheek.",
+        "{p1}, nibble gently on {p2}’s earlobe for 10 seconds.",
+        "{p1}, ask {p2} to nibble gently on your earlobe for 10 seconds.",
+        "{p1}, give {p2} a 30-second foot rub.",
+        "{p1}, ask {p2} to give you a 30-second foot rub.",
+        "{p1}, hug {p2} tightly from behind for 30 seconds.",
+        "{p1}, ask {p2} to hug you tightly from behind for 30 seconds.",
+        "{p1}, use your fingers to trace {p2}’s lips slowly.",
+        "{p1}, ask {p2} to trace your lips slowly with their fingers.",
+        "{p1}, give {p2} a scalp massage using your nails for 30 seconds.",
+        "{p1}, ask {p2} to give you a scalp massage using their nails for 30 seconds.",
+        "{p1}, use your lips to explore {p2}’s forearm for 20 seconds.",
+        "{p1}, ask {p2} to use their lips to explore your forearm for 20 seconds.",
+        "{p1}, sit face-to-face with {p2} and have your knees touching for 1 minute.",
+        "{p1}, ask {p2} to sit face-to-face with you with knees touching for 1 minute.",
+        "{p1}, blow warm air on {p2}’s neck and then kiss it.",
+        "{p1}, ask {p2} to blow warm air on your neck and then kiss it.",
+        "{p1}, give {p2} a 30-second hand massage, interlacing your fingers.",
+        "{p1}, ask {p2} to give you a 30-second hand massage, interlacing fingers.",
+        "{p1}, trace the outline of {p2}’s ears with your fingernails.",
+        "{p1}, ask {p2} to trace the outline of your ears with their fingernails.",
+        "{p1}, kiss {p2}’s collarbone five times very slowly.",
+        "{p1}, ask {p2} to kiss your collarbone five times very slowly.",
+        "{p1}, pull {p2} into a 30-second bear hug.",
+        "{p1}, ask {p2} to pull you into a 30-second bear hug.",
+        "{p1}, use your tongue to trace a small circle on {p2}’s palm.",
+        "{p1}, ask {p2} to trace a small circle on your palm with their tongue.",
+        "{p1}, give {p2} 10 butterfly kisses on their cheek.",
+        "{p1}, ask {p2} to give you 10 butterfly kisses on your cheek.",
+        "{p1}, sit on {p2}’s lap and stare into their eyes for 30 seconds.",
+        "{p1}, ask {p2} to sit on your lap and stare into your eyes for 30 seconds.",
+        "{p1}, use your fingernails to lightly scratch {p2}’s back for 30 seconds.",
+        "{p1}, ask {p2} to lightly scratch your back with their nails for 30 seconds.",
+        "{p1}, place your hands on {p2}’s inner thighs for 20 seconds.",
+        "{p1}, ask {p2} to place their hands on your inner thighs for 20 seconds.",
+        "{p1}, whisper a secret fantasy into {p2}’s ear.",
+        "{p1}, ask {p2} to whisper a secret fantasy into your ear.",
+        "{p1}, use your lips to explore {p2}’s shoulder blades.",
+        "{p1}, ask {p2} to use their lips to explore your shoulder blades.",
+        "{p1}, give {p2} a 30-second calf massage.",
+        "{p1}, ask {p2} to give you a 30-second calf massage.",
+        "{p1}, trace {p2}’s spine with one cold finger.",
+        "{p1}, ask {p2} to trace your spine with one cold finger.",
+        "{p1}, bite {p2}’s shoulder gently through their clothes.",
+        "{p1}, ask {p2} to bite your shoulder gently through your clothes.",
+        "{p1}, give {p2} a 30-second lower back massage.",
+        "{p1}, ask {p2} to give you a 30-second lower back massage.",
+        "{p1}, hold {p2}’s face in your hands and look into their eyes.",
+        "{p1}, ask {p2} to hold your face in their hands and look into your eyes.",
+        "{p1}, tickle {p2}’s bare feet for 20 seconds.",
+        "{p1}, ask {p2} to tickle your bare feet for 20 seconds.",
+        "{p1}, use your lips to explore {p2}’s temple and hairline.",
+        "{p1}, ask {p2} to use their lips to explore your temple and hairline.",
+        "{p1}, place your forehead against {p2}’s for 30 seconds.",
+        "{p1}, ask {p2} to place their forehead against yours for 30 seconds.",
+        "{p1}, give {p2} a 30-second bicep massage.",
+        "{p1}, ask {p2} to give you a 30-second bicep massage.",
+        "{p1}, trace {p2}’s belly button with your finger.",
+        "{p1}, ask {p2} to trace your belly button with their finger.",
+        "{p1}, kiss {p2}’s knuckles one by one.",
+        "{p1}, ask {p2} to kiss your knuckles one by one.",
+        "{p1}, sit behind {p2} and wrap your arms around their waist.",
+        "{p1}, ask {p2} to sit behind you and wrap their arms around your waist.",
+        "{p1}, use your fingernails to tickle {p2}’s knees.",
+        "{p1}, ask {p2} to tickle your knees with their fingernails.",
+        "{p1}, give {p2} a piggyback ride around the room.",
+        "{p1}, ask {p2} to give you a piggyback ride around the room.",
+        "{p1}, whisper \"I want you\" in {p2}’s ear in a seductive voice.",
+        "{p1}, ask {p2} to whisper \"I want you\" in your ear in a seductive voice.",
+        "{p1}, use your lips to explore {p2}’s wrist and palm.",
+        "{p1}, ask {p2} to use their lips to explore your wrist and palm.",
+        "{p1}, give {p2} a 30-second chest massage over their clothes.",
+        "{p1}, ask {p2} to give you a 30-second chest massage over your clothes.",
+        "{p1}, trace {p2}’s eyebrows with your pinky finger.",
+        "{p1}, ask {p2} to trace your eyebrows with their pinky finger.",
+        "{p1}, sit on {p2}’s lap face-to-face for 30 seconds.",
+        "{p1}, ask {p2} to sit on your lap face-to-face for 30 seconds.",
+        "{p1}, use your fingernails to trail down {p2}’s sides.",
+        "{p1}, ask {p2} to trail their fingernails down your sides.",
+        "{p1}, nibble on {p2}’s knuckles playfully.",
+        "{p1}, ask {p2} to nibble on your knuckles playfully.",
+        "{p1}, give {p2} a 30-second neck massage using both hands.",
+        "{p1}, ask {p2} to give you a 30-second neck massage using both hands.",
+        "{p1}, use your lips to explore {p2}’s inner elbow.",
+        "{p1}, ask {p2} to use their lips to explore your inner elbow.",
+        "{p1}, sit on the floor between {p2}’s legs and lean back.",
+        "{p1}, ask {p2} to sit on the floor between your legs and lean back.",
+        "{p1}, trace a secret word on {p2}’s back for them to guess.",
+        "{p1}, ask {p2} to trace a secret word on your back for you to guess.",
+        "{p1}, give {p2} a 30-second tricep massage.",
+        "{p1}, ask {p2} to give you a 30-second tricep massage.",
+        "{p1}, use your teeth to gently tug on {p2}’s shirt collar.",
+        "{p1}, ask {p2} to gently tug on your shirt collar with their teeth.",
+        "{p1}, hold {p2}’s hands and lean in until your noses touch for 30 seconds.",
+        "{p1}, ask {p2} to hold your hands and lean in until your noses touch for 30 seconds.",
+        "{p1}, use your fingernails to tickle the back of {p2}’s thighs.",
+        "{p1}, ask {p2} to tickle the back of your thighs with their fingernails.",
+        "{p1}, give {p2} a long, 1-minute soulful hug.",
+        "{p1}, ask {p2} to give you a long, 1-minute soulful hug.",
+        "{p1}, use your lips to explore {p2}’s cheekbones.",
+        "{p1}, ask {p2} to use their lips to explore your cheekbones.",
+        "{p1}, sit on {p2}’s lap and rotate 360 degrees slowly.",
+        "{p1}, ask {p2} to sit on your lap and rotate 360 degrees slowly.",
+        "{p1}, trace {p2}’s collarbone with your fingernails.",
+        "{p1}, ask {p2} to trace your collarbone with their fingernails.",
+        "{p1}, give {p2} a 30-second glute massage over their clothes.",
+        "{p1}, ask {p2} to give you a 30-second glute massage over your clothes.",
+        "{p1}, whisper your favorite thing about {p2}’s body in their ear.",
+        "{p1}, ask {p2} to whisper their favorite thing about your body in your ear.",
+        "{p1}, use your lips to explore the back of {p2}’s neck.",
+        "{p1}, ask {p2} to use their lips to explore the back of your neck.",
+        "{p1}, sit on {p2}’s lap and bounce slightly for 10 seconds.",
+        "{p1}, ask {p2} to sit on your lap and bounce slightly for 10 seconds.",
+        "{p1}, trace {p2}’s lips with a cold finger.",
+        "{p1}, ask {p2} to trace your lips with a cold finger.",
+        "{p1}, give {p2} a 30-second forearm massage.",
+        "{p1}, ask {p2} to give you a 30-second forearm massage.",
+        "{p1}, use your fingernails to tickle {p2}’s underarms.",
+        "{p1}, ask {p2} to tickle your underarms with their fingernails.",
+        "{p1}, pull {p2} into a slow-dance embrace for 30 seconds.",
+        "{p1}, ask {p2} to pull you into a slow-dance embrace for 30 seconds.",
+        "{p1}, use your lips to explore {p2}’s chin and jaw.",
+        "{p1}, ask {p2} to use their lips to explore your chin and jaw.",
+        "{p1}, sit on {p2}’s lap and try to make them blush.",
+        "{p1}, ask {p2} to sit on your lap and try to make you blush.",
+        "{p1}, trace {p2}’s hairline with your tongue very lightly.",
+        "{p1}, ask {p2} to trace your hairline with their tongue very lightly.",
+        "{p1}, give {p2} a 30-second temple and forehead massage.",
+        "{p1}, ask {p2} to give you a 30-second temple and forehead massage.",
+        "{p1}, use your fingernails to scratch {p2}’s scalp gently.",
+        "{p1}, ask {p2} to scratch your scalp gently with their fingernails.",
+        "{p1}, place {p2}’s hands on your chest to feel your heartbeat.",
+        "{p1}, ask {p2} to place your hands on their chest to feel their heartbeat.",
+        "{p1}, use your lips to explore {p2}’s shoulder.",
+        "{p1}, ask {p2} to use their lips to explore your shoulder.",
+        "{p1}, sit on {p2}’s lap and give them a 20-second lap movement.",
+        "{p1}, ask {p2} to sit on your lap and give you a 20-second lap movement.",
+        "{p1}, trace {p2}’s ears with your tongue (no saliva).",
+        "{p1}, ask {p2} to trace your ears with their tongue (no saliva).",
+        "{p1}, give {p2} a 30-second palm massage using your thumbs.",
+        "{p1}, ask {p2} to give you a 30-second palm massage using their thumbs.",
+        "{p1}, use your fingernails to trail down {p2}’s inner arms.",
+        "{p1}, ask {p2} to trail their fingernails down your inner arms.",
+        "{p1}, whisper a daring \"What if\" scenario into {p2}’s ear.",
+        "{p1}, ask {p2} to whisper a daring \"What if\" scenario into your ear.",
+        "{p1}, use your lips to explore {p2}’s knuckles.",
+        "{p1}, ask {p2} to use their lips to explore your knuckles.",
+        "{p1}, sit on {p2}’s lap face-to-face and hug them tight.",
+        "{p1}, ask {p2} to sit on your lap face-to-face and hug you tight.",
+        "{p1}, trace {p2}’s eyebrows with your lips.",
+        "{p1}, ask {p2} to trace your eyebrows with their lips.",
+        "{p1}, give {p2} a 30-second \"full body\" squeeze hug.",
+        "{p1}, ask {p2} to give you a 30-second \"full body\" squeeze hug.",
+        "{p1}, use your fingernails to lightly scratch {p2}’s thighs.",
+        "{p1}, ask {p2} to lightly scratch your thighs with their fingernails.",
+        "{p1}, place your hands on {p2}’s waist and pull them flush against you.",
+        "{p1}, ask {p2} to place their hands on your waist and pull you flush against them.",
+        "{p1}, use your lips to explore {p2}’s eyelid area gently.",
+        "{p1}, ask {p2} to use their lips to explore your eyelid area gently.",
+        "{p1}, would you like to have a 5-minute cuddle session with {p2} right now?",
+        "{p1}, would you let {p2} choose where to kiss you next?",
+        "{p1}, would you enjoy it if {p2} gave you a full-body massage?",
+        "{p1}, would you like to sit on {p2}’s lap while the next person takes their turn?",
+        "{p1}, would you let {p2} whisper something naughty in your ear for 1 minute?",
+        "{p1}, would you like to feel {p2}’s heartbeat against yours right now?",
+        "{p1}, would you let {p2} trace your body with their fingernails?",
+        "{p1}, would you like to explore {p2}’s neck with your lips?",
+        "{p1}, would you let {p2} pull you into a tight hug for 2 minutes?",
+        "{p1}, would you like to share a secret fantasy with {p2}?",
+        "{p1}, would you let {p2} tickle you until you laugh out loud?",
+        "{p1}, would you like to dance closely with {p2} with the lights off?",
+        "{p1}, would you let {p2} bite your earlobe gently?",
+        "{p1}, would you like to give {p2} a lap dance?",
+        "{p1}, would you let {p2} massage your feet for 5 minutes?",
+        "{p1}, would you like to hold {p2}’s hands for the rest of this level?",
+        "{p1}, would you let {p2} scratch your back with their nails?",
+        "{p1}, would you like to whisper something naughty to {p2}?",
+        "{p1}, would you let {p2} place their hands on your inner thighs?",
+        "{p1}, would you like to sit on {p2}’s lap for the next three rounds?"
+      ],
+        3: [
+        "{p1}, give {p2} a 30-second chest or boob massage over their clothes.",
+        "{p1}, ask {p2} to give you a 30-second chest or boob massage over your clothes.",
+        "{p1}, reach your hand inside {p2}’s shirt and massage their bare chest.",
+        "{p1}, ask {p2} to reach their hand inside your shirt and massage your bare chest.",
+        "{p1}, remove one article of your clothing right now.",
+        "{p1}, ask {p2} to remove one article of their clothing right now.",
+        "{p1}, lean {p2} against the wall and kiss their bare back slowly.",
+        "{p1}, ask {p2} to lean you against the wall and kiss your bare back slowly.",
+        "{p1}, slide your hand inside {p2}’s underwear for 20 seconds.",
+        "{p1}, ask {p2} to slide their hand inside your underwear for 20 seconds.",
+        "{p1}, pinch or bite {p2}’s nipple gently through their clothes.",
+        "{p1}, ask {p2} to pinch or bite your nipple gently through your clothes.",
+        "{p1}, slide your hand into {p2}’s bra and cup them for 30 seconds.",
+        "{p1}, ask {p2} to slide their hand into your bra and cup you for 30 seconds.",
+        "{p1}, give {p2} a lap dance while wearing only your undergarments.",
+        "{p1}, ask {p2} to give you a lap dance while wearing only their undergarments.",
+        "{p1}, slide your hands between {p2}’s thighs and move upward slowly.",
+        "{p1}, ask {p2} to slide their hands between your thighs and move upward slowly.",
+        "{p1}, guide {p2}’s hands to exactly where you want to be touched right now.",
+        "{p1}, ask {p2} to guide your hands to exactly where they want to be touched.",
+        "{p1}, give {p2} a passionate kiss on the lips for 30 seconds.",
+        "{p1}, ask {p2} to give you a passionate kiss on the lips for 30 seconds.",
+        "{p1}, use your tongue to trace a line from {p2}’s navel to their chest.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your navel to your chest.",
+        "{p1}, reach your hand into {p2}’s pants and squeeze their glutes.",
+        "{p1}, ask {p2} to reach their hand into your pants and squeeze your glutes.",
+        "{p1}, remove {p2}’s shirt or top for them.",
+        "{p1}, ask {p2} to remove your shirt or top for you.",
+        "{p1}, kiss {p2}’s inner thigh, getting as high as possible.",
+        "{p1}, ask {p2} to kiss your inner thigh, getting as high as possible.",
+        "{p1}, use your teeth to pull down {p2}’s bra strap or underwear waistband.",
+        "{p1}, ask {p2} to use their teeth to pull down your bra strap or waistband.",
+        "{p1}, massage {p2}’s bare chest or boobs with oil or lotion for 1 minute.",
+        "{p1}, ask {p2} to massage your bare chest or boobs with oil or lotion.",
+        "{p1}, sit on {p2}’s lap and grind against them for 30 seconds.",
+        "{p1}, ask {p2} to sit on your lap and grind against you for 30 seconds.",
+        "{p1}, lick {p2}’s nipple (bare skin) for 15 seconds.",
+        "{p1}, ask {p2} to lick your bare nipple for 15 seconds.",
+        "{p1}, slide your finger along the rim of {p2}’s underwear.",
+        "{p1}, ask {p2} to slide their finger along the rim of your underwear.",
+        "{p1}, whisper your dirtiest sexual fantasy in {p2}’s ear.",
+        "{p1}, ask {p2} to whisper their dirtiest sexual fantasy in your ear.",
+        "{p1}, give {p2} a hickey on a spot of their choosing.",
+        "{p1}, ask {p2} to give you a hickey on a spot of your choosing.",
+        "{p1}, let {p2} explore your body with their hands under your clothes for 1 minute.",
+        "{p1}, explore {p2}’s body with your hands under their clothes for 1 minute.",
+        "{p1}, take off {p2}’s socks using only your teeth.",
+        "{p1}, ask {p2} to take off your socks using only their teeth.",
+        "{p1}, kiss every inch of {p2}’s bare stomach.",
+        "{p1}, ask {p2} to kiss every inch of your bare stomach.",
+        "{p1}, reach into {p2}’s underwear and touch their bare skin in the front.",
+        "{p1}, ask {p2} to reach into your underwear and touch your bare skin in the front.",
+        "{p1}, bite {p2}’s inner thigh gently.",
+        "{p1}, ask {p2} to bite your inner thigh gently.",
+        "{p1}, pull {p2} onto the bed/couch and pin their hands above their head.",
+        "{p1}, ask {p2} to pull you onto the bed/couch and pin your hands above your head.",
+        "{p1}, use your tongue to explore {p2}’s ear and neck deeply.",
+        "{p1}, ask {p2} to use their tongue to explore your ear and neck deeply.",
+        "{p1}, remove your pants/skirt and stay in your underwear.",
+        "{p1}, ask {p2} to remove their pants/skirt and stay in their underwear.",
+        "{p1}, give {p2} a 30-second thigh massage, going very high up.",
+        "{p1}, ask {p2} to give you a 30-second thigh massage, going very high up.",
+        "{p1}, use your lips to find {p2}’s most sensitive spot and kiss it.",
+        "{p1}, ask {p2} to find your most sensitive spot and kiss it.",
+        "{p1}, slide your hand between {p2}’s legs and keep it there for the next round.",
+        "{p1}, ask {p2} to slide their hand between your legs and keep it there for the next round.",
+        "{p1}, blindfold {p2} and use your hands to touch them anywhere.",
+        "{p1}, ask {p2} to blindfold you and use their hands to touch you anywhere.",
+        "{p1}, trace {p2}’s underwear line with your tongue.",
+        "{p1}, ask {p2} to trace your underwear line with their tongue.",
+        "{p1}, massage {p2}’s glutes with both hands under their clothes.",
+        "{p1}, ask {p2} to massage your glutes with both hands under your clothes.",
+        "{p1}, kiss {p2} from their neck all the way down to their waist.",
+        "{p1}, ask {p2} to kiss you from your neck all the way down to your waist.",
+        "{p1}, pull {p2}’s hair gently while you kiss them passionately.",
+        "{p1}, ask {p2} to pull your hair gently while they kiss you passionately.",
+        "{p1}, reach inside {p2}’s top and pinch their nipples.",
+        "{p1}, ask {p2} to reach inside your top and pinch your nipples.",
+        "{p1}, straddle {p2} and whisper what you want to do to them.",
+        "{p1}, ask {p2} to straddle you and whisper what they want to do to you.",
+        "{p1}, use your fingernails to scratch {p2}’s inner thighs.",
+        "{p1}, ask {p2} to use their fingernails to scratch your inner thighs.",
+        "{p1}, remove {p2}’s bra or underwear (if applicable).",
+        "{p1}, ask {p2} to remove your bra or underwear.",
+        "{p1}, lick a trail of water or alcohol off {p2}’s chest.",
+        "{p1}, ask {p2} to lick a trail of water or alcohol off your chest.",
+        "{p1}, slide your hand flat against {p2}’s bare stomach and move it down.",
+        "{p1}, ask {p2} to slide their hand flat against your bare stomach and move it down.",
+        "{p1}, give {p2} a french kiss for a full minute.",
+        "{p1}, ask {p2} to give you a french kiss for a full minute.",
+        "{p1}, use your lips to explore {p2}’s hip bones.",
+        "{p1}, ask {p2} to use their lips to explore your hip bones.",
+        "{p1}, slide your hand into {p2}’s back pocket and squeeze.",
+        "{p1}, ask {p2} to slide their hand into your back pocket and squeeze.",
+        "{p1}, take off your shirt and let {p2} touch your bare back.",
+        "{p1}, ask {p2} to take off their shirt and let you touch their bare back.",
+        "{p1}, nibble on {p2}’s neck until you leave a red mark.",
+        "{p1}, ask {p2} to nibble on your neck until they leave a red mark.",
+        "{p1}, slide your hands inside {p2}’s shirt and find their nipples.",
+        "{p1}, ask {p2} to slide their hands inside your shirt and find your nipples.",
+        "{p1}, give {p2} a 30-second erotic massage on their lower back.",
+        "{p1}, ask {p2} to give you a 30-second erotic massage on your lower back.",
+        "{p1}, use your tongue to circle {p2}’s navel.",
+        "{p1}, ask {p2} to use their tongue to circle your navel.",
+        "{p1}, straddle {p2} and kiss them while they hold your waist.",
+        "{p1}, ask {p2} to straddle you and kiss you while you hold their waist.",
+        "{p1}, slide your hand between {p2}’s thighs and squeeze gently.",
+        "{p1}, ask {p2} to slide their hand between your thighs and squeeze gently.",
+        "{p1}, remove one piece of {p2}’s clothing of your choice.",
+        "{p1}, ask {p2} to remove one piece of your clothing of their choice.",
+        "{p1}, lick {p2}’s earlobe and then whisper a dirty word.",
+        "{p1}, ask {p2} to lick your earlobe and whisper a dirty word.",
+        "{p1}, reach into {p2}’s pants and touch their bare skin for 30 seconds.",
+        "{p1}, ask {p2} to reach into your pants and touch your bare skin for 30 seconds.",
+        "{p1}, kiss the very top of {p2}’s inner thigh.",
+        "{p1}, ask {p2} to kiss the very top of your inner thigh.",
+        "{p1}, give {p2} a 1-minute massage using your bare chest (if applicable).",
+        "{p1}, ask {p2} to give you a 1-minute massage using their bare chest.",
+        "{p1}, trace {p2}’s lips with your tongue and then kiss them deeply.",
+        "{p1}, ask {p2} to trace your lips with their tongue and kiss you deeply.",
+        "{p1}, slide your hand into {p2}’s underwear and leave it there.",
+        "{p1}, ask {p2} to slide their hand into your underwear and leave it there.",
+        "{p1}, bite {p2}’s bottom lip gently while kissing.",
+        "{p1}, ask {p2} to bite your bottom lip gently while kissing.",
+        "{p1}, remove your bra/undershirt in front of {p2}.",
+        "{p1}, ask {p2} to remove their bra/undershirt in front of you.",
+        "{p1}, use your fingernails to trace {p2}’s chest and stomach.",
+        "{p1}, ask {p2} to use their fingernails to trace your chest and stomach.",
+        "{p1}, give {p2} a 30-second lap grind in just your underwear.",
+        "{p1}, ask {p2} to give you a 30-second lap grind in just their underwear.",
+        "{p1}, kiss {p2}’s bare shoulder and move down to their breast/chest.",
+        "{p1}, ask {p2} to kiss your bare shoulder and move down to your breast/chest.",
+        "{p1}, slide your hand into {p2}’s pants from the back.",
+        "{p1}, ask {p2} to slide their hand into your pants from the back.",
+        "{p1}, lick {p2}’s neck from the collarbone to the ear.",
+        "{p1}, ask {p2} to lick your neck from the collarbone to the ear.",
+        "{p1}, reach inside {p2}’s underwear and describe what you feel.",
+        "{p1}, ask {p2} to reach inside your underwear and describe what they feel.",
+        "{p1}, pinch {p2}’s glutes firmly and then kiss them.",
+        "{p1}, ask {p2} to pinch your glutes firmly and then kiss you.",
+        "{p1}, use your tongue to explore {p2}’s palm and fingers.",
+        "{p1}, ask {p2} to use their tongue to explore your palm and fingers.",
+        "{p1}, remove {p2}’s pants or skirt for them.",
+        "{p1}, ask {p2} to remove your pants or skirt for you.",
+        "{p1}, kiss {p2}’s stomach and move your lips toward their underwear.",
+        "{p1}, ask {p2} to kiss your stomach and move their lips toward your underwear.",
+        "{p1}, slide your hand into {p2}’s bra and pinch a nipple.",
+        "{p1}, ask {p2} to slide their hand into your bra and pinch a nipple.",
+        "{p1}, give {p2} a 30-second erotic neck massage.",
+        "{p1}, ask {p2} to give you a 30-second erotic neck massage.",
+        "{p1}, use your lips to explore {p2}’s bare lower back.",
+        "{p1}, ask {p2} to use their lips to explore your bare lower back.",
+        "{p1}, slide your hand between {p2}’s thighs and rub for 20 seconds.",
+        "{p1}, ask {p2} to slide their hand between your thighs and rub for 20 seconds.",
+        "{p1}, take off {p2}’s shirt and kiss their bare chest.",
+        "{p1}, ask {p2} to take off your shirt and kiss your bare chest.",
+        "{p1}, lick {p2}’s collarbone and then bite it gently.",
+        "{p1}, ask {p2} to lick your collarbone and then bite it gently.",
+        "{p1}, reach into {p2}’s underwear and stay there for 30 seconds.",
+        "{p1}, ask {p2} to reach into your underwear and stay there for 30 seconds.",
+        "{p1}, kiss {p2}’s thigh and move upward toward their crotch.",
+        "{p1}, ask {p2} to kiss your thigh and move upward toward your crotch.",
+        "{p1}, give {p2} a 1-minute massage on their bare glutes.",
+        "{p1}, ask {p2} to give you a 1-minute massage on your bare glutes.",
+        "{p1}, use your tongue to explore {p2}’s lips before kissing.",
+        "{p1}, ask {p2} to use their tongue to explore your lips before kissing.",
+        "{p1}, remove {p2}’s belt or shoes with your teeth.",
+        "{p1}, ask {p2} to remove your belt or shoes with their teeth.",
+        "{p1}, slide your hand flat against {p2}’s chest under their shirt.",
+        "{p1}, ask {p2} to slide their hand flat against your chest under your shirt.",
+        "{p1}, kiss {p2}’s neck and then whisper what you want to do.",
+        "{p1}, ask {p2} to kiss your neck and whisper what they want to do.",
+        "{p1}, reach into {p2}’s bra/shirt and play with their nipples.",
+        "{p1}, ask {p2} to reach into your bra/shirt and play with your nipples.",
+        "{p1}, give {p2} a wet kiss on their bare stomach.",
+        "{p1}, ask {p2} to give you a wet kiss on your bare stomach.",
+        "{p1}, slide your hand into {p2}’s underwear and squeeze.",
+        "{p1}, ask {p2} to slide their hand into your underwear and squeeze.",
+        "{p1}, lick {p2}’s shoulder and then kiss it.",
+        "{p1}, ask {p2} to lick your shoulder and then kiss it.",
+        "{p1}, remove your socks and one other item of clothing.",
+        "{p1}, ask {p2} to remove their socks and one other item of clothing.",
+        "{p1}, kiss {p2}’s inner thigh three times.",
+        "{p1}, ask {p2} to kiss your inner thigh three times.",
+        "{p1}, reach inside {p2}’s pants and find their most sensitive spot.",
+        "{p1}, ask {p2} to reach inside your pants and find your most sensitive spot.",
+        "{p1}, give {p2} a 30-second chest massage with your lips.",
+        "{p1}, ask {p2} to give you a 30-second chest massage with their lips.",
+        "{p1}, use your fingernails to scratch {p2}’s bare back.",
+        "{p1}, ask {p2} to use their fingernails to scratch your bare back.",
+        "{p1}, straddle {p2} and kiss their neck for 1 minute.",
+        "{p1}, ask {p2} to straddle you and kiss your neck for 1 minute.",
+        "{p1}, slide your hand inside {p2}’s underwear and rub their skin.",
+        "{p1}, ask {p2} to slide their hand inside your underwear and rub your skin.",
+        "{p1}, kiss {p2}’s stomach and move your tongue down.",
+        "{p1}, ask {p2} to kiss your stomach and move their tongue down.",
+        "{p1}, remove {p2}’s top and leave them in their bra/bare.",
+        "{p1}, ask {p2} to remove your top and leave you in your bra/bare.",
+        "{p1}, lick {p2}’s chest and then blow on it.",
+        "{p1}, ask {p2} to lick your chest and then blow on it.",
+        "{p1}, reach into {p2}’s pants and leave your hand there for 1 minute.",
+        "{p1}, ask {p2} to reach into your pants and leave their hand there for 1 minute.",
+        "{p1}, give {p2} a passionate 30-second kiss while holding their glutes.",
+        "{p1}, ask {p2} to give you a passionate 30-second kiss while holding your glutes.",
+        "{p1}, use your lips to explore {p2}’s inner thighs.",
+        "{p1}, ask {p2} to use their lips to explore your inner thighs.",
+        "{p1}, slide your hand between {p2}’s thighs and massage.",
+        "{p1}, ask {p2} to slide their hand between your thighs and massage.",
+        "{p1}, take off your shirt and let {p2} kiss your chest.",
+        "{p1}, ask {p2} to take off their shirt and let you kiss their chest.",
+        "{p1}, lick {p2}’s nipple through their shirt.",
+        "{p1}, ask {p2} to lick your nipple through your shirt.",
+        "{p1}, reach into {p2}’s underwear and pinch their skin gently.",
+        "{p1}, ask {p2} to reach into your underwear and pinch your skin gently.",
+        "{p1}, kiss {p2}’s neck and move toward their ear.",
+        "{p1}, ask {p2} to kiss your neck and move toward your ear.",
+        "{p1}, give {p2} a 30-second erotic thigh massage.",
+        "{p1}, ask {p2} to give you a 30-second erotic thigh massage.",
+        "{p1}, use your tongue to trace {p2}’s jawline.",
+        "{p1}, ask {p2} to use their tongue to trace your jawline.",
+        "{p1}, straddle {p2} and let them touch you anywhere.",
+        "{p1}, ask {p2} to straddle you and let you touch them anywhere.",
+        "{p1}, slide your hand into {p2}’s bra and rub.",
+        "{p1}, ask {p2} to slide their hand into your bra and rub.",
+        "{p1}, remove {p2}’s socks and kiss their feet.",
+        "{p1}, ask {p2} to remove your socks and kiss your feet.",
+        "{p1}, lick {p2}’s stomach and move toward their crotch.",
+        "{p1}, ask {p2} to lick your stomach and move toward your crotch.",
+        "{p1}, reach into {p2}’s pants and touch their bare skin.",
+        "{p1}, ask {p2} to reach into your pants and touch your bare skin.",
+        "{p1}, kiss {p2}’s back from top to bottom.",
+        "{p1}, ask {p2} to kiss your back from top to bottom.",
+        "{p1}, give {p2} a 30-second massage on their bare stomach.",
+        "{p1}, ask {p2} to give you a 30-second massage on your bare stomach.",
+        "{p1}, use your lips to explore {p2}’s armpits.",
+        "{p1}, ask {p2} to use their lips to explore your armpits.",
+        "{p1}, slide your hand into {p2}’s underwear and massage.",
+        "{p1}, ask {p2} to slide their hand into your underwear and massage.",
+        "{p1}, take off your pants and stay in your underwear.",
+        "{p1}, ask {p2} to take off their pants and stay in their underwear.",
+        "{p1}, lick {p2}’s chest and move toward their neck.",
+        "{p1}, ask {p2} to lick your chest and move toward your neck.",
+        "{p1}, reach into {p2}’s bra/shirt and squeeze.",
+        "{p1}, ask {p2} to reach into your bra/shirt and squeeze.",
+        "{p1}, kiss {p2}’s inner thigh and leave a mark.",
+        "{p1}, ask {p2} to kiss your inner thigh and leave a mark.",
+        "{p1}, give {p2} a 30-second erotic massage on their thighs.",
+        "{p1}, ask {p2} to give you a 30-second erotic massage on your thighs.",
+        "{p1}, use your tongue to explore {p2}’s neck.",
+        "{p1}, ask {p2} to use their tongue to explore your neck.",
+        "{p1}, straddle {p2} and kiss them deeply.",
+        "{p1}, ask {p2} to straddle you and kiss you deeply.",
+        "{p1}, slide your hand between {p2}’s thighs and stay there.",
+        "{p1}, ask {p2} to slide their hand between your thighs and stay there.",
+        "{p1}, remove {p2}’s shirt and kiss their bare back.",
+        "{p1}, ask {p2} to remove your shirt and kiss your bare back.",
+        "{p1}, lick {p2}’s collarbone and then kiss it.",
+        "{p1}, ask {p2} to lick your collarbone and then kiss it.",
+        "{p1}, reach into {p2}’s underwear and rub.",
+        "{p1}, ask {p2} to reach into your underwear and rub.",
+        "{p1}, kiss {p2}’s stomach and then bite it gently.",
+        "{p1}, ask {p2} to kiss your stomach and bite it gently.",
+        "{p1}, give {p2} a 30-second massage on their bare glutes.",
+        "{p1}, ask {p2} to give you a 30-second massage on your bare glutes.",
+        "{p1}, use your lips to explore {p2}’s chest.",
+        "{p1}, ask {p2} to use their lips to explore your chest.",
+        "{p1}, slide your hand into {p2}’s pants and squeeze.",
+        "{p1}, ask {p2} to slide their hand into your pants and squeeze.",
+        "{p1}, take off your shirt and stay bare for the next round.",
+        "{p1}, ask {p2} to take off their shirt and stay bare for the next round.",
+        "{p1}, what is the most sensitive part of your body that you want {p2} to touch?",
+        "{p1}, have you ever had a sexual dream about {p2}?",
+        "{p1}, what is your favorite sexual position to try with {p2}?",
+        "{p1}, if you could have {p2} do anything to you right now, what would it be?",
+        "{p1}, what is the dirtiest thing you’ve ever thought about doing to {p2}?",
+        "{p1}, do you prefer being on top or bottom when with {p2}?",
+        "{p1}, what kind of underwear are you wearing right now? Let {p2} see.",
+        "{p1}, where is the most public place you’ve ever been intimate?",
+        "{p1}, what is your biggest turn-on when it comes to {p2}’s body?",
+        "{p1}, would you let {p2} record a video of you being intimate?",
+        "{p1}, what is a kink you have that you haven’t told {p2} yet?",
+        "{p1}, would you rather have a quickie or a long session with {p2}?",
+        "{p1}, what is the first thing you noticed about {p2}’s body today?",
+        "{p1}, do you prefer {p2} to be dominant or submissive?",
+        "{p1}, what is the most intimate thing {p2} has ever done to you?",
+        "{p1}, if {p2} were to give you a happy ending massage, where would they start?",
+        "{p1}, do you like it when {p2} talks dirty to you during the game?",
+        "{p1}, what is the most daring thing you want to do to {p2} tonight?",
+        "{p1}, how many articles of clothing do you want to be wearing by the end of this game?",
+        "{p1}, what is the best kiss you’ve ever had from {p2}?",
+        "{p1}, would you like {p2} to use toys on you?",
+        "{p1}, what part of {p2}’s body do you find most irresistible right now?",
+        "{p1}, what is your favorite way to be woken up by {p2}?",
+        "{p1}, have you ever wanted to try role-playing with {p2}?",
+        "{p1}, what is the longest you’ve ever gone in one session?",
+        "{p1}, would you let {p2} blindfold you and tease you for 10 minutes?",
+        "{p1}, what is the naughtiest thing you’ve done in a car?",
+        "{p1}, do you like it when {p2} pulls your hair or bites you?",
+        "{p1}, what is a secret desire you have for {p2}?",
+        "{p1}, if we stopped the game right now, what would you want to do with {p2}?"
+      ],
+        4: [
+        "{p1}, remove every remaining article of clothing and stand before {p2} for 1 minute.",
+        "{p1}, ask {p2} to remove every remaining article of their clothing and stand before you for 1 minute.",
+        "{p1}, use your mouth and tongue to explore {p2}’s most intimate area for 2 minutes.",
+        "{p1}, ask {p2} to use their mouth and tongue to explore your most intimate area for 2 minutes.",
+        "{p1}, blindfold {p2} and use your lips to tease them everywhere for 3 minutes.",
+        "{p1}, ask {p2} to blindfold you and use their lips to tease you everywhere for 3 minutes.",
+        "{p1}, give {p2} a full-body massage using only your bare skin and oil.",
+        "{p1}, ask {p2} to give you a full-body massage using only their bare skin and oil.",
+        "{p1}, use your teeth to gently tug on {p2}’s underwear and pull them off.",
+        "{p1}, ask {p2} to use their teeth to gently tug on your underwear and pull them off.",
+        "{p1}, straddle {p2} and perform a slow, explicit lap dance for one full song.",
+        "{p1}, ask {p2} to straddle you and perform a slow, explicit lap dance for one full song.",
+        "{p1}, pinch {p2}’s nipples while kissing them deeply for 1 minute.",
+        "{p1}, ask {p2} to pinch your nipples while kissing you deeply for 1 minute.",
+        "{p1}, slide your hand between {p2}’s legs and keep it there until they finish a task.",
+        "{p1}, ask {p2} to slide their hand between your legs and keep it there until you finish a task.",
+        "{p1}, use an ice cube to trace {p2}’s most sensitive areas until it melts.",
+        "{p1}, ask {p2} to use an ice cube to trace your most sensitive areas until it melts.",
+        "{p1}, bite {p2}’s inner thigh and leave a visible mark.",
+        "{p1}, ask {p2} to bite your inner thigh and leave a visible mark.",
+        "{p1}, lean {p2} over a piece of furniture and massage them from behind.",
+        "{p1}, ask {p2} to lean you over a piece of furniture and massage you from behind.",
+        "{p1}, use your tongue to mimic a specific sexual act on {p2}’s neck.",
+        "{p1}, ask {p2} to use their tongue to mimic a specific sexual act on your neck.",
+        "{p1}, tie {p2}’s hands behind their back using a piece of clothing.",
+        "{p1}, ask {p2} to tie your hands behind your back using a piece of clothing.",
+        "{p1}, lick a line from {p2}’s toes all the way up to their inner thigh.",
+        "{p1}, ask {p2} to lick a line from your toes all the way up to your inner thigh.",
+        "{p1}, simulate your favorite sexual position with {p2} for 1 minute.",
+        "{p1}, ask {p2} to simulate their favorite sexual position with you for 1 minute.",
+        "{p1}, whisper exactly how you want {p2} to touch you later into their ear.",
+        "{p1}, ask {p2} to whisper exactly how they want you to touch them later into your ear.",
+        "{p1}, use your fingernails to scratch {p2}’s glutes firmly while kissing.",
+        "{p1}, ask {p2} to use their fingernails to scratch your glutes firmly while kissing.",
+        "{p1}, place your mouth on {p2}’s chest and vibrate your voice against their skin.",
+        "{p1}, ask {p2} to place their mouth on your chest and vibrate their voice against your skin.",
+        "{p1}, guide {p2}’s hand inside your underwear and show them how to rub you.",
+        "{p1}, ask {p2} to guide your hand inside their underwear and show you how to rub them.",
+        "{p1}, sit on {p2}’s lap face-to-face and grind until one of you moans.",
+        "{p1}, ask {p2} to sit on your lap face-to-face and grind until one of you moans.",
+        "{p1}, use your tongue to explore {p2}’s belly button and move lower.",
+        "{p1}, ask {p2} to use their tongue to explore your belly button and move lower.",
+        "{p1}, give {p2} a love bite on the hip or inner thigh.",
+        "{p1}, ask {p2} to give you a love bite on the hip or inner thigh.",
+        "{p1}, remove {p2}’s remaining clothing using only your hands and teeth.",
+        "{p1}, ask {p2} to remove your remaining clothing using only their hands and teeth.",
+        "{p1}, kiss {p2}’s back from the neck to the very bottom, lingering on the glutes.",
+        "{p1}, ask {p2} to kiss your back from the neck to the very bottom, lingering on the glutes.",
+        "{p1}, use your lips to explore {p2}’s most intimate spot through their underwear.",
+        "{p1}, ask {p2} to use their lips to explore your most intimate spot through your underwear.",
+        "{p1}, hold {p2}’s hair and pull their head back while you kiss their neck.",
+        "{p1}, ask {p2} to hold your hair and pull your head back while they kiss your neck.",
+        "{p1}, use your saliva to paint a heart on {p2}’s bare chest.",
+        "{p1}, ask {p2} to use their saliva to paint a heart on your bare chest.",
+        "{p1}, slide your hand between {p2}’s legs and describe the texture of their skin.",
+        "{p1}, ask {p2} to slide their hand between your legs and describe the texture of your skin.",
+        "{p1}, sit on {p2}’s chest and lean down to kiss them deeply.",
+        "{p1}, ask {p2} to sit on your chest and lean down to kiss you deeply.",
+        "{p1}, trace {p2}’s spine with your tongue, moving very slowly.",
+        "{p1}, ask {p2} to trace your spine with their tongue, moving very slowly.",
+        "{p1}, give {p2} an erotic massage on their thighs using only your mouth.",
+        "{p1}, ask {p2} to give you an erotic massage on your thighs using only their mouth.",
+        "{p1}, squeeze {p2}’s nipples with your teeth gently.",
+        "{p1}, ask {p2} to squeeze your nipples with their teeth gently.",
+        "{p1}, straddle {p2}’s face (if comfortable) or neck for 30 seconds.",
+        "{p1}, ask {p2} to straddle your face or neck for 30 seconds.",
+        "{p1}, lick {p2}’s ear while sliding your hand into their pants.",
+        "{p1}, ask {p2} to lick your ear while sliding their hand into your pants.",
+        "{p1}, use your fingernails to trace the rim of {p2}’s most intimate area.",
+        "{p1}, ask {p2} to use their fingernails to trace the rim of your most intimate area.",
+        "{p1}, pull {p2}’s underwear down halfway and kiss the exposed skin.",
+        "{p1}, ask {p2} to pull your underwear down halfway and kiss the exposed skin.",
+        "{p1}, give {p2} a 2-minute massage on their glutes with both hands.",
+        "{p1}, ask {p2} to give you a 2-minute massage on your glutes with both hands.",
+        "{p1}, blow hot air on {p2}’s most sensitive spot and then lick it.",
+        "{p1}, ask {p2} to blow hot air on your most sensitive spot and then lick it.",
+        "{p1}, lift {p2} and hold them against the wall while you kiss them.",
+        "{p1}, ask {p2} to lift you and hold you against the wall while they kiss you.",
+        "{p1}, use your tongue to trace the outline of {p2}’s underwear.",
+        "{p1}, ask {p2} to use their tongue to trace the outline of your underwear.",
+        "{p1}, pinch {p2}’s inner thigh and then immediately kiss the spot.",
+        "{p1}, ask {p2} to pinch your inner thigh and then immediately kiss the spot.",
+        "{p1}, sit on {p2}’s lap and move as if you were having sex for 1 minute.",
+        "{p1}, ask {p2} to sit on your lap and move as if you were having sex for 1 minute.",
+        "{p1}, use your lips to explore {p2}’s armpits and move down to the ribs.",
+        "{p1}, ask {p2} to use their lips to explore your armpits and move down to the ribs.",
+        "{p1}, reach into {p2}’s underwear and describe your favorite part of them.",
+        "{p1}, ask {p2} to reach into your underwear and describe their favorite part of you.",
+        "{p1}, give {p2} a 30-second wet kiss on their bare stomach and below.",
+        "{p1}, ask {p2} to give you a 30-second wet kiss on your bare stomach and below.",
+        "{p1}, bite {p2}’s neck and move your hand between their legs.",
+        "{p1}, ask {p2} to bite your neck and move their hand between your legs.",
+        "{p1}, use your tongue to circle {p2}’s nipples until they are hard.",
+        "{p1}, ask {p2} to use their tongue to circle your nipples until they are hard.",
+        "{p1}, remove {p2}’s shirt and use your bare chest to rub against them.",
+        "{p1}, ask {p2} to remove your shirt and use their bare chest to rub against you.",
+        "{p1}, lick {p2}’s inner wrist and move your tongue up to their shoulder.",
+        "{p1}, ask {p2} to lick your inner wrist and move their tongue up to your shoulder.",
+        "{p1}, slide your hand into the front of {p2}’s underwear and rub for 1 minute.",
+        "{p1}, ask {p2} to slide their hand into the front of your underwear and rub for 1 minute.",
+        "{p1}, use your lips to explore {p2}’s pelvic bone area.",
+        "{p1}, ask {p2} to use their lips to explore your pelvic bone area.",
+        "{p1}, give {p2} a passionate make-out session while your hands are in their pants.",
+        "{p1}, ask {p2} to give you a passionate make-out session while their hands are in your pants.",
+        "{p1}, use your tongue to trace a line from {p2}’s ear to their nipple.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your ear to your nipple.",
+        "{p1}, reach behind {p2} and massage their bare back and glutes.",
+        "{p1}, ask {p2} to reach behind you and massage your bare back and glutes.",
+        "{p1}, bite {p2}’s shoulder while they touch you intimately.",
+        "{p1}, ask {p2} to bite your shoulder while you touch them intimately.",
+        "{p1}, lick a trail of saliva from {p2}’s chest to their navel.",
+        "{p1}, ask {p2} to lick a trail of saliva from your chest to your navel.",
+        "{p1}, slide your fingers into {p2}’s mouth and let them suck on them.",
+        "{p1}, ask {p2} to slide their fingers into your mouth and let you suck on them.",
+        "{p1}, remove {p2}’s underwear and kiss their bare intimate area.",
+        "{p1}, ask {p2} to remove your underwear and kiss your bare intimate area.",
+        "{p1}, use your tongue to explore {p2}’s upper thigh near the crotch.",
+        "{p1}, ask {p2} to use their tongue to explore your upper thigh near the crotch.",
+        "{p1}, give {p2} a 30-second erotic massage on their bare stomach.",
+        "{p1}, ask {p2} to give you a 30-second erotic massage on your bare stomach.",
+        "{p1}, bite {p2}’s earlobe while your hand is between their thighs.",
+        "{p1}, ask {p2} to bite your earlobe while their hand is between your thighs.",
+        "{p1}, use your lips to find {p2}’s sweet spot and stay there for 30 seconds.",
+        "{p1}, ask {p2} to find your sweet spot and stay there for 30 seconds.",
+        "{p1}, slide your hand inside {p2}’s shirt and pinch their nipples.",
+        "{p1}, ask {p2} to slide their hand inside your shirt and pinch your nipples.",
+        "{p1}, sit on {p2}’s lap and whisper what you want them to do with their mouth.",
+        "{p1}, ask {p2} to sit on your lap and whisper what they want you to do with your mouth.",
+        "{p1}, use your tongue to explore {p2}’s inner elbow and move to the armpit.",
+        "{p1}, ask {p2} to use their tongue to explore your inner elbow and move to the armpit.",
+        "{p1}, reach into {p2}’s pants from the back and squeeze their bare glutes.",
+        "{p1}, ask {p2} to reach into your pants from the back and squeeze your bare glutes.",
+        "{p1}, give {p2} a passionate kiss while they have their hand in your underwear.",
+        "{p1}, ask {p2} to give you a passionate kiss while you have your hand in their underwear.",
+        "{p1}, use your lips to explore {p2}’s hip and pelvic area.",
+        "{p1}, ask {p2} to use their lips to explore your hip and pelvic area.",
+        "{p1}, bite {p2}’s lip while your hands are on their bare chest.",
+        "{p1}, ask {p2} to bite your lip while their hands are on your bare chest.",
+        "{p1}, lick a circle around {p2}’s nipple and then blow on it.",
+        "{p1}, ask {p2} to lick a circle around your nipple and then blow on it.",
+        "{p1}, slide your hand between {p2}’s legs and move it rhythmically for 30 seconds.",
+        "{p1}, ask {p2} to slide their hand between your legs and move it rhythmically.",
+        "{p1}, remove your underwear and sit on {p2}’s lap skin-to-skin.",
+        "{p1}, ask {p2} to remove their underwear and sit on your lap skin-to-skin.",
+        "{p1}, use your tongue to trace the waistband of {p2}’s underwear.",
+        "{p1}, ask {p2} to use their tongue to trace the waistband of your underwear.",
+        "{p1}, give {p2} a 1-minute full-body nuzzle using only your face and neck.",
+        "{p1}, ask {p2} to give you a 1-minute full-body nuzzle using only their face and neck.",
+        "{p1}, bite {p2}’s neck and then suck on the spot to leave a mark.",
+        "{p1}, ask {p2} to bite your neck and suck on the spot to leave a mark.",
+        "{p1}, use your fingernails to lightly scratch {p2}’s inner thighs and move up.",
+        "{p1}, ask {p2} to use their fingernails to scratch your inner thighs and move up.",
+        "{p1}, sit on {p2}’s lap and let them touch your most intimate area.",
+        "{p1}, ask {p2} to sit on your lap and let you touch their most intimate area.",
+        "{p1}, lick {p2}’s stomach and move your tongue down to their pelvic bone.",
+        "{p1}, ask {p2} to lick your stomach and move their tongue down to your pelvic bone.",
+        "{p1}, reach into {p2}’s underwear and use two fingers to explore.",
+        "{p1}, ask {p2} to reach into your underwear and use two fingers to explore.",
+        "{p1}, kiss {p2}’s neck while they are blindfolded and hands are tied.",
+        "{p1}, ask {p2} to kiss your neck while you are blindfolded and hands are tied.",
+        "{p1}, use your lips to explore {p2}’s bare back and glutes.",
+        "{p1}, ask {p2} to use their lips to explore your bare back and glutes.",
+        "{p1}, give {p2} a 30-second lap grind while they are bare-chested.",
+        "{p1}, ask {p2} to give you a 30-second lap grind while you are bare-chested.",
+        "{p1}, bite {p2}’s shoulder and move your hand into their underwear.",
+        "{p1}, ask {p2} to bite your shoulder and move their hand into your underwear.",
+        "{p1}, use your tongue to trace a line from {p2}’s chest to their crotch.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your chest to your crotch.",
+        "{p1}, remove {p2}’s shirt and kiss every inch of their bare skin.",
+        "{p1}, ask {p2} to remove your shirt and kiss every inch of your bare skin.",
+        "{p1}, lick {p2}’s nipple and then bite it very gently.",
+        "{p1}, ask {p2} to lick your nipple and bite it very gently.",
+        "{p1}, reach into {p2}’s pants and find their most sensitive spot.",
+        "{p1}, ask {p2} to reach into your pants and find your most sensitive spot.",
+        "{p1}, give {p2} a passionate kiss while grinding against them for 1 minute.",
+        "{p1}, ask {p2} to give you a passionate kiss while grinding against you.",
+        "{p1}, use your lips to explore {p2}’s inner thigh and move closer.",
+        "{p1}, ask {p2} to use their lips to explore your inner thigh and move closer.",
+        "{p1}, slide your hand between {p2}’s legs and rub them through their underwear.",
+        "{p1}, ask {p2} to slide their hand between your legs and rub you through your underwear.",
+        "{p1}, take off your shirt and let {p2} lick your chest.",
+        "{p1}, ask {p2} to take off their shirt and let you lick their chest.",
+        "{p1}, bite {p2}’s lip and then kiss them deeply for 30 seconds.",
+        "{p1}, ask {p2} to bite your lip and kiss you deeply for 30 seconds.",
+        "{p1}, use your tongue to circle {p2}’s navel and move down.",
+        "{p1}, ask {p2} to use their tongue to circle your navel and move down.",
+        "{p1}, reach into {p2}’s underwear and describe how hot they feel.",
+        "{p1}, ask {p2} to reach into your underwear and describe how hot you feel.",
+        "{p1}, give {p2} a 30-second erotic massage on their bare thighs.",
+        "{p1}, ask {p2} to give you a 30-second erotic massage on your bare thighs.",
+        "{p1}, bite {p2}’s ear and then whisper what you want to do to them.",
+        "{p1}, ask {p2} to bite your ear and whisper what they want to do to you.",
+        "{p1}, use your lips to explore {p2}’s bare glutes.",
+        "{p1}, ask {p2} to use their lips to explore your bare glutes.",
+        "{p1}, slide your hand inside {p2}’s shirt and play with their nipples.",
+        "{p1}, ask {p2} to slide their hand inside your shirt and play with your nipples.",
+        "{p1}, sit on {p2}’s lap and grind for one full minute without stopping.",
+        "{p1}, ask {p2} to sit on your lap and grind for one full minute.",
+        "{p1}, use your tongue to explore {p2}’s inner thigh near the underwear.",
+        "{p1}, ask {p2} to use their tongue to explore your inner thigh near the underwear.",
+        "{p1}, reach into {p2}’s pants and touch their bare skin intimately.",
+        "{p1}, ask {p2} to reach into your pants and touch your bare skin intimately.",
+        "{p1}, give {p2} a passionate kiss while they are in just their underwear.",
+        "{p1}, ask {p2} to give you a passionate kiss while you are in just your underwear.",
+        "{p1}, use your lips to find {p2}’s most sensitive spot and lick it.",
+        "{p1}, ask {p2} to find your most sensitive spot and lick it.",
+        "{p1}, bite {p2}’s inner thigh and move your hand between their legs.",
+        "{p1}, ask {p2} to bite your inner thigh and move their hand between your legs.",
+        "{p1}, lick {p2}’s nipple and move your tongue down to their navel.",
+        "{p1}, ask {p2} to lick your nipple and move their tongue down to your navel.",
+        "{p1}, remove {p2}’s underwear and kiss their bare skin for 1 minute.",
+        "{p1}, ask {p2} to remove your underwear and kiss your bare skin for 1 minute.",
+        "{p1}, use your tongue to trace a line from {p2}’s ear to their crotch.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your ear to your crotch.",
+        "{p1}, reach into {p2}’s underwear and use your thumb to rub them.",
+        "{p1}, ask {p2} to reach into your underwear and use their thumb to rub you.",
+        "{p1}, give {p2} a passionate make-out session while they are blindfolded.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you are blindfolded.",
+        "{p1}, use your lips to explore {p2}’s bare stomach and hips.",
+        "{p1}, ask {p2} to use their lips to explore your bare stomach and hips.",
+        "{p1}, bite {p2}’s neck and then whisper a naughty command.",
+        "{p1}, ask {p2} to bite your neck and whisper a naughty command.",
+        "{p1}, lick {p2}’s chest and move your tongue down to their pants.",
+        "{p1}, ask {p2} to lick your chest and move their tongue down to your pants.",
+        "{p1}, slide your hand between {p2}’s legs and keep it there for 1 minute.",
+        "{p1}, ask {p2} to slide their hand between your legs and keep it there.",
+        "{p1}, remove your shirt and let {p2} touch your bare skin everywhere.",
+        "{p1}, ask {p2} to remove their shirt and let you touch their bare skin.",
+        "{p1}, use your tongue to explore {p2}’s inner thigh and move closer.",
+        "{p1}, ask {p2} to use their tongue to explore your inner thigh and move closer.",
+        "{p1}, reach into {p2}’s pants and squeeze their bare glutes firmly.",
+        "{p1}, ask {p2} to reach into your pants and squeeze your bare glutes firmly.",
+        "{p1}, give {p2} a passionate kiss while they are touching you intimately.",
+        "{p1}, ask {p2} to give you a passionate kiss while you are touching them intimately.",
+        "{p1}, use your lips to explore {p2}’s bare back and move down.",
+        "{p1}, ask {p2} to use their lips to explore your bare back and move down.",
+        "{p1}, bite {p2}’s shoulder and then suck on it to leave a mark.",
+        "{p1}, ask {p2} to bite your shoulder and suck on it to leave a mark.",
+        "{p1}, lick {p2}’s nipple and move your tongue down to their inner thigh.",
+        "{p1}, ask {p2} to lick your nipple and move their tongue down to your inner thigh.",
+        "{p1}, remove {p2}’s remaining clothing and stand before them bare.",
+        "{p1}, ask {p2} to remove your remaining clothing and stand before you bare.",
+        "{p1}, use your tongue to trace a line from {p2}’s chest to their crotch.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your chest to your crotch.",
+        "{p1}, reach into {p2}’s underwear and use your fingers to explore intimately.",
+        "{p1}, ask {p2} to reach into your underwear and use their fingers to explore.",
+        "{p1}, give {p2} a passionate make-out session while grinding against them.",
+        "{p1}, ask {p2} to give you a passionate make-out session while grinding.",
+        "{p1}, use your lips to explore {p2}’s pelvic bone area and move lower.",
+        "{p1}, ask {p2} to use their lips to explore your pelvic bone area.",
+        "{p1}, bite {p2}’s ear and then whisper a naughty command into it.",
+        "{p1}, ask {p2} to bite your ear and whisper a naughty command.",
+        "{p1}, lick {p2}’s stomach and move your tongue down to their underwear.",
+        "{p1}, ask {p2} to lick your stomach and move their tongue down to your underwear.",
+        "{p1}, slide your hand between {p2}’s legs and rub them skin-to-skin.",
+        "{p1}, ask {p2} to slide their hand between your legs and rub you skin-to-skin.",
+        "{p1}, remove your underwear and sit on {p2}’s lap for 1 minute.",
+        "{p1}, ask {p2} to remove their underwear and sit on your lap for 1 minute.",
+        "{p1}, use your tongue to explore {p2}’s inner thigh near the crotch.",
+        "{p1}, ask {p2} to use their tongue to explore your inner thigh near the crotch.",
+        "{p1}, reach into {p2}’s pants and touch their most sensitive spot intimately.",
+        "{p1}, ask {p2} to reach into your pants and touch your most sensitive spot.",
+        "{p1}, give {p2} a passionate kiss while they have their hand in your pants.",
+        "{p1}, ask {p2} to give you a passionate kiss while you have your hand in their pants.",
+        "{p1}, use your lips to explore {p2}’s bare stomach and hips intimately.",
+        "{p1}, ask {p2} to use their lips to explore your bare stomach and hips.",
+        "{p1}, bite {p2}’s neck and then whisper exactly what you want to do to them.",
+        "{p1}, ask {p2} to bite your neck and whisper exactly what they want to do.",
+        "{p1}, lick {p2}’s chest and move your tongue down to their most sensitive spot.",
+        "{p1}, ask {p2} to lick your chest and move their tongue down to your sensitive spot.",
+        "{p1}, remove {p2}’s remaining clothing and stand before them for 1 minute.",
+        "{p1}, ask {p2} to remove your remaining clothing and stand before you.",
+        "{p1}, use your tongue to trace a line from {p2}’s ear to their inner thigh.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your ear to your inner thigh.",
+        "{p1}, reach into {p2}’s underwear and describe how hot they feel right now.",
+        "{p1}, ask {p2} to reach into your underwear and describe how hot you feel.",
+        "{p1}, give {p2} a passionate make-out session while they are touching you bare.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you are touching them.",
+        "{p1}, use your lips to find {p2}’s most sensitive spot and stay there.",
+        "{p1}, ask {p2} to find your most sensitive spot and stay there.",
+        "{p1}, bite {p2}’s inner thigh and then move your hand between their legs intimately.",
+        "{p1}, ask {p2} to bite your inner thigh and move their hand between your legs.",
+        "{p1}, lick {p2}’s nipple and move your tongue down to their crotch area.",
+        "{p1}, ask {p2} to lick your nipple and move their tongue down to your crotch.",
+        "{p1}, remove {p2}’s underwear and kiss their bare intimate area for 1 minute.",
+        "{p1}, ask {p2} to remove your underwear and kiss your bare intimate area.",
+        "{p1}, use your tongue to trace a line from {p2}’s chest to their crotch intimately.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your chest to your crotch.",
+        "{p1}, reach into {p2}’s pants and find their most sensitive spot and rub it.",
+        "{p1}, ask {p2} to reach into your pants and find your most sensitive spot.",
+        "{p1}, give {p2} a passionate kiss while grinding against them skin-to-skin.",
+        "{p1}, ask {p2} to give you a passionate kiss while grinding skin-to-skin.",
+        "{p1}, use your lips to explore {p2}’s pelvic bone area and move closer intimately.",
+        "{p1}, ask {p2} to use their lips to explore your pelvic bone area.",
+        "{p1}, bite {p2}’s ear and then whisper a naughty command into it passionately.",
+        "{p1}, ask {p2} to bite your ear and whisper a naughty command passionately.",
+        "{p1}, lick {p2}’s stomach and move your tongue down to their bare crotch.",
+        "{p1}, ask {p2} to lick your stomach and move their tongue down to your bare crotch.",
+        "{p1}, slide your hand between {p2}’s legs and rub them rhythmically skin-to-skin.",
+        "{p1}, ask {p2} to slide their hand between your legs and rub you rhythmically.",
+        "{p1}, remove your underwear and sit on {p2}’s lap skin-to-skin for 1 minute.",
+        "{p1}, ask {p2} to remove their underwear and sit on your lap skin-to-skin.",
+        "{p1}, use your tongue to explore {p2}’s inner thigh near the crotch passionately.",
+        "{p1}, ask {p2} to use their tongue to explore your inner thigh passionately.",
+        "{p1}, reach into {p2}’s pants and touch their most sensitive spot intimately for 1 minute.",
+        "{p1}, ask {p2} to reach into your pants and touch your most sensitive spot.",
+        "{p1}, give {p2} a passionate make-out session while they have their hand in your pants bare.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you touch them bare.",
+        "{p1}, use your lips to explore {p2}’s bare stomach and hips intimately and move lower.",
+        "{p1}, ask {p2} to use their lips to explore your bare stomach and move lower.",
+        "{p1}, bite {p2}’s neck and then whisper exactly what you want to do to them tonight.",
+        "{p1}, ask {p2} to bite your neck and whisper exactly what they want to do.",
+        "{p1}, lick {p2}’s chest and move your tongue down to their most sensitive spot bare.",
+        "{p1}, ask {p2} to lick your chest and move their tongue down to your sensitive spot.",
+        "{p1}, remove {p2}’s remaining clothing and stand before them bare for 1 minute.",
+        "{p1}, ask {p2} to remove your remaining clothing and stand before you bare.",
+        "{p1}, use your tongue to trace a line from {p2}’s ear to their inner thigh intimately.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your ear to your inner thigh.",
+        "{p1}, reach into {p2}’s underwear and describe how hot they feel right now intimately.",
+        "{p1}, ask {p2} to reach into your underwear and describe how hot you feel.",
+        "{p1}, give {p2} a passionate make-out session while they are touching you bare intimately.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you touch them.",
+        "{p1}, use your lips to find {p2}’s most sensitive spot and stay there for 1 minute.",
+        "{p1}, ask {p2} to find your most sensitive spot and stay there for 1 minute.",
+        "{p1}, bite {p2}’s inner thigh and then move your hand between their legs bare.",
+        "{p1}, ask {p2} to bite your inner thigh and move their hand between your legs bare.",
+        "{p1}, lick {p2}’s nipple and move your tongue down to their bare crotch area.",
+        "{p1}, ask {p2} to lick your nipple and move their tongue down to your crotch area.",
+        "{p1}, remove {p2}’s underwear and kiss their bare intimate area for 2 minutes.",
+        "{p1}, ask {p2} to remove your underwear and kiss your bare intimate area for 2 minutes.",
+        "{p1}, use your tongue to trace a line from {p2}’s chest to their crotch bare.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your chest to your crotch.",
+        "{p1}, reach into {p2}’s pants and find their most sensitive spot and rub it bare.",
+        "{p1}, ask {p2} to reach into your pants and find your most sensitive spot bare.",
+        "{p1}, give {p2} a passionate kiss while grinding against them skin-to-skin for 2 minutes.",
+        "{p1}, ask {p2} to give you a passionate kiss while grinding skin-to-skin.",
+        "{p1}, use your lips to explore {p2}’s pelvic bone area and move closer bare.",
+        "{p1}, ask {p2} to use their lips to explore your pelvic bone area bare.",
+        "{p1}, bite {p2}’s ear and then whisper a naughty command into it bare.",
+        "{p1}, ask {p2} to bite your ear and whisper a naughty command bare.",
+        "{p1}, lick {p2}’s stomach and move your tongue down to their bare crotch intimately.",
+        "{p1}, ask {p2} to lick your stomach and move their tongue down to your bare crotch.",
+        "{p1}, slide your hand between {p2}’s legs and rub them rhythmically bare skin.",
+        "{p1}, ask {p2} to slide their hand between your legs and rub you rhythmically bare.",
+        "{p1}, remove your underwear and sit on {p2}’s lap skin-to-skin for 2 minutes.",
+        "{p1}, ask {p2} to remove their underwear and sit on your lap skin-to-skin.",
+        "{p1}, use your tongue to explore {p2}’s inner thigh near the crotch bare.",
+        "{p1}, ask {p2} to use their tongue to explore your inner thigh bare.",
+        "{p1}, reach into {p2}’s pants and touch their most sensitive spot intimately bare.",
+        "{p1}, ask {p2} to reach into your pants and touch your most sensitive spot bare.",
+        "{p1}, give {p2} a passionate make-out session while they have their hand in your pants bare intimately.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you touch them bare.",
+        "{p1}, use your lips to explore {p2}’s bare stomach and hips intimately and move lower bare.",
+        "{p1}, ask {p2} to use their lips to explore your bare stomach and move lower bare.",
+        "{p1}, bite {p2}’s neck and then whisper exactly what you want to do to them tonight bare.",
+        "{p1}, ask {p2} to bite your neck and whisper exactly what they want to do bare.",
+        "{p1}, lick {p2}’s chest and move your tongue down to their most sensitive spot bare intimately.",
+        "{p1}, ask {p2} to lick your chest and move their tongue down to your sensitive spot.",
+        "{p1}, remove {p2}’s remaining clothing and stand before them bare for 2 minutes.",
+        "{p1}, ask {p2} to remove your remaining clothing and stand before you bare.",
+        "{p1}, use your tongue to trace a line from {p2}’s ear to their inner thigh intimately bare.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your ear to your inner thigh.",
+        "{p1}, reach into {p2}’s underwear and describe how hot they feel right now intimately bare.",
+        "{p1}, ask {p2} to reach into your underwear and describe how hot you feel bare.",
+        "{p1}, give {p2} a passionate make-out session while they are touching you bare intimately bare.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you touch them bare.",
+        "{p1}, use your lips to find {p2}’s most sensitive spot and stay there for 2 minutes.",
+        "{p1}, ask {p2} to find your most sensitive spot and stay there for 2 minutes.",
+        "{p1}, bite {p2}’s inner thigh and then move your hand between their legs bare intimately.",
+        "{p1}, ask {p2} to bite your inner thigh and move their hand between your legs bare.",
+        "{p1}, lick {p2}’s nipple and move your tongue down to their bare crotch area intimately.",
+        "{p1}, ask {p2} to lick your nipple and move their tongue down to your crotch area.",
+        "{p1}, remove {p2}’s underwear and kiss their bare intimate area for 3 minutes.",
+        "{p1}, ask {p2} to remove your underwear and kiss your bare intimate area for 3 minutes.",
+        "{p1}, use your tongue to trace a line from {p2}’s chest to their crotch bare intimately.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your chest to your crotch.",
+        "{p1}, reach into {p2}’s pants and find their most sensitive spot and rub it bare intimately.",
+        "{p1}, ask {p2} to reach into your pants and find your most sensitive spot bare.",
+        "{p1}, give {p2} a passionate kiss while grinding against them skin-to-skin for 3 minutes.",
+        "{p1}, ask {p2} to give you a passionate kiss while grinding skin-to-skin.",
+        "{p1}, use your lips to explore {p2}’s pelvic bone area and move closer bare intimately.",
+        "{p1}, ask {p2} to use their lips to explore your pelvic bone area bare.",
+        "{p1}, bite {p2}’s ear and then whisper a naughty command into it bare intimately.",
+        "{p1}, ask {p2} to bite your ear and whisper a naughty command bare intimately.",
+        "{p1}, lick {p2}’s stomach and move your tongue down to their bare crotch area bare.",
+        "{p1}, ask {p2} to lick your stomach and move their tongue down to your bare crotch.",
+        "{p1}, slide your hand between {p2}’s legs and rub them rhythmically bare skin intimately.",
+        "{p1}, ask {p2} to slide their hand between your legs and rub you rhythmically.",
+        "{p1}, remove your underwear and sit on {p2}’s lap skin-to-skin for 3 minutes.",
+        "{p1}, ask {p2} to remove their underwear and sit on your lap skin-to-skin.",
+        "{p1}, use your tongue to explore {p2}’s inner thigh near the crotch bare intimately.",
+        "{p1}, ask {p2} to use their tongue to explore your inner thigh bare intimately.",
+        "{p1}, reach into {p2}’s pants and touch their most sensitive spot intimately bare for 2 minutes.",
+        "{p1}, ask {p2} to reach into your pants and touch your most sensitive spot bare.",
+        "{p1}, give {p2} a passionate make-out session while they have their hand in your pants bare intimately bare.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you touch them bare.",
+        "{p1}, use your lips to explore {p2}’s bare stomach and hips intimately and move lower bare intimately.",
+        "{p1}, ask {p2} to use their lips to explore your bare stomach and move lower bare.",
+        "{p1}, bite {p2}’s neck and then whisper exactly what you want to do to them tonight bare intimately.",
+        "{p1}, ask {p2} to bite your neck and whisper exactly what they want to do bare.",
+        "{p1}, lick {p2}’s chest and move your tongue down to their most sensitive spot bare intimately bare.",
+        "{p1}, ask {p2} to lick your chest and move their tongue down to your sensitive spot.",
+        "{p1}, remove {p2}’s remaining clothing and stand before them bare for 3 minutes.",
+        "{p1}, ask {p2} to remove your remaining clothing and stand before you bare.",
+        "{p1}, use your tongue to trace a line from {p2}’s ear to their inner thigh intimately bare intimately.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your ear to your inner thigh.",
+        "{p1}, reach into {p2}’s underwear and describe how hot they feel right now intimately bare intimately.",
+        "{p1}, ask {p2} to reach into your underwear and describe how hot you feel bare.",
+        "{p1}, give {p2} a passionate make-out session while they are touching you bare intimately bare intimately.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you touch them bare.",
+        "{p1}, use your lips to find {p2}’s most sensitive spot and stay there for 3 minutes.",
+        "{p1}, ask {p2} to find your most sensitive spot and stay there for 3 minutes.",
+        "{p1}, bite {p2}’s inner thigh and then move your hand between their legs bare intimately bare.",
+        "{p1}, ask {p2} to bite your inner thigh and move their hand between your legs bare.",
+        "{p1}, lick {p2}’s nipple and move your tongue down to their bare crotch area intimately bare.",
+        "{p1}, ask {p2} to lick your nipple and move their tongue down to your crotch area.",
+        "{p1}, remove {p2}’s underwear and kiss their bare intimate area for 4 minutes.",
+        "{p1}, ask {p2} to remove your underwear and kiss your bare intimate area for 4 minutes.",
+        "{p1}, use your tongue to trace a line from {p2}’s chest to their crotch bare intimately bare.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your chest to your crotch.",
+        "{p1}, reach into {p2}’s pants and find their most sensitive spot and rub it bare intimately bare.",
+        "{p1}, ask {p2} to reach into your pants and find your most sensitive spot bare.",
+        "{p1}, give {p2} a passionate kiss while grinding against them skin-to-skin for 4 minutes.",
+        "{p1}, ask {p2} to give you a passionate kiss while grinding skin-to-skin.",
+        "{p1}, use your lips to explore {p2}’s pelvic bone area and move closer bare intimately bare.",
+        "{p1}, ask {p2} to use their lips to explore your pelvic bone area bare.",
+        "{p1}, bite {p2}’s ear and then whisper a naughty command into it bare intimately bare.",
+        "{p1}, ask {p2} to bite your ear and whisper a naughty command bare.",
+        "{p1}, lick {p2}’s stomach and move your tongue down to their bare crotch area bare intimately.",
+        "{p1}, ask {p2} to lick your stomach and move their tongue down to your bare crotch.",
+        "{p1}, slide your hand between {p2}’s legs and rub them rhythmically bare skin intimately bare.",
+        "{p1}, ask {p2} to slide their hand between your legs and rub you rhythmically.",
+        "{p1}, remove your underwear and sit on {p2}’s lap skin-to-skin for 4 minutes.",
+        "{p1}, ask {p2} to remove their underwear and sit on your lap skin-to-skin.",
+        "{p1}, use your tongue to explore {p2}’s inner thigh near the crotch bare intimately bare.",
+        "{p1}, ask {p2} to use their tongue to explore your inner thigh bare.",
+        "{p1}, reach into {p2}’s pants and touch their most sensitive spot intimately bare for 3 minutes.",
+        "{p1}, ask {p2} to reach into your pants and touch your most sensitive spot bare.",
+        "{p1}, give {p2} a passionate make-out session while they have their hand in your pants bare intimately bare.",
+        "{p1}, ask {p2} to give you a passionate make-out session while you touch them bare.",
+        "{p1}, use your lips to explore {p2}’s bare stomach and hips intimately and move lower bare intimately bare.",
+        "{p1}, ask {p2} to use their lips to explore your bare stomach and move lower bare.",
+        "{p1}, bite {p2}’s neck and then whisper exactly what you want to do to them tonight bare intimately bare.",
+        "{p1}, ask {p2} to bite your neck and whisper exactly what they want to do bare.",
+        "{p1}, lick {p2}’s chest and move your tongue down to their most sensitive spot bare intimately bare.",
+        "{p1}, ask {p2} to lick your chest and move their tongue down to your sensitive spot.",
+        "{p1}, remove {p2}’s remaining clothing and stand before them bare for 4 minutes.",
+        "{p1}, ask {p2} to remove your remaining clothing and stand before you bare.",
+        "{p1}, use your tongue to trace a line from {p2}’s ear to their inner thigh intimately bare intimately bare.",
+        "{p1}, ask {p2} to use their tongue to trace a line from your ear to your inner thigh.",
+        "{p1}, what is the one thing {p2} does that makes you instantly wet or hard?",
+        "{p1}, describe the first time you ever had a sexual thought about {p2}.",
+        "{p1}, would you let {p2} invite a third person into our bed?",
+        "{p1}, what is the most extreme kink you’ve ever wanted to try but were too shy to say?",
+        "{p1}, if you could watch {p2} be intimate with someone else, would you?",
+        "{p1}, what is the one part of your body you are most sensitive in during sex?",
+        "{p1}, how many times a day do you think about having sex with {p2}?",
+        "{p1}, would you let {p2} control your body with a remote-controlled toy?",
+        "{p1}, what is the dirtiest thing you’ve ever done in a public place?",
+        "{p1}, do you prefer {p2} to be rough or gentle when things get intense?",
+        "{p1}, what is your favorite way for {p2} to touch your most intimate area?",
+        "{p1}, would you let {p2} tie you up and do whatever they want to you?",
+        "{p1}, what is the longest you’ve ever gone without wearing any clothes around {p2}?",
+        "{p1}, do you have a specific fantasy involving a uniform or role-play?",
+        "{p1}, what is the most explicit video or photo you’ve ever sent to {p2}?",
+        "{p1}, would you let {p2} film us while we are being intimate?",
+        "{p1}, what is the one thing {p2} does that always gives you a soul-shaking orgasm?",
+        "{p1}, do you like it when {p2} watches you touch yourself?",
+        "{p1}, what is your favorite memory of a time we were intimate?",
+        "{p1}, would you let {p2} use a blindfold and earplugs on you for a full hour?",
+        "{p1}, what is the naughtiest thing you’ve ever wanted {p2} to do to you in a car?",
+        "{p1}, do you prefer morning sex or late-night sex with {p2}?",
+        "{p1}, what is the most sensitive spot on your body that {p2} hasn't found yet?",
+        "{p1}, would you let {p2} give you a golden shower (if that’s a kink)?",
+        "{p1}, what is the one word that describes {p2}’s performance in bed?",
+        "{p1}, have you ever faked an orgasm with {p2}?",
+        "{p1}, what is the most embarrassing thing that’s happened during sex with {p2}?",
+        "{p1}, would you let {p2} claim you in front of others (in a kinky way)?",
+        "{p1}, what is your favorite toy to use with {p2}?",
+        "{p1}, do you like it when {p2} uses their mouth or their hands more?",
+        "{p1}, what is the most daring place you want to have sex with {p2} tonight?",
+        "{p1}, would you let {p2} decide what you wear (or don't wear) for a full day?",
+        "{p1}, what is your favorite thing about {p2}’s naked body?",
+        "{p1}, do you prefer to be the one giving or receiving pleasure more?",
+        "{p1}, what is the most intimate thing {p2} has ever whispered to you?",
+        "{p1}, would you let {p2} use food during sex?",
+        "{p1}, what is the one thing you’ve always wanted to do to {p2} but haven't yet?",
+        "{p1}, how do you feel about temperature play (using ice or wax)?",
+        "{p1}, what is the most kinky thing you’ve ever searched for online?",
+        "{p1}, would you let {p2} spank you until you beg for mercy?",
+        "{p1}, what is your favorite after-care routine with {p2}?",
+        "{p1}, do you like it when {p2} is vocal during sex?",
+        "{p1}, what is the most daring dare from this game you actually loved?",
+        "{p1}, would you let {p2} tease you for an hour without letting you finish?",
+        "{p1}, what is your favorite position for a quickie?",
+        "{p1}, have you ever thought about {p2} while you were touching yourself alone?",
+        "{p1}, what is the most sensitive part of {p2}’s body to lick?",
+        "{p1}, would you let {p2} take boudoir photos of you?",
+        "{p1}, what is the one thing you want to change about our sex life (to make it kinkier)?",
+        "{p1}, if this were the last time we ever had sex, what would you want it to be like?"
+      ]
+    };
 
-const baseIcons = {1:"🥳",2:"🤓",3:"🫦",4:"👙"};
+    const baseIcons = {1:"🥳",2:"🤓",3:"🫦",4:"👙"};
 
-function createPlayerInputs(){
-  const num = parseInt(document.getElementById('numPlayers').value, 10);
-  if(!num || num < 1){
-    alert('Enter a valid number of players (1-10).');
-    return;
-  }
-  const container = document.getElementById('players');
-  container.innerHTML = '';
-  for(let i=0;i<num;i++){
-    const row = document.createElement('div');
-    row.className = 'playerRow';
-    row.innerHTML = `
-      <input id="name${i}" type="text" placeholder="Player ${i+1} Name" />
-      <select id="gender${i}">
-        <option value="">Gender</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select>
-    `;
-    container.appendChild(row);
-  }
-  document.getElementById('landingScreen').classList.add('hidden');
-  document.getElementById('playerScreen').classList.remove('hidden');
-}
-
-function savePlayers(){
-  const num = parseInt(document.getElementById('numPlayers').value, 10);
-  const players = [];
-  for(let i=0;i<num;i++){
-    const name = (document.getElementById(`name${i}`).value || '').trim();
-    const gender = (document.getElementById(`gender${i}`).value || '').trim();
-    if(!name || !gender){
-      alert('All fields are mandatory. Fill name and gender for each player.');
-      return;
+    function createPlayerInputs(){
+      const num = parseInt(document.getElementById('numPlayers').value, 10);
+      if(!num || num < 1){
+        alert('Enter a valid number of players (1-10).');
+        return;
+      }
+      const container = document.getElementById('players');
+      container.innerHTML = '';
+      for(let i=0;i<num;i++){
+        const row = document.createElement('div');
+        row.className = 'playerRow';
+        row.innerHTML = `
+          <input id="name${i}" type="text" placeholder="Player ${i+1} Name" />
+          <select id="gender${i}">
+            <option value="">Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        `;
+        container.appendChild(row);
+      }
+      document.getElementById('landingScreen').classList.add('hidden');
+      document.getElementById('playerScreen').classList.remove('hidden');
     }
-    players.push({name, gender});
-  }
-  localStorage.setItem('players', JSON.stringify(players));
-  document.getElementById('playerScreen').classList.add('hidden');
-  document.getElementById('startScreen').classList.remove('hidden');
-}
 
-function startGame(){
-  currentPlayerIndex = 0;
-  currentBase = 1;
-  maleIndex = 0;
-  femaleIndex = 0;
-  updateBaseIndicator();
-  updateBaseSwitch();
-  document.getElementById('startScreen').classList.add('hidden');
-  document.getElementById('gameScreen').classList.remove('hidden');
-  nextTask();
-}
-
-/* heart click: strong pulse then next task */
-function onHeartClick(){
-  const btn = document.getElementById('nextTaskBtn');
-  btn.classList.add('pulse-strong');
-  setTimeout(()=> btn.classList.remove('pulse-strong'), 520);
-  nextTask();
-}
-
-function nextTask(){
-  const players = JSON.parse(localStorage.getItem('players') || '[]');
-  if(!players || players.length === 0){
-    document.getElementById('taskDisplay').innerText = 'No players saved!';
-    return;
-  }
-
-  const tasks = baseTasks[currentBase] || [];
-  const task = tasks[Math.floor(Math.random() * tasks.length)];
-  const currentPlayer = players[currentPlayerIndex];
-
-if (task.includes('{p1}') || task.includes('{p2}')) {
-  let partner = null;
-
-  if (currentPlayer.gender === 'male') {
-    const females = players.filter(p => p.gender === 'female');
-    if (females.length > 0) {
-      partner = females[femaleIndex % females.length];
-      femaleIndex++;
+    function savePlayers(){
+      const num = parseInt(document.getElementById('numPlayers').value, 10);
+      const players = [];
+      for(let i=0;i<num;i++){
+        const name = (document.getElementById(`name${i}`).value || '').trim();
+        const gender = (document.getElementById(`gender${i}`).value || '').trim();
+        if(!name || !gender){
+          alert('All fields are mandatory. Fill name and gender for each player.');
+          return;
+        }
+        players.push({name, gender});
+      }
+      localStorage.setItem('players', JSON.stringify(players));
+      document.getElementById('playerScreen').classList.add('hidden');
+      document.getElementById('startScreen').classList.remove('hidden');
     }
-  } else if (currentPlayer.gender === 'female') {
-    const males = players.filter(p => p.gender === 'male');
-    if (males.length > 0) {
-      partner = males[maleIndex % males.length];
-      maleIndex++;
+
+    function startGame(){
+      currentPlayerIndex = 0;
+      currentBase = 1;
+      maleIndex = 0;
+      femaleIndex = 0;
+      updateBaseIndicator();
+      updateBaseSwitch();
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('gameScreen').classList.remove('hidden');
+      nextTask();
     }
-  }
 
-  if (partner) {
-    const taskText = task
-      .replaceAll('{p1}', currentPlayer.name)
-      .replaceAll('{p2}', partner.name);
-    document.getElementById('taskDisplay').innerText = taskText;
-  } else {
-    document.getElementById('taskDisplay').innerText =
-      `No opposite gender partner available for ${currentPlayer.name}'s task.`;
-  }
-} else {
-  document.getElementById('taskDisplay').innerText =
-    `${currentPlayer.name}: ${task}`;
-}
-  currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-}
+    /* heart click: strong pulse then next task */
+    function onHeartClick(){
+      const btn = document.getElementById('nextTaskBtn');
+      btn.classList.add('pulse-strong');
+      setTimeout(()=> btn.classList.remove('pulse-strong'), 520);
+      nextTask();
+    }
 
-function switchBase(base){
-  currentBase = base;
-  updateBaseIndicator();
-  updateBaseSwitch();
-  nextTask();
-}
+    function nextTask(){
+      const players = JSON.parse(localStorage.getItem('players') || '[]');
+      if(!players || players.length === 0){
+        document.getElementById('taskDisplay').innerText = 'No players saved!';
+        return;
+      }
 
-function updateBaseIndicator(){
-  document.getElementById('baseIndicator').innerHTML=
-    `<div class="baseBtnTop"><span class="emoji">${baseIcons[currentBase]}</span><span>Base ${currentBase}</span></div>`;
-}
+      const tasks = baseTasks[currentBase] || [];
+      const task = tasks[Math.floor(Math.random() * tasks.length)];
+      const currentPlayer = players[currentPlayerIndex];
 
-function updateBaseSwitch(){
-  const switchDiv = document.getElementById('baseSwitch');
-  switchDiv.innerHTML = '';
-  [1,2,3,4].forEach(b=>{
-    if(b === currentBase) return;
-    const btn = document.createElement('button');
-    btn.innerHTML = `<span class="emoji">${baseIcons[b]}</span> Base ${b}`;
-    btn.onclick = ()=> switchBase(b);
-    switchDiv.appendChild(btn);
-  });
-}
+    if (task.includes('{p1}') || task.includes('{p2}')) {
+      let partner = null;
 
-/* initialize */
-(function init(){
-  const players = JSON.parse(localStorage.getItem('players') || '[]');
-  if(players && players.length > 0) document.getElementById('numPlayers').value = players.length;
-  updateBaseIndicator();
-  updateBaseSwitch();
-})();
+      if (currentPlayer.gender === 'male') {
+        const females = players.filter(p => p.gender === 'female');
+        if (females.length > 0) {
+          partner = females[femaleIndex % females.length];
+          femaleIndex++;
+        }
+      } else if (currentPlayer.gender === 'female') {
+        const males = players.filter(p => p.gender === 'male');
+        if (males.length > 0) {
+          partner = males[maleIndex % males.length];
+          maleIndex++;
+        }
+      }
+
+      if (partner) {
+        const taskText = task
+          .replaceAll('{p1}', currentPlayer.name)
+          .replaceAll('{p2}', partner.name);
+        document.getElementById('taskDisplay').innerText = taskText;
+      } else {
+        document.getElementById('taskDisplay').innerText =
+          `No opposite gender partner available for ${currentPlayer.name}'s task.`;
+      }
+    } else {
+      document.getElementById('taskDisplay').innerText =
+        `${currentPlayer.name}: ${task}`;
+    }
+      currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    }
+
+    function switchBase(base){
+      currentBase = base;
+      updateBaseIndicator();
+      updateBaseSwitch();
+      nextTask();
+    }
+
+    function updateBaseIndicator(){
+      document.getElementById('baseIndicator').innerHTML=
+        `<div class="baseBtnTop"><span class="emoji">${baseIcons[currentBase]}</span><span>Base ${currentBase}</span></div>`;
+    }
+
+    function updateBaseSwitch(){
+      const switchDiv = document.getElementById('baseSwitch');
+      switchDiv.innerHTML = '';
+      [1,2,3,4].forEach(b=>{
+        if(b === currentBase) return;
+        const btn = document.createElement('button');
+        btn.innerHTML = `<span class="emoji">${baseIcons[b]}</span> Base ${b}`;
+        btn.onclick = ()=> switchBase(b);
+        switchDiv.appendChild(btn);
+      });
+    }
+
+    /* initialize */
+    (function init(){
+      const players = JSON.parse(localStorage.getItem('players') || '[]');
+      if(players && players.length > 0) document.getElementById('numPlayers').value = players.length;
+      updateBaseIndicator();
+      updateBaseSwitch();
+    })();
 </script>
 </body>
 </html>
