@@ -75,7 +75,7 @@
         #taskDisplay {
           position:relative; top:auto; left:auto; transform:none;
           flex-grow:1; display:flex; align-items:center; justify-content:center;
-          margin:10px 0; overflow-y:auto; max-height:40vh;
+          margin:10px 0; overflow-y:hidden; max-height:40vh;
           font-size:2rem;text-align:center;font-weight:800;width:86%;
           font-family: 'Times New Roman', Times, serif;text-shadow:2px 2px 6px rgba(0,0,0,0.35);
           padding:6px 10px;box-sizing:border-box;
@@ -2632,6 +2632,21 @@
           <div class="punishment-badge">PUNISHMENT for ${player.name}</div>
           <div>${p}</div>
         </div>`;
+      fitText();
+    }
+
+    function fitText(){
+      const display = document.getElementById('taskDisplay');
+      display.style.overflowY = 'hidden';
+      let fontSize = 2.0;
+      display.style.fontSize = fontSize + 'rem';
+      while(display.scrollHeight > display.clientHeight && fontSize > 0.8){
+        fontSize -= 0.1;
+        display.style.fontSize = fontSize + 'rem';
+      }
+      if(display.scrollHeight > display.clientHeight){
+        display.style.overflowY = 'auto';
+      }
     }
 
     function nextTask(){
@@ -2676,6 +2691,7 @@
         `${currentPlayer.name}: ${task}`;
     }
       currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+      fitText();
     }
 
     function switchBase(base){
