@@ -148,8 +148,8 @@
           cursor:pointer; z-index:10; transition:all 0.2s ease;
           font-weight:600; letter-spacing:0.5px;
         }
-        #punishBtn:hover { background:rgba(220, 20, 60, 0.8); border-color:#fff; transform:translate(-50%, -50%) scale(1.05); }
-        #punishBtn:active { transform:translate(-50%, -50%) scale(0.95); }
+        #punishBtn:hover { background:rgba(220, 20, 60, 0.8); border-color:#fff; transform:scale(1.05); }
+        #punishBtn:active { transform:scale(0.95); }
 
         /* bottom base switch */
         #baseSwitch {
@@ -249,6 +249,24 @@
     let currentPlayerIndex = 0;
     let currentBase = 1;
     let maleIndex = 0, femaleIndex = 0;
+
+    // Wake Lock API to keep screen awake
+    let wakeLock = null;
+    async function requestWakeLock() {
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLock = await navigator.wakeLock.request('screen');
+        } catch (err) {
+          console.error(`${err.name}, ${err.message}`);
+        }
+      }
+    }
+
+    document.addEventListener('visibilitychange', async () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+      }
+    });
 
     const baseTasks = {
       1: [
@@ -2590,6 +2608,7 @@
       document.getElementById('startScreen').classList.add('hidden');
       document.getElementById('gameScreen').classList.remove('hidden');
       nextTask();
+      requestWakeLock();
     }
 
     /* heart click: strong pulse then next task */
