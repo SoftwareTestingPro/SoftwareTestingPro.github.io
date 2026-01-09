@@ -69,7 +69,7 @@
 
         /* Task display */
         #taskDisplay {
-          position:absolute;top:28%;left:50%;transform:translateX(-50%);
+          position:absolute;top:20%;left:50%;transform:translateX(-50%);
           font-size:2rem;text-align:center;font-weight:800;width:86%;
           font-family: 'Times New Roman', Times, serif;text-shadow:2px 2px 6px rgba(0,0,0,0.35);
           padding:6px 10px;box-sizing:border-box;
@@ -80,7 +80,7 @@
           position:absolute;
           left:50%;
           transform:translateX(-50%);
-          top:60%;
+          top:70%;
           width:110px;
           height:110px;
           display:flex;
@@ -135,6 +135,17 @@
           100% { transform:scale(1); }
         }
 
+        /* Punishment button */
+        #punishBtn {
+          position:absolute; top:60%; left:50%; transform:translate(-50%, -50%);
+          background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.5);
+          color:#fff; padding:8px 16px; border-radius:20px; font-size:0.9rem;
+          cursor:pointer; z-index:10; transition:all 0.2s ease;
+          font-weight:600; letter-spacing:0.5px;
+        }
+        #punishBtn:hover { background:rgba(220, 20, 60, 0.8); border-color:#fff; transform:translate(-50%, -50%) scale(1.05); }
+        #punishBtn:active { transform:translate(-50%, -50%) scale(0.95); }
+
         /* bottom base switch */
         #baseSwitch {
           position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
@@ -157,7 +168,7 @@
 
         /* responsive */
         @media (max-width:360px){
-          #taskDisplay{ font-size:1.6rem; top:24%; }
+          #taskDisplay{ font-size:1.6rem; top:20%; }
           .heart-wrap{ width:96px; height:96px; top:28%; }
           .heart-circle{ width:80px; height:80px; }
           .heart-emoji{ font-size:28px; }
@@ -198,6 +209,7 @@
 <div class="container hidden" id="gameScreen">
     <div id="baseIndicator"></div>
     <div id="taskDisplay"></div>
+    <button id="punishBtn" onclick="showPunishment()">😈 I can't better punish me</button>
 
     <!-- circular heart button -->
     <div class="heart-wrap">
@@ -2117,6 +2129,29 @@
 
     const baseIcons = {1:"🥳",2:"🤓",3:"🫦",4:"👙"};
 
+    const punishments = [
+      "Do 10 pushups immediately.",
+      "Sing the chorus of a song chosen by the group.",
+      "Let the group look through your photo gallery for 10 seconds.",
+      "Post a status on social media chosen by the group.",
+      "Do a plank for 10 seconds.",
+      "Eat a spoonful of a condiment chosen by the group.",
+      "Let the person to your right send a text to anyone in your contacts.",
+      "Do a silly dance for 1 minute without music.",
+      "Speak in a fake accent for the next 3 rounds.",
+      "Let someone draw a mustache on your face.",
+      "Hold an ice cube in your hand until it melts.",
+      "Let the group mix a 'mystery drink' for you to take a sip of.",
+      "Do 5 squats.",
+      "Let the person to your left style your hair however they want.",
+      "Bark like a dog every time someone says your name for the next 5 minutes.",
+      "Let the group choose a contact to call and hang up on.",
+      "Walk like a crab across the room.",
+      "Let someone tickle you for 30 seconds.",
+      "Spin around 10 times and try to walk straight.",
+      "Let the group ask you 3 personal questions you must answer truthfully."
+    ];
+
     function createPlayerInputs(){
       const num = parseInt(document.getElementById('numPlayers').value, 10);
       if(!num || num < 1){
@@ -2177,6 +2212,17 @@
       btn.classList.add('pulse-strong');
       setTimeout(()=> btn.classList.remove('pulse-strong'), 520);
       nextTask();
+    }
+
+    function showPunishment(){
+      const players = JSON.parse(localStorage.getItem('players') || '[]');
+      if(!players.length) return;
+      // Identify the player who currently has the task (previous index)
+      const playerIndex = (currentPlayerIndex - 1 + players.length) % players.length;
+      const player = players[playerIndex];
+      const p = punishments[Math.floor(Math.random() * punishments.length)];
+      const display = document.getElementById('taskDisplay');
+      display.innerHTML = `<span style="color:#ff6b6b;text-shadow:1px 1px 0 #000;font-size:1.2rem;">PUNISHMENT for ${player.name}:</span><br><br>${p}`;
     }
 
     function nextTask(){
