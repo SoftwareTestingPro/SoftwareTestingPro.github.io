@@ -7,11 +7,35 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div id="loadingOverlay" class="hidden">
+    <div class="spinner"></div>
+</div>
+
 <div class="container">
     <h1>Game Hub</h1>
     <div class="game-list">
-        <a href="strip-poker.html" class="game-link">Strip Poker</a>
+        <div onclick="navigateToGame('strip-poker.html')" class="game-link">Strip Poker</div>
     </div>
 </div>
+
+<script>
+    function navigateToGame(url) {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.classList.remove('hidden');
+
+        // Small delay to allow the spinner to render before navigation starts
+        setTimeout(() => {
+            window.location.href = url;
+        }, 100);
+    }
+
+    // Hide overlay when page is shown (for back button navigation)
+    window.addEventListener('pageshow', function(event) {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+        }
+    });
+</script>
 </body>
 </html>
