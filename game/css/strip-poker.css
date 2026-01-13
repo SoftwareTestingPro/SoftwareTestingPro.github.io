@@ -1,0 +1,240 @@
+/* Game screen specific layout */
+#gameScreen {
+    justify-content: space-between;
+    padding-bottom: 20px;
+    perspective: 1000px; /* Enable 3D space for card flip */
+}
+
+/* Top base indicator */
+#baseIndicator {
+  position:relative; top:auto; left:auto; transform:none;
+  margin-bottom:10px; flex-shrink:0;
+  width:100%;max-width:420px;display:flex;justify-content:center;
+}
+.baseBtnTop{
+  display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+  background:transparent;border:2px solid var(--accent);color:#fff;font-weight:700;
+}
+.baseBtnTop .emoji{ font-size:1.8rem; display:inline-block; animation:bounce 2.2s infinite; }
+
+/* Card Container */
+.card-container {
+    width: 90%;
+    max-width: 380px;
+    height: 40vh;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    margin: 10px auto;
+}
+
+.card-container.flipped {
+    transform: rotateY(180deg);
+}
+
+/* Card Faces */
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    transition: background-color 0.5s ease;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background: rgba(255, 71, 87, 0.2); /* Red tint for punishment */
+    border-color: rgba(255, 71, 87, 0.4);
+}
+
+/* Base-specific background colors */
+.base-1-bg { background-color: rgba(79, 172, 254, 0.2); }
+.base-2-bg { background-color: rgba(0, 242, 254, 0.25); }
+.base-3-bg { background-color: rgba(255, 107, 107, 0.25); }
+.base-4-bg { background-color: rgba(131, 58, 180, 0.25); }
+
+
+/* Task display */
+#taskDisplay {
+  font-size:1.8rem;
+  text-align: justify; /* Justified text */
+  font-weight:800;
+  font-family: 'Times New Roman', Times, serif;
+  text-shadow:2px 2px 6px rgba(0,0,0,0.35);
+  width: 100%;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+/* Punishment Display - Centered text */
+#punishmentDisplay {
+  font-size:1.8rem;
+  text-align: center; /* Center align punishment text */
+  font-weight:800;
+  font-family: 'Times New Roman', Times, serif;
+  text-shadow:2px 2px 6px rgba(0,0,0,0.35);
+  width: 100%;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+/* Circular heart button with interactive beating animation */
+.heart-wrap {
+  position:relative; top:auto; left:auto; transform:none;
+  margin:10px 0 20px 0; flex-shrink:0;
+  width:110px;
+  height:110px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
+}
+
+.heart-circle {
+  width:96px;
+  height:96px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff9aa2,#ff6b6b);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 12px 30px rgba(0,0,0,0.28), 0 0 18px rgba(255,107,107,0.08) inset;
+  transition:transform .18s ease, box-shadow .18s ease;
+  cursor:pointer;
+  border:0;
+  outline:none;
+  animation:heartBeat 1000ms infinite ease-in-out;
+}
+
+.heart-circle:active { transform:scale(0.96); }
+
+.heart-emoji {
+  font-size:34px;
+  line-height:1;
+  transform:translateY(0);
+  text-shadow:0 4px 10px rgba(0,0,0,0.25);
+  pointer-events:none;
+}
+
+/* stronger pulse when clicked */
+.heart-circle.pulse-strong {
+  animation:heartPulseStrong 520ms ease-in-out;
+}
+
+@keyframes heartBeat {
+  0%   { transform:scale(1); }
+  25%  { transform:scale(1.06); }
+  50%  { transform:scale(1.12); }
+  75%  { transform:scale(1.06); }
+  100% { transform:scale(1); }
+}
+
+@keyframes heartPulseStrong {
+  0% { transform:scale(1); }
+  30% { transform:scale(1.28); }
+  60% { transform:scale(0.96); }
+  100% { transform:scale(1); }
+}
+
+/* Punishment button */
+#punishBtn {
+  width: 80%;
+  max-width: 300px;
+  margin: 15px auto; /* Center align using auto margins */
+  padding: 12px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  backdrop-filter: blur(5px);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+#punishBtn:hover {
+  background: rgba(0, 0, 0, 0.3);
+  transform: scale(1.03);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+#punishBtn:active {
+  transform: scale(0.98);
+}
+
+/* bottom base switch */
+#baseSwitch {
+  position:relative; bottom:auto; left:auto; transform:none;
+  margin-top:auto; flex-shrink:0;
+  display:flex;gap:10px;width:100%;max-width:420px;padding:0 8px;box-sizing:border-box;
+  justify-content: center;
+}
+#baseSwitch button {
+  flex: 1; /* Allow buttons to grow and fill the space equally */
+  padding:12px;
+  border-radius:12px;
+  font-size:0.95rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background: rgba(255, 255, 255, 0.15); /* Modern glassmorphism feel */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color:#fff;
+  font-weight:600;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+}
+#baseSwitch button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+#baseSwitch button:active {
+    transform: translateY(0);
+}
+#baseSwitch button .emoji { display:inline-block; font-size:1.4rem; animation:bounce 2.2s infinite; }
+
+/* hover effects */
+#baseSwitch button:hover, .baseBtnTop:hover { transform:scale(1.02); box-shadow:0 10px 22px rgba(255,107,107,0.18); }
+#baseSwitch button:active, .baseBtnTop:active { transform:scale(0.98); }
+
+/* small animations */
+@keyframes bounce { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
+
+/* Punishment Badge Style */
+.punishment-badge {
+  background: #ff4757;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  border: 2px solid rgba(255,255,255,0.9);
+  margin-bottom: 16px;
+  display: inline-block;
+  text-shadow: none;
+  letter-spacing: 0.5px;
+}
+
+/* responsive */
+@media (max-width:360px){
+  #taskDisplay, #punishmentDisplay{ font-size:1.6rem; }
+  .heart-wrap{ width:96px; height:96px; }
+  .heart-circle{ width:80px; height:80px; }
+  .heart-emoji{ font-size:28px; }
+  #baseSwitch button .emoji{ font-size:1.05rem; }
+  .baseBtnTop .emoji{ font-size:1.05rem; }
+}
