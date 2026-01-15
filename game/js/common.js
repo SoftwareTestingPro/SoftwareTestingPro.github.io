@@ -176,10 +176,12 @@ async function loadTasks() {
             fetch('tasks/Punishments.json').then(r => r.json())
         ]);
 
-        baseTasks[1] = t1;
-        baseTasks[2] = t2;
-        baseTasks[3] = t3;
-        baseTasks[4] = t4;
+        // Handle both old (array) and new (object) formats for backward compatibility during migration
+        baseTasks[1] = Array.isArray(t1) ? { common: t1, male: [], female: [] } : t1;
+        baseTasks[2] = Array.isArray(t2) ? { common: t2, male: [], female: [] } : t2;
+        baseTasks[3] = Array.isArray(t3) ? { common: t3, male: [], female: [] } : t3;
+        baseTasks[4] = Array.isArray(t4) ? { common: t4, male: [], female: [] } : t4;
+
         punishments = p;
 
         tasksLoaded = true;
@@ -286,11 +288,23 @@ function generateTaskString() {
     const players = JSON.parse(sessionStorage.getItem('players') || '[]');
     if(!players || players.length === 0) return "No players saved!";
 
-    const tasks = baseTasks[currentBase] || [];
-    if(tasks.length === 0) return `No tasks for Base ${currentBase}`;
+    const baseData = baseTasks[currentBase];
+    if(!baseData) return `No tasks for Base ${currentBase}`;
 
-    const task = tasks[Math.floor(Math.random() * tasks.length)];
     const currentPlayer = players[currentPlayerIndex];
+
+    // Construct the pool of tasks based on gender
+    let taskPool = [...(baseData.common || [])]; // Start with common tasks
+
+    if (currentPlayer.gender === 'male' && baseData.male) {
+        taskPool = taskPool.concat(baseData.male);
+    } else if (currentPlayer.gender === 'female' && baseData.female) {
+        taskPool = taskPool.concat(baseData.female);
+    }
+
+    if(taskPool.length === 0) return `No tasks available for ${currentPlayer.gender} in Base ${currentBase}`;
+
+    const task = taskPool[Math.floor(Math.random() * taskPool.length)];
 
     let taskText = "";
 
@@ -349,8 +363,9 @@ function checkForTimer(taskText) {
     timerContainer.innerHTML = '';
     if (timerInterval) clearInterval(timerInterval);
 
-    // Regex to find patterns like "30 Seconds", "1 Minute", "2 Minutes"
-    const timeRegex = /(\d+)\s*(Second|Minute)s?/i;
+    // Regex to find patterns like "30 Seconds", "1 Minute", "2 Minutes", "30-seconds", "1-minute"
+    // Updated to handle optional hyphen
+    const timeRegex = /(\d+)\s*-?\s*(Second|Minute)s?/i;
     const match = taskText.match(timeRegex);
 
     if (match) {
