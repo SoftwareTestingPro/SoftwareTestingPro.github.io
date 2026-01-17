@@ -56,14 +56,35 @@
       width: 300px;
     }
 
+    .input-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
     input[type="text"] {
-      width: 100%;
+      flex: 1;
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
       text-align: center;
       box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
     }
 
     #validation-message {
@@ -83,7 +104,10 @@
 
   <div class="input-container">
     <label for="user-input">Enter time in HH:MM:SS format (12-hour)</label>
-    <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" />
+    <div class="input-wrapper">
+      <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" />
+      <button id="submit-btn">Submit</button>
+    </div>
     <div id="validation-message"></div>
   </div>
 
@@ -93,16 +117,6 @@
     let currentSeconds = Math.floor(Math.random() * 60);
 
     function updateClock() {
-      currentSeconds++;
-      if (currentSeconds >= 60) {
-        currentSeconds = 0;
-        currentMinutes++;
-        if (currentMinutes >= 60) {
-          currentMinutes = 0;
-          currentHours = (currentHours % 12) + 1;
-        }
-      }
-
       const secDeg = (currentSeconds / 60) * 360;
       const minDeg = (currentMinutes / 60) * 360 + (currentSeconds / 60) * 6;
       const hourDeg = ((currentHours % 12) / 12) * 360 + (currentMinutes / 60) * 30;
@@ -112,43 +126,74 @@
       document.getElementById('hour').style.transform = `rotate(${hourDeg}deg)`;
     }
 
-    function formatTime(value) {
-      if (/^\d{2}:\d{2}:\d{2}$/.test(value)) return value;
-
-      let digits = value.replace(/[^0-9]/g, '').padStart(6, '0').slice(0, 6);
-      return `${digits.slice(0,2)}:${digits.slice(2,4)}:${digits.slice(4,6)}`;
-    }
-
     function validateInput() {
       const input = document.getElementById('user-input');
       const message = document.getElementById('validation-message');
-
-      // Only format if input isn't already in HH:MM:SS
-      if (!/^\d{2}:\d{2}:\d{2}$/.test(input.value)) {
-        input.value = formatTime(input.value);
-      }
 
       const [hhStr, mmStr, ssStr] = input.value.split(':');
       const hh = parseInt(hhStr, 10);
       const mm = parseInt(mmStr, 10);
       const ss = parseInt(ssStr, 10);
 
+      // Basic format validation
       if (
-        hhStr.length === 2 && mmStr.length === 2 && ssStr.length === 2 &&
-        hh >= 1 && hh <= 12 &&
+        !/^\d{2}:\d{2}:\d{2}$/.test(input.value) ||
+        !(hh >= 1 && hh <= 12 &&
         mm >= 0 && mm <= 59 &&
-        ss >= 0 && ss <= 59
+        ss >= 0 && ss <= 59)
       ) {
-        message.textContent = "✅ Valid time format (12-hour)";
+        message.textContent = "❌ Invalid format! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
+        message.style.color = "red";
+        return;
+      }
+
+      // Compare with clock time
+      const expectedHH = String(currentHours).padStart(2, '0');
+      const expectedMM = String(currentMinutes).padStart(2, '0');
+      const expectedSS = String(currentSeconds).padStart(2, '0');
+      const expectedTime = `${expectedHH}:${expectedMM}:${expectedSS}`;
+
+      if (input.value === expectedTime) {
+        message.textContent = "✅ Correct! You entered the right time.";
         message.style.color = "green";
       } else {
-        message.textContent = "❌ Invalid! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
+        message.textContent = `❌ Incorrect! The actual time is ${expectedTime}`;
         message.style.color = "red";
       }
     }
 
-    document.getElementById('user-input').addEventListener('blur', validateInput);
-    setInterval(updateClock, 1000);
+    const inputField = document.getElementById('user-input');
+
+    // Auto-format input with colons
+    inputField.addEventListener('input', function(e) {
+      // Get current cursor position to handle editing in middle
+      // (Simple implementation: just strip and reformat)
+      let value = e.target.value.replace(/[^0-9]/g, '');
+
+      if (value.length > 2) {
+        value = value.substring(0, 2) + ':' + value.substring(2);
+      }
+      if (value.length > 5) {
+        value = value.substring(0, 5) + ':' + value.substring(5);
+      }
+
+      // Prevent entering more than HH:MM:SS
+      if (value.length > 8) {
+        value = value.substring(0, 8);
+      }
+
+      e.target.value = value;
+    });
+
+    document.getElementById('submit-btn').addEventListener('click', validateInput);
+
+    // Allow pressing Enter to submit
+    inputField.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        validateInput();
+      }
+    });
+
     updateClock();
   </script>
 </body>
