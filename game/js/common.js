@@ -30,7 +30,7 @@ function addPlayerRow(index, name = '', gender = '') {
     row.className = 'playerRow';
     row.id = `playerRow-${index}`;
     row.innerHTML = `
-      <input id="name${index}" type="text" placeholder="Player Name" value="${name}" autocomplete="off" onblur="formatName(this)" />
+      <input id="name${index}" type="text" placeholder="Player First Name" value="${name}" autocomplete="off" onblur="formatName(this)" />
       <div class="gender-selector">
         <button type="button" class="gender-btn ${gender === 'male' ? 'male-selected' : ''}" id="btn-male-${index}" onclick="selectGender(${index}, 'male')">♂</button>
         <button type="button" class="gender-btn ${gender === 'female' ? 'female-selected' : ''}" id="btn-female-${index}" onclick="selectGender(${index}, 'female')">♀</button>
@@ -112,12 +112,24 @@ function savePlayers(){
     const gender = (document.getElementById(`gender${i}`).value || '').trim();
 
     if(name) {
+        if (!gender) {
+            alert(`Please select gender for player "${name}".`);
+            return;
+        }
         players.push({name, gender});
     }
   }
 
   if (players.length < 2) {
-      alert("Please add at least 2 players with names.");
+      alert("Please add at least 2 players with name and gender.");
+      return;
+  }
+
+  const maleCount = players.filter(p => p.gender === 'male').length;
+  const femaleCount = players.filter(p => p.gender === 'female').length;
+
+  if (maleCount < 1 || femaleCount < 1) {
+      alert("There must be at least 1 male and 1 female player.");
       return;
   }
 
