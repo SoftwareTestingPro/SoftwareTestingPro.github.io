@@ -30,7 +30,10 @@ function addPlayerRow(index, name = '', gender = '') {
     row.className = 'playerRow';
     row.id = `playerRow-${index}`;
     row.innerHTML = `
-      <input id="name${index}" type="text" placeholder="Player First Name" value="${name}" autocomplete="off" onblur="formatName(this)" />
+      <input id="name${index}" type="text" placeholder="Player First Name" value="${name}" autocomplete="off"
+             onblur="formatName(this)"
+             oninput="validateNameInput(this)"
+             onkeydown="if(event.key === ' ') event.preventDefault();" />
       <div class="gender-selector">
         <button type="button" class="gender-btn ${gender === 'male' ? 'male-selected' : ''}" id="btn-male-${index}" onclick="selectGender(${index}, 'male')">♂</button>
         <button type="button" class="gender-btn ${gender === 'female' ? 'female-selected' : ''}" id="btn-female-${index}" onclick="selectGender(${index}, 'female')">♀</button>
@@ -39,6 +42,11 @@ function addPlayerRow(index, name = '', gender = '') {
       <button class="remove-btn" onclick="removePlayer(${index})">×</button>
     `;
     container.appendChild(row);
+}
+
+function validateNameInput(input) {
+    // Allow only letters (no spaces)
+    input.value = input.value.replace(/[^a-zA-Z]/g, '');
 }
 
 function formatName(input) {
@@ -65,6 +73,8 @@ function reindexRows() {
         const nameInput = row.querySelector('input[type="text"]');
         nameInput.id = `name${newIndex}`;
         nameInput.setAttribute('onblur', 'formatName(this)');
+        nameInput.setAttribute('oninput', 'validateNameInput(this)');
+        nameInput.setAttribute('onkeydown', "if(event.key === ' ') event.preventDefault();");
 
         const genderInput = row.querySelector('input[type="hidden"]');
         genderInput.id = `gender${newIndex}`;
@@ -112,8 +122,21 @@ function savePlayers(){
     const gender = (document.getElementById(`gender${i}`).value || '').trim();
 
     if(name) {
+        // Validation: Only letters (no spaces)
+        if (!/^[a-zA-Z]+$/.test(name)) {
+            alert(`Player name "${name}" contains invalid characters. Only letters are allowed.`);
+            return;
+        }
+
+        // Validation: Minimum 3 alphabets
+        const letterCount = name.replace(/[^a-zA-Z]/g, '').length;
+        if (letterCount < 3) {
+            alert(`Player name "${name}" is too short. It must contain at least 3 letters.`);
+            return;
+        }
+
         if (!gender) {
-            alert(`Please select gender for player "${name}".`);
+            alert(`Please select a gender for player "${name}".`);
             return;
         }
         players.push({name, gender});
@@ -121,7 +144,7 @@ function savePlayers(){
   }
 
   if (players.length < 2) {
-      alert("Please add at least 2 players with name and gender.");
+      alert("Please add at least 2 players with names.");
       return;
   }
 
