@@ -300,7 +300,7 @@ function switchBase(base){
 function updateBaseIndicator(){
   const el = document.getElementById('baseIndicator');
   if(el) {
-      el.innerHTML = `<div class="baseBtnTop"><span class="emoji">${baseIcons[currentBase]}</span><span>Base ${currentBase}</span></div>`;
+      el.innerHTML = `<div class="baseBtnTop"><span class="emoji">${baseIcons[currentBase]}</span><span>Level ${currentBase}</span></div>`;
   }
 }
 
@@ -312,7 +312,7 @@ function updateBaseSwitch(){
   [1,2,3,4].forEach(b=>{
     if(b === currentBase) return;
     const btn = document.createElement('button');
-    btn.innerHTML = `<span class="emoji">${baseIcons[b]}</span> Base ${b}`;
+    btn.innerHTML = `<span class="emoji">${baseIcons[b]}</span> Level ${b}`;
     btn.onclick = ()=> switchBase(b);
     switchDiv.appendChild(btn);
   });
@@ -324,7 +324,7 @@ function generateTaskString() {
     if(!players || players.length === 0) return "No players saved!";
 
     const baseData = baseTasks[currentBase];
-    if(!baseData) return `No tasks for Base ${currentBase}`;
+    if(!baseData) return `No tasks for Level ${currentBase}`;
 
     const currentPlayer = players[currentPlayerIndex];
 
@@ -337,7 +337,7 @@ function generateTaskString() {
         taskPool = taskPool.concat(baseData.female);
     }
 
-    if(taskPool.length === 0) return `No tasks available for ${currentPlayer.gender} in Base ${currentBase}`;
+    if(taskPool.length === 0) return `No tasks available for ${currentPlayer.gender} in Level ${currentBase}`;
 
     const task = taskPool[Math.floor(Math.random() * taskPool.length)];
 
