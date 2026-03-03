@@ -3,43 +3,467 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Privacy Policy</title>
+  <meta name="description" content="Privacy Policy for SoftwareTestingPro - Learn how we collect, use, and protect your data. GDPR and CCPA compliant." />
+  <meta name="keywords" content="privacy policy, GDPR, CCPA, data protection, personal information" />
+  <title>Privacy Policy - SoftwareTestingPro</title>
   <style>
-    body {font-family: Arial, sans-serif; margin:30px; color:#222; background:#f9f9f9}
-    .container{max-width:900px;margin:0 auto;background:#fff;padding:24px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
-    h1{color:#111}
-    a{color:#007BFF}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 15px;
+    }
+    h2 {
+      color: #764ba2;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+    }
+    h3 {
+      color: #667eea;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .last-updated {
+      color: #666;
+      font-style: italic;
+      margin-bottom: 30px;
+      border-left: 4px solid #667eea;
+      padding-left: 15px;
+    }
+    .privacy-box {
+      background: #f0f4ff;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    .privacy-box strong {
+      color: #764ba2;
+    }
+    ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #764ba2;
+    }
+    .contact-section {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 20px;
+      margin: 30px 0;
+      border-radius: 5px;
+    }
+    .contact-section strong {
+      color: #856404;
+    }
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background: #667eea;
+      color: white;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .footer-nav {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+      text-align: center;
+    }
+    .footer-nav a {
+      margin: 0 15px;
+      display: inline-block;
+    }
+    .toc {
+      background: #f0f4ff;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .toc ol {
+      margin-left: 20px;
+    }
+    .toc li {
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Privacy Policy</h1>
-    <p>Last updated: <!-- INSERT DATE --> </p>
+    <p class="last-updated"><strong>Last updated:</strong> March 3, 2026 | <strong>Version:</strong> 2.0</p>
 
-    <p>This privacy policy explains how this site collects, uses, and protects information.</p>
+    <div class="privacy-box">
+      <strong>Your Privacy Matters:</strong> SoftwareTestingPro ("we," "us," "our," or the "Website") is committed to protecting your privacy. This policy explains how we collect, use, disclose, and safeguard your information.
+    </div>
 
-    <h2>Information we collect</h2>
+    <!-- Table of Contents -->
+    <div class="toc">
+      <h3>📑 Table of Contents</h3>
+      <ol>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#information-collect">Information We Collect</a></li>
+        <li><a href="#how-we-use">How We Use Information</a></li>
+        <li><a href="#third-party">Third-Party Services</a></li>
+        <li><a href="#cookies">Cookies and Tracking Technologies</a></li>
+        <li><a href="#user-rights">Your Rights & Choices</a></li>
+        <li><a href="#security">Data Security</a></li>
+        <li><a href="#retention">Data Retention</a></li>
+        <li><a href="#children">Children's Privacy</a></li>
+        <li><a href="#international">International Data Transfers</a></li>
+        <li><a href="#policy-changes">Changes to This Policy</a></li>
+        <li><a href="#contact">Contact Information</a></li>
+      </ol>
+    </div>
+
+    <!-- Section 1: Overview -->
+    <h2 id="overview">🔒 Overview</h2>
+    <p>SoftwareTestingPro.github.io is an interactive, free learning platform for test automation professionals. We collect minimal personal information and are committed to:</p>
     <ul>
-      <li>Automatically-collected analytics data (pageviews, events) via third-party services such as Google Analytics.</li>
-      <li>Information you provide voluntarily (for example, when you contact us or use a donation link).</li>
+      <li>Transparency about data collection and usage</li>
+      <li>Protection of your data with industry-standard security measures</li>
+      <li>Compliance with GDPR, CCPA, and other privacy regulations</li>
+      <li>Respecting your privacy choices and user rights</li>
+      <li>Never selling your personal information to third parties</li>
     </ul>
 
-    <h2>How we use information</h2>
-    <p>We use the data to improve the site, understand usage, and process donations or purchases via third-party providers. We do not sell personal data.</p>
+    <!-- Section 2: Information We Collect -->
+    <h2 id="information-collect">📊 Information We Collect</h2>
 
-    <h2>Third-party services</h2>
-    <p>We may use third-party services that collect data, such as Google Analytics and ad networks (after approval). These services have their own privacy policies — please review them directly.</p>
+    <h3>1. Automatically Collected Information</h3>
+    <p>When you visit our website, we automatically collect certain information:</p>
+    <ul>
+      <li><strong>Analytics Data:</strong> Page views, click events, session duration, device type, browser type, and operating system</li>
+      <li><strong>IP Address:</strong> Your IP address may be collected and partially anonymized</li>
+      <li><strong>Referral Source:</strong> How you found our site (search engine, direct link, etc.)</li>
+      <li><strong>Cookies & Tracking IDs:</strong> Local storage identifiers for analytics purposes</li>
+    </ul>
 
-    <h2>Cookies and tracking</h2>
-    <p>We may use cookies and similar technologies for analytics and advertising. If you require cookie consent for your jurisdiction, integrate a consent banner and update this policy accordingly.</p>
+    <p><strong>Tools Used:</strong></p>
+    <ul>
+      <li>Google Analytics 4 (GA4) - Visit <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a></li>
+      <li>Google Tag Manager - For tracking site interactions</li>
+      <li>Ad Networks (contextual advertising) - See <a href="disclosure.html">Disclosure Page</a></li>
+    </ul>
 
-    <h2>Affiliates & advertising</h2>
-    <p>We may use affiliate links and display ads. Affiliate links help support the site at no extra cost to you. See our <a href="disclosure.html">Affiliate & Advertising Disclosure</a> for details.</p>
+    <h3>2. Voluntarily Provided Information</h3>
+    <p>You may voluntarily provide information when you:</p>
+    <ul>
+      <li>Contact us via email with questions or feedback</li>
+      <li>Submit forms on the website (if any)</li>
+      <li>Sign up for newsletters or updates</li>
+      <li>Make purchases or donations through third-party platforms</li>
+      <li>Participate in surveys or feedback forms</li>
+    </ul>
 
-    <h2>Contact</h2>
-    <p>If you have questions about this policy, contact: <a href="mailto:you@example.com">you@example.com</a></p>
+    <p><strong>Types of Information:</strong></p>
+    <ul>
+      <li>Name and email address</li>
+      <li>Comments, questions, or messages</li>
+      <li>Payment information (processed by third-party payment providers)</li>
+    </ul>
 
-    <p style="margin-top:24px;font-size:90%">This is a template privacy policy. Replace placeholders (contact email, dates, and list of services) with your real information before publishing.</p>
+    <h3>3. Information NOT Collected</h3>
+    <p>To protect your privacy, we <strong>do NOT collect:</strong></p>
+    <ul>
+      <li>Passwords or sensitive credentials</li>
+      <li>Credit card information (handled by third parties)</li>
+      <li>Health, medical, or biometric data</li>
+      <li>Race, ethnicity, or religious information</li>
+      <li>Information about children (under 13)</li>
+    </ul>
+
+    <!-- Section 3: How We Use Information -->
+    <h2 id="how-we-use">🎯 How We Use Information</h2>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Purpose</th>
+            <th>Data Used</th>
+            <th>Legal Basis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Improve website performance and user experience</td>
+            <td>Analytics data, page views, click events</td>
+            <td>Legitimate Interest</td>
+          </tr>
+          <tr>
+            <td>Monitor site security and prevent fraud</td>
+            <td>IP addresses, access logs</td>
+            <td>Legitimate Interest</td>
+          </tr>
+          <tr>
+            <td>Display personalized content and recommendations</td>
+            <td>Usage patterns, interests, location</td>
+            <td>Consent</td>
+          </tr>
+          <tr>
+            <td>Serve contextual advertisements</td>
+            <td>Browsing behavior, anonymized data</td>
+            <td>Consent/Legitimate Interest</td>
+          </tr>
+          <tr>
+            <td>Respond to inquiries and provide support</td>
+            <td>Name, email, message content</td>
+            <td>Contractual/Legitimate Interest</td>
+          </tr>
+          <tr>
+            <td>Send newsletters or updates (if opted in)</td>
+            <td>Email address, preferences</td>
+            <td>Consent</td>
+          </tr>
+          <tr>
+            <td>Process payments and donations</td>
+            <td>Payment info via third parties</td>
+            <td>Contractual</td>
+          </tr>
+          <tr>
+            <td>Comply with legal obligations</td>
+            <td>As required by law</td>
+            <td>Legal Obligation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 4: Third-Party Services -->
+    <h2 id="third-party">🔗 Third-Party Services & Data Sharing</h2>
+
+    <h3>Services We Use</h3>
+    <p>We use third-party services that may collect and process data:</p>
+
+    <h3>Analytics & Tracking</h3>
+    <ul>
+      <li><strong>Google Analytics 4:</strong> Tracks site visits, user behavior, and engagement</li>
+      <li><strong>Google Tag Manager:</strong> Manages tracking codes and events</li>
+    </ul>
+
+    <h3>Advertising Networks</h3>
+    <ul>
+      <li><strong>Google AdSense:</strong> Displays contextual advertisements</li>
+      <li><strong>Affiliate Networks:</strong> Amazon Associates, Udemy, Coursera (see <a href="disclosure.html">Disclosure Page</a>)</li>
+    </ul>
+
+    <h3>Infrastructure & Hosting</h3>
+    <ul>
+      <li><strong>GitHub Pages:</strong> Hosts the website (review <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank">GitHub Privacy Policy</a>)</li>
+    </ul>
+
+    <h3>Email & Communications</h3>
+    <ul>
+      <li><strong>Email Services:</strong> If you contact us, your email may be stored for correspondence</li>
+    </ul>
+
+    <div class="privacy-box">
+      <strong>Data Sharing:</strong> We do NOT sell your data to third parties. Third-party services may collect data according to their own privacy policies. We recommend reviewing their policies directly.
+    </div>
+
+    <!-- Section 5: Cookies and Tracking -->
+    <h2 id="cookies">🍪 Cookies & Tracking Technologies</h2>
+
+    <h3>What Are Cookies?</h3>
+    <p>Cookies are small text files stored on your device. They help us remember your preferences and improve your experience.</p>
+
+    <h3>Types of Cookies We Use</h3>
+    <ul>
+      <li><strong>Analytics Cookies:</strong> Track site usage via Google Analytics</li>
+      <li><strong>Advertising Cookies:</strong> Used by Google AdSense and affiliate networks</li>
+      <li><strong>Session Cookies:</strong> Temporary cookies that expire when you close your browser</li>
+      <li><strong>Persistent Cookies:</strong> Remain on your device for extended periods</li>
+    </ul>
+
+    <h3>Opt-Out & Control</h3>
+    <p>You can control cookies in several ways:</p>
+    <ul>
+      <li><strong>Browser Settings:</strong> Most browsers allow you to refuse cookies or alert you when cookies are being set</li>
+      <li><strong>Google Analytics Opt-Out:</strong> <a href="https://tools.google.com/dlpage/gaoptout" target="_blank">Download Google Analytics Opt-Out Extension</a></li>
+      <li><strong>Google Ads Settings:</strong> <a href="https://myaccount.google.com/data-and-privacy" target="_blank">Manage Your Google Ads Preferences</a></li>
+      <li><strong>GDPR Consent:</strong> Users in EU/EEA may see a consent banner</li>
+    </ul>
+
+    <p><strong>Note:</strong> Disabling cookies may affect some website features.</p>
+
+    <!-- Section 6: User Rights & Choices -->
+    <h2 id="user-rights">👤 Your Rights & Choices</h2>
+
+    <h3>GDPR Rights (EU/EEA Users)</h3>
+    <p>If you're in the European Union or European Economic Area, you have the following rights:</p>
+    <ul>
+      <li><strong>Right to Access:</strong> Request a copy of your personal data</li>
+      <li><strong>Right to Rectification:</strong> Correct inaccurate information</li>
+      <li><strong>Right to Erasure:</strong> Request deletion of your data ("right to be forgotten")</li>
+      <li><strong>Right to Restrict Processing:</strong> Limit how we use your data</li>
+      <li><strong>Right to Data Portability:</strong> Receive your data in a portable format</li>
+      <li><strong>Right to Object:</strong> Opt-out of certain data processing activities</li>
+      <li><strong>Right to Lodge a Complaint:</strong> File a complaint with your local data protection authority</li>
+    </ul>
+
+    <h3>CCPA Rights (California Residents)</h3>
+    <p>If you're a California resident, you have the following rights under CCPA:</p>
+    <ul>
+      <li><strong>Right to Know:</strong> Request what personal data we collect and how it's used</li>
+      <li><strong>Right to Delete:</strong> Request deletion of personal information</li>
+      <li><strong>Right to Opt-Out:</strong> Opt-out of the "sale or sharing" of personal information</li>
+      <li><strong>Right to Correct:</strong> Request correction of inaccurate personal information</li>
+      <li><strong>Right to Non-Discrimination:</strong> We will not discriminate against you for exercising your rights</li>
+    </ul>
+
+    <h3>How to Exercise Your Rights</h3>
+    <p>To exercise any of these rights, please contact us at:</p>
+    <ul>
+      <li>Email: <a href="mailto:privacy@softwaretestingpro.github.io">privacy@softwaretestingpro.github.io</a></li>
+      <li>GitHub Issues: <a href="https://github.com/SoftwareTestingPro/SoftwareTestingPro.github.io/issues" target="_blank">Report on GitHub</a></li>
+    </ul>
+
+    <p><strong>Response Time:</strong> We aim to respond to all requests within 30 days. We may request additional information to verify your identity.</p>
+
+    <!-- Section 7: Data Security -->
+    <h2 id="security">🛡️ Data Security</h2>
+
+    <p>We take data security seriously and implement industry-standard measures:</p>
+    <ul>
+      <li><strong>HTTPS/SSL Encryption:</strong> All data transmitted over secure, encrypted connections</li>
+      <li><strong>GitHub Security:</strong> Leveraging GitHub Pages' security infrastructure</li>
+      <li><strong>No Sensitive Data Storage:</strong> We store minimal personal information</li>
+      <li><strong>Access Controls:</strong> Limited access to any collected data</li>
+      <li><strong>Regular Security Updates:</strong> Website and dependencies kept up-to-date</li>
+    </ul>
+
+    <div class="privacy-box">
+      <strong>Security Limitations:</strong> While we implement security measures, no online system is 100% secure. We cannot guarantee absolute security of your data.
+    </div>
+
+    <!-- Section 8: Data Retention -->
+    <h2 id="retention">⏰ Data Retention</h2>
+
+    <h3>How Long We Keep Your Data</h3>
+    <ul>
+      <li><strong>Analytics Data:</strong> Retained for 14 months by Google Analytics</li>
+      <li><strong>Cookies:</strong> Vary by type; analytics cookies typically expire after 2 years</li>
+      <li><strong>Contact Form Data:</strong> Retained for 1 year or until you request deletion</li>
+      <li><strong>Email Communications:</strong> Retained as needed for correspondence and support</li>
+      <li><strong>Log Files:</strong> Stored on GitHub's servers per their retention policy</li>
+    </ul>
+
+    <p>After the retention period, data is deleted or anonymized unless we're required by law to retain it longer.</p>
+
+    <!-- Section 9: Children's Privacy -->
+    <h2 id="children">👶 Children's Privacy</h2>
+
+    <p><strong>Our website is not directed to children under 13.</strong> We do not knowingly collect personal information from children under 13.</p>
+
+    <p>If we learn we have collected information from a child under 13, we will delete such information promptly. If you believe we have collected information from a child, please contact us immediately at <a href="mailto:privacy@softwaretestingpro.github.io">privacy@softwaretestingpro.github.io</a>.</p>
+
+    <p><strong>For Children 13+:</strong> If you're between 13 and 18, you may have additional rights. Contact us to learn more.</p>
+
+    <!-- Section 10: International Data Transfers -->
+    <h2 id="international">🌍 International Data Transfers</h2>
+
+    <p>Our website is hosted on GitHub Pages and may process data across different countries. If you're in the EU/EEA, your data may be transferred to the United States.</p>
+
+    <p><strong>GDPR Compliance:</strong> We comply with GDPR and use appropriate safeguards for international data transfers, including:</p>
+    <ul>
+      <li>Standard Contractual Clauses (SCCs)</li>
+      <li>Privacy Shield (where applicable)</li>
+      <li>Your explicit consent (if required)</li>
+    </ul>
+
+    <!-- Section 11: Policy Changes -->
+    <h2 id="policy-changes">📝 Changes to This Privacy Policy</h2>
+
+    <p>We may update this privacy policy periodically to reflect changes in our practices, technology, legal requirements, or other factors. We will notify you of material changes by:</p>
+    <ul>
+      <li>Updating the "Last updated" date at the top of this policy</li>
+      <li>Posting a prominent notice on our website</li>
+      <li>Sending you an email notification (if applicable)</li>
+    </ul>
+
+    <p><strong>Continued Use:</strong> Your continued use of the website after changes become effective constitutes your acceptance of the updated privacy policy.</p>
+
+    <!-- Section 12: Contact Information -->
+    <div class="contact-section" id="contact">
+      <h2>📧 Contact Information & Data Protection</h2>
+      <p><strong>Questions about this privacy policy or your data?</strong> We welcome your inquiries.</p>
+
+      <p>
+        <strong>Email:</strong> <a href="mailto:privacy@softwaretestingpro.github.io">privacy@softwaretestingpro.github.io</a><br>
+        <strong>Website:</strong> <a href="https://softwaretestingpro.github.io/" target="_blank">https://softwaretestingpro.github.io/</a><br>
+        <strong>GitHub Repository:</strong> <a href="https://github.com/SoftwareTestingPro/SoftwareTestingPro.github.io" target="_blank">SoftwareTestingPro.github.io</a>
+      </p>
+
+      <h3 style="margin-top: 20px;">Data Protection Authority</h3>
+      <p>If you have concerns about our privacy practices and are in the EU/EEA, you have the right to lodge a complaint with your local data protection authority.</p>
+    </div>
+
+    <!-- Related Links -->
+    <h2>⚖️ Related Policies & Resources</h2>
+    <ul>
+      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="disclosure.html">Affiliate & Advertising Disclosure</a></li>
+      <li><a href="SECURITY.md">Security Policy</a></li>
+      <li><a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a></li>
+      <li><a href="https://support.google.com/analytics/answer/6004245" target="_blank">Google Analytics Privacy Controls</a></li>
+    </ul>
+
+    <!-- Footer Navigation -->
+    <div class="footer-nav">
+      <a href="index.html">← Back to Home</a>
+      <a href="terms.html">Terms of Service →</a>
+    </div>
+
+    <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #999; font-size: 85%; text-align: center;">
+      <strong>Policy Version:</strong> 2.0 | <strong>Last Updated:</strong> March 3, 2026<br>
+      This policy will be reviewed and updated annually or as needed.
+    </p>
   </div>
 </body>
 </html>
