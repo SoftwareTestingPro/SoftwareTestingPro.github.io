@@ -237,9 +237,63 @@
     <priority>0.6</priority>
   </url>
 
-  <!-- Automation Intermediate examples -->
+  <!-- Automation Intermediate - All 30 files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.01-DragAndDropText.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.02-HoverLink.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.03-Train.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.04-Calendar.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.05-CricketScorecard.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.06-Table.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.07-Rubix.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.08-Slider.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.09-RandomButtons.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.10-Alerts.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -251,121 +305,121 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.12-ProgressbarColor.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.12-Frame.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.13-DragAndDropFile.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.13-BrowserPopUp.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.14-Resizable.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.14-JSInput.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.15-Selectable.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.15-RandomPopUp.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.16-ContextMenu.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.16-RandomList.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.17-KeyboardEvents.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.17-LoadingResults.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.18-MouseEvents.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.18-Chart.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.19-FormValidation.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.19-FetchDate.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.20-LocalStorage.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.20-ValueInput.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.21-ServiceWorker.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.21-ScrollableList.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.22-WebSocket.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.22-SortNumbers.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.23-Notification.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.23-SortCharacters.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.24-Caching.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.24-SortWords.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.25-IndexedDB.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.25-SplitWords.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.26-FileSystem.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.26-ImagePosition.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.27-BackgroundSync.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.27-YoungestPerson.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.28-PushNotifications.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.28-CompareImages.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.29-PeriodicSync.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.29-ColorPicker.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.30-ClientHints.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.30-SignaturePad.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
-  <!-- Automation Advanced examples (selected) -->
+  <!-- Automation Advanced - All 30 files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.01-HiddenElement.html</loc>
     <lastmod>2026-03-03</lastmod>
@@ -391,148 +445,382 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.05-APIInteraction.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.05-MultipleDragDrop.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.06-FileDownload.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.06-BrokenImages.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.07-FileUpload.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.07-Clock.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.08-DataEncryption.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.08-ShapesOddOneOut.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.09-DataDecryption.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.09-Location.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.10-Database.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.10-Game.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.11-LocalStorage.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.11-FileUpload.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.12-ServiceWorker.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.12-DragAndDropImg.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.13-WebSocket.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.13-SortableTable.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.14-PushNotifications.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.14-ResizeableElement.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.15-PeriodicSync.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.15-ContextMenu.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.16-ClientHints.html</loc>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.16-ReadEmailContent.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.17-SpeechToText.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.18-ImageToText.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.19-Spinner.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.20-AIQuiz.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.21-InfiniteScroll.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.22-XLSWriteData.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.23-XLSReadData.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.24-SortItems.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.25-DragableItemsXY.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.26-CharOddOneOut.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.27-AudioOddOneOut.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.28-DragAndDropWithFrames.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.29-DynamicProgressBar.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.30-ReadingPdfFile.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- API section -->
-  <url>
-    <loc>https://softwaretestingpro.github.io/API/Home.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/API/Instructions.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <!-- Programming section -->
-  <url>
-    <loc>https://softwaretestingpro.github.io/Programming/Home.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Programming/Instructions.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <!-- Quiz section (selected pages) -->
+  <!-- Quiz section - All 21 files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Quiz-Home.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Advanced-Java.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/API.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Basic-Java.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Cucumber.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Functional-Testing.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/GIT.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/JavaScript.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <!-- Dev section -->
-  <url>
-    <loc>https://softwaretestingpro.github.io/Dev/Home.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Dev/Instructions.html</loc>
+    <loc>https://softwaretestingpro.github.io/Quiz/Jenkins.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/JIRA.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Load-Testing.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Maven.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Mobile-Testing.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Performance-Testing.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Playwright.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Postman.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Rest-Assured.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Selenium.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/TestNG.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/TypeScript.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Quiz/Web-Services.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 
-  <!-- Kids and Games -->
+  <!-- Kids section - All 15 files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Kids/index.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/LetterSeries.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/game/index.html</loc>
+    <loc>https://softwaretestingpro.github.io/Kids/NumberSeries.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Relationship.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Kids Easy section -->
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Easy/index.html</loc>
     <lastmod>2026-03-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
-
-  <!-- If you want every single page exhaustively listed here, I can expand this file to include all 130+ HTML files found in the repo with precise entries (loc + lastmod + changefreq + priority). -->
-
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Easy/kid.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Easy/Odd-Equations.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Easy/Odd-Objects.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Kids Medium section -->
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Medium/index.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Medium/Maths-Grade3-MixEquations.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Medium/Odd-Equations.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Medium/Odd-Objects.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Kids Hard section -->
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Hard/index.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Hard/Odd-Equations.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Kids/Hard/Odd-Objects.html</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>
