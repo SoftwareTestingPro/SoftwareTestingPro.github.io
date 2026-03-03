@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Progress Bar Challenge</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
+        .container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #progress-bar-container {
+            width: 300px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            margin: 0 auto 20px; /* Center align horizontally */
+            overflow: hidden;
+        }
+        #progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.1s linear;
+        }
+        #status { margin-bottom: 20px; font-size: 18px; }
+        button { padding: 10px 20px; font-size: 16px; border-radius: 5px; border: none; cursor: pointer; background-color: #007BFF; color: #fff; }
+        button:disabled { background-color: #a0a0a0; cursor: not-allowed; }
+        #message-display { margin-top: 15px; font-size: 18px; font-weight: bold; min-height: 22px; }
+        .success { color: green; }
+        .failure { color: red; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Dynamic Progress Bar Challenge</h2>
+    <div id="status">0%</div>
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+    <button id="action-button">Click Me!</button>
+    <div id="message-display"></div>
+</div>
+
+<script>
+    const progressBar = document.getElementById('progress-bar');
+    const statusDisplay = document.getElementById('status');
+    const actionButton = document.getElementById('action-button');
+    const messageDisplay = document.getElementById('message-display');
+    let width = 0;
+    let intervalId;
+
+    function frame() {
+        if (width >= 100) {
+            clearInterval(intervalId);
+            statusDisplay.textContent = "Complete!";
+        } else {
+            width++;
+            progressBar.style.width = width + '%';
+            statusDisplay.textContent = width + '%';
+        }
+    }
+
+    actionButton.addEventListener('click', () => {
+        if (width < 100) {
+            clearInterval(intervalId);
+            messageDisplay.textContent = "You clicked too early";
+            messageDisplay.className = 'message-display failure';
+            actionButton.disabled = true;
+        } else {
+            messageDisplay.textContent = "Success! Button was clicked after completion.";
+            messageDisplay.className = 'message-display success';
+        }
+    });
+
+    intervalId = setInterval(frame, 50);
+</script>
+</body>
+</html>
