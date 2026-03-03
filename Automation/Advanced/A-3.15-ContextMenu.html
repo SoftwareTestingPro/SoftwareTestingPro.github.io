@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Context Menu Challenge</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
+        .container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #target-area {
+            width: 300px;
+            height: 200px;
+            background-color: #e0e0e0;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto 0; /* Center align with auto margins */
+            position: relative;
+        }
+        #context-menu { display: none; position: absolute; z-index: 1000; width: 150px; background-color: #fff; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); }
+        #context-menu ul { list-style: none; padding: 0; margin: 0; }
+        #context-menu li { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+        #context-menu li:hover { background-color: #f0f0f0; }
+        #context-menu li:last-child { border-bottom: none; }
+        #instruction { font-size: 18px; margin-bottom: 10px; font-weight: bold; }
+        #message-display { font-weight: bold; min-height: 25px; margin-top: 15px; }
+        .success { color: green; }
+        .failure { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Custom Context Menu Challenge</h2>
+        <div id="instruction">Right-click the box and select: </div>
+        <div id="target-area">
+            Right-Click Me
+        </div>
+        <div id="message-display"></div>
+    </div>
+
+    <div id="context-menu">
+        <ul>
+            <li onclick="menuAction('Edit')">Edit</li>
+            <li onclick="menuAction('Cut')">Cut</li>
+            <li onclick="menuAction('Copy')">Copy</li>
+            <li onclick="menuAction('Paste')">Paste</li>
+            <li onclick="menuAction('Delete')">Delete</li>
+        </ul>
+    </div>
+
+    <script>
+        const targetArea = document.getElementById('target-area');
+        const contextMenu = document.getElementById('context-menu');
+        const instructionDisplay = document.getElementById('instruction');
+        const messageDisplay = document.getElementById('message-display');
+        const menuOptions = ['Edit', 'Cut', 'Copy', 'Paste', 'Delete'];
+        let targetOption = '';
+
+        function initializeChallenge() {
+            targetOption = menuOptions[Math.floor(Math.random() * menuOptions.length)];
+            instructionDisplay.textContent = `Right-click the box and select: "${targetOption}"`;
+            messageDisplay.textContent = '';
+        }
+
+        targetArea.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = e.pageX + 'px';
+            contextMenu.style.top = e.pageY + 'px';
+        });
+
+        document.addEventListener('click', () => {
+            contextMenu.style.display = 'none';
+        });
+
+        function menuAction(selectedAction) {
+            if (selectedAction === targetOption) {
+                messageDisplay.textContent = 'Success! You selected the correct option.';
+                messageDisplay.className = 'message-display success';
+            } else {
+                messageDisplay.textContent = `Failure! You selected "${selectedAction}", but the correct option was "${targetOption}".`;
+                messageDisplay.className = 'message-display failure';
+            }
+            contextMenu.style.display = 'none';
+        }
+
+        window.addEventListener('load', initializeChallenge);
+    </script>
+</body>
+</html>

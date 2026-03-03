@@ -3,138 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurants Count</title>
+    <title>Infinite Scroll Challenge</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            box-sizing: border-box;
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f4; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; }
+        #instructions { text-align: center; } /* Center align the paragraph */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
         }
-        .container {
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        .image-container {
+            width: 100%;
+            padding-top: 75%; /* 4:3 Aspect Ratio */
+            position: relative;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+        }
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        img.loaded {
+            opacity: 1;
+        }
+        #loader {
             text-align: center;
-            max-width: 90%; /* Limit container width to 90% of viewport */
-            width: fit-content; /* Make container width equal to content */
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #666;
         }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em; /* Responsive font size */
-            color: #333;
+        #verification-area {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .spaced-button {
-            margin-bottom: 20px; /* Add space below the first button */
-            display: block;
-            width: 100%; /* Full width on small screens */
+        #verification-message {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 18px;
         }
-        .input-group {
-            display: flex;
-            flex-direction: column; /* Stack label and input vertically */
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        label {
-            font-size: 1em; /* Responsive font size */
-            color: #555;
-            margin-bottom: 10px; /* Space between label and input */
-        }
-        input[type="text"] {
-            width: 80%; /* Responsive width */
-            max-width: 150px; /* Maximum width for larger screens */
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em; /* Responsive font size */
-            text-align: center; /* Center the text inside the input */
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em; /* Responsive font size */
-            cursor: pointer;
-            width: 100%; /* Full width on small screens */
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 1em; /* Responsive font size */
-        }
-        .success {
-            color: green;
-        }
-        .failure {
-            color: red;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-            h1 {
-                font-size: 1.2em; /* Smaller font size for mobile */
-            }
-            .input-group {
-                flex-direction: column; /* Stack vertically on small screens */
-                align-items: center;
-            }
-            input[type="text"] {
-                width: 100%; /* Full width input on small screens */
-            }
-            button {
-                padding: 12px 0;
-                font-size: 1em;
-            }
-        }
+        .success { color: green; }
+        .failure { color: red; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Validate Restaurants Count</h1>
-        <button class="spaced-button" onclick="window.location.href='RestaurantsList.html'">Go to Restaurant List</button>
-        
-        <div class="input-group">
-            <label for="restaurantCount">Enter Total Restaurants Count:</label>
-            <input type="text" id="restaurantCount" placeholder="Enter number" maxlength="3">
+        <h1>Infinite Scroll Challenge</h1>
+        <p id="instructions">Scroll down to load all images, then enter the total count.</p>
+        <div class="image-grid" id="image-grid"></div>
+        <div id="loader">Loading...</div>
+        <div id="verification-area" style="display: none;">
+            <label for="image-count-input"><b>All images loaded. How many are there?</b></label>
+            <br><br>
+            <input type="number" id="image-count-input" placeholder="Enter count">
+            <button id="verify-btn">Verify</button>
+            <div id="verification-message"></div>
         </div>
-        
-        <button onclick="validateGuess()">Validate</button>
-        <div class="message" id="message"></div>
     </div>
 
     <script>
-        // Restrict input to digits only
-        const restaurantCountInput = document.getElementById('restaurantCount');
-        restaurantCountInput.addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, ''); // Remove non-digit characters
-        });
+        document.addEventListener("DOMContentLoaded", () => {
+            const imageGrid = document.getElementById('image-grid');
+            const loader = document.getElementById('loader');
+            const verificationArea = document.getElementById('verification-area');
+            const verifyBtn = document.getElementById('verify-btn');
 
-        function validateGuess() {
-            const userGuess = restaurantCountInput.value;
-            const actualCount = localStorage.getItem('restaurantCount'); // Fetch actual count from localStorage
-            const message = document.getElementById('message');
+            const BATCH_SIZE = 12;
+            const minBatches = 4; // 4 * 12 = 48 images
+            const maxBatches = 20; // 20 * 12 = 240 images
+            const randomBatchCount = Math.floor(Math.random() * (maxBatches - minBatches + 1)) + minBatches;
+            const MAX_IMAGES = randomBatchCount * BATCH_SIZE;
 
-            if (userGuess == actualCount) {
-                message.textContent = 'Success! You entered the correct number of restaurants.';
-                message.className = 'message success';
-            } else {
-                message.textContent = 'Failure! Your guess was incorrect.';
-                message.className = 'message failure';
+            let imageCounter = 0;
+            let isLoading = false;
+
+            const imageLazyLoader = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+                        img.src = img.dataset.src;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            function loadMoreImages() {
+                if (isLoading || imageCounter >= MAX_IMAGES) return;
+
+                isLoading = true;
+                loader.style.display = 'block';
+
+                setTimeout(() => {
+                    for (let i = 0; i < BATCH_SIZE; i++) {
+                        if (imageCounter >= MAX_IMAGES) break;
+                        imageCounter++;
+                        const container = document.createElement('div');
+                        container.className = 'image-container';
+                        const img = document.createElement('img');
+                        img.dataset.src = `https://picsum.photos/400/300?random=${imageCounter}`;
+                        img.alt = `Image ${imageCounter}`;
+                        container.appendChild(img);
+                        imageGrid.appendChild(container);
+                        imageLazyLoader.observe(img);
+                    }
+
+                    isLoading = false;
+
+                    if (imageCounter >= MAX_IMAGES) {
+                        loader.style.display = 'none';
+                        verificationArea.style.display = 'block';
+                        scrollObserver.disconnect();
+                    }
+                }, 500);
             }
-        }
+
+            const scrollObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMoreImages();
+                }
+            }, { threshold: 1.0 });
+
+            verifyBtn.addEventListener('click', () => {
+                const userInput = document.getElementById('image-count-input').value;
+                const verificationMessage = document.getElementById('verification-message');
+                const userCount = parseInt(userInput, 10);
+
+                if (userCount === MAX_IMAGES) {
+                    verificationMessage.textContent = 'Success! You entered the correct count.';
+                    verificationMessage.className = 'success';
+                } else {
+                    verificationMessage.textContent = `Failure! Expected: ${MAX_IMAGES}, You entered: ${userCount || 0}.`;
+                    verificationMessage.className = 'failure';
+                }
+            });
+
+            loadMoreImages();
+            scrollObserver.observe(loader);
+        });
     </script>
 </body>
 </html>

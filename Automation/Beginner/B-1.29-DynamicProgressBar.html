@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Progress Bar</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
+        .container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #progress-bar-container { width: 300px; height: 30px; border: 1px solid #ccc; border-radius: 5px; background-color: #e0e0e0; margin-bottom: 20px; }
+        #progress-bar { width: 0; height: 100%; background-color: #4CAF50; border-radius: 5px; transition: width 0.1s linear; }
+        #status { margin-bottom: 20px; font-size: 18px; }
+        button { padding: 10px 20px; font-size: 16px; border-radius: 5px; border: none; cursor: pointer; }
+        #action-button { background-color: #a0a0a0; color: #fff; }
+        #action-button:enabled { background-color: #007BFF; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Dynamic Progress Bar</h2>
+        <div id="status">0%</div>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+        <button id="action-button" disabled>Click Me When Done</button>
+    </div>
+
+    <script>
+        const progressBar = document.getElementById('progress-bar');
+        const statusDisplay = document.getElementById('status');
+        const actionButton = document.getElementById('action-button');
+        let width = 0;
+
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+                actionButton.disabled = false;
+                statusDisplay.textContent = "Complete!";
+            } else {
+                width++;
+                progressBar.style.width = width + '%';
+                statusDisplay.textContent = width + '%';
+            }
+        }
+
+        const id = setInterval(frame, 50); // Update every 50ms
+    </script>
+</body>
+</html>
