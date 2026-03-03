@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Platformer Game with Final Platform Fix</title>
+  <title>Platformer Game Challenge</title>
   <style>
     body {
       margin: 0;
@@ -89,6 +89,9 @@
     window.addEventListener('keydown', (e) => keys[e.code] = true);
     window.addEventListener('keyup', (e) => keys[e.code] = false);
 
+    // Track previous Y position for better collision detection
+    let previousPlayerY = player.y;
+
     function gameLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -108,19 +111,22 @@
 
       player.speedY += gravity;
       player.x += player.speedX;
+      previousPlayerY = player.y;
       player.y += player.speedY;
 
       player.grounded = false;
       let topPlatformReached = false;
 
       platforms.forEach(platform => {
-        if (
-          player.y + player.height > platform.y &&
-          player.y + player.height < platform.y + platform.height &&
-          player.x + player.width > platform.x &&
-          player.x < platform.x + platform.width &&
-          player.speedY >= 0
-        ) {
+        // Check horizontal overlap
+        const horizontalOverlap = player.x + player.width > platform.x && player.x < platform.x + platform.width;
+
+        // Check if player is falling (speedY >= 0) and landing on platform from above
+        const wasAbovePlatform = previousPlayerY + player.height <= platform.y;
+        const isNowAtPlatform = player.y + player.height >= platform.y;
+        const isLandingOnPlatform = wasAbovePlatform && isNowAtPlatform && player.speedY >= 0;
+
+        if (horizontalOverlap && isLandingOnPlatform) {
           player.y = platform.y - player.height;
           player.speedY = 0;
           player.jumping = false;
