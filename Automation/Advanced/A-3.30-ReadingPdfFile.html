@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-3.35-Country PDF Validator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        /* Theme updated to match A-3.29-DynamicProgressBar.html */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            transition: transform 0.2s, background-color 0.15s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background-color: #0069d9;
+        }
+
+        /* Disable style for validate button */
+        .validate-btn:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        .validation-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            display: none;
+            border: 1px solid #eee;
+        }
+
+        .validation-section.active {
+            display: block;
+        }
+
+        .country-display {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-left: none; /* removed blue accent */
+        }
+
+        .country-display p {
+            margin: 0;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .country-name {
+            font-size: 28px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .radio-group {
+            margin: 20px 0;
+        }
+
+        .radio-option {
+            margin: 12px 0;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .validate-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .message.success {
+            display: block;
+            background: #c8e6c9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+
+        .message.failure {
+            display: block;
+            background: #ffcdd2;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Country PDF Validator</h1>
+
+    <div class="button-group">
+        <button id="downloadBtn" onclick="generateAndDownloadPDF()">Download Countries PDF</button>
+    </div>
+
+    <div class="validation-section" id="validationSection">
+        <div class="country-display">
+            <p>Verify if this country is in the downloaded PDF:</p>
+            <div class="country-name" id="randomCountry"></div>
+        </div>
+
+        <div class="radio-group">
+            <div class="radio-option">
+                <input type="radio" id="yes" name="verification" value="yes">
+                <label for="yes">Yes, country is in the PDF</label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" id="no" name="verification" value="no">
+                <label for="no">No, country is not in the PDF</label>
+            </div>
+        </div>
+
+        <button id="validateBtn" class="validate-btn" onclick="validateAnswer()">Validate</button>
+
+        <div class="message" id="successMessage">✓ Success! Your answer is correct!</div>
+        <div class="message" id="failureMessage">✗ Failure! Your answer is incorrect.</div>
+    </div>
+</div>
+
+<script>
+    const countries = [
+        'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola',
+        'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria',
+        'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados',
+        'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan',
+        'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei',
+        'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon',
+        'Canada', 'Cape Verde', 'Central African Republic', 'Chad', 'Chile',
+        'China', 'Colombia', 'Comoros', 'Congo', 'Costa Rica',
+        'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark',
+        'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt'
+    ];
+
+    let selectedCountry = '';
+
+    function generateAndDownloadPDF() {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(16);
+            doc.text('Countries List', 105, 15, { align: 'center' });
+
+            doc.setFontSize(12);
+            let yPosition = 30;
+
+            countries.forEach((country, index) => {
+                if (yPosition > 280) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+                doc.text(`${index + 1}. ${country}`, 20, yPosition);
+                yPosition += 8;
+            });
+
+            doc.save('countries_list.pdf');
+
+            // hide the download button after user triggers the download
+            const dlBtn = document.getElementById('downloadBtn');
+            if (dlBtn) {
+                dlBtn.style.display = 'none';
+                dlBtn.disabled = true;
+            }
+
+            showValidationSection();
+        } catch (error) {
+            console.error('PDF generation error:', error);
+            alert('Error generating PDF. Please try again.');
+        }
+    }
+
+    function showValidationSection() {
+        const allCountries = [
+            'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda',
+            'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain',
+            'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan',
+            'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria',
+            'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Cape Verde',
+            'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros',
+            'Congo', 'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark',
+            'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt',
+            'France', 'Germany', 'India', 'Japan', 'Mexico'
+        ];
+
+        const isInPDF = Math.random() > 0.5;
+
+        if (isInPDF) {
+            selectedCountry = countries[Math.floor(Math.random() * countries.length)];
+        } else {
+            const countriesNotInPDF = allCountries.filter(c => !countries.includes(c));
+            selectedCountry = countriesNotInPDF[Math.floor(Math.random() * countriesNotInPDF.length)];
+        }
+
+        document.getElementById('randomCountry').textContent = selectedCountry;
+        document.getElementById('validationSection').classList.add('active');
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('failureMessage').style.display = 'none';
+        document.querySelectorAll('input[name="verification"]').forEach(radio => radio.checked = false);
+    }
+
+    function validateAnswer() {
+        const selectedOption = document.querySelector('input[name="verification"]:checked');
+
+        if (!selectedOption) {
+            alert('Please select Yes or No');
+            return;
+        }
+
+        // disable validate button so user cannot submit multiple times
+        const validateBtn = document.getElementById('validateBtn');
+        if (validateBtn) validateBtn.disabled = true;
+
+        const isInPDF = countries.includes(selectedCountry);
+        const userSaidYes = selectedOption.value === 'yes';
+        const isCorrect = isInPDF === userSaidYes;
+
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        if (isCorrect) {
+            successMessage.style.display = 'block';
+            failureMessage.style.display = 'none';
+        } else {
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'block';
+        }
+    }
+</script>
+</body>
+</html>
