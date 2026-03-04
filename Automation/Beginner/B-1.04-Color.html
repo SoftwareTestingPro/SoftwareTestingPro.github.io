@@ -7,173 +7,281 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
+            background-color: #f6f7fb;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px;
         }
 
         .container-box {
             background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 85%; /* Adjust width to fit smaller screens */
-            max-width: 500px; /* Set a max width for larger screens */
+            border-radius: 12px;
+            box-shadow: 0 6px 24px rgba(20, 20, 50, 0.08);
+            padding: 24px;
+            width: 100%;
+            max-width: 560px;
             text-align: center;
         }
 
         .colorful-button {
             display: inline-block;
-            padding: 10px 20px;
-            margin-bottom: 20px;
+            padding: 12px 28px;
+            margin-bottom: 18px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            background-color: #ff69b4; /* Initial button color */
-            transition: background-color 0.3s ease;
+            background-color: #ff69b4;
+            color: #fff;
+            transition: background-color 0.18s ease, transform 0.08s ease;
+            user-select: none;
         }
 
-        .colorful-button:hover {
-            background-color: #4CAF50; /* Green for hover */
-        }
+        .colorful-button:hover { background-color: #4CAF50; }
+        .colorful-button:active { background-color: #FFA500; transform: translateY(1px); }
 
-        .colorful-button:active {
-            background-color: #FFA500; /* Orange for click and hold */
+        .input-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
         }
 
         .input-container {
+            width: 100%;
+            max-width: 380px;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center align input and label */
-            margin-bottom: 20px; /* Space between input fields */
+            align-items: stretch;
+            text-align: left;
         }
 
         .input-container label {
-            font-size: 14px; /* Smaller font size for labels */
-            margin-bottom: 5px;
-            text-align: center; /* Center align text */
-            white-space: nowrap; /* Prevent text wrapping */
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 6px;
         }
 
         .input-container input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 80%; /* Adjust width for responsiveness */
-            max-width: 300px; /* Limit width for larger screens */
+            padding: 10px 12px;
+            font-size: 15px;
+            border: 1px solid #d6d9e6;
+            border-radius: 8px;
             box-sizing: border-box;
-            text-align: center; /* Center align text */
-            margin-bottom: 10px; /* Space between input and icon */
+            outline: none;
         }
 
-        .validation-icon {
-            font-size: 20px; /* Adjust icon size */
-            display: none; /* Hide icons by default */
+        .input-container input[type="text"]:focus {
+            border-color: #9fb7ff;
+            box-shadow: 0 4px 12px rgba(60, 120, 255, 0.08);
         }
 
-        .validation-icon.success {
-            color: #28a745; /* Green color for success */
+        .message {
+            margin-top: 8px;
+            font-size: 13px;
+            display: none;
+            align-items: center;
+            gap: 8px;
         }
 
-        .validation-icon.failure {
-            color: #d9534f; /* Red color for failure */
+        .message.success {
+            color: #155724;
+            background: #e6f7ea;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
         }
 
-        /* Responsive styling */
-        @media (max-width: 600px) {
-            .colorful-button {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
+        .message.error {
+            color: #6b1220;
+            background: #fff0f0;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
 
-            .input-container label, .input-container input[type="text"] {
-                font-size: 12px; /* Smaller font size for mobile */
-            }
+        .message .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-            .input-container input[type="text"] {
-                padding: 8px;
-                width: 80%; /* Adjust width for smaller screens */
-                max-width: none; /* Remove max-width for smaller screens */
-            }
+        .swatch {
+            width: 24px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .code {
+            font-family: Menlo, Monaco, monospace;
+            font-size: 13px;
+            background: rgba(0,0,0,0.03);
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #1b1b1b;
+        }
+
+        .icon {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1;
+            display: inline-block;
+            width: 18px;
+            text-align: center;
+        }
+
+        @media (max-width: 520px) {
+            .colorful-button { padding: 10px 18px; font-size: 15px; }
+            .input-container { max-width: 100%; }
         }
     </style>
 </head>
 <body>
     <div class="container-box">
         <button class="colorful-button" id="colorButton">Colorful Button</button>
-        <div class="input-container">
-            <label for="user-input1">Fetch and input default hex color of button:</label>
-            <input type="text" id="user-input1" name="user-input1">
-            <span class="validation-icon" id="icon1"></span>
+
+        <div class="input-row">
+            <div class="input-container" data-index="1">
+                <label for="user-input1">Enter the button's default color (hex):</label>
+                <input type="text" id="user-input1" name="user-input1" placeholder="Enter hex color code here">
+                <div class="message" id="msg1" aria-live="polite"></div>
+            </div>
         </div>
 
-        <div class="input-container">
-            <label for="user-input2">Perform mouseover and input hex color:</label>
-            <input type="text" id="user-input2" name="user-input2">
-            <span class="validation-icon" id="icon2"></span>
+        <div class="input-row">
+            <div class="input-container" data-index="2">
+                <label for="user-input2">Enter the button color after hovering (hex):</label>
+                <input type="text" id="user-input2" name="user-input2" placeholder="Enter hex color code here">
+                <div class="message" id="msg2" aria-live="polite"></div>
+            </div>
         </div>
 
-        <div class="input-container">
-            <label for="user-input3">Perform click and hold and input hex color:</label>
-            <input type="text" id="user-input3" name="user-input3">
-            <span class="validation-icon" id="icon3"></span>
+        <div class="input-row">
+            <div class="input-container" data-index="3">
+                <label for="user-input3">Enter the button color while pressed (hex):</label>
+                <input type="text" id="user-input3" name="user-input3" placeholder="Enter hex color code here">
+                <div class="message" id="msg3" aria-live="polite"></div>
+            </div>
         </div>
     </div>
 
     <script>
+        // Helper: normalize user hex (accepts with/without '#', short form)
+        // Returns a normalized hex like '#rrggbb' or null if invalid
+        function normalizeHex(s) {
+            if (!s) return null;
+            s = s.trim().toLowerCase();
+            if (s[0] === '#') s = s.slice(1);
+            if (/^[0-9a-f]{3}$/.test(s)) {
+                s = s.split('').map(ch => ch + ch).join('');
+            }
+            if (/^[0-9a-f]{6}$/.test(s)) return '#' + s;
+            return null; // invalid
+        }
+
+        // Convert computed rgb(a) to hex
+        function rgbToHex(rgb) {
+            const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return rgb;
+            const toHex = n => ('0' + parseInt(n, 10).toString(16)).slice(-2);
+            return '#' + toHex(m[1]) + toHex(m[2]) + toHex(m[3]);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const colorButton = document.getElementById('colorButton');
             const defaultColor = '#ff69b4';
             const hoverColor = '#4CAF50';
             const activeColor = '#FFA500';
 
-            // Update button colors on events
-            colorButton.addEventListener('mousedown', () => {
-                colorButton.style.backgroundColor = activeColor; // Orange for click and hold
-            });
+            // update button appearance on events (keeps behavior consistent)
+            colorButton.addEventListener('mousedown', () => colorButton.style.backgroundColor = activeColor);
+            colorButton.addEventListener('mouseup', () => colorButton.style.backgroundColor = hoverColor);
+            colorButton.addEventListener('mouseover', () => colorButton.style.backgroundColor = hoverColor);
+            colorButton.addEventListener('mouseout', () => colorButton.style.backgroundColor = defaultColor);
 
-            colorButton.addEventListener('mouseup', () => {
-                colorButton.style.backgroundColor = hoverColor; // Green after click
-            });
+            // Map inputs to their expected colors
+            const config = {
+                'user-input1': defaultColor,
+                'user-input2': hoverColor,
+                'user-input3': activeColor
+            };
 
-            colorButton.addEventListener('mouseover', () => {
-                colorButton.style.backgroundColor = hoverColor; // Green for hover
-            });
-
-            colorButton.addEventListener('mouseout', () => {
-                colorButton.style.backgroundColor = defaultColor; // Pink for default state
-            });
-
-            // Input validation
-            function validateInput(inputId, correctColor) {
-                const input = document.getElementById(inputId);
-                const icon = document.getElementById('icon' + inputId.slice(-1));
-
-                input.addEventListener('input', () => {
-                    const value = input.value.trim();
-                    if (value.toLowerCase() === correctColor.toLowerCase()) {
-                        icon.innerHTML = '&#10003;'; // Checkmark symbol
-                        icon.classList.add('success');
-                        icon.classList.remove('failure');
-                    } else {
-                        icon.innerHTML = '&#10007;'; // Cross symbol
-                        icon.classList.add('failure');
-                        icon.classList.remove('success');
-                    }
-                    icon.style.display = 'inline'; // Show icon
-                });
+            function showSuccess(msgEl) {
+                msgEl.className = 'message success';
+                msgEl.style.display = 'flex';
+                msgEl.innerHTML = '<span class="icon">✓</span><span>Correct — value matches expected color.</span>';
             }
 
-            // Validate each input
-            validateInput('user-input1', defaultColor);
-            validateInput('user-input2', hoverColor);
-            validateInput('user-input3', activeColor);
+            function showError(msgEl, expectedHex, actualHex, actualIsInvalid=false) {
+                msgEl.className = 'message error';
+                msgEl.style.display = 'flex';
+                const actualDisplay = actualIsInvalid ? '<span class="code">(invalid input)</span>' : `<span class="swatch" style="background:${actualHex}"></span><span class="code">${actualHex}</span>`;
+                msgEl.innerHTML = `
+                    <div class="row">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="icon" style="color:#9b1f2b">✕</span>
+                            <strong>Does not match</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span>Expected:</span>
+                            <span class="swatch" style="background:${expectedHex}"></span>
+                            <span class="code">${expectedHex}</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span>Actual:</span>
+                            ${actualDisplay}
+                        </div>
+                    </div>
+                `;
+            }
+
+            function validateField(inputEl, msgEl, expectedHex) {
+                const raw = inputEl.value;
+                const userHex = normalizeHex(raw);
+                const expectedNorm = normalizeHex(expectedHex); // will be '#rrggbb' or null (but expectedHex is valid)
+                // compute actual color from user input when valid, otherwise from button's computed style
+                const computed = getComputedStyle(colorButton).backgroundColor;
+                const computedHex = rgbToHex(computed);
+                const actualHex = userHex || computedHex;
+                const actualIsInvalid = (raw.trim() !== '' && userHex === null);
+
+                if (userHex && userHex.toLowerCase() === expectedNorm) {
+                    showSuccess(msgEl);
+                } else if (raw.trim() === '') {
+                    // hide messages if input empty
+                    msgEl.style.display = 'none';
+                    msgEl.className = 'message';
+                    msgEl.innerHTML = '';
+                } else {
+                    showError(msgEl, expectedNorm, actualHex, actualIsInvalid);
+                }
+            }
+
+            // wire up inputs
+            Object.keys(config).forEach(id => {
+                const input = document.getElementById(id);
+                const msg = document.getElementById('msg' + id.slice(-1));
+                input.addEventListener('input', () => validateField(input, msg, config[id]));
+                // Optional: validate on blur as well (when user moves away)
+                input.addEventListener('blur', () => validateField(input, msg, config[id]));
+            });
+
+            // Initialize button to default color so initial computed color is consistent
+            colorButton.style.backgroundColor = defaultColor;
         });
     </script>
 </body>
