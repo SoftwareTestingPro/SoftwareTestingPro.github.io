@@ -3,76 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dynamic Progress Bar - Click a button after a progress bar reaches 100%.">
     <title>Dynamic Progress Bar Challenge</title>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
-        .container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #progress-bar-container {
-            width: 300px;
-            height: 30px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #e0e0e0;
-            margin: 0 auto 20px; /* Center align horizontally */
-            overflow: hidden;
-        }
-        #progress-bar {
-            width: 0;
-            height: 100%;
-            background-color: #4CAF50;
-            transition: width 0.1s linear;
-        }
-        #status { margin-bottom: 20px; font-size: 18px; }
-        button { padding: 10px 20px; font-size: 16px; border-radius: 5px; border: none; cursor: pointer; background-color: #007BFF; color: #fff; }
-        button:disabled { background-color: #a0a0a0; cursor: not-allowed; }
-        #message-display { margin-top: 15px; font-size: 18px; font-weight: bold; min-height: 22px; }
-        .success { color: green; }
-        .failure { color: red; }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-<div class="container">
-    <h2>Dynamic Progress Bar Challenge</h2>
-    <div id="status">0%</div>
-    <div id="progress-bar-container">
-        <div id="progress-bar"></div>
-    </div>
-    <button id="action-button">Click Me After 100%!</button>
-    <div id="message-display"></div>
-</div>
+    <div id="header-placeholder"></div>
 
-<script>
-    const progressBar = document.getElementById('progress-bar');
-    const statusDisplay = document.getElementById('status');
-    const actionButton = document.getElementById('action-button');
-    const messageDisplay = document.getElementById('message-display');
-    let width = 0;
-    let intervalId;
+    <main class="card">
+        <h1>Dynamic Progress Bar Challenge</h1>
+        <p class="lead">Wait for the progress bar to reach 100%, then click the button. Clicking too early will result in a failure.</p>
 
-    function frame() {
-        if (width >= 100) {
-            clearInterval(intervalId);
-            statusDisplay.textContent = "Complete!";
-        } else {
-            width++;
-            progressBar.style.width = width + '%';
-            statusDisplay.textContent = width + '%';
+        <div id="status">0%</div>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div class="button-group">
+            <button id="action-button">Click Me After 100%!</button>
+        </div>
+
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Success! Button was clicked after completion.</span>
+        </div>
+
+        <div class="message" id="failureMessage" role="status" aria-live="polite">
+            <div class="message-row">
+                <span class="icon">✕</span>
+                <strong>Failure</strong>
+            </div>
+            <div class="message-row">
+                <span>You clicked too early.</span>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const progressBar = document.getElementById('progress-bar');
+        const statusDisplay = document.getElementById('status');
+        const actionButton = document.getElementById('action-button');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        let width = 0;
+        let intervalId;
+
+        function frame() {
+            if (width >= 100) {
+                clearInterval(intervalId);
+                statusDisplay.textContent = "Complete!";
+            } else {
+                width++;
+                progressBar.style.width = width + '%';
+                statusDisplay.textContent = width + '%';
+            }
         }
-    }
 
-    actionButton.addEventListener('click', () => {
-        if (width < 100) {
-            clearInterval(intervalId);
-            messageDisplay.textContent = "You clicked too early";
-            messageDisplay.className = 'message-display failure';
-            actionButton.disabled = true;
-        } else {
-            messageDisplay.textContent = "Success! Button was clicked after completion.";
-            messageDisplay.className = 'message-display success';
-        }
-    });
+        actionButton.addEventListener('click', () => {
+            if (width < 100) {
+                clearInterval(intervalId);
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                actionButton.disabled = true;
+            } else {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            }
+        });
 
-    intervalId = setInterval(frame, 50);
-</script>
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+
+        intervalId = setInterval(frame, 50);
+    </script>
 </body>
 </html>

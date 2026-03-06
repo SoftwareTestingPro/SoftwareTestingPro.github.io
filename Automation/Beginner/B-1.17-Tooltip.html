@@ -3,104 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rainbow Text with Tooltip</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            width: 300px;
-        }
-        .rainbow-text {
-            font-size: 1.5em;
-            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 20px;
-            cursor: pointer;
-            position: relative;
-        }
-        .rainbow-text:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 120%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            white-space: nowrap;
-        }
-        .rainbow-text:hover::before {
-            content: '';
-            position: absolute;
-            bottom: 110%;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 5px;
-            border-style: solid;
-            border-color: rgba(0, 0, 0, 0.7) transparent transparent transparent;
-        }
-        input[type="text"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 1em;
-        }
-        .success {
-            color: #28a745;
-        }
-        .failure {
-            color: #dc3545;
-        }
-    </style>
+    <meta name="description" content="Tooltip Validation - Hover over text to reveal a tooltip and validate its content.">
+    <title>Tooltip Validation</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="rainbow-text" data-tooltip="I am a Tooltip">
-            Header Text With Tooltip
+    <div id="header-placeholder"></div>
+
+    <main class="card">
+        <h1>Tooltip Validation</h1>
+        <p class="lead">Hover over the rainbow text below to reveal a tooltip, then enter the tooltip's text into the input field.</p>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div class="rainbow-text" data-tooltip="I am a Tooltip">
+                Hover Me For Tooltip
+            </div>
         </div>
-        <div id="label">Mouse Hover on Above Header Text and Enter Displayed Tooltip Text in Below Input Field</div><br></br>
-        <input type="text" id="inputField" placeholder="Enter Tooltip Text Here">
-        <div class="message" id="result"></div>
-    </div>
+
+        <div class="input-group">
+            <label for="inputField">Enter Tooltip Text:</label>
+            <input type="text" id="inputField" placeholder="Enter the tooltip text here">
+        </div>
+
+        <div class="message success" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Correct — the entered text matches the tooltip.</span>
+        </div>
+
+        <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+            <div class="message-row">
+                <span class="icon">✕</span>
+                <strong>Does not match</strong>
+            </div>
+            <div class="message-row">
+                <div>
+                    <span style="color: inherit; font-size: 12px;">Expected:</span>
+                    <div class="value-box" id="expectedValue"></div>
+                </div>
+                <div>
+                    <span style="color: inherit; font-size: 12px;">Entered:</span>
+                    <div class="value-box" id="actualValue"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
 
     <script>
-        document.getElementById('inputField').addEventListener('input', function() {
-            const inputField = document.getElementById('inputField');
+        const inputField = document.getElementById('inputField');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValueDisplay = document.getElementById('expectedValue');
+        const actualValueDisplay = document.getElementById('actualValue');
+
+        const tooltipText = document.querySelector('.rainbow-text').getAttribute('data-tooltip');
+        expectedValueDisplay.textContent = tooltipText;
+
+        inputField.addEventListener('input', function() {
             const userInput = inputField.value;
-            const tooltipText = document.querySelector('.rainbow-text').getAttribute('data-tooltip');
-            const resultDiv = document.getElementById('result');
+            actualValueDisplay.textContent = userInput;
 
             if (userInput === tooltipText) {
-                resultDiv.textContent = 'Success! The entered text matches the tooltip text.';
-                resultDiv.className = 'message success';
+                successMessage.style.display = 'flex';
+                failureMessage.style.display = 'none';
             } else if (userInput) {
-                resultDiv.textContent = `Failure! You entered "${userInput}", but the tooltip text is "${tooltipText}".`;
-                resultDiv.className = 'message failure';
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'flex';
             } else {
-                resultDiv.textContent = '';
-                resultDiv.className = 'message';
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
             }
         });
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
     </script>
 </body>
 </html>

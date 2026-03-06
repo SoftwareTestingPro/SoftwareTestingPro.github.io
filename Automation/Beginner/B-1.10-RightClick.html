@@ -3,98 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Button Click Effects</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden; /* Prevent scrollbars from appearing due to flying emojis */
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            width: 60%; /* Adjust width as needed */
-            max-width: 500px; /* Ensure the container doesn't get too large */
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #333;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        button:active {
-            transform: scale(0.98);
-        }
-        .success-message, .failure-message {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1em;
-            position: absolute;
-            width: calc(100% - 40px); /* Adjust width to fit inside the container */
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .failure-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .emoji {
-            position: absolute;
-            font-size: 24px;
-            animation: fly 3s linear;
-        }
-        @keyframes fly {
-            from {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-100vh) scale(0.5);
-            }
-        }
-    </style>
+    <meta name="description" content="Right Click Action - Right click the button to complete this task.">
+    <title>Right Click Action</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h3>Right click on below button</h3>
-        <button id="clickButton" type="button">Click Me</button>
-        <div class="success-message" id="successMessage">
-            Success! You right-clicked the button.
+    <div id="header-placeholder"></div>
+
+    <main class="card">
+        <h1>Right Click Action</h1>
+        <p class="lead">Right click on the button below to complete the task.</p>
+
+        <div class="button-group">
+            <button id="clickButton" type="button">Click Me</button>
         </div>
-        <div class="failure-message" id="failureMessage">
-            Ha Ha! You left-clicked the button.
+
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Success! You right-clicked the button.</span>
         </div>
-    </div>
+
+        <div class="message" id="failureMessage" role="status" aria-live="polite">
+            <div class="message-row">
+                <span class="icon">✕</span>
+                <strong>Incorrect</strong>
+            </div>
+            <div class="message-row">
+                <span>Ha Ha! You left-clicked the button.</span>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const clickButton = document.getElementById('clickButton');
@@ -103,8 +44,10 @@
 
         clickButton.addEventListener('click', (event) => {
             // Show failure message for left-click
-            failureMessage.style.display = 'block';
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
             successMessage.style.display = 'none'; // Hide success message
+            successMessage.classList.remove('success');
 
             // Add laughing emojis flying across the screen
             for (let i = 0; i < 30; i++) {
@@ -125,9 +68,17 @@
 
         clickButton.addEventListener('contextmenu', (event) => {
             event.preventDefault(); // Prevent the default right-click menu
-            successMessage.style.display = 'block';
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
             failureMessage.style.display = 'none'; // Hide failure message
+            failureMessage.classList.remove('failure');
         });
+
+        //Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
     </script>
 </body>
 </html>

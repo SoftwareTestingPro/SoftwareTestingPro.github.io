@@ -4,78 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Match the Following</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f4f8;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 100%;
-        }
-        .column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .item, .label {
-            background-color: #e9ecef;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 10px;
-            cursor: pointer;
-            text-align: center;
-            width: 150px;
-        }
-        .item:hover, .label:hover {
-            background-color: #d0d4d6;
-        }
-        h1 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        #successMessage {
-            margin-top: 20px;
-            font-weight: bold;
-            color: green;
-            display: none; /* Hidden by default */
-        }
-    </style>
 </head>
 <body>
+    <div id="header-placeholder"></div>
 
-<h2>Drag and Drop Items To Match the Following</h2>
-<div class="container">
-    <div class="column" id="leftColumn">
-        <!-- Left items will be inserted here -->
-    </div>
-    <div class="column" id="rightColumn">
-        <div class="label" data-type="number">Number</div>
-        <div class="label" data-type="string">String</div>
-        <div class="label" data-type="alphanumeric">Alphanumeric</div>
-    </div>
-</div>
-<p id="successMessage">All items matched successfully!</p>
+    <main class="card">
+        <h1>Match the Following</h1>
+        <p class="lead">Drag and drop items to match them with the correct categories below.</p>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin: 20px 0;">
+            <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">ITEMS TO MATCH</h3>
+                <div id="leftColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <!-- Left items will be inserted here -->
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">CATEGORIES</h3>
+                <div id="rightColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <div class="draggable-item" data-type="number" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Number</div>
+                    <div class="draggable-item" data-type="string" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">String</div>
+                    <div class="draggable-item" data-type="alphanumeric" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Alphanumeric</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>All items matched successfully!</span>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script>
     $(function() {
+        const successMessage = document.getElementById('successMessage');
+        
+        // Hide message on page load
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+
         const items = [
             Math.floor(Math.random() * 100), // Random number
             getRandomString(5),               // Random string
@@ -88,25 +62,45 @@
         // Insert items into the left column
         const leftColumn = $('#leftColumn');
         items.forEach(item => {
-            const itemBox = $('<div class="item"></div>').text(item).draggable({
-                revert: 'invalid',
-                helper: 'clone',
-                start: function(event, ui) {
-                    $(this).css('opacity', 0.5);
-                },
-                stop: function(event, ui) {
-                    $(this).css('opacity', 1);
-                }
-            });
+            const itemBox = $('<div></div>')
+                .text(item)
+                .attr('style', 'background: var(--card); border: 2px solid var(--accent); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;')
+                .addClass('draggable-item')
+                .draggable({
+                    revert: 'invalid',
+                    helper: 'clone',
+                    start: function(event, ui) {
+                        $(this).css('opacity', 0.5);
+                    },
+                    stop: function(event, ui) {
+                        $(this).css('opacity', 1);
+                    }
+                })
+                .hover(
+                    function() { $(this).css('transform', 'translateY(-2px)'); },
+                    function() { $(this).css('transform', 'translateY(0)'); }
+                );
             leftColumn.append(itemBox);
         });
+
+        // Add hover effects to drop targets
+        $('.draggable-item').hover(
+            function() { 
+                if (!$(this).hasClass('ui-droppable-disabled')) {
+                    $(this).css('transform', 'translateY(-2px)'); 
+                }
+            },
+            function() { 
+                $(this).css('transform', 'translateY(0)'); 
+            }
+        );
 
         // Keep track of matched items
         let matchedCount = 0;
 
         // Make right labels droppable
-        $('.label').droppable({
-            accept: '.item',
+        $('.draggable-item').droppable({
+            accept: '.draggable-item',
             drop: function(event, ui) {
                 const leftItem = ui.draggable.text();
                 const rightLabelType = $(this).data('type');
@@ -120,18 +114,31 @@
                     (rightLabelType === 'string' && isString) ||
                     (rightLabelType === 'alphanumeric' && isAlphanumeric)) {
                     
-                    $(this).text(leftItem + ' matched!'); // Display match
-                    $(this).css('background-color', '#a3e4d7'); // Change color on match
+                    $(this).text(leftItem + ' ✓'); // Display match
+                    $(this).css('background', 'var(--success)'); 
+                    $(this).css('color', 'white');
+                    $(this).css('border-color', 'var(--success)');
                     ui.draggable.draggable('disable'); // Disable dragging for matched item
                     $(this).droppable('disable'); // Disable dropping on this label
+                    $(this).css('cursor', 'default');
+                    ui.draggable.css('cursor', 'default');
                     matchedCount++;
 
                     // Check if all items are matched
                     if (matchedCount === items.length) {
-                        $('#successMessage').show(); // Show success message
+                        successMessage.style.display = 'flex';
+                        successMessage.classList.add('success');
                     }
                 } else {
-                    alert('This item does not match the selected label.');
+                    // Visual feedback for incorrect match
+                    $(this).css('background', 'var(--danger)');
+                    $(this).css('color', 'white');
+                    $(this).css('border-color', 'var(--danger)');
+                    setTimeout(() => {
+                        $(this).css('background', 'var(--card)');
+                        $(this).css('color', 'inherit');
+                        $(this).css('border-color', 'var(--border)');
+                    }, 500);
                 }
             }
         });

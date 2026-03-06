@@ -4,81 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f9;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 350px;
-            padding: 20px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h3 {
-            margin-top: 0;
-        }
-        .item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-        }
-        .key {
-            font-weight: bold;
-            font-size: 14px;
-            color: #555;
-        }
-        .value {
-            font-size: 16px;
-        }
-        .input-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-        label {
-            font-size: 16px;
-        }
-        input[type="text"] {
-            padding: 5px;
-            width: 50%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .message {
-            margin-top: 15px;
-            font-size: 16px;
-            color: #28a745;
-        }
-        .message.failure {
-            color: #dc3545;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
+    <div id="header-placeholder"></div>
 
-<div class="container" id="orderSummary">
-    <!-- Order details will be populated here by JavaScript -->
-    <div class="input-row">
-        <label for="orderInput">Enter Order Number:</label>
-        <input type="text" id="orderInput" name="orderInput" placeholder="Order Number">
-    </div>
-    <div class="message" id="message"></div>
-</div>
+    <main class="card" id="orderSummary">
+        <h1>Order Confirmation</h1>
+        <p class="lead">Enter the exact order number shown below. The order details are displayed in random order.</p>
+
+        <!-- Order details will be populated here by JavaScript -->
+        
+        <div class="input-group">
+            <label for="orderInput">Enter Order Number:</label>
+            <input
+                type="text"
+                id="orderInput"
+                name="orderInput"
+                placeholder="Enter the order number here"
+                aria-describedby="orderMessage"
+            >
+        </div>
+
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Correct! Order number matches.</span>
+        </div>
+
+        <div class="message" id="failureMessage" role="status" aria-live="polite">
+            <span class="icon">✕</span>
+            <span>Incorrect! Order number does not match.</span>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
 
 <script>
     // Function to generate a random 10-digit number
@@ -137,16 +97,24 @@
     // Function to check if the input matches the order number
     document.getElementById("orderInput").addEventListener("input", function () {
         const input = document.getElementById("orderInput").value;
-        const messageElement = document.getElementById("message");
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
         if (input == orderNumber) {
-            messageElement.textContent = "Success: Order number matches!";
-            messageElement.className = "message success";
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
         } else if (input === "") {
-            messageElement.textContent = "";
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
         } else {
-            messageElement.textContent = "Failure: Order number does not match.";
-            messageElement.className = "message failure";
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
         }
     });
 

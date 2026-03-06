@@ -1,0 +1,108 @@
+<header class="site-header">
+    <div class="header-content">
+        <a href="../index.html" class="home-link" title="Home">
+            <svg class="home-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="home-text">Home</span>
+        </a>
+        <div class="breadcrumb">
+            <span class="breadcrumb-item">Automation</span>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-item">Beginner</span>
+        </div>
+    </div>
+</header>
+
+<style>
+.site-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 0;
+    margin: 0;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.home-link:hover {
+    opacity: 0.8;
+    background: rgba(255,255,255,0.1);
+}
+
+.home-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.home-text {
+    font-size: 14px;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.breadcrumb-item {
+    color: white;
+}
+
+.breadcrumb-separator {
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        padding: 0 15px;
+    }
+    
+    .home-text {
+        display: none;
+    }
+    
+    .breadcrumb {
+        font-size: 12px;
+    }
+}
+</style>
+
+<script>
+// Update home link based on current path
+document.addEventListener('DOMContentLoaded', function() {
+    const homeLink = document.querySelector('.home-link');
+    const currentPath = window.location.pathname;
+    
+    if (currentPath.includes('/Automation/Beginner/')) {
+        homeLink.href = '../../index.html';
+    } else if (currentPath.includes('/Automation/')) {
+        homeLink.href = '../index.html';
+    } else {
+        homeLink.href = 'index.html';
+    }
+});
+</script>

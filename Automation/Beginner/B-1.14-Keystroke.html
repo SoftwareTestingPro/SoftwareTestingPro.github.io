@@ -3,77 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Press Any Key</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        .container {
-            width: 80%;
-            max-width: 600px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 1.2em;
-        }
-        .success {
-            color: green;
-        }
-        .error {
-            color: red;
-        }
-    </style>
+    <meta name="description" content="Keystroke Challenge - Press the randomly specified key to succeed.">
+    <title>Keystroke Challenge</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Keystroke Test</h1>
-        <p id="instruction">Press the "<span id="random-key"></span>" key on your keyboard.</p>
-        <div class="message" id="message"></div>
-    </div>
+    <div id="header-placeholder"></div>
+
+    <main class="card">
+        <h1>Keystroke Challenge</h1>
+        <p class="lead">Press the key specified below to complete the task.</p>
+
+        <div class="input-group" style="text-align: center;">
+            <p>Press the "<strong id="random-key" style="font-size: 1.2em; color: var(--accent);"></strong>" key on your keyboard.</p>
+        </div>
+
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Success! You pressed the correct key.</span>
+        </div>
+
+        <div class="message" id="failureMessage" role="status" aria-live="polite">
+            <div class="message-row">
+                <span class="icon">✕</span>
+                <strong>Incorrect Key</strong>
+            </div>
+            <div class="message-row">
+                <div>
+                    <span style="color: inherit; font-size: 12px;">Expected:</span>
+                    <div class="value-box" id="expectedKey"></div>
+                </div>
+                <div>
+                    <span style="color: inherit; font-size: 12px;">You Pressed:</span>
+                    <div class="value-box" id="actualKey"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
 
     <script>
-        // Array of possible keys to press
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedKeyDisplay = document.getElementById('expectedKey');
+        const actualKeyDisplay = document.getElementById('actualKey');
+        const randomKeyDisplay = document.getElementById('random-key');
+
         const keys = [
             'Backspace', 'Tab', 'Enter', 'Shift', 'Control', 'Alt', 'CapsLock', 'Escape',
-            'Space', 'PageUp', 'PageDown', 'End', 'Home', 'ArrowLeft', 'ArrowUp',
+            ' ', 'PageUp', 'PageDown', 'End', 'Home', 'ArrowLeft', 'ArrowUp',
             'ArrowRight', 'ArrowDown', 'Insert', 'Delete', '0', '1', '2', '3', '4',
             '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
             'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
             'Meta', 'ContextMenu', 'NumLock', 'ScrollLock', 'Pause', 'PrintScreen'
         ];
         
-        // Function to get a random key
         function getRandomKey() {
             return keys[Math.floor(Math.random() * keys.length)];
         }
         
-        // Display the random key
         const randomKey = getRandomKey();
-        document.getElementById('random-key').textContent = randomKey;
+        randomKeyDisplay.textContent = randomKey === ' ' ? 'Space' : randomKey;
+        expectedKeyDisplay.textContent = randomKey === ' ' ? 'Space' : randomKey;
         
-        // Add event listener for key presses
         document.addEventListener('keydown', function(event) {
-            const messageElement = document.getElementById('message');
-            if (event.key === randomKey) {
-                messageElement.textContent = 'Success! You pressed the correct key.';
-                messageElement.className = 'message success';
+            // Prevent browser shortcuts for keys like 'Control' or 'Alt'
+            event.preventDefault();
+
+            const pressedKey = event.key;
+            actualKeyDisplay.textContent = pressedKey === ' ' ? 'Space' : pressedKey;
+
+            if (pressedKey.toLowerCase() === randomKey.toLowerCase()) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                messageElement.textContent = `Error! You pressed the "${event.key}" key.`;
-                messageElement.className = 'message error';
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
         });
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
     </script>
 </body>
 </html>

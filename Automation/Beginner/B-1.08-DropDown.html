@@ -3,104 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f9f9f9;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: auto; /* Fit container to content */
-        }
-        h2 {
-            text-align: center; /* Center-align header */
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-        .dropdown-wrapper {
-            margin-bottom: 10px;
-        }
-        .dropdown-wrapper select {
-            width: calc(100% - 30px); /* Adjust width to fit within container, accounting for icon space */
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: 10px; /* Space between dropdown and icon */
-        }
-        .dropdown-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .validation-icon {
-            width: 20px;
-            height: 20px;
-            background-size: contain;
-            background-repeat: no-repeat;
-        }
-        .validation-icon.success {
-            background-color: #28a745; /* Green background */
-            mask: url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/check-circle-fill.svg') no-repeat center center;
-            mask-size: contain;
-        }
-        .validation-icon.error {
-            background-color: #dc3545; /* Red background */
-            mask: url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/x-circle-fill.svg') no-repeat center center;
-            mask-size: contain;
-        }
-    </style>
+    <meta name="description" content="Dropdown Selection - Interact with single and multi-select dropdowns.">
+    <title>Dropdown Selection</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2>Select Options</h2>
+    <div id="header-placeholder"></div>
+
+    <main class="card">
+        <h1>Dropdown Selection</h1>
+        <p class="lead">Select the specified options from the dropdowns below to complete the tasks.</p>
         
-        <div class="dropdown-wrapper">
+        <div class="input-group">
             <label for="dropdown1">Select '2' from dropdown:</label>
-            <div class="dropdown-container">
-                <select id="dropdown1">
-                    <option value="">Select</option>
-                    <!-- Options will be added dynamically -->
-                </select>
-                <span id="icon1" class="validation-icon"></span>
+            <select id="dropdown1">
+                <option value="">Select</option>
+                <!-- Options will be added dynamically -->
+            </select>
+            <div class="message" id="successMessage1" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Correct selection.</span>
+            </div>
+            <div class="message" id="failureMessage1" role="status" aria-live="polite">
+                <div class="message-row">
+                    <span class="icon">✕</span>
+                    <strong>Does not match</strong>
+                </div>
+                <div class="message-row">
+                    <div>
+                        <span style="color: inherit; font-size: 12px;">Expected:</span>
+                        <div class="value-box" id="expectedValue1">2</div>
+                    </div>
+                    <div>
+                        <span style="color: inherit; font-size: 12px;">Selected:</span>
+                        <div class="value-box" id="actualValue1"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="dropdown-wrapper">
-            <label for="dropdown2">Select '2' and '4' from dropdown:</label>
-            <div class="dropdown-container">
-                <select id="dropdown2" multiple>
-                    <option value="">Select</option>
-                    <!-- Options will be added dynamically -->
-                </select>
-                <span id="icon2" class="validation-icon"></span>
+        <div class="input-group">
+            <label for="dropdown2">Select '2' and '4' from dropdown (multi-select):</label>
+            <select id="dropdown2" multiple>
+                <option value="">Select</option>
+                <!-- Options will be added dynamically -->
+            </select>
+            <div class="message" id="successMessage2" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Correct selection.</span>
+            </div>
+            <div class="message" id="failureMessage2" role="status" aria-live="polite">
+                <div class="message-row">
+                    <span class="icon">✕</span>
+                    <strong>Does not match</strong>
+                </div>
+                <div class="message-row">
+                    <div>
+                        <span style="color: inherit; font-size: 12px;">Expected:</span>
+                        <div class="value-box" id="expectedValue2">2, 4</div>
+                    </div>
+                    <div>
+                        <span style="color: inherit; font-size: 12px;">Selected:</span>
+                        <div class="value-box" id="actualValue2"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="dropdown-wrapper">
+        <div class="input-group">
             <label for="dropdown3">Select the 3rd option from dropdown:</label>
-            <div class="dropdown-container">
-                <select id="dropdown3">
-                    <option value="">Select</option>
-                    <!-- Options will be added dynamically -->
-                </select>
-                <span id="icon3" class="validation-icon"></span>
+            <select id="dropdown3">
+                <option value="">Select</option>
+                <!-- Options will be added dynamically -->
+            </select>
+            <div class="message" id="successMessage3" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Correct selection.</span>
+            </div>
+            <div class="message" id="failureMessage3" role="status" aria-live="polite">
+                <div class="message-row">
+                    <span class="icon">✕</span>
+                    <strong>Does not match</strong>
+                </div>
+                <div class="message-row">
+                    <div>
+                        <span style="color: inherit; font-size: 12px;">Expected:</span>
+                        <div class="value-box" id="expectedValue3"></div>
+                    </div>
+                    <div>
+                        <span style="color: inherit; font-size: 12px;">Selected:</span>
+                        <div class="value-box" id="actualValue3"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         // Function to shuffle array
@@ -146,34 +146,54 @@
 
             // Store the randomized list to check later
             dropdown3.dataset.randomizedList = JSON.stringify(numbers);
+            document.getElementById('expectedValue3').textContent = numbers[2].toString();
         }
 
-        // Validate selections
         function validateDropdown1() {
             const dropdown1 = document.getElementById('dropdown1').value;
-            const icon = document.getElementById('icon1');
+            const successMsg = document.getElementById('successMessage1');
+            const failureMsg = document.getElementById('failureMessage1');
+            const actualValueDisplay = document.getElementById('actualValue1');
 
             if (dropdown1 === '2') {
-                icon.className = 'validation-icon success';
+                successMsg.style.display = 'flex';
+                successMsg.classList.add('success');
+                failureMsg.style.display = 'none';
+                failureMsg.classList.remove('failure');
             } else {
-                icon.className = 'validation-icon error';
+                successMsg.style.display = 'none';
+                successMsg.classList.remove('success');
+                failureMsg.style.display = 'flex';
+                failureMsg.classList.add('failure');
+                actualValueDisplay.textContent = dropdown1 || '(none)';
             }
         }
 
         function validateDropdown2() {
             const dropdown2 = Array.from(document.getElementById('dropdown2').selectedOptions).map(option => option.value);
-            const icon = document.getElementById('icon2');
+            const successMsg = document.getElementById('successMessage2');
+            const failureMsg = document.getElementById('failureMessage2');
+            const actualValueDisplay = document.getElementById('actualValue2');
 
             if (dropdown2.includes('2') && dropdown2.includes('4') && dropdown2.length === 2) {
-                icon.className = 'validation-icon success';
+                successMsg.style.display = 'flex';
+                successMsg.classList.add('success');
+                failureMsg.style.display = 'none';
+                failureMsg.classList.remove('failure');
             } else {
-                icon.className = 'validation-icon error';
+                successMsg.style.display = 'none';
+                successMsg.classList.remove('success');
+                failureMsg.style.display = 'flex';
+                failureMsg.classList.add('failure');
+                actualValueDisplay.textContent = dropdown2.join(', ') || '(none)';
             }
         }
 
         function validateDropdown3() {
             const dropdown3 = document.getElementById('dropdown3').value;
-            const icon = document.getElementById('icon3');
+            const successMsg = document.getElementById('successMessage3');
+            const failureMsg = document.getElementById('failureMessage3');
+            const actualValueDisplay = document.getElementById('actualValue3');
 
             // Retrieve the randomized list for dropdown3
             const randomizedList = JSON.parse(document.getElementById('dropdown3').dataset.randomizedList);
@@ -182,9 +202,16 @@
             const thirdItem = randomizedList[2].toString();
 
             if (dropdown3 === thirdItem) {
-                icon.className = 'validation-icon success';
+                successMsg.style.display = 'flex';
+                successMsg.classList.add('success');
+                failureMsg.style.display = 'none';
+                failureMsg.classList.remove('failure');
             } else {
-                icon.className = 'validation-icon error';
+                successMsg.style.display = 'none';
+                successMsg.classList.remove('success');
+                failureMsg.style.display = 'flex';
+                failureMsg.classList.add('failure');
+                actualValueDisplay.textContent = dropdown3 || '(none)';
             }
         }
 
@@ -195,6 +222,14 @@
             document.getElementById('dropdown1').addEventListener('change', validateDropdown1);
             document.getElementById('dropdown2').addEventListener('change', validateDropdown2);
             document.getElementById('dropdown3').addEventListener('change', validateDropdown3);
+
+            // Hide messages on load
+            document.getElementById('successMessage1').style.display = 'none';
+            document.getElementById('failureMessage1').style.display = 'none';
+            document.getElementById('successMessage2').style.display = 'none';
+            document.getElementById('failureMessage2').style.display = 'none';
+            document.getElementById('successMessage3').style.display = 'none';
+            document.getElementById('failureMessage3').style.display = 'none';
         });
     </script>
 </body>

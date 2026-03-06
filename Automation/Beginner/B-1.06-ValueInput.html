@@ -3,70 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Value</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container-box {
-            max-width: 400px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .full-height {
-            height: 100vh;
-        }
-        .alert {
-            display: none;
-        }
-        .text-center {
-            text-align: center;
-        }
-    </style>
+    <meta name="description" content="Input Value Matching - Copy text from one field to another to validate.">
+    <title>Input Value Matching</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="d-flex justify-content-center align-items-center full-height">
-        <div class="container-box">
-            <h4 class="text-center">Input Validations</h4>
-            <div class="form-group">
-                <label for="inputField1">Copy text from below Input Field:</label>
-                <input type="text" class="form-control" id="inputField1" readonly>
-            </div>
-            <div class="form-group">
-                <label for="inputField2">Enter text copied from above Input Field:</label>
-                <input type="text" class="form-control" id="inputField2">
-            </div>
-            <div id="message" class="alert" role="alert"></div>
+    <div id="header-placeholder"></div>
+
+    <main class="card">
+        <h1>Input Value Matching</h1>
+        <p class="lead">Copy the randomly generated text from the first field into the second field to complete the task.</p>
+
+        <div class="input-group">
+            <label for="sourceInput">Source Text (Read-Only):</label>
+            <input type="text" id="sourceInput" readonly>
         </div>
-    </div>
+
+        <div class="input-group">
+            <label for="destinationInput">Enter the text here:</label>
+            <input type="text" id="destinationInput" placeholder="Enter the text from the field above">
+        </div>
+
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Correct — the entered text matches the source.</span>
+        </div>
+
+        <div class="message" id="failureMessage" role="status" aria-live="polite">
+            <div class="message-row">
+                <span class="icon">✕</span>
+                <strong>Does not match</strong>
+            </div>
+            <div class="message-row">
+                <div>
+                    <span style="color: inherit; font-size: 12px;">Expected:</span>
+                    <div class="value-box" id="expectedValue"></div>
+                </div>
+                <div>
+                    <span style="color: inherit; font-size: 12px;">Entered:</span>
+                    <div class="value-box" id="actualValue"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const inputField1 = document.getElementById('inputField1');
-            const inputField2 = document.getElementById('inputField2');
-            const message = document.getElementById('message');
+        const sourceInput = document.getElementById('sourceInput');
+        const destinationInput = document.getElementById('destinationInput');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValueDisplay = document.getElementById('expectedValue');
+        const actualValueDisplay = document.getElementById('actualValue');
 
-            // Generate random text
-            const randomText = Math.random().toString(36).substring(3);
+        // Generate and set random text
+        const randomText = Math.random().toString(36).substring(3);
+        sourceInput.value = randomText;
+        expectedValueDisplay.textContent = randomText;
 
-            // Set value as attribute and also as displayed value
-            inputField1.setAttribute('value', randomText);
-            inputField1.value = randomText;
+        // Hide messages on page load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
 
-            inputField2.addEventListener('input', () => {
-                if (inputField2.value === inputField1.value) {
-                    message.textContent = 'Success: The values match!';
-                    message.className = 'alert alert-success';
-                    message.style.display = 'block';
-                } else {
-                    message.textContent = 'Failure: The values do not match.';
-                    message.className = 'alert alert-danger';
-                    message.style.display = 'block';
-                }
-            });
-        });
+        function validateInput() {
+            const userInput = destinationInput.value;
+
+            if (userInput === '') {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+                actualValueDisplay.textContent = '';
+            } else if (userInput === randomText) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            } else {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                actualValueDisplay.textContent = userInput;
+            }
+        }
+
+        destinationInput.addEventListener('input', validateInput);
+        destinationInput.addEventListener('blur', validateInput);
     </script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

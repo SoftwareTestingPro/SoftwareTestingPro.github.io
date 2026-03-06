@@ -4,99 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click Action</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        .box {
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 90%; /* Adjusted for mobile responsiveness */
-            margin: 0 auto; /* Center the box on mobile */
-        }
-
-        .banner {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px 5px 0 0;
-            margin-bottom: 20px;
-        }
-
-        .banner h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .level-info {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .success-message {
-            color: green;
-            font-weight: bold;
-            display: none;
-            margin-top: 20px;
-        }
-
-        .box button {
-            display: inline-block;
-            background-color: #007bff;
-            color: #fff;
-            font-weight: bold;
-            padding: 10px 20px;
-            border: 2px solid #007bff;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .box button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Responsive styling for small devices */
-        @media (max-width: 600px) {
-            .box {
-                width: 81%; /* 90% width for smaller mobile screens */
-            }
-
-            .banner h1 {
-                font-size: 20px; /* Reduce font size for smaller screens */
-            }
-
-            .box button {
-                font-size: 14px; /* Adjust button font size */
-                padding: 10px 15px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="box">
-        <div class="level-info">
-            <p>Click the below button</p>
+    <div id="header-placeholder"></div>
+
+    <main class="card">
+        <h1>Click Action</h1>
+        <p class="lead">Click the button below to complete this task.</p>
+
+        <div class="button-group">
+            <button id="clickButton" type="button">Click Me</button>
         </div>
-        <button id="clickButton">Click Me</button>
-        <div id="successMessage" class="success-message">Success! You clicked the button.</div>
-    </div>
+
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Success! You clicked the button.</span>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
 
     <script>
-        document.getElementById('clickButton').addEventListener('click', function() {
-            document.getElementById('successMessage').style.display = 'block';
+        const clickButton = document.getElementById('clickButton');
+        const successMessage = document.getElementById('successMessage');
+
+        // Hide success message initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+
+        clickButton.addEventListener('click', function() {
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
         });
     </script>
 </body>

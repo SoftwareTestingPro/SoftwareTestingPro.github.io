@@ -104,64 +104,64 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h3>Please Fill Out the Following Information</h3>
-        <label for="user-input-name">Enter your first name:</label>
-        <div class="input-container">
-            <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
-            <span class="material-icons valid-icon">check_circle</span>
-            <span class="material-icons invalid-icon">cancel</span>
-        </div>
-        
-        <label for="user-input-age">Enter your age:</label>
-        <div class="input-container">
-            <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age">
-            <span class="material-icons valid-icon">check_circle</span>
-            <span class="material-icons invalid-icon">cancel</span>
-        </div>
-
-        <label for="text-input">Enter "text within double quotes" in the input field:</label>
-        <div class="input-container">
-            <input type="text" id="text-input" class="form-control" placeholder="Enter label text within quotes">
-            <span class="material-icons valid-icon">check_circle</span>
-            <span class="material-icons invalid-icon">cancel</span>
-        </div>
+<div class="container">
+    <h3>Please Fill Out the Following Information</h3>
+    <label for="user-input-name">Enter your first name:</label>
+    <div class="input-container">
+        <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
+        <span class="material-icons valid-icon">check_circle</span>
+        <span class="material-icons invalid-icon">cancel</span>
     </div>
 
-    <script>
-        const validateInput = (input, regex) => {
-            const value = input.value;
-            const parent = input.parentNode;
-            const validIcon = parent.querySelector('.valid-icon');
-            const invalidIcon = parent.querySelector('.invalid-icon');
+    <label for="user-input-age">Enter your age:</label>
+    <div class="input-container">
+        <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age">
+        <span class="material-icons valid-icon">check_circle</span>
+        <span class="material-icons invalid-icon">cancel</span>
+    </div>
 
-            if (value === '') {
-                validIcon.style.display = 'none';
-                invalidIcon.style.display = 'none';
-            } else if (regex.test(value)) {
-                parent.classList.add('valid');
-                parent.classList.remove('invalid');
-                validIcon.style.display = 'inline-block';
-                invalidIcon.style.display = 'none';
-            } else {
-                parent.classList.add('invalid');
-                parent.classList.remove('valid');
-                validIcon.style.display = 'none';
-                invalidIcon.style.display = 'inline-block';
-            }
-        };
+    <label for="text-input">Enter "text within double quotes" in the input field:</label>
+    <div class="input-container">
+        <input type="text" id="text-input" class="form-control" placeholder="Enter label text within quotes">
+        <span class="material-icons valid-icon">check_circle</span>
+        <span class="material-icons invalid-icon">cancel</span>
+    </div>
+</div>
 
-        document.getElementById('user-input-name').addEventListener('input', function() {
-            validateInput(this, /^[A-Za-z]+$/);
-        });
+<script>
+    const validateInput = (input, regex) => {
+        const value = input.value;
+        const parent = input.parentNode;
+        const validIcon = parent.querySelector('.valid-icon');
+        const invalidIcon = parent.querySelector('.invalid-icon');
 
-        document.getElementById('user-input-age').addEventListener('input', function() {
-            validateInput(this, /^\d+$/);
-        });
+        if (value === '') {
+            validIcon.style.display = 'none';
+            invalidIcon.style.display = 'none';
+        } else if (regex.test(value)) {
+            parent.classList.add('valid');
+            parent.classList.remove('invalid');
+            validIcon.style.display = 'inline-block';
+            invalidIcon.style.display = 'none';
+        } else {
+            parent.classList.add('invalid');
+            parent.classList.remove('valid');
+            validIcon.style.display = 'none';
+            invalidIcon.style.display = 'inline-block';
+        }
+    };
 
-        document.getElementById('text-input').addEventListener('input', function() {
-            validateInput(this, /^text within double quotes$/);
-        });
-    </script>
+    document.getElementById('user-input-name').addEventListener('input', function() {
+        validateInput(this, /^[A-Za-z]+$/);
+    });
+
+    document.getElementById('user-input-age').addEventListener('input', function() {
+        validateInput(this, /^\d+$/);
+    });
+
+    document.getElementById('text-input').addEventListener('input', function() {
+        validateInput(this, /^text within double quotes$/);
+    });
+</script>
 </body>
 </html>

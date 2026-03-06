@@ -4,20 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Gender</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
+</head>
+<body>
+    <div id="header-placeholder"></div>
 
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
+    <main class="card">
+        <h1>Select Gender</h1>
+        <p class="lead">Select the "Male" radio button to complete this task.</p>
+
+        <div class="radio-group">
+            <label class="radio-label">
+                <input type="radio" name="gender" value="male">
+                <span class="radio-custom"></span>
+                Male
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="gender" value="female">
+                <span class="radio-custom"></span>
+                Female
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="gender" value="other">
+                <span class="radio-custom"></span>
+                Other
+            </label>
+        </div>
+
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Correct! You selected the right option.</span>
+        </div>
+
+        <div class="message" id="failureMessage" role="status" aria-live="polite">
+            <span class="icon">✕</span>
+            <span>Incorrect! Please select the "Male" option.</span>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const radioOptions = document.querySelectorAll('input[name="gender"]');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+
+        radioOptions.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selected = this.value;
+                if (selected === 'male') {
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('success');
+                    failureMessage.style.display = 'none';
+                    failureMessage.classList.remove('failure');
+                } else {
+                    successMessage.style.display = 'none';
+                    successMessage.classList.remove('success');
+                    failureMessage.style.display = 'flex';
+                    failureMessage.classList.add('failure');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 80%;

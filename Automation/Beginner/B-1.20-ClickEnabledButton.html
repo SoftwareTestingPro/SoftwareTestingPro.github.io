@@ -3,133 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enabled Disabled Buttons</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            text-align: center;
-            max-width: 90%;
-            width: 400px;
-        }
-        .label {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-        .button-container button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff; /* Default button color */
-            transition: background-color 0.3s ease;
-        }
-        .button-container button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        .button-container button:hover:not(:disabled) {
-            background-color: #0056b3; /* Darker color on hover */
-        }
-        .message {
-            margin-top: 15px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .success {
-            color: green;
-        }
-
-        /* Responsive styling */
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-                max-width: 85%; /* Adjust to fit smaller screens */
-            }
-
-            .label {
-                font-size: 16px; /* Smaller font size */
-            }
-
-            .button-container button {
-                font-size: 14px; /* Adjust font size for buttons */
-                padding: 8px 16px; /* Reduce padding */
-                min-width: 120px; /* Ensure buttons are not too small */
-            }
-
-            .message {
-                font-size: 14px; /* Smaller font size for messages */
-            }
-        }
-    </style>
+    <meta name="description" content="Click Enabled Button - Identify and click the single enabled button among several disabled ones.">
+    <title>Enabled/Disabled Buttons</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
+    <div id="header-placeholder"></div>
 
-<div class="container">
-    <div class="label">Select the enabled button:</div>
-    <div class="button-container" id="buttonContainer">
-        <!-- Buttons will be inserted here by JavaScript -->
-    </div>
-    <div id="message" class="message"></div>
-</div>
+    <main class="card">
+        <h1>Click the Enabled Button</h1>
+        <p class="lead">Select the one enabled button from the group below to complete the task.</p>
 
-<script>
-    function generateRandomString(length) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let result = '';
-        for (let i = 0; i < length; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        <div class="button-container" id="buttonContainer">
+            <!-- Buttons will be inserted here by JavaScript -->
+        </div>
+
+        <div class="message success" id="successMessage" role="status" aria-live="polite">
+            <span class="icon">✓</span>
+            <span>Success! You clicked the enabled button.</span>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
         }
-        return result;
-    }
 
-    function setupButtons() {
-        const buttonContainer = document.getElementById('buttonContainer');
-        const buttonCount = 5;
-        const enabledIndex = Math.floor(Math.random() * buttonCount);
-        const buttons = [];
+        function setupButtons() {
+            const buttonContainer = document.getElementById('buttonContainer');
+            const successMessage = document.getElementById('successMessage');
+            const buttonCount = 5;
+            const enabledIndex = Math.floor(Math.random() * buttonCount);
 
-        for (let i = 0; i < buttonCount; i++) {
-            const button = document.createElement('button');
-            button.textContent = `Button ${i + 1}`;
-            button.id = generateRandomString(8);
-            button.className = generateRandomString(5);
-            button.name = generateRandomString(6);
-            button.disabled = i !== enabledIndex; // Only one button enabled
-            button.addEventListener('click', function() {
-                if (!this.disabled) {
-                    document.getElementById('message').textContent = 'Success! You clicked the enabled button.';
-                    document.getElementById('message').className = 'message success';
-                }
-            });
-            buttonContainer.appendChild(button);
+            for (let i = 0; i < buttonCount; i++) {
+                const button = document.createElement('button');
+                button.textContent = `Button ${i + 1}`;
+                button.id = generateRandomString(8);
+                button.className = generateRandomString(5);
+                button.name = generateRandomString(6);
+                button.disabled = i !== enabledIndex;
+                button.addEventListener('click', function() {
+                    if (!this.disabled) {
+                        successMessage.style.display = 'flex';
+                    }
+                });
+                buttonContainer.appendChild(button);
+            }
         }
-    }
 
-    // Initialize buttons
-    setupButtons();
-</script>
-
+        // Initialize buttons and hide message
+        setupButtons();
+        document.getElementById('successMessage').style.display = 'none';
+    </script>
 </body>
 </html>

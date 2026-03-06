@@ -3,70 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Capture Screenshots - A dynamic page for practicing screenshot capture.">
     <title>Capturing Screenshots</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-            transition: all 1s ease-in-out;
-        }
-        .scrollable {
-            height: auto;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        #label {
-            font-size: 24px;
-            margin-bottom: 20px;
-            position: sticky;
-            top: 0;
-            background-color: #fff;
-            padding: 10px;
-            z-index: 10;
-        }
-        #timer {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        #flagsContainer {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-            transition: all 1s ease-in-out;
-        }
-        img {
-            width: 150px;
-            height: auto;
-            align-self: center;
-            transition: all 0.5s ease-in-out;
-        }
-        .hidden {
-            opacity: 0;
-            transform: scale(0.5);
-        }
-        .visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
+    <div id="header-placeholder"></div>
 
     <div class="container" id="contentContainer">
         <div id="label">Flags displaying in...</div>
         <div id="timer">5</div>
         <div id="flagsContainer"></div>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const label = document.getElementById('label');
