@@ -10,49 +10,53 @@
 <body>
 <div id="header-placeholder"></div>
 
-<nav class="task-navigation">
-    <a href="B-1.02-Input.html" class="nav-btn nav-btn-prev">
-        <span class="nav-icon">←</span>
-        Previous Task
-    </a>
-    <a href="B-1.04-Color.html" class="nav-btn nav-btn-next">
-        Next Task
-        <span class="nav-icon">→</span>
-    </a>
-</nav>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="B-1.02-Input.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
+        <a href="B-1.04-Color.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
 
     <main class="card">
-        <h1>Select Gender</h1>
-        <p class="lead">Select the "Male" radio button to complete this task.</p>
+        <div class="card-content">
+            <h1>Select Gender</h1>
+            <p class="lead">Select the "Male" radio button to complete this task.</p>
 
-        <div class="radio-group">
-            <label class="radio-label">
-                <input type="radio" name="gender" value="male">
-                <span class="radio-custom"></span>
-                Male
-            </label>
-            <label class="radio-label">
-                <input type="radio" name="gender" value="female">
-                <span class="radio-custom"></span>
-                Female
-            </label>
-            <label class="radio-label">
-                <input type="radio" name="gender" value="other">
-                <span class="radio-custom"></span>
-                Other
-            </label>
-        </div>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" name="gender" value="male">
+                    <span class="radio-custom"></span>
+                    Male
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="gender" value="female">
+                    <span class="radio-custom"></span>
+                    Female
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="gender" value="other">
+                    <span class="radio-custom"></span>
+                    Other
+                </label>
+            </div>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct! You selected the right option.</span>
-        </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Correct! You selected the right option.</span>
+            </div>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <span class="icon">✕</span>
-            <span>Incorrect! Please select the "Male" option.</span>
+            <div class="message" id="failureMessage" role="status" aria-live="polite">
+                <span class="icon">✕</span>
+                <span>Incorrect! Please select the "Male" option.</span>
+            </div>
         </div>
     </main>
+</div>
 
     <div id="footer-placeholder"></div>
 

@@ -4,57 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hiding Element</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 100%;
-            width: auto;
-            text-align: center;
-        }
-
-        .success-message,
-        .failure-message {
-            display: none;
-            margin-top: 20px;
-            font-size: 1.2em;
-        }
-
-        .success-message {
-            color: #155724;
-        }
-
-        .failure-message {
-            color: #721c24;
-        }
-
-        #countdown {
-            font-size: 1.5em;
-            margin-top: 10px;
-            color: #007bff;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <label id="labelText">Click the button displayed in next screen</label>
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.01-HiddenElement.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.02-Download.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Hidden Element Challenge</h1>
+        <p class="lead">A button will appear briefly after a countdown. Click it quickly to succeed.</p>
+
         <div id="countdown">Time remaining: 5 seconds</div>
 
         <!-- Success and failure messages -->
@@ -62,12 +34,11 @@
             <div class="success-message" id="successMessage">Congratulations! Well done!</div>
             <div class="failure-message" id="failureMessage">Sorry, you missed it!</div>
         </div>
-    </div>
+        </div>
+    </main>
+</div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<div id="footer-placeholder"></div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -77,6 +48,12 @@
             var failureMessage = document.getElementById('failureMessage');
             var buttonClicked = false;
             var timeLeft = 5;
+
+            // Hide messages on load
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.classList.remove('failure');
 
             // Countdown timer
             var countdownInterval = setInterval(function() {
@@ -97,7 +74,7 @@
                 button.id = 'showButton';
                 button.className = 'btn btn-primary btn-lg';
                 button.textContent = 'Click Me';
-                document.querySelector('.container').appendChild(button);
+                document.querySelector('.card-content').appendChild(button);
 
                 // Show the button instantly
                 button.style.display = 'block';
@@ -109,7 +86,10 @@
                         if (button.parentNode) {
                             button.parentNode.removeChild(button); // Remove button from DOM
                         }
-                        failureMessage.style.display = 'block';
+                        failureMessage.style.display = 'flex';
+                        failureMessage.classList.add('failure');
+                        successMessage.style.display = 'none';
+                        successMessage.classList.remove('success');
                     }
                 }, 500);
 
@@ -120,7 +100,10 @@
                     if (button.parentNode) {
                         button.parentNode.removeChild(button); // Remove button from DOM
                     }
-                    successMessage.style.display = 'block';
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('success');
+                    failureMessage.style.display = 'none';
+                    failureMessage.classList.remove('failure');
                 });
 
             }, 5000);

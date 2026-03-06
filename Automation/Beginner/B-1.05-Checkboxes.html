@@ -10,42 +10,44 @@
 <body>
 <div id="header-placeholder"></div>
 
-<nav class="task-navigation">
-    <a href="B-1.04-Color.html" class="nav-btn nav-btn-prev">
-        <span class="nav-icon">←</span>
-        Previous Task
-    </a>
-    <a href="B-1.06-ValueInput.html" class="nav-btn nav-btn-next">
-        Next Task
-        <span class="nav-icon">→</span>
-    </a>
-</nav>
-
     <div class="content-wrapper">
-        <main class="card">
-            <h1>Select Hobbies</h1>
-            <p id="message">Please select "Music" and the 3rd option in the list.</p>
+        <div class="card-nav">
+            <a href="B-1.04-Color.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.06-ValueInput.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
 
-            <div class="checkbox-group" id="checkboxGroup">
-                <!-- Checkboxes will be inserted here by JavaScript -->
-            </div>
-            <div class="message success" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>You have selected "Music" and the 3rd option.</span>
-            </div>
-            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-                <div class="message-row">
-                    <span class="icon">✕</span>
-                    <strong>Does not match</strong>
+        <main class="card">
+            <div class="card-content">
+                <h1>Select Hobbies</h1>
+                <p id="message">Please select "Music" and the 3rd option in the list.</p>
+
+                <div class="checkbox-group" id="checkboxGroup">
+                    <!-- Checkboxes will be inserted here by JavaScript -->
                 </div>
-                <div class="message-row">
-                    <div>
-                        <span style="color: inherit; font-size: 12px;">Expected:</span>
-                        <div class="value-box" id="expectedValue"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>You have selected "Music" and the 3rd option.</span>
+                </div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    <div class="message-row">
+                        <span class="icon">✕</span>
+                        <strong>Does not match</strong>
                     </div>
-                    <div>
-                        <span style="color: inherit; font-size: 12px;">Entered:</span>
-                        <div class="value-box" id="actualValue"></div>
+                    <div class="message-row">
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Expected:</span>
+                            <div class="value-box" id="expectedValue"></div>
+                        </div>
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Entered:</span>
+                            <div class="value-box" id="actualValue"></div>
+                        </div>
                     </div>
                 </div>
             </div>

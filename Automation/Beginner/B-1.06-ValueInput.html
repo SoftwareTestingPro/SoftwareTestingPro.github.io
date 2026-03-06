@@ -11,7 +11,8 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
+<div class="content-wrapper">
+    <div class="card-nav">
         <a href="B-1.05-Checkboxes.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
             Previous Task
@@ -20,44 +21,47 @@
             Next Task
             <span class="nav-icon">→</span>
         </a>
-    </nav>
+    </div>
 
     <main class="card">
-        <h1>Input Value Matching</h1>
-        <p class="lead">Copy the randomly generated text from the first field into the second field to complete the task.</p>
+        <div class="card-content">
+            <h1>Input Value Matching</h1>
+            <p class="lead">Copy the randomly generated text from the first field into the second field to complete the task.</p>
 
-        <div class="input-group">
-            <label for="sourceInput">Source Text (Read-Only):</label>
-            <input type="text" id="sourceInput" readonly>
-        </div>
-
-        <div class="input-group">
-            <label for="destinationInput">Enter the text here:</label>
-            <input type="text" id="destinationInput" placeholder="Enter the text from the field above">
-        </div>
-
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct — the entered text matches the source.</span>
-        </div>
-
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <div class="message-row">
-                <span class="icon">✕</span>
-                <strong>Does not match</strong>
+            <div class="input-group">
+                <label for="sourceInput">Source Text (Read-Only):</label>
+                <input type="text" id="sourceInput" readonly>
             </div>
-            <div class="message-row">
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Expected:</span>
-                    <div class="value-box" id="expectedValue"></div>
+
+            <div class="input-group">
+                <label for="destinationInput">Enter the text here:</label>
+                <input type="text" id="destinationInput" placeholder="Enter the text from the field above">
+            </div>
+
+            <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Correct — the entered text matches the source.</span>
+            </div>
+
+            <div class="message" id="failureMessage" role="status" aria-live="polite">
+                <div class="message-row">
+                    <span class="icon">✕</span>
+                    <strong>Does not match</strong>
                 </div>
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Entered:</span>
-                    <div class="value-box" id="actualValue"></div>
+                <div class="message-row">
+                    <div>
+                        <span style="color: inherit; font-size: 12px;">Expected:</span>
+                        <div class="value-box" id="expectedValue"></div>
+                    </div>
+                    <div>
+                        <span style="color: inherit; font-size: 12px;">Entered:</span>
+                        <div class="value-box" id="actualValue"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+</div>
 
     <div id="footer-placeholder"></div>
 

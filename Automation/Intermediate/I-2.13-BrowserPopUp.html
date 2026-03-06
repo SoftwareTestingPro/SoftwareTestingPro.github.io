@@ -6,72 +6,38 @@
     <title>Random Life Quote</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <script src="../../components.js"></script>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .box {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-        }
-        .box label {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            display: block;
-            color: #333;
-        }
-        .box input[type="text"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        .box button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .box button:hover {
-            background-color: #0056b3;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 1em;
-        }
-        .success {
-            color: #28a745;
-        }
-        .failure {
-            color: #dc3545;
-        }
-    </style>
 </head>
 <body>
-    <div class="box">
-        <label for="userInput">Click below button to fetch a quote and enter the quote in the input field:</label>
-        <div class="container">
-            <button onclick="openQuoteWindow()">Get a Random Life Quote</button>
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.12-Frame.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.14-JSInput.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <input type="text" id="userInput" name="userInput" disabled>
-        <div class="message" id="result"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Random Life Quote</h1>
+                <p class="lead">Click below button to fetch a quote and enter the quote in the input field:</p>
+
+                <div class="container">
+                    <button onclick="openQuoteWindow()">Get a Random Life Quote</button>
+                </div>
+
+                <input type="text" id="userInput" name="userInput" disabled>
+
+                <div class="message" id="result"></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         let displayedQuote = "";

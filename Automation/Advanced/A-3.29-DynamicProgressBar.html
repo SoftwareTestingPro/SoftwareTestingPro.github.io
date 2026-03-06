@@ -4,56 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Progress Bar Challenge</title>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
-        .container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #progress-bar-container {
-            width: 300px;
-            height: 30px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #e0e0e0;
-            margin: 20px auto;
-            overflow: hidden;
-            position: relative;
-        }
-        #progress-bar {
-            width: 100%;
-            height: 100%;
-            background-color: #4CAF50;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transform-origin: left;
-            transform: scaleX(0);
-        }
-        #status { display: none; }
-        button { padding: 10px 20px; font-size: 16px; border-radius: 5px; border: none; cursor: pointer; background-color: #007BFF; color: #fff; }
-        button:disabled { background-color: #a0a0a0; cursor: not-allowed; }
-        #message-display { margin-top: 15px; font-size: 18px; font-weight: bold; min-height: 22px; }
-        .success { color: green; }
-        .failure { color: red; }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2>Dynamic Progress Bar Challenge</h2>
-        <h4>Click on below button once progress bar completes</h4>
-        <div id="status"></div>
-        <div id="progress-bar-container">
-            <div id="progress-bar"></div>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="A-3.28-DragAndDropWithFrames.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="A-3.30-ReadingPdfFile.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <button id="action-button">Click Me!</button>
-        <div id="message-display"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Dynamic Progress Bar</h1>
+                <p class="lead">Click the button to start the progress bar and complete it.</p>
+
+                <h4>Click on below button once progress bar completes</h4>
+                <div id="status"></div>
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <button id="action-button">Click Me!</button>
+                <div id="successMessage" class="message success"></div>
+                <div id="failureMessage" class="message failure"></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const progressBar = document.getElementById('progress-bar');
         const actionButton = document.getElementById('action-button');
-        const messageDisplay = document.getElementById('message-display');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
         let progress = 0;
         let intervalId;
         let buttonClicked = false;
+
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.classList.remove('failure');
 
         const randomDuration = Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000;
         const updateInterval = 100; // Check progress every 100ms
@@ -82,8 +83,11 @@
                 setTimeout(() => {
                     actionButton.style.display = 'none';
                     if (!buttonClicked) {
-                        messageDisplay.textContent = "Failure! You failed to click the button in time.";
-                        messageDisplay.className = 'message-display failure';
+                        failureMessage.style.display = 'flex';
+                        failureMessage.classList.add('failure');
+                        successMessage.style.display = 'none';
+                        successMessage.classList.remove('success');
+                        failureMessage.textContent = "Failure! You failed to click the button in time.";
                     }
                 }, 1000);
             }
@@ -94,12 +98,18 @@
             if (progress < 100) {
                 clearInterval(intervalId);
                 progressBar.style.animationPlayState = 'paused'; // Pause the animation
-                messageDisplay.textContent = "You clicked too early";
-                messageDisplay.className = 'message-display failure';
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.textContent = "You clicked too early";
                 actionButton.disabled = true;
             } else {
-                messageDisplay.textContent = "Success! Button was clicked after completion.";
-                messageDisplay.className = 'message-display success';
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+                successMessage.textContent = "Success! Button was clicked after completion.";
             }
         });
 

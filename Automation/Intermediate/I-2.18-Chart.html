@@ -4,63 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales Volume of a company</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 80%;
-            max-width: 800px;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border-radius: 10px;
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
-        }
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
-        .input-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        label {
-            font-size: 18px;
-            margin-right: 10px;
-        }
-        input {
-            padding: 5px;
-            font-size: 16px;
-        }
-        .message {
-            margin-top: 10px;
-            font-size: 18px;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Sales per Month FY 2023-24</h1>
-        <canvas id="salesChart"></canvas>
-        <div class="input-container">
-            <label for="monthInput">Enter Month with Highest Sales:</label>
-            <input type="text" id="monthInput">
-            <div id="message" class="message"></div>
+
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.17-LoadingResults.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.19-FetchDate.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Sales per Month FY 2023-24</h1>
+                <p class="lead">Enter Month with Highest Sales</p>
+
+                <canvas id="salesChart"></canvas>
+
+                <div class="input-container">
+                    <label for="monthInput">Enter Month with Highest Sales:</label>
+                    <input type="text" id="monthInput">
+                    <div id="message" class="message"></div>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <!-- Include Chart.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

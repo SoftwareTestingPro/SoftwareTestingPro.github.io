@@ -4,64 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drag and Drop Image</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            text-align: center;
-        }
-        #draggableImage {
-            width: 200px;
-            cursor: move;
-        }
-        #dropBox {
-            width: 300px;
-            height: 300px;
-            border: 2px dashed #aaa;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-            background-color: white;
-            position: relative;
-        }
-        #dropBox.over {
-            border-color: #00f;
-            background-color: #e0e0ff;
-        }
-        #dropBoxText {
-            position: absolute;
-        }
-        #successMessage {
-            margin-top: 10px;
-            font-size: 16px;
-            color: green;
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2>Drag and Drop the Image</h2>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Taj-Mahal.jpg/1200px-Taj-Mahal.jpg" id="draggableImage" draggable="true">
-        <div id="dropBox">
-            <span id="dropBoxText">Drop Here</span>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="A-3.11-FileUpload.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="A-3.13-SortableTable.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <div id="successMessage">Image dropped successfully!</div>
+
+        <main class="card">
+            <div class="card-content">
+            <h1>Drag and Drop Image</h1>
+            <p class="lead">Drag the image to the drop zone.</p>
+
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Taj-Mahal.jpg/1200px-Taj-Mahal.jpg" id="draggableImage" draggable="true">
+                <div id="dropBox">
+                    <span id="dropBoxText">Drop Here</span>
+                </div>
+                <div id="successMessage" class="message success">Image dropped successfully!</div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
+
     <script>
         const draggableImage = document.getElementById('draggableImage');
         const dropBox = document.getElementById('dropBox');
         const dropBoxText = document.getElementById('dropBoxText');
         const successMessage = document.getElementById('successMessage');
+
+        // Hide message on load
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
 
         draggableImage.addEventListener('dragstart', function(event) {
             event.dataTransfer.setData('text/plain', event.target.id);
@@ -83,7 +68,8 @@
             dropBox.appendChild(draggedElement);
             dropBox.classList.remove('over');
             dropBoxText.style.display = 'none';
-            successMessage.style.display = 'block';
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
         });
     </script>
 </body>

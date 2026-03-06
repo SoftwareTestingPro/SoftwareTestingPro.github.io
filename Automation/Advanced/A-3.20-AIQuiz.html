@@ -4,53 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Quiz</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-        .quiz-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            width: 80%;
-            max-width: 500px;
-            text-align: center;
-        }
-        .options {
-            margin: 20px 0;
-            text-align: center;
-        }
-        .options div {
-            margin: 10px 0;
-            display: inline-block;
-            text-align: left;
-        }
-        .options input {
-            margin-right: 10px;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
-            display: none;
-        }
-        .success {
-            color: green;
-        }
-        .failure {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="quiz-container">
-        <h2 id="question">Loading question...</h2>
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.19-Spinner.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.21-InfiniteScroll.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>AI Quiz Challenge</h1>
+        <p class="lead">Answer the questions correctly to succeed.</p>
+
         <div class="options">
             <div>
                 <input type="radio" id="option1" name="option" value="">
@@ -69,8 +45,13 @@
                 <label for="option4">Option 4</label>
             </div>
         </div>
-        <div id="message" class="message"></div>
+        <div id="successMessage" class="message success"></div>
+        <div id="failureMessage" class="message failure"></div>
     </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         const questions = [            
@@ -305,15 +286,21 @@
 
             inputElements.forEach(input => {
                 input.addEventListener('change', () => {
-                    const message = document.getElementById('message');
+                    const successMessage = document.getElementById('successMessage');
+                    const failureMessage = document.getElementById('failureMessage');
                     if (input.getAttribute('data-correct') === 'true') {
-                        message.textContent = "🎉 Correct! 🎉";
-                        message.className = "message success";
+                        successMessage.style.display = 'flex';
+                        successMessage.classList.add('success');
+                        failureMessage.style.display = 'none';
+                        failureMessage.classList.remove('failure');
+                        successMessage.textContent = " Correct! ";
                     } else {
-                        message.textContent = "❌ Incorrect. Try again! ❌";
-                        message.className = "message failure";
+                        successMessage.style.display = 'none';
+                        successMessage.classList.remove('success');
+                        failureMessage.style.display = 'flex';
+                        failureMessage.classList.add('failure');
+                        failureMessage.textContent = " Incorrect. Try again! ";
                     }
-                    message.style.display = 'block';
                 });
             });
         }

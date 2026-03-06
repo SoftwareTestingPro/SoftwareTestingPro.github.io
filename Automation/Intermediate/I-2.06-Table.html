@@ -115,14 +115,14 @@
 <div id="footer-placeholder"></div>
 
     <script>
-        function generateUniqueNames() {
+        function generateUniqueNames(count) {
             const names = [
                 'Aarav Sharma', 'Vivaan Patel', 'Aditya Kumar', 'Vihaan Singh', 
                 'Arjun Mehta', 'Reyansh Gupta', 'Sai Patel', 'Ayaan Joshi', 
                 'Ishaan Rao', 'Kartik Jain', 'Kabir Verma', 'Rohan Agarwal'
             ];
             const usedNames = new Set();
-            while (usedNames.size < 10) {
+            while (usedNames.size < count) {
                 const randomIndex = Math.floor(Math.random() * names.length);
                 usedNames.add(names[randomIndex]);
             }
@@ -141,12 +141,12 @@
         }
 
         function generateRandomEmployees() {
-            const numberOfRows = Math.floor(Math.random() * (10 - 4 + 1)) + 4;
-            const names = generateUniqueNames();
+            const numberOfRows = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
+            const names = generateUniqueNames(numberOfRows);
             const positions = ['Software Engineer', 'Marketing Manager', 'HR Specialist', 'Sales Representative', 'Financial Analyst'];
             const salaries = generateUniqueSalaries(numberOfRows);
 
-            const employees = names.slice(0, numberOfRows).map((name, index) => ({
+            const employees = names.map((name, index) => ({
                 name,
                 position: positions[Math.floor(Math.random() * positions.length)],
                 salary: salaries[index]

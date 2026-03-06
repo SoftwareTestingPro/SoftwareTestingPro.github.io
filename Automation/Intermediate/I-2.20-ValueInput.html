@@ -4,38 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Fields Example</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container-box {
-            max-width: 400px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .full-height {
-            height: 100vh;
-        }
-        .alert {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="d-flex justify-content-center align-items-center full-height">
-        <div class="container-box">
-            <h4 class="text-center">Input Validations</h4>
-            <div class="form-group">
-                <label for="inputField1">Copy text from below Input Field:</label>
-                <input type="text" class="form-control" id="inputField1" readonly>
-            </div>
-            <div class="form-group">
-                <label for="inputField2">Enter text copied from above Input Field:</label>
-                <input type="text" class="form-control" id="inputField2">
-            </div>
-            <div id="message" class="alert" role="alert"></div>
+
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.19-FetchDate.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.21-ScrollableList.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Input Fields Example</h1>
+                <p class="lead">Copy text from below Input Field</p>
+
+                <div class="input-group">
+                    <label for="inputField1">Copy text from below Input Field:</label>
+                    <input type="text" id="inputField1" readonly>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputField2">Enter text copied from above Input Field:</label>
+                    <input type="text" id="inputField2">
+                </div>
+
+                <div id="message" class="message" role="alert"></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const inputField1 = document.getElementById('inputField1');
@@ -47,18 +55,15 @@
             inputField2.addEventListener('input', () => {
                 if (inputField2.value === inputField1.value) {
                     message.textContent = 'Success: The values match!';
-                    message.className = 'alert alert-success';
+                    message.className = 'message success';
                     message.style.display = 'block';
                 } else {
                     message.textContent = 'Failure: The values do not match.';
-                    message.className = 'alert alert-danger';
+                    message.className = 'message failure';
                     message.style.display = 'block';
                 }
             });
         });
     </script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

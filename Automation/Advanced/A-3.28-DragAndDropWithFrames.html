@@ -4,78 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Drag and Drop Between Frames</title>
-    <style>
-        /* Overall layout styling */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 20px; /* Add padding for mobile responsiveness */
-            box-sizing: border-box;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.2rem; /* Reduce the header font size */
-        }
-
-        /* Styling for the iframe containers */
-        .iframe-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 40px; /* Add some space between the containers */
-            flex-wrap: nowrap; /* Ensure boxes remain side by side */
-        }
-
-        iframe {
-            width: 240px; /* Width for larger screens */
-            height: 180px; /* Height for larger screens */
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .iframe-container {
-                padding: 0 20px; /* Add left and right padding */
-            }
-
-            iframe {
-                width: 180px; /* Reduced width for mobile devices */
-                height: 140px; /* Reduced height for mobile devices */
-            }
-        }
-
-        /* Center alignment */
-        .center {
-            text-align: center;
-            margin: 0 auto;
-        }
-
-        #message {
-            margin-top: 20px;
-            color: #4CAF50;
-            font-weight: bold;
-            font-size: 16px;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
+<div id="header-placeholder"></div>
 
-    <h2>Modern Drag and Drop between Frames</h2>
-
-    <div class="iframe-container">
-        <iframe id="frame1"></iframe>
-        <iframe id="frame2"></iframe>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.27-AudioOddOneOut.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.29-DynamicProgressBar.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Drag and Drop with Frames</h1>
+        <p class="lead">Drag the item from the left frame to the right frame.</p>
+
+        <div class="iframe-container">
+            <iframe id="frame1"></iframe>
+            <iframe id="frame2"></iframe>
+        </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         // Inject content into iframe 1 (drag source)
@@ -194,7 +154,14 @@
                         Drop Here
                     </div>
                 </div>
-                <p id="message"></p>
+                <div id="successMessage" class="message success"></div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const successMessage = document.getElementById('successMessage');
+                        successMessage.style.display = 'none';
+                        successMessage.classList.remove('success');
+                    });
+                </script>
             </body>
             </html>
         `);
@@ -217,8 +184,10 @@
             dropTarget.appendChild(draggedElement);
 
             // Display success message
-            var message = document.getElementById('frame2').contentWindow.document.getElementById('message');
-            message.innerText = "Element successfully dropped!";
+            var successMessage = document.getElementById('frame2').contentWindow.document.getElementById('successMessage');
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            successMessage.textContent = "Element successfully dropped!";
         }
     </script>
 

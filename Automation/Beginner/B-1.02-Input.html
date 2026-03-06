@@ -10,63 +10,66 @@
 <body>
 <div id="header-placeholder"></div>
 
-<nav class="task-navigation">
-    <a href="B-1.01-Click.html" class="nav-btn nav-btn-prev">
-        <span class="nav-icon">←</span>
-        Previous Task
-    </a>
-    <a href="B-1.03-Radio.html" class="nav-btn nav-btn-next">
-        Next Task
-        <span class="nav-icon">→</span>
-    </a>
-</nav>
 <div class="content-wrapper">
+    <div class="card-nav">
+        <a href="B-1.01-Click.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
+        <a href="B-1.03-Radio.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
     <main class="card">
-        <h1>Input Action</h1>
-        <p class="lead">Please Fill Out the Following Information.</p>
+        <div class="card-content">
+            <h1>Input Validation</h1>
+            <p class="lead">Please Fill Out the Following Information.</p>
 
-        <div class="input-group">
-            <label for="user-input-name">Enter your first name:</label>
-            <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name..." class="form-control">
+            <div class="input-group">
+                <label for="user-input-name">Enter your first name:</label>
+                <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name..." class="form-control">
 
-            <div class="message success" id="nameSuccessMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Name is valid!</span>
+                <div class="message success" id="nameSuccessMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Name is valid!</span>
+                </div>
+
+                <div class="message failure" id="nameFailureMessage" role="status" aria-live="polite">
+                    <span class="icon">✕</span>
+                    <span>Please enter letters only</span>
+                </div>
             </div>
 
-            <div class="message failure" id="nameFailureMessage" role="status" aria-live="polite">
-                <span class="icon">✕</span>
-                <span>Please enter letters only</span>
-            </div>
-        </div>
+            <div class="input-group">
+                <label for="user-input-age">Enter your age:</label>
+                <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age" class="form-control">
 
-        <div class="input-group">
-            <label for="user-input-age">Enter your age:</label>
-            <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age" class="form-control">
+                <div class="message success" id="ageSuccessMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Age is valid!</span>
+                </div>
 
-            <div class="message success" id="ageSuccessMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Age is valid!</span>
-            </div>
-
-            <div class="message failure" id="ageFailureMessage" role="status" aria-live="polite">
-                <span class="icon">✕</span>
-                <span>Please enter digits only</span>
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label for="text-input">Enter "text within double quotes" in the input field:</label>
-            <input type="text" id="text-input" class="form-control" placeholder="Enter label text within quotes">
-
-            <div class="message success" id="textSuccessMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Text is valid!</span>
+                <div class="message failure" id="ageFailureMessage" role="status" aria-live="polite">
+                    <span class="icon">✕</span>
+                    <span>Please enter digits only</span>
+                </div>
             </div>
 
-            <div class="message failure" id="textFailureMessage" role="status" aria-live="polite">
-                <span class="icon">✕</span>
-                <span>Please enter: "text within double quotes"</span>
+            <div class="input-group">
+                <label for="text-input">Enter "text within double quotes" in the input field:</label>
+                <input type="text" id="text-input" class="form-control" placeholder="Enter label text within quotes">
+
+                <div class="message success" id="textSuccessMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Text is valid!</span>
+                </div>
+
+                <div class="message failure" id="textFailureMessage" role="status" aria-live="polite">
+                    <span class="icon">✕</span>
+                    <span>Please enter: "text within double quotes"</span>
+                </div>
             </div>
         </div>
     </main>

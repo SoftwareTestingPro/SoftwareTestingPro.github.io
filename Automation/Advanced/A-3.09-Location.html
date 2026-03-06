@@ -18,100 +18,56 @@
     <meta name="twitter:description" content="Use this page to access your geolocation and get information about your current location, including country, city, and principal subdivision.">
     <meta name="twitter:image" content="URL_TO_IMAGE">
     <title>Geo Location</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            padding: 10px; /* Added padding for better spacing on mobile */
-            box-sizing: border-box;
-        }
-
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            max-width: 100%; /* Ensure container does not overflow */
-            box-sizing: border-box;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #location-info {
-            margin-top: 20px;
-            font-size: 16px;
-        }
-
-        .success-message {
-            color: green;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        h3 {
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .container {
-                width: 100%; /* Full width on small screens */
-                padding: 15px; /* Adjust padding for smaller screens */
-            }
-
-            button {
-                width: 100%; /* Full width button on small screens */
-                font-size: 14px; /* Smaller font size */
-                padding: 12px; /* Adjust padding */
-            }
-
-            #location-info {
-                font-size: 14px; /* Smaller font size for better readability */
-            }
-
-            h3 {
-                font-size: 18px; /* Adjust heading size */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h3 id="location-label">Click on the button below to see your current location</h3>
-        <button onclick="getLocation()">Click Here</button>
-        <div id="location-info"></div>
-        <div id="success-message" class="success-message" style="display: none;">Success! Location details have been retrieved.</div>
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.08-ShapesOddOneOut.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.10-Game.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
 
+    <main class="card">
+        <div class="card-content">
+        <h1>Geolocation Challenge</h1>
+        <p class="lead">Click the button to access your location and verify the displayed information.</p>
+
+        <button onclick="getLocation()">Click Here</button>
+        <div id="location-info"></div>
+        <div id="successMessage" class="message success"></div>
+        <div id="failureMessage" class="message failure"></div>
+    </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
     <script>
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.classList.remove('failure');
+
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
-                document.getElementById("location-info").innerHTML = "Geolocation is not supported by this browser.";
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                failureMessage.textContent = 'Geolocation is not supported by this browser.';
             }
         }
 
@@ -129,22 +85,31 @@
             // Update label, remove button, and display success message
             document.getElementById('location-label').textContent = 'Below are your location details';
             document.querySelector('button').remove();
-            document.getElementById('success-message').style.display = 'block';
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+            successMessage.textContent = 'Success! Location details have been retrieved.';
         }
 
         function showError(error) {
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+
             switch(error.code) {
                 case error.PERMISSION_DENIED:
-                    document.getElementById("location-info").innerHTML = "User denied the request for Geolocation.";
+                    failureMessage.textContent = 'User denied the request for Geolocation.';
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    document.getElementById("location-info").innerHTML = "Location information is unavailable.";
+                    failureMessage.textContent = 'Location information is unavailable.';
                     break;
                 case error.TIMEOUT:
-                    document.getElementById("location-info").innerHTML = "The request to get user location timed out.";
+                    failureMessage.textContent = 'The request to get user location timed out.';
                     break;
                 case error.UNKNOWN_ERROR:
-                    document.getElementById("location-info").innerHTML = "An unknown error occurred.";
+                    failureMessage.textContent = 'An unknown error occurred.';
                     break;
             }
         }

@@ -4,90 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Data Table</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 10px; /* Added padding for better spacing on mobile */
-            box-sizing: border-box;
-        }
-
-        table {
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin: 0 auto; /* Center the table */
-            width: auto; /* Fit to content */
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            word-wrap: break-word; /* Handle long text */
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        caption {
-            margin-bottom: 10px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            border: none;
-            padding: 8px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        input:focus {
-            outline: 2px solid #4CAF50;
-        }
-
-        /* Media query for smaller screens */
-        @media (max-width: 600px) {
-            table {
-                width: 100%; /* Full width for small screens */
-                display: block; /* Make table scrollable horizontally */
-                overflow-x: auto;
-            }
-
-            th, td {
-                padding: 8px; /* Reduced padding for better fit */
-                font-size: 14px; /* Smaller text for mobile */
-            }
-
-            caption {
-                font-size: 18px; /* Adjusted caption size */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <table>
-        <caption>Read data from the Excel file written in the previous example and enter values below</caption>
-        <tr>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Position</th>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.22-XLSWriteData.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.24-SortItems.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Excel Read Data Challenge</h1>
+        <p class="lead">Read the data from the Excel file and enter it in the fields.</p>
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Position</th>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name"></td>
+                <td><input type="text" placeholder="Enter Department"></td>
+                <td><input type="text" placeholder="Enter Position"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name"></td>
+                <td><input type="text" placeholder="Enter Department"></td>
+                <td><input type="text" placeholder="Enter Position"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name"></td>
+                <td><input type="text" placeholder="Enter Department"></td>
+                <td><input type="text" placeholder="Enter Position"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name"></td>
+                <td><input type="text" placeholder="Enter Department"></td>
+                <td><input type="text" placeholder="Enter Position"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name"></td>
+                <td><input type="text" placeholder="Enter Department"></td>
+                <td><input type="text" placeholder="Enter Position"></td>
+            </tr>
+        </table>
             <td><input type="text" placeholder="Enter Department"></td>
             <td><input type="text" placeholder="Enter Position"></td>
         </tr>
@@ -112,5 +83,10 @@
             <td><input type="text" placeholder="Enter Position"></td>
         </tr>
     </table>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 </body>
 </html>

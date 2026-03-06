@@ -4,112 +4,51 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Analog Clock (12-Hour Format)</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .clock {
-      width: 300px;
-      height: 300px;
-      border: 10px solid #4CAF50;
-      border-radius: 50%;
-      position: relative;
-      padding: 20px;
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      transform: rotate(-90deg);
-    }
-
-    .hand {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform-origin: 0% 50%;
-    }
-
-    .hour { width: 35%; height: 8px; background-color: #333; }
-    .minute { width: 45%; height: 6px; background-color: #666; }
-    .second { width: 50%; height: 4px; background-color: red; }
-
-    .center-point {
-      width: 12px;
-      height: 12px;
-      background-color: #4CAF50;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .input-container {
-      text-align: center;
-      margin-top: 20px;
-      width: 300px;
-    }
-
-    .input-wrapper {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    input[type="text"] {
-      flex: 1;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      text-align: center;
-      box-sizing: border-box;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    #validation-message {
-      margin-top: 10px;
-      font-size: 16px;
-    }
-  </style>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <script src="../../components.js"></script>
 </head>
 
 <body>
-  <div class="clock">
-    <div class="hand hour" id="hour"></div>
-    <div class="hand minute" id="minute"></div>
-    <div class="hand second" id="second"></div>
-    <div class="center-point"></div>
+  <div id="header-placeholder"></div>
+
+  <div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.06-BrokenImages.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.08-ShapesOddOneOut.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+      <div class="card-content">
+      <h1>Analog Clock Challenge</h1>
+      <p class="lead">Match the time displayed on the analog clock by entering it in HH:MM:SS format.</p>
+
+        <div class="clock">
+          <div class="hand hour" id="hour"></div>
+          <div class="hand minute" id="minute"></div>
+          <div class="hand second" id="second"></div>
+          <div class="center-point"></div>
+        </div>
+
+        <div class="input-container">
+          <label for="user-input">Enter time in HH:MM:SS format (12-hour)</label>
+          <div class="input-wrapper">
+            <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" />
+            <button id="submit-btn">Submit</button>
+          </div>
+          <div id="successMessage" class="message success"></div>
+          <div id="failureMessage" class="message failure"></div>
+        </div>
+      </div>
+    </main>
   </div>
 
-  <div class="input-container">
-    <label for="user-input">Enter time in HH:MM:SS format (12-hour)</label>
-    <div class="input-wrapper">
-      <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" />
-      <button id="submit-btn">Submit</button>
-    </div>
-    <div id="validation-message"></div>
-  </div>
+  <div id="footer-placeholder"></div>
 
   <script>
     let currentHours = Math.floor(Math.random() * 12) + 1;
@@ -128,7 +67,14 @@
 
     function validateInput() {
       const input = document.getElementById('user-input');
-      const message = document.getElementById('validation-message');
+      const successMessage = document.getElementById('successMessage');
+      const failureMessage = document.getElementById('failureMessage');
+
+      // Hide messages
+      successMessage.style.display = 'none';
+      failureMessage.style.display = 'none';
+      successMessage.classList.remove('success');
+      failureMessage.classList.remove('failure');
 
       const [hhStr, mmStr, ssStr] = input.value.split(':');
       const hh = parseInt(hhStr, 10);
@@ -142,8 +88,9 @@
         mm >= 0 && mm <= 59 &&
         ss >= 0 && ss <= 59)
       ) {
-        message.textContent = "❌ Invalid format! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
-        message.style.color = "red";
+        failureMessage.style.display = 'flex';
+        failureMessage.classList.add('failure');
+        failureMessage.textContent = "❌ Invalid format! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
         return;
       }
 
@@ -154,11 +101,13 @@
       const expectedTime = `${expectedHH}:${expectedMM}:${expectedSS}`;
 
       if (input.value === expectedTime) {
-        message.textContent = "✅ Correct! You entered the right time.";
-        message.style.color = "green";
+        successMessage.style.display = 'flex';
+        successMessage.classList.add('success');
+        successMessage.textContent = "✅ Correct! You entered the right time.";
       } else {
-        message.textContent = `❌ Incorrect! The actual time is ${expectedTime}`;
-        message.style.color = "red";
+        failureMessage.style.display = 'flex';
+        failureMessage.classList.add('failure');
+        failureMessage.textContent = `❌ Incorrect! The actual time is ${expectedTime}`;
       }
     }
 

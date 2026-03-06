@@ -4,75 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infinite Scroll Challenge</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f4; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        h1 { text-align: center; }
-        #instructions { text-align: center; } /* Center align the paragraph */
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        .image-container {
-            width: 100%;
-            padding-top: 75%; /* 4:3 Aspect Ratio */
-            position: relative;
-            background-color: #e0e0e0;
-            border-radius: 8px;
-        }
-        img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        img.loaded {
-            opacity: 1;
-        }
-        #loader {
-            text-align: center;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #666;
-        }
-        #verification-area {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        #verification-message {
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .success { color: green; }
-        .failure { color: red; }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Infinite Scroll Challenge</h1>
-        <p id="instructions">Scroll down to load all images, then enter the total count.</p>
-        <div class="image-grid" id="image-grid"></div>
-        <div id="loader">Loading...</div>
-        <div id="verification-area" style="display: none;">
-            <label for="image-count-input"><b>All images loaded. How many are there?</b></label>
-            <br><br>
-            <input type="number" id="image-count-input" placeholder="Enter count">
-            <button id="verify-btn">Verify</button>
-            <div id="verification-message"></div>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="A-3.20-AIQuiz.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="A-3.22-XLSWriteData.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Infinite Scroll Challenge</h1>
+                <p class="lead">Scroll down to load all images and enter the total count.</p>
+                <p id="instructions">Scroll down to load all images, then enter the total count.</p>
+                <div class="image-grid" id="image-grid"></div>
+                <div id="loader">Loading...</div>
+                <div id="verification-area">
+                    <label for="image-count-input"><b>All images loaded. How many are there?</b></label>
+                    <br><br>
+                    <input type="number" id="image-count-input" placeholder="Enter count">
+                    <button id="verify-btn">Verify</button>
+                    <div id="successMessage" class="message success"></div>
+                    <div id="failureMessage" class="message failure"></div>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -80,6 +49,14 @@
             const loader = document.getElementById('loader');
             const verificationArea = document.getElementById('verification-area');
             const verifyBtn = document.getElementById('verify-btn');
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+
+            // Hide messages on load
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.classList.remove('failure');
 
             const BATCH_SIZE = 12;
             const minBatches = 4; // 4 * 12 = 48 images
@@ -139,15 +116,20 @@
 
             verifyBtn.addEventListener('click', () => {
                 const userInput = document.getElementById('image-count-input').value;
-                const verificationMessage = document.getElementById('verification-message');
                 const userCount = parseInt(userInput, 10);
 
                 if (userCount === MAX_IMAGES) {
-                    verificationMessage.textContent = 'Success! You entered the correct count.';
-                    verificationMessage.className = 'success';
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('success');
+                    failureMessage.style.display = 'none';
+                    failureMessage.classList.remove('failure');
+                    successMessage.textContent = 'Success! You entered the correct count.';
                 } else {
-                    verificationMessage.textContent = `Failure! Expected: ${MAX_IMAGES}, You entered: ${userCount || 0}.`;
-                    verificationMessage.className = 'failure';
+                    successMessage.style.display = 'none';
+                    successMessage.classList.remove('success');
+                    failureMessage.style.display = 'flex';
+                    failureMessage.classList.add('failure');
+                    failureMessage.textContent = `Failure! Expected: ${MAX_IMAGES}, You entered: ${userCount || 0}.`;
                 }
             });
 

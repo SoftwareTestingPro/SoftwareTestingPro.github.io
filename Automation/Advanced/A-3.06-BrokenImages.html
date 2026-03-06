@@ -7,87 +7,42 @@
     <meta name="keywords" content="QR Code, Image Validation, Broken Images, Country Flags">
     <meta name="author" content="Sushil Singh">
     <title>Broken Images</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        .images-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .image-container {
-            width: 150px;
-            height: 100px;
-            margin: 10px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .image-container img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 5px;
-        }
-
-        .input-container {
-            text-align: center;
-        }
-
-        .input-container label {
-            font-size: 18px;
-            margin-right: 10px;
-            display: inline-block;
-        }
-
-        .input-container input[type="number"] {
-            width: 50px;
-            padding: 5px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        .success-message {
-            color: green;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        .failure-message {
-            color: red;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <main class="container">
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.05-MultipleDragDrop.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.07-Clock.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Broken Images Detector</h1>
+        <p class="lead">Count the number of broken images among the displayed flags and enter the count.</p>
+
         <section class="images-container" id="images-container" aria-live="polite"></section>
         <section class="input-container">
             <label for="user-input">Enter count of broken images:</label>
             <input type="number" id="user-input" name="user-input">
-            <div id="message" aria-live="polite"></div>
+            <div id="successMessage" class="success-message" style="display: none;"></div>
+            <div id="failureMessage" class="failure-message" style="display: none;"></div>
         </section>
+        </div>
     </main>
-    
+</div>
+
+<div id="footer-placeholder"></div>
+
     <script>
         const flagUrls = [
             'https://flagcdn.com/w320/us.png',  // USA
@@ -139,16 +94,28 @@
             }
         }
 
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+
         document.getElementById('user-input').addEventListener('input', function() {
             const userInput = parseInt(this.value, 10);
-            const message = document.getElementById('message');
 
             if (userInput === brokenImageCount) {
-                message.textContent = 'Success! You entered the correct value.';
-                message.className = 'success-message';
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+                successMessage.textContent = 'Success! You entered the correct value.';
             } else {
-                message.textContent = 'Failure! Incorrect value entered.';
-                message.className = 'failure-message';
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                failureMessage.textContent = 'Failure! Incorrect value entered.';
             }
         });
     </script>

@@ -4,126 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Employee Table</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        .container {
-            max-width: 100%; /* Ensures container does not exceed 90% of viewport width */
-            width: fit-content; /* Width adjusts to fit content */
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-            margin: auto; /* Centers the container */
-        }
-        .header {
-            font-size: 24px;
-            color: #333;
-            margin: 0 0 20px;
-        }
-        table {
-            width: 100%; /* Ensures the table fills the container width */
-            border-collapse: collapse;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 0 auto;
-            table-layout: auto;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #007bff;
-            color: #ffffff;
-            cursor: pointer;
-        }
-        th:hover {
-            background-color: #0056b3;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            table {
-                border: 0;
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-                width: 100%;
-            }
-            thead {
-                display: block;
-                width: 100%;
-            }
-            tbody {
-                display: block;
-                width: 100%;
-                max-height: 400px; /* Adjust based on your content */
-                overflow-y: auto;
-            }
-            tr {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                border-bottom: 1px solid #ddd;
-            }
-            th, td {
-                display: block;
-                width: 33.33%; /* Adjust width to fit three columns */
-                box-sizing: border-box;
-                text-align: center;
-            }
-            td {
-                border-bottom: none;
-            }
-            th {
-                position: sticky;
-                top: 0;
-                background-color: #007bff;
-                color: #ffffff;
-                z-index: 1;
-            }
-            tr:nth-child(even) {
-                background-color: #f9f9f9;
-            }
-            tr:hover {
-                background-color: #f1f1f1;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                font-size: 18px;
-            }
-            th, td {
-                font-size: 14px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="header">Sort columns and verify sorted data is correct</div>
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.12-DragAndDropImg.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.14-ResizeableElement.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Sortable Table Challenge</h1>
+        <p class="lead">Sort the table columns and verify the data is sorted correctly.</p>
+
         <table id="employeeTable">
             <thead>
                 <tr>
@@ -186,6 +89,10 @@
             </tbody>
         </table>
     </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         // Function to sort table

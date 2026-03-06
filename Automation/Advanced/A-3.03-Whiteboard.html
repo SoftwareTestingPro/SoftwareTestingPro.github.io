@@ -4,61 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whiteboard Shape Challenge</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            width: 40vw;
-        }
-        .header label {
-            font-size: 18px;
-            margin-right: auto; /* Pushes buttons to the right */
-        }
-        .header button {
-            margin-left: 10px;
-        }
-        canvas {
-            border: 1px solid #000;
-            background-color: #fff;
-            width: 40vw;
-            height: 40vh;
-        }
-        #message-display {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            min-height: 22px;
-        }
-        .success { color: green; }
-        .failure { color: red; }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="header">
-        <label>Draw a square in the whiteboard below</label>
-        <button onclick="checkShape()">Test Your Shape</button>
-        <button onclick="clearCanvas()">Clear</button>
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.02-Download.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.04-ReadQR.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
-    <canvas id="whiteboard"></canvas>
-    <div id="message-display"></div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Whiteboard Drawing Challenge</h1>
+        <p class="lead">Draw a square on the whiteboard below and test it.</p>
+
+            <div class="header">
+                <button onclick="checkShape()">Test Your Shape</button>
+                <button onclick="clearCanvas()">Clear</button>
+            </div>
+            <canvas id="whiteboard" width="400" height="300" style="border: 1px solid #000; background: #fff;"></canvas>
+            <div id="message-display">
+                <div id="successMessage" style="display: none;"></div>
+                <div id="failureMessage" style="display: none;"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const canvas = document.getElementById('whiteboard');
         const ctx = canvas.getContext('2d');
-        const messageDisplay = document.getElementById('message-display');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
         let drawing = false;
         let path = [];
+
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.classList.remove('failure');
 
         function startDrawing(e) {
             drawing = true;
@@ -82,7 +78,10 @@
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             path = [];
-            messageDisplay.textContent = '';
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.classList.remove('failure');
         }
 
         function checkShape() {
@@ -115,13 +114,19 @@
             const cornerCount = detectCorners(path);
 
             if (isSquareLike && isClosed && curvature < 0.3) {
-                messageDisplay.textContent = "Success! That looks like a square.";
-                messageDisplay.className = 'success';
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+                successMessage.textContent = "Success! That looks like a square.";
             } else {
                 // Generate funny feedback based on what was actually drawn
                 const feedback = identifyShape(curvature, aspectRatio, irregularity, cornerCount);
-                messageDisplay.textContent = feedback;
-                messageDisplay.className = 'failure';
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.textContent = feedback;
             }
         }
 
@@ -254,6 +259,7 @@
 
         window.addEventListener('load', resizeCanvas);
         window.addEventListener('resize', resizeCanvas);
-    </script>
+    });
+</script>
 </body>
 </html>

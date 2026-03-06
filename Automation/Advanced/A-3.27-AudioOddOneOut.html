@@ -4,89 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sound Odd One Out Game</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f9;
-    }
-    .container {
-      width: 90%;
-      max-width: 400px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px; /* Distance between buttons */
-      justify-content: center;
-    }
-    .sound-button {
-      width: 110px;
-      height: 110px;
-      border: none;
-      background-color: #e0e0e0;
-      cursor: pointer;
-      font-size: 18px;
-      padding: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      position: relative;
-    }
-    .play-icon {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    #message {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    @media (max-width: 600px) {
-      .container {
-        width: 85%;
-      }
-      .buttons {
-        gap: 20px;
-      }
-      .sound-button {
-        width: 90px;
-        height: 90px;
-        font-size: 16px;
-      }
-      .play-icon {
-        font-size: 20px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <script src="../../components.js"></script>
 </head>
 <body>
+<div id="header-placeholder"></div>
 
-<div class="container">
-  <h4>Click each icon to hear the sounds. Select the grey area of the thumbnail with 'cuak' sound.</h4>
-  <div class="buttons" id="buttonContainer"></div>
-  <div id="message"></div>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.26-CharOddOneOut.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.28-DragAndDropWithFrames.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Audio Odd One Out</h1>
+        <p class="lead">Listen to the sounds and select the odd one out.</p>
+
+        <div class="buttons" id="buttonContainer"></div>
+        <div id="successMessage" class="message success"></div>
+        <div id="failureMessage" class="message failure"></div>
+        </div>
+    </main>
 </div>
 
+<div id="footer-placeholder"></div>
+
 <script>
+  const successMessage = document.getElementById('successMessage');
+  const failureMessage = document.getElementById('failureMessage');
+
+  // Hide messages on load
+  successMessage.style.display = 'none';
+  failureMessage.style.display = 'none';
+  successMessage.classList.remove('success');
+  failureMessage.classList.remove('failure');
+
   // Local sound files
   const sounds = [
     { name: 'Sound 1', file: '../../sounds/ghanta.mp3' },
@@ -127,9 +86,17 @@
     // Add click event listener to button to determine if it is the odd sound
     button.onclick = () => {
       if (sound === oddSound) {
-        document.getElementById('message').innerHTML = '<span style="color: green;">Success! You found the odd sound out!</span>';
+        successMessage.style.display = 'flex';
+        successMessage.classList.add('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+        successMessage.textContent = 'Success! You found the odd sound out!';
       } else {
-        document.getElementById('message').innerHTML = '<span style="color: red;">Failure! Try again.</span>';
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'flex';
+        failureMessage.classList.add('failure');
+        failureMessage.textContent = 'Failure! Try again.';
       }
     };
 

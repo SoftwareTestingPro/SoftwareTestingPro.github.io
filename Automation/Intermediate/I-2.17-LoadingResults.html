@@ -5,115 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A page displaying thumbnails with dynamic ISBN data.">
     <title>Thumbnails with ISBN Data</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        .thumbnails-label {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .thumbnails {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .thumbnail {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 150px;
-            text-align: center;
-            padding: 10px;
-            border: 2px solid #ddd;
-            opacity: 0;
-            transition: opacity 1s ease;
-            margin: 0 10px;
-        }
-
-        .thumbnail img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-
-        .isbn {
-            font-size: 14px;
-            color: #333;
-            margin-top: 10px;
-        }
-
-        .input-container {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .input-container label {
-            display: block;
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .input-container input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 230px;
-            box-sizing: border-box;
-        }
-
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .success {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-
-        .failure {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div id="mainContent">
-        <div class="thumbnails-label" id="thumbnailsLabel">
-            Fetch ISBNs of Thumbnails Displayed in next screens, Store and Input them in last page
+
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.16-RandomList.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.18-Chart.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="thumbnails" id="thumbnailContainer"></div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Thumbnails with ISBN Data</h1>
+                <p class="lead">Fetch ISBNs of Thumbnails Displayed in next screens, Store and Input them in last page</p>
 
-        <div class="input-container" id="inputContainer">
-            <div id="inputFields"></div>
-            <div id="message" class="message"></div>
-        </div>
+                <div class="thumbnails" id="thumbnailContainer"></div>
+
+                <div class="input-container" id="inputContainer">
+                    <div id="inputFields"></div>
+                    <div id="message" class="message"></div>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

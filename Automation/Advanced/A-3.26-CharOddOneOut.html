@@ -4,72 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Odd One Out Game</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f9;
-    }
-    .container {
-      width: 90%;
-      max-width: 400px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    button {
-      padding: 15px;
-      font-size: 18px;
-      background-color: #3498db;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
-    #message {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    @media (max-width: 600px) {
-      .container {
-        width: 85%;
-      }
-      button {
-        font-size: 16px;
-        padding: 10px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <script src="../../components.js"></script>
 </head>
 <body>
+<div id="header-placeholder"></div>
 
-<div class="container">
-  <h2>Select the odd Tile</h2>
-  <div class="buttons" id="buttonContainer"></div>
-  <div id="message"></div>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.25-DragableItemsXY.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.27-AudioOddOneOut.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Character Odd One Out</h1>
+        <p class="lead">Select the character that is different from the others.</p>
+
+        <div class="buttons" id="buttonContainer"></div>
+        <div id="successMessage" class="message success"></div>
+        <div id="failureMessage" class="message failure"></div>
+        </div>
+    </main>
 </div>
 
+<div id="footer-placeholder"></div>
+
 <script>
+  const successMessage = document.getElementById('successMessage');
+  const failureMessage = document.getElementById('failureMessage');
+
+  // Hide messages on load
+  successMessage.style.display = 'none';
+  failureMessage.style.display = 'none';
+  successMessage.classList.remove('success');
+  failureMessage.classList.remove('failure');
+
   const characters = ['A', 'B', 'C', 'D', 'E', 'F'];  // Example character options
   const numbers = ['1', '2', '3', '4', '5', '6'];      // Example number options
   const emojis = ['😊', '😂', '😎', '🤔', '😅'];       // Example emoji options
@@ -106,11 +82,18 @@
   });
 
   function checkOddOneOut(isOddOneOut) {
-    const messageDiv = document.getElementById('message');
     if (isOddOneOut) {
-      messageDiv.innerHTML = '<span style="color: green;">Success! You found the odd one out!</span>';
+      successMessage.style.display = 'flex';
+      successMessage.classList.add('success');
+      failureMessage.style.display = 'none';
+      failureMessage.classList.remove('failure');
+      successMessage.textContent = 'Success! You found the odd one out!';
     } else {
-      messageDiv.innerHTML = '<span style="color: red;">Failure! Try again.</span>';
+      successMessage.style.display = 'none';
+      successMessage.classList.remove('success');
+      failureMessage.style.display = 'flex';
+      failureMessage.classList.add('failure');
+      failureMessage.textContent = 'Failure! Try again.';
     }
   }
 </script>

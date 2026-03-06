@@ -4,186 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A-3.35-Country PDF Validator</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        /* Theme updated to match A-3.29-DynamicProgressBar.html */
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 100%;
-        }
-
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .button-group {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            background-color: #007BFF;
-            color: #fff;
-            transition: transform 0.2s, background-color 0.15s;
-        }
-
-        button:hover {
-            transform: scale(1.05);
-            background-color: #0069d9;
-        }
-
-        /* Disable style for validate button */
-        .validate-btn:disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-            opacity: 0.9;
-        }
-
-        .validation-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            display: none;
-            border: 1px solid #eee;
-        }
-
-        .validation-section.active {
-            display: block;
-        }
-
-        .country-display {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 20px;
-            border-left: none; /* removed blue accent */
-        }
-
-        .country-display p {
-            margin: 0;
-            color: #555;
-            font-weight: 500;
-        }
-
-        .country-name {
-            font-size: 28px;
-            color: #333;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .radio-group {
-            margin: 20px 0;
-        }
-
-        .radio-option {
-            margin: 12px 0;
-        }
-
-        .radio-option input[type="radio"] {
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .radio-option label {
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .validate-btn {
-            width: 100%;
-            margin-top: 20px;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            background-color: #28a745;
-            color: white;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 6px;
-            text-align: center;
-            font-weight: bold;
-            display: none;
-        }
-
-        .message.success {
-            display: block;
-            background: #c8e6c9;
-            color: #2e7d32;
-            border: 1px solid #66bb6a;
-        }
-
-        .message.failure {
-            display: block;
-            background: #ffcdd2;
-            color: #c62828;
-            border: 1px solid #ef5350;
-        }
-    </style>
+    <script src="../../components.js"></script>
 </head>
 <body>
-<div class="container">
-    <h1>Country PDF Validator</h1>
+<div id="header-placeholder"></div>
 
-    <div class="button-group">
-        <button id="downloadBtn" onclick="generateAndDownloadPDF()">Download Countries PDF</button>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.29-DynamicProgressBar.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.30-ReadingPdfFile.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
 
-    <div class="validation-section" id="validationSection">
-        <div class="country-display">
-            <p>Verify if this country is in the downloaded PDF:</p>
-            <div class="country-name" id="randomCountry"></div>
-        </div>
+    <main class="card">
+        <div class="card-content">
+            <h1>PDF File Reader</h1>
+            <p class="lead">Enter your country name and verify if it matches the PDF content.</p>
 
-        <div class="radio-group">
-            <div class="radio-option">
-                <input type="radio" id="yes" name="verification" value="yes">
-                <label for="yes">Yes, country is in the PDF</label>
+            <div class="button-group">
+                <button id="downloadBtn" onclick="generateAndDownloadPDF()">Download Countries PDF</button>
             </div>
-            <div class="radio-option">
-                <input type="radio" id="no" name="verification" value="no">
-                <label for="no">No, country is not in the PDF</label>
+
+            <div class="validation-section" id="validationSection">
+                <div class="country-display">
+                    <p>Verify if this country is in the downloaded PDF:</p>
+                    <div class="country-name" id="randomCountry"></div>
+                </div>
+
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="yes" name="verification" value="yes">
+                        <label for="yes">Yes, country is in the PDF</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="no" name="verification" value="no">
+                        <label for="no">No, country is not in the PDF</label>
+                    </div>
+                </div>
+
+                <button id="validateBtn" class="validate-btn" onclick="validateAnswer()">Validate</button>
+
+                <div class="message success" id="successMessage"></div>
+                <div class="message failure" id="failureMessage"></div>
             </div>
         </div>
-
-        <button id="validateBtn" class="validate-btn" onclick="validateAnswer()">Validate</button>
-
-        <div class="message" id="successMessage">✓ Success! Your answer is correct!</div>
-        <div class="message" id="failureMessage">✗ Failure! Your answer is incorrect.</div>
-    </div>
+    </main>
 </div>
+
+<div id="footer-placeholder"></div>
 
 <script>
     const countries = [
@@ -294,12 +169,5 @@
         }
     }
 </script>
-
-<footer style="max-width:900px;margin:20px auto 40px;text-align:center;font-family:Arial,sans-serif;color:#555">
-    <div style="background:#fff;padding:12px;border-radius:8px;border:1px solid #eee;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
-        <p style="margin:6px 0">Support this site: <a href="https://www.buymeacoffee.com/YOURNAME" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a> | <a href="../../privacy.html">Privacy</a> | <a href="../../terms.html">Terms</a> | <a href="../../disclosure.html">Disclosure</a></p>
-        <p style="font-size:12px;margin:6px 0;color:#888">This site may use affiliate links and ads after approval.</p>
-    </div>
-</footer>
 </body>
 </html>

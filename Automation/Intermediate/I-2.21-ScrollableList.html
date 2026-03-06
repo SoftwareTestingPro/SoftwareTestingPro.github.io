@@ -4,139 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms and Conditions</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 90%; /* Adjusted for responsiveness */
-            max-width: 600px;
-            position: relative;
-        }
-        .header {
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .terms {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #ccc;
-            border: none;
-            border-radius: 5px;
-            cursor: not-allowed;
-            transition: background-color 0.3s;
-            display: block;
-            margin: 0 auto;
-            width: 100%; /* Ensure the button is responsive */
-            max-width: 300px; /* Limit the button width on large screens */
-        }
-        button.enabled {
-            background-color: #007bff;
-            cursor: pointer;
-        }
-        button.clicked {
-            background-color: #28a745;
-        }
-
-        /* Media queries for responsiveness */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                width: 90%;
-                max-width: 500px;
-            }
-
-            .header {
-                font-size: 1.3em;
-            }
-
-            .terms {
-                max-height: 300px;
-            }
-
-            button {
-                font-size: 0.9em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-                width: 90%;
-            }
-
-            .header {
-                font-size: 1.2em;
-            }
-
-            .terms {
-                max-height: 250px;
-            }
-
-            button {
-                font-size: 0.8em;
-                padding: 8px 15px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="header">Scroll to the bottom of the page to accept the Terms and Conditions</div>
-        <div class="terms">
-            <h2>1. Introduction</h2>
-            <p>Welcome to our Terms and Conditions. Please read them carefully.</p>
-            
-            <h2>2. Acceptance of Terms</h2>
-            <p>By using our services, you agree to these terms and conditions.</p>
-            
-            <h2>3. User Responsibilities</h2>
-            <p>Users are responsible for their own actions while using the service.</p>
-            
-            <h2>4. Service Availability</h2>
-            <p>We strive to provide uninterrupted service but cannot guarantee it.</p>
-            
-            <h2>5. Privacy Policy</h2>
-            <p>Your privacy is important to us. Please review our privacy policy.</p>
-            
-            <h2>6. Intellectual Property</h2>
-            <p>All intellectual property rights are owned by us or our licensors.</p>
-            
-            <h2>7. Limitation of Liability</h2>
-            <p>Our liability is limited as described in these terms.</p>
-            
-            <h2>8. Termination</h2>
-            <p>We may terminate your access if you violate our terms.</p>
-            
-            <h2>9. Changes to Terms</h2>
-            <p>We may update these terms from time to time.</p>
-            
-            <h2>10. Contact Information</h2>
-            <p>If you have any questions, please contact us.</p>
+
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.20-ValueInput.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.22-SortNumbers.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <button id="acceptButton" disabled>I Accept</button>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Terms and Conditions</h1>
+                <p class="lead">Scroll to the bottom of the page to accept the Terms and Conditions</p>
+
+                <div class="terms">
+                    <h2>1. Introduction</h2>
+                    <p>Welcome to our Terms and Conditions. Please read them carefully.</p>
+                    
+                    <h2>2. Acceptance of Terms</h2>
+                    <p>By using our services, you agree to these terms and conditions.</p>
+                    
+                    <h2>3. User Responsibilities</h2>
+                    <p>Users are responsible for their own actions while using the service.</p>
+                    
+                    <h2>4. Service Availability</h2>
+                    <p>We strive to provide uninterrupted service but cannot guarantee it.</p>
+                    
+                    <h2>5. Privacy Policy</h2>
+                    <p>Your privacy is important to us. Please review our privacy policy.</p>
+                    
+                    <h2>6. Intellectual Property</h2>
+                    <p>All intellectual property rights are owned by us or our licensors.</p>
+                    
+                    <h2>7. Limitation of Liability</h2>
+                    <p>Our liability is limited as described in these terms.</p>
+                    
+                    <h2>8. Termination</h2>
+                    <p>We may terminate your access if you violate our terms.</p>
+                    
+                    <h2>9. Changes to Terms</h2>
+                    <p>We may update these terms from time to time.</p>
+                    
+                    <h2>10. Contact Information</h2>
+                    <p>If you have any questions, please contact us.</p>
+                </div>
+
+                <button id="acceptButton" disabled>I Accept</button>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const terms = document.querySelector('.terms');

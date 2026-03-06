@@ -10,13 +10,9 @@ function getBasePath() {
     const currentPath = window.location.pathname;
     console.log('Current path:', currentPath);
     
-    // If we're in Automation/Beginner/, go up two levels
-    if (currentPath.includes('/Automation/Beginner/')) {
+    // If we're in Automation/, go up two levels to root
+    if (currentPath.includes('/Automation/')) {
         return '../../';
-    }
-    // If we're in Automation/, go up one level
-    else if (currentPath.includes('/Automation/')) {
-        return '../';
     }
     // Default to root level
     else {

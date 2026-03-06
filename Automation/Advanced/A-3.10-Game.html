@@ -4,63 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Platformer Game Challenge</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .container {
-      width: 800px;
-      background-color: #fff;
-      border: 2px solid #333;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    canvas {
-      background-color: #87CEEB;
-    }
-
-    .message {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      color: #4caf50;
-      display: none;
-      white-space: nowrap;
-    }
-
-    .label {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #000;
-      text-align: center;
-    }
-  </style>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <script src="../../components.js"></script>
 </head>
 <body>
-  <div class="container">
+  <div id="header-placeholder"></div>
+
+  <div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.09-Location.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.11-FileUpload.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+      <div class="card-content">
+      <h1>Platformer Game Challenge</h1>
+      <p class="lead">Use arrow keys and spacebar to reach the top platform.</p>
+
     <canvas id="gameCanvas" width="800" height="400"></canvas>
-    <div class="message" id="congratulationMessage">Congratulations! You reached the top platform!</div>
+    <div class="message success" id="successMessage">Congratulations! You reached the top platform!</div>
     <h3 class="label">Use the spacebar and arrow keys to reach the top platform and verify the congratulations message.</h3>
   </div>
+    </main>
+  </div>
+
+  <div id="footer-placeholder"></div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const message = document.getElementById('congratulationMessage');
+    const successMessage = document.getElementById('successMessage');
+
+    // Hide message on load
+    successMessage.style.display = 'none';
+    successMessage.classList.remove('success');
 
     const gravity = 0.5;
     const friction = 0.9;
@@ -150,7 +133,12 @@
         ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
       });
 
-      message.style.display = topPlatformReached ? 'block' : 'none';
+      successMessage.style.display = topPlatformReached ? 'flex' : 'none';
+      if (topPlatformReached) {
+        successMessage.classList.add('success');
+      } else {
+        successMessage.classList.remove('success');
+      }
 
       requestAnimationFrame(gameLoop);
     }

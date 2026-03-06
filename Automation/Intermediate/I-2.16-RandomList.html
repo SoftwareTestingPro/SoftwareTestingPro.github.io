@@ -6,90 +6,45 @@
     <title>Random Household Items</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <script src="../../components.js"></script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            text-align: center;
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #333;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        label {
-            font-size: 1em;
-            color: #333;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        .item-list {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        .item {
-            background-color: #e9ecef;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 5px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 1.2em;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-        }
-        .success-message {
-            color: #4caf50;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-        .failure-message {
-            color: #dc3545;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Random Household Items</h1>
-        <div class="input-group">
-            <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
+
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.15-RandomPopUp.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.17-LoadingResults.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <ul class="item-list" id="itemList"></ul>
-        <div class="message success-message" id="successMessage">
-            Correct! The number matches the count of household items.
-        </div>
-        <div class="message failure-message" id="failureMessage">
-            Incorrect! The number does not match the count of household items.
-        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Random Household Items</h1>
+                <p class="lead">Enter the count of household items displayed below</p>
+
+                <div class="input-group">
+                    <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
+                </div>
+
+                <ul class="item-list" id="itemList"></ul>
+
+                <div class="message success-message" id="successMessage">
+                    Correct! The number matches the count of household items.
+                </div>
+
+                <div class="message failure-message" id="failureMessage">
+                    Incorrect! The number does not match the count of household items.
+                </div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const items = [
