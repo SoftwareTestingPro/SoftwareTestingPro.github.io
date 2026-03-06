@@ -11,47 +11,51 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.13-DynamicProgressBar.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.15-DatePicker.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>Keystroke Challenge</h1>
-        <p class="lead">Press the key specified below to complete the task.</p>
-
-        <div class="input-group" style="text-align: center;">
-            <p>Press the "<strong id="random-key" style="font-size: 1.2em; color: var(--accent);"></strong>" key on your keyboard.</p>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.13-DynamicProgressBar.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.15-DatePicker.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Success! You pressed the correct key.</span>
-        </div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Keystroke Challenge</h1>
+                <p class="lead">Press the key specified below to complete the task.</p>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <div class="message-row">
-                <span class="icon">✕</span>
-                <strong>Incorrect Key</strong>
-            </div>
-            <div class="message-row">
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Expected:</span>
-                    <div class="value-box" id="expectedKey"></div>
+                <div class="input-group" style="text-align: center;">
+                    <p>Press the "<strong id="random-key" style="font-size: 1.2em; color: var(--accent);"></strong>" key on your keyboard.</p>
                 </div>
-                <div>
-                    <span style="color: inherit; font-size: 12px;">You Pressed:</span>
-                    <div class="value-box" id="actualKey"></div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Success! You pressed the correct key.</span>
+                </div>
+
+                <div class="message" id="failureMessage" role="status" aria-live="polite">
+                    <div class="message-row">
+                        <span class="icon">✕</span>
+                        <strong>Incorrect Key</strong>
+                    </div>
+                    <div class="message-row">
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Expected:</span>
+                            <div class="value-box" id="expectedKey"></div>
+                        </div>
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">You Pressed:</span>
+                            <div class="value-box" id="actualKey"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 

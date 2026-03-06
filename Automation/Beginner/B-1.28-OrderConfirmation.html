@@ -10,7 +10,8 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
+<div class="content-wrapper">
+    <div class="card-nav">
         <a href="B-1.27-MatchTheFollowing.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
             Previous Task
@@ -19,35 +20,38 @@
             Next Task
             <span class="nav-icon">→</span>
         </a>
-    </nav>
+    </div>
 
     <main class="card" id="orderSummary">
-        <h1>Order Confirmation</h1>
-        <p class="lead">Enter the exact order number shown below. The order details are displayed in random order.</p>
+        <div class="card-content">
+            <h1>Order Confirmation</h1>
+            <p class="lead">Enter the exact order number shown below. The order details are displayed in random order.</p>
 
-        <!-- Order details will be populated here by JavaScript -->
-        
-        <div class="input-group">
-            <label for="orderInput">Enter Order Number:</label>
-            <input
-                type="text"
-                id="orderInput"
-                name="orderInput"
-                placeholder="Enter the order number here"
-                aria-describedby="orderMessage"
-            >
-        </div>
+            <!-- Order details will be populated here by JavaScript -->
+            
+            <div class="input-group">
+                <label for="orderInput">Enter Order Number:</label>
+                <input
+                    type="text"
+                    id="orderInput"
+                    name="orderInput"
+                    placeholder="Enter the order number here"
+                    aria-describedby="orderMessage"
+                >
+            </div>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct! Order number matches.</span>
-        </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Correct! Order number matches.</span>
+            </div>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <span class="icon">✕</span>
-            <span>Incorrect! Order number does not match.</span>
+            <div class="message" id="failureMessage" role="status" aria-live="polite">
+                <span class="icon">✕</span>
+                <span>Incorrect! Order number does not match.</span>
+            </div>
         </div>
     </main>
+</div>
 
     <div id="footer-placeholder"></div>
 

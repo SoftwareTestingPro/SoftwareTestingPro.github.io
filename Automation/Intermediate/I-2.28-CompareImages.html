@@ -90,10 +90,12 @@
       const message = document.getElementById('message');
       if (userSaysSame === areSame) {
         message.textContent = '✅ Success! You got it right.';
-        message.style.color = 'green';
+        message.classList.add('success');
+        message.classList.remove('failure');
       } else {
         message.textContent = '❌ Failure! That was incorrect.';
-        message.style.color = 'red';
+        message.classList.add('failure');
+        message.classList.remove('success');
       }
     }
 

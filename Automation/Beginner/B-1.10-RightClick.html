@@ -11,40 +11,44 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.09-DoubleClick.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.11-PageTitle.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>Right Click Action</h1>
-        <p class="lead">Right click on the button below to complete the task.</p>
-
-        <div class="button-group">
-            <button id="clickButton" type="button">Click Me</button>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.09-DoubleClick.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.11-PageTitle.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Success! You right-clicked the button.</span>
-        </div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Right Click Action</h1>
+                <p class="lead">Right click on the button below to complete the task.</p>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <div class="message-row">
-                <span class="icon">✕</span>
-                <strong>Incorrect</strong>
+                <div class="button-group">
+                    <button id="clickButton" type="button">Click Me</button>
+                </div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Success! You right-clicked the button.</span>
+                </div>
+
+                <div class="message" id="failureMessage" role="status" aria-live="polite">
+                    <div class="message-row">
+                        <span class="icon">✕</span>
+                        <strong>Incorrect</strong>
+                    </div>
+                    <div class="message-row">
+                        <span>Ha Ha! You left-clicked the button.</span>
+                    </div>
+                </div>
             </div>
-            <div class="message-row">
-                <span>Ha Ha! You left-clicked the button.</span>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 

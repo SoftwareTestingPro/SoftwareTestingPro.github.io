@@ -11,48 +11,52 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.11-PageTitle.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.13-DynamicProgressBar.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>URL Matching</h1>
-        <p class="lead">Enter the full URL of this webpage in the input field below to complete the task.</p>
-
-        <div class="input-group">
-            <label for="urlInput">Enter the URL of this webpage:</label>
-            <input type="text" id="urlInput" placeholder="Enter URL here">
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.11-PageTitle.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.13-DynamicProgressBar.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct — the entered URL matches the current page's URL.</span>
-        </div>
+        <main class="card">
+            <div class="card-content">
+                <h1>URL Matching</h1>
+                <p class="lead">Enter the full URL of this webpage in the input field below to complete the task.</p>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <div class="message-row">
-                <span class="icon">✕</span>
-                <strong>Does not match</strong>
-            </div>
-            <div class="message-row">
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Expected:</span>
-                    <div class="value-box" id="expectedValue"></div>
+                <div class="input-group">
+                    <label for="urlInput">Enter the URL of this webpage:</label>
+                    <input type="text" id="urlInput" placeholder="Enter URL here">
                 </div>
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Entered:</span>
-                    <div class="value-box" id="actualValue"></div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Correct — the entered URL matches the current page's URL.</span>
+                </div>
+
+                <div class="message" id="failureMessage" role="status" aria-live="polite">
+                    <div class="message-row">
+                        <span class="icon">✕</span>
+                        <strong>Does not match</strong>
+                    </div>
+                    <div class="message-row">
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Expected:</span>
+                            <div class="value-box" id="expectedValue"></div>
+                        </div>
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Entered:</span>
+                            <div class="value-box" id="actualValue"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 

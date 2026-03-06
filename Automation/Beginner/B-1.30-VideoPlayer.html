@@ -18,86 +18,84 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.29-CharCounter.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.31-Overview.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
     <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.29-CharCounter.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.31-Overview.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
         <main class="card">
-        <h1>Video Player</h1>
-        <p class="lead">Play the video, pause it, seek through the timeline, change playback speed, adjust volume, and toggle fullscreen. Watch the entire video to see the success message.</p>
-        
-        <div class="instructions">
-            <strong>Instructions:</strong> Use the video controls to play, pause, seek, adjust speed and volume. The player should correctly track progress and display remaining time.
-        </div>
+            <div class="card-content">
+                <h1>Video Player - Advanced Automation Task</h1>
+                <p class="lead">Play the video, pause it, seek through the timeline, change playback speed, adjust volume, and toggle fullscreen. Watch the entire video to see the success message.</p>
 
-        <div class="video-player">
-            <div class="video-wrapper">
-                <video id="videoPlayer">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="play-pause-overlay" id="playPauseOverlay">
-                    <span class="play-pause-icon" id="overlayIcon">▶️</span>
+                <div class="video-player">
+                    <div class="video-wrapper">
+                        <video id="videoPlayer">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="play-pause-overlay" id="playPauseOverlay">
+                            <span class="play-pause-icon" id="overlayIcon">▶️</span>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <div class="progress-bar-container" id="progressContainer">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+
+                        <div class="controls-buttons">
+
+                            <button id="rewindBtn" title="Rewind 10 seconds">
+                                ⏪ -10s
+                            </button>
+
+                            <button id="forwardBtn" title="Forward 10 seconds">
+                                ⏩ +10s
+                            </button>
+
+                            <div class="speed-control">
+                                <label for="speedSelect">Speed:</label>
+                                <select id="speedSelect">
+                                    <option value="0.5">0.5x</option>
+                                    <option value="0.75">0.75x</option>
+                                    <option value="1" selected>1x</option>
+                                    <option value="1.25">1.25x</option>
+                                    <option value="1.5">1.5x</option>
+                                    <option value="2">2x</option>
+                                </select>
+                            </div>
+
+                            <div class="time-display">
+                                <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                            </div>
+
+                            <div class="volume-control">
+                                <label for="volumeSlider" title="Volume">🔊</label>
+                                <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100">
+                            </div>
+
+                            <button id="fullscreenBtn" class="fullscreen-btn" title="Toggle Fullscreen">
+                                ⛶ Fullscreen
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="message" id="successMessage">
+                    <span class="icon">✓</span>
+                    <span>Congratulations! You've watched the entire video successfully!</span>
+                </div>
+
+                <div class="message info" id="infoMessage"></div>
             </div>
-            <div class="controls">
-                <div class="progress-bar-container" id="progressContainer">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-
-                <div class="controls-buttons">
-
-                    <button id="rewindBtn" title="Rewind 10 seconds">
-                        ⏪ -10s
-                    </button>
-
-                    <button id="forwardBtn" title="Forward 10 seconds">
-                        ⏩ +10s
-                    </button>
-
-                    <div class="speed-control">
-                        <label for="speedSelect">Speed:</label>
-                        <select id="speedSelect">
-                            <option value="0.5">0.5x</option>
-                            <option value="0.75">0.75x</option>
-                            <option value="1" selected>1x</option>
-                            <option value="1.25">1.25x</option>
-                            <option value="1.5">1.5x</option>
-                            <option value="2">2x</option>
-                        </select>
-                    </div>
-
-                    <div class="time-display">
-                        <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
-                    </div>
-
-                    <div class="volume-control">
-                        <label for="volumeSlider" title="Volume">🔊</label>
-                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100">
-                    </div>
-
-                    <button id="fullscreenBtn" class="fullscreen-btn" title="Toggle Fullscreen">
-                        ⛶ Fullscreen
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="message" id="successMessage">
-            <span class="icon">✓</span>
-            <span>Congratulations! You've watched the entire video successfully!</span>
-        </div>
-
-        <div class="message info" id="infoMessage"></div>
-    </main>
+        </main>
     </div>
 
     <div id="footer-placeholder"></div>

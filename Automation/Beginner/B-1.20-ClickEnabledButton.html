@@ -11,31 +11,33 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.19-AutoComplete.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.21-CompareText.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
     <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.19-AutoComplete.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.21-CompareText.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
         <main class="card">
-        <h1>Click the Enabled Button</h1>
-        <p class="lead">Select the one enabled button from the group below to complete the task.</p>
+            <div class="card-content">
+                <h1>Enabled/Disabled Buttons</h1>
+                <p class="lead">Select the one enabled button from the group below to complete the task.</p>
 
-        <div class="button-container" id="buttonContainer">
-            <!-- Buttons will be inserted here by JavaScript -->
-        </div>
+                <div class="button-container" id="buttonContainer">
+                    <!-- Buttons will be inserted here by JavaScript -->
+                </div>
 
-        <div class="message success" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Success! You clicked the enabled button.</span>
-        </div>
-    </main>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Success! You clicked the enabled button.</span>
+                </div>
+            </div>
+        </main>
     </div>
 
     <div id="footer-placeholder"></div>

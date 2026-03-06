@@ -11,45 +11,49 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.12-FetchURL.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.14-Keystroke.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>Dynamic Progress Bar Challenge</h1>
-        <p class="lead">Wait for the progress bar to reach 100%, then click the button. Clicking too early will result in a failure.</p>
-
-        <div id="status">0%</div>
-        <div id="progress-bar-container">
-            <div id="progress-bar"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.12-FetchURL.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.14-Keystroke.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="button-group">
-            <button id="action-button">Click Me After 100%!</button>
-        </div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Dynamic Progress Bar Challenge</h1>
+                <p class="lead">Wait for the progress bar to reach 100%, then click the button. Clicking too early will result in a failure.</p>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Success! Button was clicked after completion.</span>
-        </div>
+                <div id="status">0%</div>
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <div class="message-row">
-                <span class="icon">✕</span>
-                <strong>Failure</strong>
+                <div class="button-group">
+                    <button id="action-button">Click Me After 100%!</button>
+                </div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Success! Button was clicked after completion.</span>
+                </div>
+
+                <div class="message" id="failureMessage" role="status" aria-live="polite">
+                    <div class="message-row">
+                        <span class="icon">✕</span>
+                        <strong>Failure</strong>
+                    </div>
+                    <div class="message-row">
+                        <span>You clicked too early.</span>
+                    </div>
+                </div>
             </div>
-            <div class="message-row">
-                <span>You clicked too early.</span>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 

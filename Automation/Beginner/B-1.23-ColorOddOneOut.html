@@ -10,33 +10,37 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.22-ImagePath.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.24-MathOddOneOut.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>Color Odd One Out</h1>
-        <p class="lead">Select the tile with the different color. Three tiles will have the same color, while one will be different.</p>
-
-        <div class="buttons" id="buttonContainer"></div>
-
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct! You found the odd colored tile.</span>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.22-ImagePath.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.24-MathOddOneOut.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <span class="icon">✕</span>
-            <span>Incorrect! That's not the odd one out. Try again.</span>
-        </div>
-    </main>
+        <main class="card">
+            <div class="card-content">
+                <h1>Color Odd One Out Game</h1>
+                <p class="lead">Select the tile with the different color. Three tiles will have the same color, while one will be different.</p>
+
+                <div class="buttons" id="buttonContainer"></div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Correct! You found the odd colored tile.</span>
+                </div>
+
+                <div class="message" id="failureMessage" role="status" aria-live="polite">
+                    <span class="icon">✕</span>
+                    <span>Incorrect! That's not the odd one out. Try again.</span>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 

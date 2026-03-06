@@ -10,34 +10,38 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.24-MathOddOneOut.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.26-CaseValidation.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>Text Highlight</h1>
-        <p class="lead">Execute JavaScript code to highlight the second text element with the same yellow background as the first one.</p>
-
-        <div class="text-section">
-            <span class="highlight-text">This is Highlighted text.</span>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.24-MathOddOneOut.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.26-CaseValidation.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="text-section">
-            <span id="textToHighlight">Highlight this text same as above.</span>
-        </div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Text Highlight Example</h1>
+                <p class="lead">Execute JavaScript code to highlight the second text element with the same yellow background as the first one.</p>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Success! The text has been highlighted.</span>
-        </div>
-    </main>
+                <div class="text-section">
+                    <span class="highlight-text">This is Highlighted text.</span>
+                </div>
+
+                <div class="text-section">
+                    <span id="textToHighlight">Highlight this text same as above.</span>
+                </div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Success! The text has been highlighted.</span>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 

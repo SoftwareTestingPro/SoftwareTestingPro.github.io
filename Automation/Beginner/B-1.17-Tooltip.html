@@ -11,54 +11,57 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.16-CaptureScreeshot.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.18-PageSource.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>Tooltip Validation</h1>
-        <p class="lead">Hover over the rainbow text below to reveal a tooltip, then enter the tooltip's text into the input field.</p>
-
-        <div style="text-align: center; margin-bottom: 20px;">
-            <div class="rainbow-text" data-tooltip="I am a Tooltip">
-                Hover Me For Tooltip
-            </div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.16-CaptureScreeshot.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.18-PageSource.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="input-group">
-            <label for="inputField">Enter Tooltip Text:</label>
-            <input type="text" id="inputField" placeholder="Enter the tooltip text here">
-        </div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Tooltip Validation</h1>
+                <p class="lead">Hover over the rainbow text below to reveal a tooltip, then enter the tooltip's text into the input field.</p>
 
-        <div class="message success" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct — the entered text matches the tooltip.</span>
-        </div>
-
-        <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-            <div class="message-row">
-                <span class="icon">✕</span>
-                <strong>Does not match</strong>
-            </div>
-            <div class="message-row">
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Expected:</span>
-                    <div class="value-box" id="expectedValue"></div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="rainbow-text" data-tooltip="I am a Tooltip">
+                        Hover Me For Tooltip
+                    </div>
                 </div>
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Entered:</span>
-                    <div class="value-box" id="actualValue"></div>
+
+                <div class="input-group">
+                    <input type="text" id="inputField" placeholder="Enter the tooltip text here">
+                </div>
+
+                <div class="message success" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Correct — the entered text matches the tooltip.</span>
+                </div>
+
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    <div class="message-row">
+                        <span class="icon">✕</span>
+                        <strong>Does not match</strong>
+                    </div>
+                    <div class="message-row">
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Expected:</span>
+                            <div class="value-box" id="expectedValue"></div>
+                        </div>
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Entered:</span>
+                            <div class="value-box" id="actualValue"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 

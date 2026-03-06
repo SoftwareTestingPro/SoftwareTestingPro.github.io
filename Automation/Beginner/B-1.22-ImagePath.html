@@ -10,55 +10,59 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.21-CompareText.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.23-ColorOddOneOut.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>Image Source URL</h1>
-        <p class="lead">Enter the exact source URL of the image displayed below. Your input will be compared against the actual image source.</p>
-
-        <img id="image" src="" alt="Random Image" style="display: block; margin: 0 auto 20px auto;">
-
-        <div class="input-group">
-            <label for="imageURL">Enter the source URL of this image:</label>
-            <input
-                type="text"
-                id="imageURL"
-                placeholder="Enter the image URL here"
-                aria-describedby="imageMessage"
-            >
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.21-CompareText.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.23-ColorOddOneOut.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct — URL matches exactly.</span>
-        </div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Image URL Verification</h1>
+                <p class="lead">Enter the exact source URL of the image displayed below. Your input will be compared against the actual image source.</p>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <div class="message-row">
-                <span class="icon">✕</span>
-                <strong>Does not match</strong>
-            </div>
-            <div class="message-row">
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Expected:</span>
-                    <div class="value-box" id="expectedUrl"></div>
+                <img id="image" src="" alt="Random Image" style="display: block; margin: 0 auto 20px auto;">
+
+                <div class="input-group">
+                    <label for="imageURL">Enter the source URL of this image:</label>
+                    <input
+                        type="text"
+                        id="imageURL"
+                        placeholder="Enter the image URL here"
+                        aria-describedby="imageMessage"
+                    >
                 </div>
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Entered:</span>
-                    <div class="value-box" id="actualUrl"></div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Correct — URL matches exactly.</span>
+                </div>
+
+                <div class="message" id="failureMessage" role="status" aria-live="polite">
+                    <div class="message-row">
+                        <span class="icon">✕</span>
+                        <strong>Does not match</strong>
+                    </div>
+                    <div class="message-row">
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Expected:</span>
+                            <div class="value-box" id="expectedUrl"></div>
+                        </div>
+                        <div>
+                            <span style="color: inherit; font-size: 12px;">Entered:</span>
+                            <div class="value-box" id="actualUrl"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 

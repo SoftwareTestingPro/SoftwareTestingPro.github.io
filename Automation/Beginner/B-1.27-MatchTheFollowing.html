@@ -11,7 +11,8 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
+<div class="content-wrapper">
+    <div class="card-nav">
         <a href="B-1.26-CaseValidation.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
             Previous Task
@@ -20,34 +21,37 @@
             Next Task
             <span class="nav-icon">→</span>
         </a>
-    </nav>
+    </div>
 
     <main class="card">
-        <h1>Match the Following</h1>
-        <p class="lead">Drag and drop items to match them with the correct categories below.</p>
+        <div class="card-content">
+            <h1>Match the Following</h1>
+            <p class="lead">Drag and drop items to match them with the correct categories below.</p>
 
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin: 20px 0;">
-            <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
-                <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">ITEMS TO MATCH</h3>
-                <div id="leftColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                    <!-- Left items will be inserted here -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin: 20px 0;">
+                <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                    <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">ITEMS TO MATCH</h3>
+                    <div id="leftColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <!-- Left items will be inserted here -->
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                    <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">CATEGORIES</h3>
+                    <div id="rightColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div class="draggable-item" data-type="number" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Number</div>
+                        <div class="draggable-item" data-type="string" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">String</div>
+                        <div class="draggable-item" data-type="alphanumeric" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Alphanumeric</div>
+                    </div>
                 </div>
             </div>
-            <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
-                <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">CATEGORIES</h3>
-                <div id="rightColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                    <div class="draggable-item" data-type="number" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Number</div>
-                    <div class="draggable-item" data-type="string" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">String</div>
-                    <div class="draggable-item" data-type="alphanumeric" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Alphanumeric</div>
-                </div>
-            </div>
-        </div>
 
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>All items matched successfully!</span>
+            <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>All items matched successfully!</span>
+            </div>
         </div>
     </main>
+</div>
 
     <div id="footer-placeholder"></div>
 

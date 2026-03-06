@@ -10,43 +10,57 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <nav class="task-navigation">
-        <a href="B-1.25-HighlightText.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Previous Task
-        </a>
-        <a href="B-1.27-MatchTheFollowing.html" class="nav-btn nav-btn-next">
-            Next Task
-            <span class="nav-icon">→</span>
-        </a>
-    </nav>
-
-    <main class="card">
-        <h1>Case Validation</h1>
-        <p class="lead">Select all checkboxes that contain uppercase strings. Uppercase strings contain only capital letters.</p>
-
-        <div class="checkbox-container" id="checkboxContainer">
-            <!-- Checkboxes will be generated here -->
-        </div>
-        
-        <button class="validate-btn" onclick="validateSelection()">Validate Selection</button>
-
-        <div class="message" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct! You selected all uppercase items correctly.</span>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.25-HighlightText.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.27-MatchTheFollowing.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="message" id="failureMessage" role="status" aria-live="polite">
-            <span class="icon">✕</span>
-            <span>Incorrect! Please select only the uppercase items.</span>
-        </div>
-    </main>
+        <main class="card">
+            <div class="card-content">
+                <h1>Case Validation</h1>
+                <p class="lead">Select all checkboxes that contain uppercase strings. Uppercase strings contain only capital letters.</p>
+
+                <div class="checkbox-container" id="checkboxContainer">
+                    <!-- Checkboxes will be generated here -->
+                </div>
+                
+                <button class="validate-btn" onclick="validateSelection()">Validate Selection</button>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite">
+                    <span class="icon">✓</span>
+                    <span>Correct! You selected all uppercase items correctly.</span>
+                </div>
+
+                <div class="message" id="failureMessage" role="status" aria-live="polite">
+                    <span class="icon">✕</span>
+                    <span>Incorrect! Please select only the uppercase items.</span>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <div id="footer-placeholder"></div>
 
-<script>
-    function generateRandomName() {
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    <script>
+        function generateRandomName() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            let name = "";
+            for (let i = 0; i < 5; i++) {
+                name += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return Math.random() < 0.5 ? name.toUpperCase() : name;
+        }
+
+        const checkboxContainer = document.getElementById('checkboxContainer');
+        const checkboxData = [];
+
         let name = "";
         for (let i = 0; i < 5; i++) {
             name += chars.charAt(Math.floor(Math.random() * chars.length));
