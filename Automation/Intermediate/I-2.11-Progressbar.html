@@ -4,25 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Progress Bar Example</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            text-align: center;
-        }
-        h1 {
-            margin-bottom: 10px;
-        }
-        h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
         .progress-container {
             width: 80%;
             max-width: 600px;
@@ -32,6 +16,7 @@
             box-shadow: 0 3px 3px -3px #00000070, 0 3px 4px 0px #00000040, 0 1px 8px 0px #00000030;
             margin-top: 20px;
         }
+
         .progress-bar {
             height: 30px;
             width: 0;
@@ -42,26 +27,51 @@
             border-radius: 25px;
             transition: width 0.2s;
         }
-        .success-message {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #4caf50;
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <h3>Assert the success message once progress bar reaches 100%</h3>
-    <div class="progress-container">
-        <div class="progress-bar" id="progress-bar">0%</div>
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.10-Alerts.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.12-Frame.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
-    <div class="success-message" id="successMessage">Success! The progress bar is complete.</div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Progress Bar Example</h1>
+            <p class="lead">Watch the progress bar complete</p>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar">0%</div>
+            </div>
+
+            <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Success! The progress bar is complete.</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const progressBar = document.getElementById('progress-bar');
             const successMessage = document.getElementById('successMessage');
             const duration = Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000; // Random duration between 10 to 30 seconds
+            
+            // Hide message initially
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
             
             let start = null;
 
@@ -74,7 +84,8 @@
                 if (progress < 1) {
                     requestAnimationFrame(step);
                 } else {
-                    successMessage.style.display = 'block'; // Show success message
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('success');
                 }
             }
 

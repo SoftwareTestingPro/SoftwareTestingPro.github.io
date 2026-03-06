@@ -4,27 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Buttons</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            width: 50%;
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-        }
-
         .button-container {
             margin-bottom: 20px;
         }
@@ -86,19 +68,48 @@
 </head>
 <body>
 
-<div class="container">
-    <label for="buttonContainer">Count total buttons and enter value in Input Field</label>
-    <div class="button-container" id="buttonContainer">
-        <!-- Buttons will be added here dynamically -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.08-Slider.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.10-Alerts.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
-    <input type="text" id="inputField" placeholder="Enter the number of buttons..." maxlength="10">
-    <div class="success-message" id="successMessage">
-        Correct! The number of buttons matches the input value.
-    </div>
-    <div class="failure-message" id="failureMessage">
-        Incorrect. The number of buttons does not match the input value.
-    </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Random Buttons</h1>
+            <p class="lead">Count total buttons and enter value in Input Field</p>
+
+            <div class="button-container" id="buttonContainer">
+                <!-- Buttons will be added here dynamically -->
+            </div>
+
+            <div class="input-group">
+                <label for="inputField">Enter the number of buttons:</label>
+                <input type="text" id="inputField" placeholder="Enter number of buttons..." maxlength="10">
+            </div>
+
+            <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Correct! The number of buttons matches the input value.</span>
+            </div>
+
+            <div class="message" id="failureMessage" role="status" aria-live="polite">
+                <span class="icon">✗</span>
+                <span>Incorrect. The number of buttons does not match the input value.</span>
+            </div>
+        </div>
+    </main>
 </div>
+
+<div id="footer-placeholder"></div>
 
 <script>
     function getRandomInt(min, max) {
@@ -121,6 +132,12 @@
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
 
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+
         const numberOfButtons = getRandomInt(4, 10);
         const usedNames = new Set();
         let buttonCount = numberOfButtons;
@@ -139,11 +156,15 @@
             const userInput = parseInt(inputField.value, 10);
 
             if (Number.isInteger(userInput) && userInput === buttonCount) {
-                successMessage.style.display = 'block'; // Show success message
-                failureMessage.style.display = 'none'; // Hide failure message
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                successMessage.style.display = 'none'; // Hide success message
-                failureMessage.style.display = 'block'; // Show failure message
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
             }
         });
     };

@@ -4,18 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Different Alerts</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-
         .container {
             text-align: center;
             background: #fff;
@@ -80,13 +71,36 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h3>Perform Actions on Alert Types Displayed Below</h3>
-        <button class="button alert-button" onclick="showAlert()">Show Alert</button>
-        <button class="button confirm-button" onclick="showConfirm()">Show Confirm</button>
-        <button class="button prompt-button" onclick="showPrompt()">Show Prompt</button>
-        <button class="button custom-button" onclick="showCustomAlert()">Show Custom Alert</button>
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.09-RandomButtons.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.11-Progressbar.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Different Alerts</h1>
+            <p class="lead">Perform Actions on Alert Types Displayed Below</p>
+
+            <div class="button-group">
+                <button class="button alert-button" onclick="showAlert()">Show Alert</button>
+                <button class="button confirm-button" onclick="showConfirm()">Show Confirm</button>
+                <button class="button prompt-button" onclick="showPrompt()">Show Prompt</button>
+                <button class="button custom-button" onclick="showCustomAlert()">Show Custom Alert</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         function showAlert() {

@@ -4,35 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Railway Reservation Seat Availability</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container-box {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 85%; /* Make the container responsive */
-            max-width: 600px; /* Limit the maximum width */
-            text-align: center;
-        }
-        h3 {
-            margin-bottom: 10px;
-        }
-        h5 {
-            margin-bottom: 20px;
-            font-size: 16px; /* Adjust font size for better readability */
-        }
         .table-responsive {
-            overflow-x: auto; /* Enable horizontal scrolling */
+            overflow-x: auto;
         }
         table {
             width: 100%;
@@ -55,47 +31,37 @@
         }
         caption {
             margin-bottom: 10px;
-            font-size: 20px; /* Slightly smaller font size */
+            font-size: 20px;
             font-weight: bold;
         }
-        .alert {
-            display: none;
-            margin-top: 20px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            h5 {
-                font-size: 14px; /* Smaller font size on medium screens */
-            }
-            th, td {
-                font-size: 14px; /* Smaller font size for table cells */
-            }
-        }
-
-        @media (max-width: 576px) {
-            h3 {
-                font-size: 18px; /* Adjust font size for headers */
-            }
-            h5 {
-                font-size: 12px; /* Even smaller font size for small screens */
-            }
-            th, td {
-                font-size: 12px; /* Smaller font size for table cells */
-                padding: 6px; /* Reduced padding */
-            }
-            table {
-                font-size: 12px; /* Adjust table font size */
-            }
+        .radio-cell {
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="container-box">
-        <h3>Railway Reservation Seat Availability</h3>
-        <h5>Select the train with the most number of available seats for reservation</h5>
-        <div class="table-responsive">
-            <table>
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.02-HoverLink.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.04-Calendar.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Railway Reservation Seat Availability</h1>
+            <p class="lead">Select the train with the most number of available seats for reservation</p>
+
+            <div class="table-responsive">
+                <table>
+                    <caption>Train Seat Availability</caption>
                 <thead>
                     <tr>
                         <th>Select</th>
@@ -138,9 +104,20 @@
                 </tbody>
             </table>
         </div>
-        <div class="alert alert-success" id="successMessage"></div>
-        <div class="alert alert-danger" id="failureMessage"></div>
-    </div>
+        <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>This train has the most number of seats available.</span>
+            </div>
+
+            <div class="message" id="failureMessage" role="status" aria-live="polite">
+                <span class="icon">✗</span>
+                <span>This train does not have the most number of seats available.</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         function getRandomInt(min, max) {
@@ -155,46 +132,50 @@
         }
 
         const seatData = [];
-        for (let i = 1; i <= 5; i++) {
-            const seatInfo = getRandomAvailability();
-            document.getElementById(`seat${i}`).textContent = `${seatInfo.status}: ${seatInfo.value}`;
-            seatData.push({ id: `seat${i}`, status: seatInfo.status, value: seatInfo.value });
-        }
+    for (let i = 1; i <= 5; i++) {
+        const seatInfo = getRandomAvailability();
+        document.getElementById(`seat${i}`).textContent = `${seatInfo.status}: ${seatInfo.value}`;
+        seatData.push({ id: `seat${i}`, status: seatInfo.status, value: seatInfo.value });
+    }
 
-        function updateMessage() {
-            const selectedRadio = document.querySelector('input[name="train"]:checked');
-            if (!selectedRadio) return;
+    // Hide messages initially
+    const successMessage = document.getElementById('successMessage');
+    const failureMessage = document.getElementById('failureMessage');
+    successMessage.style.display = 'none';
+    successMessage.classList.remove('success');
+    failureMessage.style.display = 'none';
+    failureMessage.classList.remove('failure');
 
-            const trainIndex = selectedRadio.value - 1;
-            const trainData = seatData[trainIndex];
+    function updateMessage() {
+        const selectedRadio = document.querySelector('input[name="train"]:checked');
+        if (!selectedRadio) return;
 
-            // Determine the train with the most available seats based on priority
-            const sortedData = seatData.slice().sort((a, b) => {
-                const statusOrder = { "Available": 3, "RAC": 2, "Waiting": 1 };
-                if (a.status === b.status) {
-                    return b.value - a.value;
-                }
-                return statusOrder[b.status] - statusOrder[a.status];
-            });
+        const trainIndex = selectedRadio.value - 1;
+        const trainData = seatData[trainIndex];
 
-            const bestTrain = sortedData[0];
-            const successMessage = document.getElementById('successMessage');
-            const failureMessage = document.getElementById('failureMessage');
-
-            if (trainData === bestTrain) {
-                successMessage.textContent = 'This train has the most number of seats available.';
-                successMessage.style.display = 'block';
-                failureMessage.style.display = 'none';
-            } else {
-                successMessage.style.display = 'none';
-                failureMessage.textContent = 'This train does not have the most number of seats available.';
-                failureMessage.style.display = 'block';
+        // Determine the train with the most available seats based on priority
+        const sortedData = seatData.slice().sort((a, b) => {
+            const statusOrder = { "Available": 3, "RAC": 2, "Waiting": 1 };
+            if (a.status === b.status) {
+                return b.value - a.value;
             }
-        }
-    </script>
+            return statusOrder[b.status] - statusOrder[a.status];
+        });
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        const bestTrain = sortedData[0];
+
+        if (trainData === bestTrain) {
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+        } else {
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
+        }
+    }
+    </script>
 </body>
 </html>

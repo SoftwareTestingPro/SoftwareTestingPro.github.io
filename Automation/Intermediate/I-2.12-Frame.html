@@ -4,17 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Button within a Frame</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f7f9fc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
         .container {
             text-align: center;
         }
@@ -56,13 +48,38 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">Click the below button</div>
-        <div class="iframe-container">
-            <iframe src="about:blank" id="button-frame"></iframe>
-        </div>
-        <div id="message" class="message"></div>
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.11-Progressbar.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.13-BrowserPopUp.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Button within a Frame</h1>
+            <p class="lead">Click the button inside the frame</p>
+
+            <div class="iframe-container">
+                <iframe src="about:blank" id="button-frame"></iframe>
+            </div>
+
+            <div class="message" id="message" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Success! You clicked the button within a frame.</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         // Create content for the iframe

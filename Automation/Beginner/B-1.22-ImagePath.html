@@ -10,6 +10,17 @@
 <body>
     <div id="header-placeholder"></div>
 
+    <nav class="task-navigation">
+        <a href="B-1.21-CompareText.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
+        <a href="B-1.23-ColorOddOneOut.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
+    </nav>
+
     <main class="card">
         <h1>Image Source URL</h1>
         <p class="lead">Enter the exact source URL of the image displayed below. Your input will be compared against the actual image source.</p>
@@ -104,6 +115,5 @@
         urlInput.addEventListener('blur', validateInput);
         window.addEventListener('load', setRandomImage);
     </script>
-
 </body>
 </html>

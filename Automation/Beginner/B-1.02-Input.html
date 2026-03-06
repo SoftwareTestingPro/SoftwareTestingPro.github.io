@@ -4,164 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Validation</title>
-    <!-- Material Icons CSS -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0; /* Changed background color */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            flex-direction: column;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        h3 {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: inline-block;
-            margin-bottom: 5px;
-            font-size: 16px;
-            color: #333;
-            vertical-align: middle;
-        }
-
-        .input-container {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        input[type="text"] {
-            width: calc(100% - 30px);
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            vertical-align: middle;
-        }
-
-        .input-container .material-icons {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            display: none; /* Icons are hidden initially */
-        }
-
-        .input-container.valid .material-icons.valid-icon {
-            color: #28a745;
-            display: inline-block; /* Show check icon on valid input */
-        }
-
-        .input-container.invalid .material-icons.invalid-icon {
-            color: #dc3545;
-            display: inline-block; /* Show cross icon on invalid input */
-        }
-
-        /* Responsive styling */
-        @media (max-width: 768px) {
-            .container {
-                width: 85%; /* 90% width for mobile devices and tablets */
-                padding: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-            }
-
-            label, input[type="text"] {
-                font-size: 14px;
-            }
-
-            input[type="text"] {
-                padding: 8px;
-            }
-
-            .material-icons {
-                font-size: 18px; /* Adjust icons for smaller devices */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../../components.js"></script>
 </head>
 <body>
-<div class="container">
-    <h3>Please Fill Out the Following Information</h3>
-    <label for="user-input-name">Enter your first name:</label>
-    <div class="input-container">
-        <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
-        <span class="material-icons valid-icon">check_circle</span>
-        <span class="material-icons invalid-icon">cancel</span>
-    </div>
+<div id="header-placeholder"></div>
 
-    <label for="user-input-age">Enter your age:</label>
-    <div class="input-container">
-        <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age">
-        <span class="material-icons valid-icon">check_circle</span>
-        <span class="material-icons invalid-icon">cancel</span>
-    </div>
+<nav class="task-navigation">
+    <a href="B-1.01-Click.html" class="nav-btn nav-btn-prev">
+        <span class="nav-icon">←</span>
+        Previous Task
+    </a>
+    <a href="B-1.03-Radio.html" class="nav-btn nav-btn-next">
+        Next Task
+        <span class="nav-icon">→</span>
+    </a>
+</nav>
+<div class="content-wrapper">
+    <main class="card">
+        <h1>Input Action</h1>
+        <p class="lead">Please Fill Out the Following Information.</p>
 
-    <label for="text-input">Enter "text within double quotes" in the input field:</label>
-    <div class="input-container">
-        <input type="text" id="text-input" class="form-control" placeholder="Enter label text within quotes">
-        <span class="material-icons valid-icon">check_circle</span>
-        <span class="material-icons invalid-icon">cancel</span>
-    </div>
+        <div class="input-group">
+            <label for="user-input-name">Enter your first name:</label>
+            <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name..." class="form-control">
+
+            <div class="message success" id="nameSuccessMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Name is valid!</span>
+            </div>
+
+            <div class="message failure" id="nameFailureMessage" role="status" aria-live="polite">
+                <span class="icon">✕</span>
+                <span>Please enter letters only</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="user-input-age">Enter your age:</label>
+            <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age" class="form-control">
+
+            <div class="message success" id="ageSuccessMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Age is valid!</span>
+            </div>
+
+            <div class="message failure" id="ageFailureMessage" role="status" aria-live="polite">
+                <span class="icon">✕</span>
+                <span>Please enter digits only</span>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="text-input">Enter "text within double quotes" in the input field:</label>
+            <input type="text" id="text-input" class="form-control" placeholder="Enter label text within quotes">
+
+            <div class="message success" id="textSuccessMessage" role="status" aria-live="polite">
+                <span class="icon">✓</span>
+                <span>Text is valid!</span>
+            </div>
+
+            <div class="message failure" id="textFailureMessage" role="status" aria-live="polite">
+                <span class="icon">✕</span>
+                <span>Please enter: "text within double quotes"</span>
+            </div>
+        </div>
+    </main>
 </div>
 
+<div id="footer-placeholder"></div>
+
 <script>
-    const validateInput = (input, regex) => {
-        const value = input.value;
-        const parent = input.parentNode;
-        const validIcon = parent.querySelector('.valid-icon');
-        const invalidIcon = parent.querySelector('.invalid-icon');
+    // Function to validate individual input and show appropriate message
+    function validateInput(inputId, regex, successId, failureId) {
+        const input = document.getElementById(inputId);
+        const successMessage = document.getElementById(successId);
+        const failureMessage = document.getElementById(failureId);
 
-        if (value === '') {
-            validIcon.style.display = 'none';
-            invalidIcon.style.display = 'none';
-        } else if (regex.test(value)) {
-            parent.classList.add('valid');
-            parent.classList.remove('invalid');
-            validIcon.style.display = 'inline-block';
-            invalidIcon.style.display = 'none';
+        if (input.value === '') {
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+        } else if (regex.test(input.value)) {
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
         } else {
-            parent.classList.add('invalid');
-            parent.classList.remove('valid');
-            validIcon.style.display = 'none';
-            invalidIcon.style.display = 'inline-block';
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
         }
-    };
+    }
 
+    // Add event listeners for each input
     document.getElementById('user-input-name').addEventListener('input', function() {
-        validateInput(this, /^[A-Za-z]+$/);
+        validateInput('user-input-name', /^[A-Za-z]+$/, 'nameSuccessMessage', 'nameFailureMessage');
     });
 
     document.getElementById('user-input-age').addEventListener('input', function() {
-        validateInput(this, /^\d+$/);
+        validateInput('user-input-age', /^\d+$/, 'ageSuccessMessage', 'ageFailureMessage');
     });
 
     document.getElementById('text-input').addEventListener('input', function() {
-        validateInput(this, /^text within double quotes$/);
+        validateInput('text-input', /^text within double quotes$/, 'textSuccessMessage', 'textFailureMessage');
     });
+
+    // Hide messages initially (following B-1.11 pattern)
+    document.getElementById('nameSuccessMessage').style.display = 'none';
+    document.getElementById('nameFailureMessage').style.display = 'none';
+    document.getElementById('ageSuccessMessage').style.display = 'none';
+    document.getElementById('ageFailureMessage').style.display = 'none';
+    document.getElementById('textSuccessMessage').style.display = 'none';
+    document.getElementById('textFailureMessage').style.display = 'none';
 </script>
 </body>
 </html>
