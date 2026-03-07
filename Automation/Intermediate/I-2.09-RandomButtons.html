@@ -37,13 +37,11 @@
             </div>
 
             <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Correct! The number of buttons matches the input value.</span>
+                <span>Correct! The count of buttons match the input value.</span>
             </div>
 
             <div class="message" id="failureMessage" role="status" aria-live="polite">
-                <span class="icon">✗</span>
-                <span>Incorrect. The number of buttons does not match the input value.</span>
+                <span>Incorrect. <span style="color: black;">Expected:</span> <span id="expectedCount"></span> <span style="color: black;">Entered:</span> <span id="enteredCount"></span></span>
             </div>
         </div>
     </main>
@@ -71,6 +69,8 @@
         const inputField = document.getElementById('inputField');
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
+        const expectedCount = document.getElementById('expectedCount');
+        const enteredCount = document.getElementById('enteredCount');
 
         // Hide messages initially
         successMessage.style.display = 'none';
@@ -81,6 +81,8 @@
         const numberOfButtons = getRandomInt(4, 10);
         const usedNames = new Set();
         let buttonCount = numberOfButtons;
+
+        expectedCount.textContent = buttonCount;
 
         for (let i = 1; i <= buttonCount; i++) {
             const button = document.createElement('button');
@@ -105,6 +107,7 @@
                 failureMessage.classList.add('failure');
                 successMessage.style.display = 'none';
                 successMessage.classList.remove('success');
+                enteredCount.textContent = isNaN(userInput) ? '(none)' : userInput;
             }
         });
     };

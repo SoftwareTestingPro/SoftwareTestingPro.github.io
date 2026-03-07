@@ -29,12 +29,8 @@
                     <input type="range" min="1" max="10" value="5" class="slider" id="valueSlider">
                     <div class="slider-value" id="sliderValue">5</div>
                 </div>
-                <div class="success-message" id="successMessage">
-                    Congratulations! You selected the value 8!
-                </div>
-                <div class="failure-message" id="failureMessage">
-                    Try again! The selected value was not 8.
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Congratulations! You selected the value 8!</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Try again! The selected value is not 8.</span></div>
             </div>
         </main>
     </div>
@@ -50,11 +46,15 @@
             const value = parseInt(slider.value, 10);
             sliderValue.textContent = value;
             if (value === 8) {
-                successMessage.style.display = 'block'; // Show success message
-                failureMessage.style.display = 'none'; // Hide failure message
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                successMessage.style.display = 'none'; // Hide success message
-                failureMessage.style.display = 'block'; // Show failure message
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
         }
 

@@ -25,12 +25,9 @@
                 <h1>Rubik's Cube</h1>
                 <p class="lead">Click the unique block to complete this task.</p>
                 <div id="rubiks-cube"></div>
-                <div class="success-message" id="successMessage">
-                    Congratulations! You clicked the unique block!
-                </div>
-                <div class="failure-message" id="failureMessage">
-                    Try again!
-                </div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Congratulations! You clicked the unique block!</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Try again!</span></div>
             </div>
         </main>
     </div>
@@ -66,10 +63,14 @@
                 block.addEventListener('click', () => {
                     if (i === distinctIndex) {
                         successMessage.style.display = 'block'; // Show success message
+                        successMessage.classList.add('success');
                         failureMessage.style.display = 'none'; // Hide failure message
+                        failureMessage.classList.remove('failure');
                     } else {
                         successMessage.style.display = 'none'; // Hide success message
+                        successMessage.classList.remove('success');
                         failureMessage.style.display = 'block'; // Show failure message
+                        failureMessage.classList.add('failure');
                     }
                 });
                 rubiksCube.appendChild(block);
