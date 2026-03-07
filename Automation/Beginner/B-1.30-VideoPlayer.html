@@ -13,6 +13,8 @@
         gtag('config', 'G-MCHF9RDWT6');
     </script>
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="../../components.js"></script>
 </head>
 <body>
@@ -32,68 +34,13 @@
 
         <main class="card">
             <div class="card-content">
-                <h1>Video Player - Advanced Automation Task</h1>
+                <h1>Using Video Player controls</h1>
                 <p class="lead">Play the video, pause it, seek through the timeline, change playback speed, adjust volume, and toggle fullscreen. Watch the entire video to see the success message.</p>
-
-                <div class="video-player">
-                    <div class="video-wrapper">
-                        <video id="videoPlayer">
-                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="play-pause-overlay" id="playPauseOverlay">
-                            <span class="play-pause-icon" id="overlayIcon">▶️</span>
-                        </div>
-                    </div>
-                    <div class="controls">
-                        <div class="progress-bar-container" id="progressContainer">
-                            <div class="progress-bar" id="progressBar"></div>
-                        </div>
-
-                        <div class="controls-buttons">
-
-                            <button id="rewindBtn" title="Rewind 10 seconds">
-                                ⏪ -10s
-                            </button>
-
-                            <button id="forwardBtn" title="Forward 10 seconds">
-                                ⏩ +10s
-                            </button>
-
-                            <div class="speed-control">
-                                <label for="speedSelect">Speed:</label>
-                                <select id="speedSelect">
-                                    <option value="0.5">0.5x</option>
-                                    <option value="0.75">0.75x</option>
-                                    <option value="1" selected>1x</option>
-                                    <option value="1.25">1.25x</option>
-                                    <option value="1.5">1.5x</option>
-                                    <option value="2">2x</option>
-                                </select>
-                            </div>
-
-                            <div class="time-display">
-                                <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
-                            </div>
-
-                            <div class="volume-control">
-                                <label for="volumeSlider" title="Volume">🔊</label>
-                                <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100">
-                            </div>
-
-                            <button id="fullscreenBtn" class="fullscreen-btn" title="Toggle Fullscreen">
-                                ⛶ Fullscreen
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="message" id="successMessage">
-                    <span class="icon">✓</span>
-                    <span>Congratulations! You've watched the entire video successfully!</span>
-                </div>
-
-                <div class="message info" id="infoMessage"></div>
+                <video id="player" controls style="width: 100%; height: 50vh;">
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You've watched the entire video successfully!</span></div>
             </div>
         </main>
     </div>
@@ -101,173 +48,13 @@
     <div id="footer-placeholder"></div>
 
     <script>
-        const video = document.getElementById('videoPlayer');
-        const videoWrapper = document.querySelector('.video-wrapper');
-        const playPauseOverlay = document.getElementById('playPauseOverlay');
-        const overlayIcon = document.getElementById('overlayIcon');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationEl = document.getElementById('duration');
-        const rewindBtn = document.getElementById('rewindBtn');
-        const forwardBtn = document.getElementById('forwardBtn');
-        const speedSelect = document.getElementById('speedSelect');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const successMessage = document.getElementById('successMessage');
-        const infoMessage = document.getElementById('infoMessage');
+    const player = new Plyr('#player');
+    const successMessage = document.getElementById('successMessage');
 
-        // Format time to MM:SS
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // Update duration when metadata is loaded
-        video.addEventListener('loadedmetadata', () => {
-            durationEl.textContent = formatTime(video.duration);
-            updateOverlayIcon();
-        });
-
-        // Update overlay icon based on video state
-        function updateOverlayIcon() {
-            if (video.paused) {
-                overlayIcon.textContent = '▶️';
-                playPauseOverlay.classList.remove('playing');
-                playPauseOverlay.classList.add('show');
-            } else {
-                overlayIcon.textContent = '⏸️';
-                playPauseOverlay.classList.add('playing');
-            }
-        }
-
-        // Play/Pause functionality via overlay
-        playPauseOverlay.addEventListener('click', (e) => {
-            e.stopPropagation();
-            togglePlayPause();
-        });
-
-        // Play/Pause via video container click
-        videoWrapper.addEventListener('click', (e) => {
-            if (e.target === videoWrapper || e.target === video) {
-                togglePlayPause();
-            }
-        });
-
-        function togglePlayPause() {
-            if (video.paused) {
-                video.play();
-                updateOverlayIcon();
-            } else {
-                video.pause();
-                updateOverlayIcon();
-            }
-        }
-
-        // Update progress bar and time
-        video.addEventListener('timeupdate', () => {
-            const percent = (video.currentTime / video.duration) * 100;
-            progressBar.style.width = percent + '%';
-            currentTimeEl.textContent = formatTime(video.currentTime);
-        });
-
-        // Hide overlay when playing, show when paused
-        video.addEventListener('play', () => {
-            updateOverlayIcon();
-            showInfoMessage('Playing... Use Space to pause, Arrow keys to skip');
-        });
-
-        video.addEventListener('pause', () => {
-            updateOverlayIcon();
-        });
-
-        // Seek functionality
-        progressContainer.addEventListener('click', (e) => {
-            const rect = progressContainer.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            video.currentTime = percent * video.duration;
-            showInfoMessage(`Seeked to ${formatTime(video.currentTime)}`);
-        });
-
-        // Keyboard seek (arrow keys)
-        document.addEventListener('keydown', (e) => {
-            if (document.activeElement === document.body) {
-                if (e.key === 'ArrowRight') {
-                    video.currentTime = Math.min(video.currentTime + 5, video.duration);
-                    showInfoMessage('⏩ Skipped forward 5 seconds');
-                } else if (e.key === 'ArrowLeft') {
-                    video.currentTime = Math.max(video.currentTime - 5, 0);
-                    showInfoMessage('⏪ Skipped backward 5 seconds');
-                } else if (e.key === ' ') {
-                    e.preventDefault();
-                    togglePlayPause();
-                }
-            }
-        });
-
-        // Rewind and Forward buttons
-        rewindBtn.addEventListener('click', () => {
-            video.currentTime = Math.max(video.currentTime - 10, 0);
-            showInfoMessage('⏪ Rewinded 10 seconds');
-        });
-
-        forwardBtn.addEventListener('click', () => {
-            video.currentTime = Math.min(video.currentTime + 10, video.duration);
-            showInfoMessage('⏩ Forwarded 10 seconds');
-        });
-
-        // Speed control
-        speedSelect.addEventListener('change', (e) => {
-            video.playbackRate = parseFloat(e.target.value);
-            showInfoMessage(`Playback speed: ${e.target.value}x`);
-        });
-
-        // Volume control
-        volumeSlider.addEventListener('input', (e) => {
-            video.volume = e.target.value / 100;
-            const volumePercent = e.target.value;
-            let volumeIcon = '🔊';
-            if (volumePercent == 0) volumeIcon = '🔇';
-            else if (volumePercent < 33) volumeIcon = '🔈';
-            else if (volumePercent < 66) volumeIcon = '🔉';
-
-            volumeSlider.previousElementSibling.textContent = volumeIcon;
-        });
-
-        // Fullscreen functionality
-        fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.querySelector('.video-player').requestFullscreen().catch(err => {
-                    console.log('Fullscreen request failed:', err);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        });
-
-        // Video ended
-        video.addEventListener('ended', () => {
-            updateOverlayIcon();
-            successMessage.style.display = 'block';
-            successMessage.className = 'message success';
-        });
-
-        // Show info message temporarily
-        function showInfoMessage(message) {
-            infoMessage.textContent = message;
-            infoMessage.className = 'message info';
-            infoMessage.style.display = 'block';
-            setTimeout(() => {
-                infoMessage.style.display = 'none';
-            }, 2000);
-        }
-
-        // Initialize
-        video.volume = 1;
-        updateOverlayIcon();
-    </script>
+    player.on('ended', () => {
+        successMessage.style.display = 'flex';
+        successMessage.className = 'message success';
+    });
+</script>
 </body>
 </html>
-

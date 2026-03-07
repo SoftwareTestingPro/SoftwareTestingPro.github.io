@@ -26,26 +26,12 @@
         <main class="card">
             <div class="card-content">
                 <h1>Double Click Button</h1>
-                <p class="lead">Double click the button below to complete this task.</p>
-
-                <div class="button-group">
+                <p class="lead">Double-click the button below to complete this task.</p>
+                <div class="button-enabled">
                     <button id="clickButton" type="button">Click Me</button>
                 </div>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Success! You double-clicked the button.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Incorrect</strong>
-                    </div>
-                    <div class="message-row">
-                        <span>You single-clicked the button. Double click to succeed.</span>
-                    </div>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully double-clicked the button.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you single clicked the button</span></div>
             </div>
         </main>
     </div>

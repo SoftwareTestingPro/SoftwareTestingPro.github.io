@@ -27,30 +27,15 @@
             <div class="card-content">
                 <h1>Dynamic Progress Bar Challenge</h1>
                 <p class="lead">Wait for the progress bar to reach 100%, then click the button. Clicking too early will result in a failure.</p>
-
                 <div id="status">0%</div>
                 <div id="progress-bar-container">
                     <div id="progress-bar"></div>
                 </div>
-
-                <div class="button-group">
+                <div class="button-enabled">
                     <button id="action-button">Click Me After 100%!</button>
                 </div>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Success! Button was clicked after completion.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Failure</strong>
-                    </div>
-                    <div class="message-row">
-                        <span>You clicked too early.</span>
-                    </div>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! Button was clicked after completion..</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you You clicked too early.</span></div>
             </div>
         </main>
     </div>

@@ -28,22 +28,19 @@
                 <h1>Autocomplete Challenge</h1>
                 <p class="lead" id="labelText"></p>
 
-                <div class="input-group">
-                    <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing...">
+                <div style="position: relative;">
+                    <div class="input-group-parent">
+                        <div class="input-group-left">
+                            <label for="searchInput" class="label-left">Enter search term:</label>
+                        </div>
+                        <div class="input-group-right">
+                            <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing...">
+                        </div>
+                    </div>
                     <div id="results" class="dropdown"></div>
                 </div>
-
-                <div class="message success" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span id="successText"></span>
-                </div>
-
-                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong id="failureText"></strong>
-                    </div>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully selected the auto-complete suggestion.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Selection does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
             </div>
         </main>
     </div>
@@ -76,28 +73,38 @@
             const filteredItems = items.filter(item => item.toLowerCase().includes(input));
 
             if (filteredItems.length > 0) {
-                resultsDiv.innerHTML = filteredItems.map(item => `<div onclick="selectItem('${item}')">${item}</div>`).join('');
+                resultsDiv.innerHTML = filteredItems.map(item => `<div class="dropdown-item">${item}</div>`).join('');
                 resultsDiv.style.display = 'block';
+                resultsDiv.style.zIndex = '9999';
+                const itemDivs = resultsDiv.querySelectorAll('.dropdown-item');
+                itemDivs.forEach((div, index) => {
+                    div.addEventListener('click', () => selectItem(filteredItems[index]));
+                });
             } else {
                 resultsDiv.innerHTML = '<div>No matching results</div>';
                 resultsDiv.style.display = 'block';
+                resultsDiv.style.zIndex = '9999';
             }
         }
 
         function selectItem(item) {
             const successMessage = document.getElementById('successMessage');
             const failureMessage = document.getElementById('failureMessage');
-            const successText = document.getElementById('successText');
-            const failureText = document.getElementById('failureText');
+            const expectedValue = document.getElementById('expectedValue');
+            const actualValue = document.getElementById('actualValue');
 
             if (item === randomItem) {
-                successText.textContent = `Congratulations! You selected the correct item: ${item}.`;
                 successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                failureText.textContent = `Sorry, ${item} is not the correct item. Please select ${randomItem}.`;
+                expectedValue.textContent = randomItem;
+                actualValue.textContent = item;
                 successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
 
             document.getElementById('searchInput').value = item;

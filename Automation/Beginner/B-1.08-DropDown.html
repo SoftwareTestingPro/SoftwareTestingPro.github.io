@@ -28,89 +28,52 @@
             <h1>Dropdown Selection</h1>
             <p class="lead">Select the specified options from the dropdowns below to complete the tasks.</p>
             
-            <div class="input-group">
-                <label for="dropdown1">Select '2' from dropdown:</label>
-                <select id="dropdown1">
-                    <option value="">Select</option>
-                    <!-- Options will be added dynamically -->
-                </select>
-                <div class="message" id="successMessage1" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct selection.</span>
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="dropdown1" class="label-left">Select '2' from dropdown:</label>
                 </div>
-                <div class="message" id="failureMessage1" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Does not match</strong>
-                    </div>
-                    <div class="message-row">
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Expected:</span>
-                            <div class="value-box" id="expectedValue1">2</div>
-                        </div>
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Selected:</span>
-                            <div class="value-box" id="actualValue1"></div>
-                        </div>
-                    </div>
+
+                <div class="input-group-right">
+                    <select id="dropdown1" class="dropdown-single-select">
+                        <option value="">Select</option>
+                        <!-- Options will be added dynamically -->
+                    </select>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="dropdown2">Select '2' and '4' from dropdown (multi-select):</label>
-                <select id="dropdown2" multiple>
-                    <option value="">Select</option>
-                    <!-- Options will be added dynamically -->
-                </select>
-                <div class="message" id="successMessage2" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct selection.</span>
+            <div class="message" id="successMessage1" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+            <div class="message" id="failureMessage1" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span> 2 </span> <span style="color: black;">Selected:</span> <span id="actualValue1"></span></span></div>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="dropdown2" class="label-left">Select '2' and '4' from dropdown (multi-select):</label>
                 </div>
-                <div class="message" id="failureMessage2" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Does not match</strong>
-                    </div>
-                    <div class="message-row">
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Expected:</span>
-                            <div class="value-box" id="expectedValue2">2, 4</div>
-                        </div>
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Selected:</span>
-                            <div class="value-box" id="actualValue2"></div>
-                        </div>
-                    </div>
+
+                <div class="input-group-right">
+                    <select id="dropdown2" class="dropdown-multi-select" multiple>
+                        <option value="">Select</option>
+                        <!-- Options will be added dynamically -->
+                    </select>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="dropdown3">Select the 3rd option from dropdown:</label>
-                <select id="dropdown3">
-                    <option value="">Select</option>
-                    <!-- Options will be added dynamically -->
-                </select>
-                <div class="message" id="successMessage3" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct selection.</span>
+            <div class="message" id="successMessage2" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+            <div class="message" id="failureMessage2" role="status" aria-live="polite"><span>Does not match. Expected: 2, 4. Selected: <span id="actualValue2"></span></span></div>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="dropdown3" class="label-left">Select the 3rd option from dropdown:</label>
                 </div>
-                <div class="message" id="failureMessage3" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Does not match</strong>
-                    </div>
-                    <div class="message-row">
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Expected:</span>
-                            <div class="value-box" id="expectedValue3"></div>
-                        </div>
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Selected:</span>
-                            <div class="value-box" id="actualValue3"></div>
-                        </div>
-                    </div>
+
+                <div class="input-group-right">
+                    <select id="dropdown3" class="dropdown-single-select">
+                        <option value="">Select</option>
+                        <!-- Options will be added dynamically -->
+                    </select>
                 </div>
             </div>
+            <div class="message" id="successMessage3" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+            <div class="message" id="failureMessage3" role="status" aria-live="polite"><span>Does not match. Expected: <span id="expectedValue3"></span>. Selected: <span id="actualValue3"></span></span></div>
         </div>
     </main>
 </div>

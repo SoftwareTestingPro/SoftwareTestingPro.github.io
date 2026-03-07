@@ -26,16 +26,13 @@
         <main class="card">
             <div class="card-content">
                 <h1>Enabled/Disabled Buttons</h1>
-                <p class="lead">Select the one enabled button from the group below to complete the task.</p>
+                <p class="lead">Select the enabled button from the group below to complete the task.</p>
 
                 <div class="button-container" id="buttonContainer">
                     <!-- Buttons will be inserted here by JavaScript -->
                 </div>
-
-                <div class="message success" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Success! You clicked the enabled button.</span>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You clicked the enabled button.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>You clicked the disabled button.</span></div>
             </div>
         </main>
     </div>
@@ -55,28 +52,49 @@
         function setupButtons() {
             const buttonContainer = document.getElementById('buttonContainer');
             const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
             const buttonCount = 5;
             const enabledIndex = Math.floor(Math.random() * buttonCount);
 
             for (let i = 0; i < buttonCount; i++) {
+                const buttonWrapper = document.createElement('div');
+                buttonWrapper.style.display = 'inline-block';
+                buttonWrapper.style.margin = '5px';
+
                 const button = document.createElement('button');
                 button.textContent = `Button ${i + 1}`;
                 button.id = generateRandomString(8);
                 button.className = generateRandomString(5);
                 button.name = generateRandomString(6);
                 button.disabled = i !== enabledIndex;
-                button.addEventListener('click', function() {
-                    if (!this.disabled) {
+                if (button.disabled) {
+                    button.style.pointerEvents = 'none';
+                }
+
+                buttonWrapper.appendChild(button);
+
+                buttonWrapper.addEventListener('click', function() {
+                    if (!button.disabled) {
                         successMessage.style.display = 'flex';
+                        successMessage.classList.add('success');
+                        failureMessage.style.display = 'none';
+                        failureMessage.classList.remove('failure');
+                    } else {
+                        successMessage.style.display = 'none';
+                        successMessage.classList.remove('success');
+                        failureMessage.style.display = 'flex';
+                        failureMessage.classList.add('failure');
                     }
                 });
-                buttonContainer.appendChild(button);
+
+                buttonContainer.appendChild(buttonWrapper);
             }
         }
 
         // Initialize buttons and hide message
         setupButtons();
         document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('failureMessage').style.display = 'none';
     </script>
 </body>
 </html>

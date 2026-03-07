@@ -27,32 +27,23 @@
             <div class="card-content">
                 <h1>Text Comparison</h1>
                 <p class="lead">Are the two texts below the same? Click "Yes" or "No" to answer.</p>
-
-                <div class="text-container">
-                    <div class="text-item">
+                <div class="text-container" style="display: flex; gap: 20px; justify-content: center;">
+                    <div class="text-item" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #f9f9f9; width: 200px;">
                         <div class="text-label">Text 1:</div>
                         <div id="text1" class="value-box"></div>
                     </div>
-                    <div class="text-item">
+                    <div class="text-item" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #f9f9f9; width: 200px;">
                         <div class="text-label">Text 2:</div>
                         <div id="text2" class="value-box"></div>
                     </div>
                 </div>
 
-                <div class="button-container">
-                    <button onclick="checkAnswer(true)">Yes</button>
-                    <button onclick="checkAnswer(false)">No</button>
+                <div class="button-container" style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <button onclick="checkAnswer(true)" style="padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">Yes</button>
+                    <button onclick="checkAnswer(false)" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">No</button>
                 </div>
-
-                <div class="message success" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct!</span>
-                </div>
-
-                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-                    <span class="icon">✕</span>
-                    <span>Incorrect!</span>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct!</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect!</span></div>
             </div>
         </main>
     </div>
@@ -81,10 +72,14 @@
 
             if (isSuccess) {
                 successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
         }
 

@@ -27,26 +27,12 @@
             <div class="card-content">
                 <h1>Page Source Validation</h1>
                 <p class="lead">Copy and paste the HTML source code of this page into the text area below to complete the task.</p>
-
                 <div class="input-group">
                     <label for="textInput">Enter HTML Page Source Code:</label>
                     <textarea id="textInput" placeholder="Input HTML page source code here..." style="height: 150px;"></textarea>
                 </div>
-
-                <div class="message success" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Success! Page source entered.</span>
-                </div>
-
-                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Failure</strong>
-                    </div>
-                    <div class="message-row">
-                        <span>This is not the correct page source.</span>
-                    </div>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully entered page source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like this is not the correct page source</span></div>
             </div>
         </main>
     </div>
@@ -63,10 +49,14 @@
             // A simple check. A more robust check would be to compare the entire source.
             if (inputValue.includes('<html lang="en">') && inputValue.includes('Page Source Validation')) {
                 successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
         });
 

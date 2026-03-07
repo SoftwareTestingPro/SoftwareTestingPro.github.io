@@ -25,31 +25,14 @@
         <main class="card">
             <div class="card-content">
                 <h1>Select Hobbies</h1>
-                <p id="message">Please select "Music" and the 3rd option in the list.</p>
+                <p id="message">Select "Music" and the 3rd option from the shuffled list below. This task checks that your selection logic can find "Music" and the 3rd option in a randomized list.</p>
 
                 <div class="checkbox-group" id="checkboxGroup">
                     <!-- Checkboxes will be inserted here by JavaScript -->
                 </div>
-                <div class="message success" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>You have selected "Music" and the 3rd option.</span>
-                </div>
-                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Does not match</strong>
-                    </div>
-                    <div class="message-row">
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Expected:</span>
-                            <div class="value-box" id="expectedValue"></div>
-                        </div>
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Entered:</span>
-                            <div class="value-box" id="actualValue"></div>
-                        </div>
-                    </div>
-                </div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Selected:</span> <span id="actualValue"></span></span></div>
             </div>
         </main>
     </div>
@@ -58,14 +41,10 @@
 
     <script>
         const checkboxesData = [
-            { value: "reading", label: "Reading" },
-            { value: "travelling", label: "Travelling" },
-            { value: "cooking", label: "Cooking" },
-            { value: "sports", label: "Sports" },
-            { value: "music", label: "Music" },
-            { value: "gaming", label: "Gaming" },
-            { value: "gardening", label: "Gardening" },
-            { value: "photography", label: "Photography" }
+            { value: "Reading", label: "Reading" },
+            { value: "Travelling", label: "Travelling" },
+            { value: "Music", label: "Music" },
+            { value: "Gaming", label: "Gaming" }
         ];
 
         function shuffleArray(array) {
@@ -78,22 +57,22 @@
         function createCheckboxes() {
             // Create a copy of the data and ensure "Music" is not in the 3rd position
             let data = [...checkboxesData];
-            const musicIndex = data.findIndex(item => item.value === 'music');
+            const musicIndex = data.findIndex(item => item.value === 'Music');
             
             // Remove "Music" from the list and prepare for reinsertion
-            const music = data.splice(musicIndex, 1)[0];
+            const Music = data.splice(musicIndex, 1)[0];
 
             // Shuffle the remaining data
             shuffleArray(data);
 
             // Insert "Music" back into one of the first two positions
             const insertPosition = Math.floor(Math.random() * 2);
-            data.splice(insertPosition, 0, music);
+            data.splice(insertPosition, 0, Music);
 
             // Ensure "Music" is not in the 3rd position
-            if (data[2].value === 'music') {
+            if (data[2].value === 'Music') {
                 data.splice(insertPosition, 1);
-                data.splice(2, 0, music);
+                data.splice(2, 0, Music);
             }
 
             const checkboxGroup = document.getElementById('checkboxGroup');
@@ -120,7 +99,7 @@
             // Get the value of the 3rd option
             const thirdOptionValue = document.querySelectorAll('input[name="hobbies"]')[2].value;
 
-            if (selectedHobbies.includes('music') && selectedHobbies.includes(thirdOptionValue) &&
+            if (selectedHobbies.includes('Music') && selectedHobbies.includes(thirdOptionValue) &&
                 selectedHobbies.length === 2) {
                 successMessage.classList.add('success');
                 successMessage.style.display = 'flex';

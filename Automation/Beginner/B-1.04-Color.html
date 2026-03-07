@@ -27,23 +27,17 @@
             <h1>Color Validation</h1>
             <p class="lead">Select the "Green" color from the palette below to complete this task.</p>
 
-            <div class="color-palette">
-                <div class="color-option" data-color="red" style="background-color: #ff4444;">Red</div>
-                <div class="color-option" data-color="blue" style="background-color: #2196f3;">Blue</div>
-                <div class="color-option" data-color="green" style="background-color: #4caf50;">Green</div>
-                <div class="color-option" data-color="yellow" style="background-color: #ffeb3b;">Yellow</div>
-                <div class="color-option" data-color="purple" style="background-color: #9c27b0;">Purple</div>
+            <div class="color-palette" style="display: flex; gap: 10px; justify-content: center;">
+                <div class="color-option" data-color="red" style="background-color: #ff4444; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 10px; cursor: pointer;">Red</div>
+                <div class="color-option" data-color="blue" style="background-color: #2196f3; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 10px; cursor: pointer;">Blue</div>
+                <div class="color-option" data-color="green" style="background-color: #4caf50; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 10px; cursor: pointer;">Green</div>
+                <div class="color-option" data-color="yellow" style="background-color: #ffeb3b; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 10px; cursor: pointer;">Yellow</div>
+                <div class="color-option" data-color="purple" style="background-color: #9c27b0; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 10px; cursor: pointer;">Purple</div>
             </div>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Correct! You selected the Green color.</span>
-            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You selected the Green color.</span></div>
 
-            <div class="message" id="failureMessage" role="status" aria-live="polite">
-                <span class="icon">✕</span>
-                <span>Incorrect! Please select the Green color.</span>
-            </div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Color does not match. <span style="color: black;">Expected:</span> Green <span style="color: black;">Selected:</span> <span id="selectedColor"></span></span></div>
         </div>
     </main>
 </div>
@@ -54,6 +48,7 @@
         const colorOptions = document.querySelectorAll('.color-option');
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
+        const selectedColorSpan = document.getElementById('selectedColor');
 
         // Hide messages initially
         successMessage.style.display = 'none';
@@ -70,6 +65,7 @@
                     failureMessage.style.display = 'none';
                     failureMessage.classList.remove('failure');
                 } else {
+                    selectedColorSpan.textContent = selectedColor;
                     successMessage.style.display = 'none';
                     successMessage.classList.remove('success');
                     failureMessage.style.display = 'flex';

@@ -31,28 +31,8 @@
                 <div class="input-group" style="text-align: center;">
                     <p>Press the "<strong id="random-key" style="font-size: 1.2em; color: var(--accent);"></strong>" key on your keyboard.</p>
                 </div>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Success! You pressed the correct key.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Incorrect Key</strong>
-                    </div>
-                    <div class="message-row">
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Expected:</span>
-                            <div class="value-box" id="expectedKey"></div>
-                        </div>
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">You Pressed:</span>
-                            <div class="value-box" id="actualKey"></div>
-                        </div>
-                    </div>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully pressed the expected key.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Pressed Key Does not match. <span style="color: black;">Expected:</span> <span id="expectedKey"></span> <span style="color: black;">Entered:</span> <span id="actualKey"></span></span></div>
             </div>
         </main>
     </div>

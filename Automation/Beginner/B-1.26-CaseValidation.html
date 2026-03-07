@@ -26,22 +26,12 @@
             <div class="card-content">
                 <h1>Case Validation</h1>
                 <p class="lead">Select all checkboxes that contain uppercase strings. Uppercase strings contain only capital letters.</p>
-
-                <div class="checkbox-container" id="checkboxContainer">
+                <div class="checkbox-group" id="checkboxContainer">
                     <!-- Checkboxes will be generated here -->
                 </div>
-                
                 <button class="validate-btn" onclick="validateSelection()">Validate Selection</button>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct! You selected all uppercase items correctly.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <span class="icon">✕</span>
-                    <span>Incorrect! Please select only the uppercase items.</span>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You selected all uppercase items correctly.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! Please select only the uppercase items.</span></div>
             </div>
         </main>
     </div>
@@ -61,77 +51,67 @@
         const checkboxContainer = document.getElementById('checkboxContainer');
         const checkboxData = [];
 
-        let name = "";
         for (let i = 0; i < 5; i++) {
-            name += chars.charAt(Math.floor(Math.random() * chars.length));
+            let name = generateRandomName();
+            let isUpperCase = name === name.toUpperCase();
+            checkboxData.push({ name, isUpperCase });
+
+            const row = document.createElement('div');
+            row.className = 'checkbox-group';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'checkbox-item';
+            checkbox.setAttribute('data-index', i);
+            checkbox.setAttribute('value', name);
+            checkbox.setAttribute('title', name); // optional tooltip
+
+            const labelText = document.createElement('span');
+            labelText.textContent = name;
+
+            row.appendChild(checkbox);
+            row.appendChild(labelText);
+            checkboxContainer.appendChild(row);
         }
-        return Math.random() < 0.5 ? name.toUpperCase() : name;
-    }
 
-    const checkboxContainer = document.getElementById('checkboxContainer');
-    const checkboxData = [];
+        // Ensure at least one uppercase item exists
+        if (!checkboxData.some(item => item.isUpperCase)) {
+            checkboxData[0].name = checkboxData[0].name.toUpperCase();
+            checkboxData[0].isUpperCase = true;
+            const firstLabel = checkboxContainer.children[0].querySelector('span');
+            firstLabel.textContent = checkboxData[0].name;
+        }
 
-for (let i = 0; i < 5; i++) {
-    let name = generateRandomName();
-    let isUpperCase = name === name.toUpperCase();
-    checkboxData.push({ name, isUpperCase });
+        function validateSelection() {
+            const checkboxes = document.querySelectorAll('.checkbox-item');
+            let isValid = true;
 
-    const row = document.createElement('div');
-    row.className = 'checkbox-row';
+            checkboxes.forEach(checkbox => {
+                const index = parseInt(checkbox.getAttribute('data-index'));
+                const isUpperCase = checkboxData[index].isUpperCase;
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'checkbox-item';
-    checkbox.setAttribute('data-index', i);
-    checkbox.setAttribute('value', name);
-    checkbox.setAttribute('title', name); // optional tooltip
+                if (isUpperCase && !checkbox.checked) {
+                    isValid = false;
+                } else if (!isUpperCase && checkbox.checked) {
+                    isValid = false;
+                }
+            });
 
-    const labelText = document.createElement('span');
-    labelText.textContent = name;
-
-    row.appendChild(checkbox);
-    row.appendChild(labelText);
-    checkboxContainer.appendChild(row);
-}
-
-    // Ensure at least one uppercase item exists
-    if (!checkboxData.some(item => item.isUpperCase)) {
-        checkboxData[0].name = checkboxData[0].name.toUpperCase();
-        checkboxData[0].isUpperCase = true;
-        const firstLabel = checkboxContainer.children[0].querySelector('span');
-        firstLabel.textContent = checkboxData[0].name;
-    }
-
-    function validateSelection() {
-        const checkboxes = document.querySelectorAll('.checkbox-item');
-        let isValid = true;
-
-        checkboxes.forEach(checkbox => {
-            const index = parseInt(checkbox.getAttribute('data-index'));
-            const isUpperCase = checkboxData[index].isUpperCase;
-
-            if (isUpperCase && !checkbox.checked) {
-                isValid = false;
-            } else if (!isUpperCase && checkbox.checked) {
-                isValid = false;
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+            
+            if (isValid) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            } else {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
-        });
-
-        const successMessage = document.getElementById('successMessage');
-        const failureMessage = document.getElementById('failureMessage');
-        
-        if (isValid) {
-            successMessage.style.display = 'flex';
-            successMessage.classList.add('success');
-            failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
-        } else {
-            successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
-            failureMessage.style.display = 'flex';
-            failureMessage.classList.add('failure');
         }
-    }
-</script>
+    </script>
 </body>
 </html>

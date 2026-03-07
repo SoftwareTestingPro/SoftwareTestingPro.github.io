@@ -28,14 +28,24 @@
             <h1>Input Value Matching</h1>
             <p class="lead">Copy the randomly generated text from the first field into the second field to complete the task.</p>
 
-            <div class="input-group">
-                <label for="sourceInput">Source Text (Read-Only):</label>
-                <input type="text" id="sourceInput" readonly>
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="sourceInput" class="label-left">Source Text (Read-Only):</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="sourceInput" readonly>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label for="destinationInput">Enter the text here:</label>
-                <input type="text" id="destinationInput" placeholder="Enter the text from the field above">
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="destinationInput" class="label-left">Enter the text here:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="destinationInput" placeholder="Enter the text from the field above">
+                </div>
             </div>
 
             <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>

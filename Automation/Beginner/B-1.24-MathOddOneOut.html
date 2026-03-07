@@ -26,18 +26,9 @@
             <div class="card-content">
                 <h1>Math Odd One Out Game</h1>
                 <p class="lead">Select the equation that is mathematically incorrect. Three equations will be correct, while one will have the wrong answer.</p>
-
                 <div class="math-buttons" id="buttonContainer"></div>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct! You found the incorrect equation.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <span class="icon">✕</span>
-                    <span>Incorrect! That equation is actually correct. Try again.</span>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You found the incorrect equation.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! That equation is actually correct. Try again.</span></div>
             </div>
         </main>
     </div>
@@ -80,6 +71,14 @@
             const button = document.createElement('button');
             button.classList.add('math-button');
             button.textContent = equation;
+            button.style.width = '200px';
+            button.style.height = '80px';
+            button.style.fontSize = '18px';
+            button.style.whiteSpace = 'nowrap';
+            button.style.margin = '10px';
+            button.style.border = '2px solid #ccc';
+            button.style.backgroundColor = '#f9f9f9';
+            button.style.color = '#333';
 
             // Check if this is the incorrect equation
             button.onclick = () => {

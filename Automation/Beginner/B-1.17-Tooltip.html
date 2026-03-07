@@ -34,31 +34,17 @@
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <input type="text" id="inputField" placeholder="Enter the tooltip text here">
-                </div>
-
-                <div class="message success" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct — the entered text matches the tooltip.</span>
-                </div>
-
-                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Does not match</strong>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="inputField" class="label-left">Enter the title of this webpage:</label>
                     </div>
-                    <div class="message-row">
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Expected:</span>
-                            <div class="value-box" id="expectedValue"></div>
-                        </div>
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Entered:</span>
-                            <div class="value-box" id="actualValue"></div>
-                        </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="inputField" placeholder="Enter the tooltip text here">
                     </div>
                 </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Tooltip matched.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Tooltip does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
             </div>
         </main>
     </div>
@@ -81,13 +67,19 @@
 
             if (userInput === tooltipText) {
                 successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else if (userInput) {
                 successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             } else {
                 successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
                 failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             }
         });
 

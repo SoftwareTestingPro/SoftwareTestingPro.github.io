@@ -25,13 +25,8 @@
 
     <main class="card">
         <div class="card-content">
-            <h1>Select Radio Button for India</h1>
-            <p class="lead">Choose the correct country from the shuffled list below. This task checks that your selection logic can find India in a randomized group. Use the Shuffle button to randomize the list or Reset to clear your selection.</p>
-
-            <div class="button-group">
-                <button id="shuffleBtn" class="btn btn-primary">Shuffle list</button>
-                <button id="resetBtn" class="btn btn-secondary">Reset selection</button>
-            </div>
+            <h1>Radio Button Selection</h1>
+            <p class="lead">Choose India from the shuffled list below. This task checks that your selection logic can find India in a randomized list.</p>
 
             <fieldset role="radiogroup">
                 <ul id="radioList" class="radio-list">
@@ -39,27 +34,8 @@
                 </ul>
             </fieldset>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Success! You selected India.</span>
-            </div>
-
-            <div class="message" id="failureMessage" role="status" aria-live="polite">
-                <div class="message-row">
-                    <span class="icon">✕</span>
-                    <strong>Does not match</strong>
-                </div>
-                <div class="message-row">
-                    <div>
-                        <span style="color: inherit; font-size: 12px;">Expected:</span>
-                        <div class="value-box">India</div>
-                    </div>
-                    <div>
-                        <span style="color: inherit; font-size: 12px;">Selected:</span>
-                        <div class="value-box" id="selectedCountry"></div>
-                    </div>
-                </div>
-            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span> India</span> <span style="color: black;">Selected:</span> <span id="selectedCountry"></span></span></div>
         </div>
     </main>
 </div>
@@ -68,7 +44,7 @@
 
     <script>
         const countriesBase = [
-            'China', 'India', 'Kazakhstan', 'Saudi Arabia', 'Iran'
+            'China', 'India', 'Kazakhstan', 'Saudi Arabia', 'Iran', 'Namibia', 'Isreal', 'Sri Lanka'
         ];
 
         const state = {

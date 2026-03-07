@@ -26,26 +26,12 @@
         <main class="card">
             <div class="card-content">
                 <h1>Right Click Action</h1>
-                <p class="lead">Right click on the button below to complete the task.</p>
-
-                <div class="button-group">
+                <p class="lead">Right-click on the button below to complete the task.</p>
+                <div class="button-enabled">
                     <button id="clickButton" type="button">Click Me</button>
                 </div>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Success! You right-clicked the button.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Incorrect</strong>
-                    </div>
-                    <div class="message-row">
-                        <span>Ha Ha! You left-clicked the button.</span>
-                    </div>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully right-clicked the button.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you single clicked the button</span></div>
             </div>
         </main>
     </div>

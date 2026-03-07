@@ -26,44 +26,21 @@
             <div class="card-content">
                 <h1>Character Count Challenge</h1>
                 <p class="lead">A random quote is displayed below. Enter the number of alphabetic characters (a-z, A-Z) in the quote:</p>
-                
-                <textarea id="text-input" rows="5" readonly disabled style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; background: var(--bg);"></textarea>
-
-                <div class="input-group">
-                    <label for="character-count">Character Count:</label>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="number" id="character-count" name="character-count" placeholder="Enter count" style="width: 120px; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px;">
-                        <button id="verify-button" style="padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: var(--radius); cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(107,33,168,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">Verify</button>
+                <textarea id="text-input" rows="5" readonly disabled style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; background: var(--bg); resize: none;"></textarea>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="character-count" class="label-left">Character Count:</label>
+                    </div>
+                    <div class="input-group-right">
+                        <input type="text" id="character-count" name="character-count" placeholder="Enter count">
                     </div>
                 </div>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct! You counted the characters accurately.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <span class="icon">✕</span>
-                    <div>
-                        <strong>Incorrect!</strong>
-                        <div style="margin-top: 8px; font-size: 13px; opacity: 0.9;">
-                            <div style="margin-bottom: 4px;">
-                                <span style="color: inherit;">Expected:</span>
-                                <span class="value-box" id="expectedCount" style="margin-left: 8px;"></span>
-                            </div>
-                            <div>
-                                <span style="color: inherit;">You entered:</span>
-                                <span class="value-box" id="actualCount" style="margin-left: 8px;"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You counted the characters accurately.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Count does not match. <span style="color: black;">Expected:</span> <span id="expectedCount"></span> <span style="color: black;">Entered:</span> <span id="actualCount"></span></span></div>
             </div>
         </main>
     </div>
-
     <div id="footer-placeholder"></div>
-
     <script>
         const quotes = [
             "The quick brown fox jumps over the lazy dog.",
@@ -75,7 +52,6 @@
 
         const textInput = document.getElementById('text-input');
         const characterCountInput = document.getElementById('character-count');
-        const verifyButton = document.getElementById('verify-button');
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
         const expectedCountDisplay = document.getElementById('expectedCount');
@@ -124,12 +100,7 @@
             setRandomQuote();
             
             // Add event listeners
-            verifyButton.addEventListener('click', verifyCount);
-            characterCountInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    verifyCount();
-                }
-            });
+            characterCountInput.addEventListener('input', verifyCount);
 
             // Hide messages initially
             successMessage.style.display = 'none';

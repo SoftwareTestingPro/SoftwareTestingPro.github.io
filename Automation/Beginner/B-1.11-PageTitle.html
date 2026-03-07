@@ -27,37 +27,22 @@
                 <h1>Match Title</h1>
                 <p class="lead">Enter the exact title of this webpage. Your input will be compared against the actual page title.</p>
 
-                <div class="input-group">
-                    <label for="titleInput">Enter the title of this webpage:</label>
-                    <input
-                        type="text"
-                        id="titleInput"
-                        placeholder="Enter the page title here"
-                        aria-describedby="titleMessage"
-                    >
-                </div>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct — title matches exactly.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Does not match</strong>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="titleInput" class="label-left">Enter the title of this webpage:</label>
                     </div>
-                    <div class="message-row">
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Expected:</span>
-                            <div class="value-box" id="expectedTitle"></div>
-                        </div>
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Entered:</span>
-                            <div class="value-box" id="actualTitle"></div>
-                        </div>
+
+                    <div class="input-group-right">
+                        <input
+                            type="text"
+                            id="titleInput"
+                            placeholder="Enter the page title here"
+                            aria-describedby="titleMessage"
+                        >
                     </div>
                 </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedTitle"></span> <span style="color: black;">Entered:</span> <span id="actualTitle"></span></span></div>
             </div>
         </main>
     </div>

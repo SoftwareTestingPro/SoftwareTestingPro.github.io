@@ -22,33 +22,22 @@
         </a>
     </div>
 
-    <main class="card" id="orderSummary">
+    <main class="card">
         <div class="card-content">
             <h1>Order Confirmation</h1>
             <p class="lead">Enter the exact order number shown below. The order details are displayed in random order.</p>
-
             <!-- Order details will be populated here by JavaScript -->
-            
-            <div class="input-group">
-                <label for="orderInput">Enter Order Number:</label>
-                <input
-                    type="text"
-                    id="orderInput"
-                    name="orderInput"
-                    placeholder="Enter the order number here"
-                    aria-describedby="orderMessage"
-                >
+            <div id="orderSummary" style="width: 70%;"></div>
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="orderInput" class="label-left">Enter Order Number:</label>
+                </div>
+                <div class="input-group-right">
+                    <input type="text" id="orderInput" name="orderInput" placeholder="Order Number" aria-describedby="orderMessage">
+                </div>
             </div>
-
-            <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Correct! Order number matches.</span>
-            </div>
-
-            <div class="message" id="failureMessage" role="status" aria-live="polite">
-                <span class="icon">✕</span>
-                <span>Incorrect! Order number does not match.</span>
-            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! Order number matches.</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! Order number does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
         </div>
     </main>
 </div>
@@ -114,6 +103,8 @@
         const input = document.getElementById("orderInput").value;
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
+        const expectedValue = document.getElementById('expectedValue');
+        const actualValue = document.getElementById('actualValue');
 
         if (input == orderNumber) {
             successMessage.style.display = 'flex';
@@ -126,6 +117,8 @@
             failureMessage.style.display = 'none';
             failureMessage.classList.remove('failure');
         } else {
+            expectedValue.textContent = orderNumber;
+            actualValue.textContent = input;
             successMessage.style.display = 'none';
             successMessage.classList.remove('success');
             failureMessage.style.display = 'flex';

@@ -44,11 +44,8 @@
                     </div>
                 </div>
             </div>
-
-            <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>All items matched successfully!</span>
-            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>All category items matched successfully!</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Category does not match for all items.</span></div>
         </div>
     </main>
 </div>
@@ -60,10 +57,13 @@
 <script>
     $(function() {
         const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
         
-        // Hide message on page load
+        // Hide messages on page load
         successMessage.style.display = 'none';
         successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
 
         const items = [
             Math.floor(Math.random() * 100), // Random number
@@ -112,6 +112,7 @@
 
         // Keep track of matched items
         let matchedCount = 0;
+        let droppedCount = 0;
 
         // Make right labels droppable
         $('.draggable-item').droppable({
@@ -124,6 +125,9 @@
                 const isString = /^[a-zA-Z]+$/.test(leftItem);
                 const isAlphanumeric = /^[A-Za-z0-9]+$/.test(leftItem);
 
+                ui.draggable.draggable('disable'); // Disable dragging for dropped item
+                droppedCount++;
+
                 // Check if the types match
                 if ((rightLabelType === 'number' && isNumber) ||
                     (rightLabelType === 'string' && isString) ||
@@ -133,27 +137,30 @@
                     $(this).css('background', 'var(--success)'); 
                     $(this).css('color', 'white');
                     $(this).css('border-color', 'var(--success)');
-                    ui.draggable.draggable('disable'); // Disable dragging for matched item
                     $(this).droppable('disable'); // Disable dropping on this label
                     $(this).css('cursor', 'default');
                     ui.draggable.css('cursor', 'default');
                     matchedCount++;
-
-                    // Check if all items are matched
-                    if (matchedCount === items.length) {
-                        successMessage.style.display = 'flex';
-                        successMessage.classList.add('success');
-                    }
                 } else {
-                    // Visual feedback for incorrect match
+                    // Visual feedback for incorrect match, keep it
+                    $(this).text(leftItem + ' ✗'); // Display incorrect
                     $(this).css('background', 'var(--danger)');
                     $(this).css('color', 'white');
                     $(this).css('border-color', 'var(--danger)');
-                    setTimeout(() => {
-                        $(this).css('background', 'var(--card)');
-                        $(this).css('color', 'inherit');
-                        $(this).css('border-color', 'var(--border)');
-                    }, 500);
+                    $(this).droppable('disable'); // Disable dropping on this label
+                    $(this).css('cursor', 'default');
+                    ui.draggable.css('cursor', 'default');
+                }
+
+                // Check if all items are dropped
+                if (droppedCount === items.length) {
+                    if (matchedCount === items.length) {
+                        successMessage.style.display = 'flex';
+                        successMessage.classList.add('success');
+                    } else {
+                        failureMessage.style.display = 'flex';
+                        failureMessage.classList.add('failure');
+                    }
                 }
             }
         });

@@ -44,16 +44,16 @@
         const contentContainer = document.getElementById('contentContainer');
 
         const flags = [
-            "https://flagcdn.com/w320/us.png", // USA
-            "https://flagcdn.com/w320/ca.png", // Canada
-            "https://flagcdn.com/w320/gb.png", // UK
-            "https://flagcdn.com/w320/fr.png", // France
-            "https://flagcdn.com/w320/de.png", // Germany
-            "https://flagcdn.com/w320/jp.png", // Japan
-            "https://flagcdn.com/w320/au.png", // Australia
-            "https://flagcdn.com/w320/in.png", // India
-            "https://flagcdn.com/w320/br.png", // Brazil
-            "https://flagcdn.com/w320/ru.png"  // Russia
+            "https://flagcdn.com/w80/us.png", // USA
+            "https://flagcdn.com/w80/ca.png", // Canada
+            "https://flagcdn.com/w80/gb.png", // UK
+            "https://flagcdn.com/w80/fr.png", // France
+            "https://flagcdn.com/w80/de.png", // Germany
+            "https://flagcdn.com/w80/jp.png", // Japan
+            "https://flagcdn.com/w80/au.png", // Australia
+            "https://flagcdn.com/w80/in.png", // India
+            "https://flagcdn.com/w80/br.png", // Brazil
+            "https://flagcdn.com/w80/ru.png"  // Russia
         ];
 
         let countdown = 5;
@@ -92,10 +92,15 @@
 
         function displayFlags(number) {
             flagsContainer.innerHTML = '';
+            flagsContainer.style.display = 'flex';
+            flagsContainer.style.flexWrap = 'wrap';
+            flagsContainer.style.justifyContent = 'center';
             for (let i = 0; i < number; i++) {
                 const flagIndex = Math.floor(Math.random() * flags.length);
                 const img = document.createElement('img');
                 img.src = flags[flagIndex];
+                img.style.width = '24%';
+                img.style.margin = '1%';
                 img.classList.add('hidden');
                 flagsContainer.appendChild(img);
                 

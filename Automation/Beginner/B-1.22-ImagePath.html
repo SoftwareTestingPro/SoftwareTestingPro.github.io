@@ -29,37 +29,18 @@
 
                 <img id="image" src="" alt="Random Image" style="display: block; margin: 0 auto 20px auto;">
 
-                <div class="input-group">
-                    <label for="imageURL">Enter the source URL of this image:</label>
-                    <input
-                        type="text"
-                        id="imageURL"
-                        placeholder="Enter the image URL here"
-                        aria-describedby="imageMessage"
-                    >
-                </div>
-
-                <div class="message" id="successMessage" role="status" aria-live="polite">
-                    <span class="icon">✓</span>
-                    <span>Correct — URL matches exactly.</span>
-                </div>
-
-                <div class="message" id="failureMessage" role="status" aria-live="polite">
-                    <div class="message-row">
-                        <span class="icon">✕</span>
-                        <strong>Does not match</strong>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="imageURL" class="label-left">Enter the source URL of this image:</label>
                     </div>
-                    <div class="message-row">
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Expected:</span>
-                            <div class="value-box" id="expectedUrl"></div>
-                        </div>
-                        <div>
-                            <span style="color: inherit; font-size: 12px;">Entered:</span>
-                            <div class="value-box" id="actualUrl"></div>
-                        </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="imageURL" placeholder="Enter the image URL here" aria-describedby="imageMessage">
                     </div>
                 </div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Source URL Successfully verified.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Source URL Does not match. <span style="color: black;">Expected:</span> <span id="expectedUrl"></span> <span style="color: black;">Entered:</span> <span id="actualUrl"></span></span></div>
             </div>
         </main>
     </div>
