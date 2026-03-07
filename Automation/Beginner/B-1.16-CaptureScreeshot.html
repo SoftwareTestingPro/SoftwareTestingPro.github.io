@@ -26,9 +26,7 @@
         <main class="card">
             <div class="card-content">
                 <h1>Capturing Screenshots</h1>
-                <p class="lead">A dynamic page for practicing screenshot capture.</p>
-
-                <div id="label">Flags displaying in...</div>
+                <p class="lead">A dynamic page for practicing screenshot capture. There can be 3 types of screenshot captures i.e 1. Capture screenshot of specific element like below flag. 2. Capture screenshot of viewport i.e Webpage current view 3. Capture full page screenshot of entire scrollable page. Try all these 3 Types and verify captured images.</p>
                 <div id="timer">5</div>
                 <div id="flagsContainer"></div>
             </div>
@@ -38,69 +36,37 @@
     <div id="footer-placeholder"></div>
 
     <script>
-        const label = document.getElementById('label');
         const timer = document.getElementById('timer');
         const flagsContainer = document.getElementById('flagsContainer');
         const contentContainer = document.getElementById('contentContainer');
 
         const flags = [
-            "https://flagcdn.com/w80/us.png", // USA
-            "https://flagcdn.com/w80/ca.png", // Canada
-            "https://flagcdn.com/w80/gb.png", // UK
-            "https://flagcdn.com/w80/fr.png", // France
-            "https://flagcdn.com/w80/de.png", // Germany
-            "https://flagcdn.com/w80/jp.png", // Japan
-            "https://flagcdn.com/w80/au.png", // Australia
-            "https://flagcdn.com/w80/in.png", // India
-            "https://flagcdn.com/w80/br.png", // Brazil
-            "https://flagcdn.com/w80/ru.png"  // Russia
+            "https://flagcdn.com/w320/us.png", // USA
+            "https://flagcdn.com/w320/ca.png", // Canada
+            "https://flagcdn.com/w320/gb.png", // UK
+            "https://flagcdn.com/w320/fr.png", // France
+            "https://flagcdn.com/w320/de.png", // Germany
+            "https://flagcdn.com/w320/jp.png", // Japan
+            "https://flagcdn.com/w320/au.png", // Australia
+            "https://flagcdn.com/w320/in.png", // India
+            "https://flagcdn.com/w320/br.png", // Brazil
+            "https://flagcdn.com/w320/ru.png"  // Russia
         ];
 
-        let countdown = 5;
-
-        const countdownInterval = setInterval(() => {
-            countdown--;
-            timer.textContent = countdown;
-            if (countdown <= 0) {
-                clearInterval(countdownInterval);
-                startFlagSequence();
-            }
-        }, 1000);
-
-        function startFlagSequence() {
-            // Hide timer and display first flag
-            label.textContent = "Here is a random flag! Capture and save the flag as screenshot";
-            timer.classList.add('hidden');
-
-            setTimeout(() => {
-                displayFlags(1);
-            }, 1000);
-
-            // Transition to display 3 flags
-            setTimeout(() => {
-                label.textContent = "Here are 3 random flags! Capture and save the current page as screenshot";
-                displayFlags(3);
-            }, 6000);
-
-            // Transition to display 20 flags and make the page scrollable
-            setTimeout(() => {
-                label.textContent = "Here are 20 random flags! Capture and save all 20 flags as a single screenshot";
-                contentContainer.classList.add('scrollable');
-                displayFlags(20);
-            }, 12000);
-        }
+        // Instantly display the flag
+        timer.classList.add('hidden');
+        displayFlags(1);
 
         function displayFlags(number) {
             flagsContainer.innerHTML = '';
-            flagsContainer.style.display = 'flex';
-            flagsContainer.style.flexWrap = 'wrap';
-            flagsContainer.style.justifyContent = 'center';
             for (let i = 0; i < number; i++) {
                 const flagIndex = Math.floor(Math.random() * flags.length);
                 const img = document.createElement('img');
                 img.src = flags[flagIndex];
-                img.style.width = '24%';
-                img.style.margin = '1%';
+                img.style.display = 'block';
+                img.style.margin = '0 auto 20px auto';
+                img.style.width = '250px';
+                img.style.border = '1px solid #ccc';
                 img.classList.add('hidden');
                 flagsContainer.appendChild(img);
                 

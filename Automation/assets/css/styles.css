@@ -257,6 +257,7 @@ input[type="text"]:focus {
     font-size: 12px;
     border: none;
     background: none;
+    display: block;
 }
 
 .message.success::before {
@@ -270,6 +271,7 @@ input[type="text"]:focus {
     border: none;
     background: none;
     flex-direction: row;
+    display: block;
 }
 
 .message.failure::before {
@@ -413,17 +415,10 @@ button:disabled { background-color: #a0a0a0; cursor: not-allowed; }
     justify-content: center;
     margin-top: 20px;
 }
-.date-picker-wrapper input {
-    padding: 10px;
-    font-size: 16px;
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding-right: 40px; /* space for the icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
 }
 .date-picker-wrapper svg {
-    position: absolute;
-    right: 10px;
     width: 20px;
     height: 20px;
     cursor: pointer;
@@ -2301,4 +2296,216 @@ fieldset {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+/* Hover Link Styles */
+.image-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 20px;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover img {
+    transform: scale(1.1);
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    padding: 10px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+/* Train Reservation Table Styles */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.table-responsive th, .table-responsive td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-responsive th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.table-responsive tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-responsive caption {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.radio-cell {
+    text-align: center;
+}
+
+/* Cricket Scorecard Styles */
+.list-group {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: var(--card);
+    min-height: 18%;
+    width: 100%;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.player-name {
+    font-weight: 500;
+    font-size: 0.9em;
+    flex: 3;
+}
+
+.player-score {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 0.85em;
+    flex: 1;
+}
+
+.input-group {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    color: #333;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.input-group input {
+    width: 100%;
+    max-width: 250px;
+    padding: 8px;
+    font-size: 0.9em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.batsmen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+/* Calendar Styles */
+.calendar-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 85%;
+    max-width: 350px;
+    overflow-x: auto;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.calendar-header {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.calendar-table th, .calendar-table td {
+    text-align: center;
+    padding: 6px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    font-size: 0.85em;
+}
+
+.calendar-table th {
+    background-color: #f8f9fa;
+}
+
+.calendar-table td {
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.calendar-table td:hover {
+    background-color: #e9ecef;
+}
+
+.calendar-table .selected {
+    background-color: #28a745;
+    color: white;
+}
+
+.info-message {
+    margin-top: 15px;
+    font-size: 1.2em;
+}
+
+.tick-cross {
+    font-size: 1.2em;
+    margin-left: 8px;
 }

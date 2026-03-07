@@ -5,65 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Top 5 Indian Batsmen</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
-    <script src="../../components.js"></script>
-    <style>
-        .list-group {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 20px 0;
-        }
-        .list-group-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            background: var(--card);
-            min-height: 18%;
-            width: 60%;
-        }
-        .list-group-item:hover {
-            background-color: #f8f9fa;
-        }
-        .player-name {
-            font-weight: 500;
-            font-size: 0.9em;
-            flex: 1;
-        }
-        .player-score {
-            font-weight: bold;
-            color: var(--accent);
-            font-size: 0.85em;
-            flex: 1;
-        }
-        .input-group {
-            margin: 15px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9em;
-            color: #333;
-            text-align: center;
-            margin-right: 10px;
-        }
-        .input-group input {
-            width: 100%;
-            max-width: 250px;
-            padding: 8px;
-            font-size: 0.9em;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            text-align: center;
-            margin: 0 auto;
-        }
-    </style>
+  <script src="../../components.js"></script>
 </head>
 <body>
   <div id="header-placeholder"></div>
@@ -85,37 +27,43 @@
             <h1>Top 5 Indian Batsmen</h1>
             <p class="lead">Identify the top scorer and Sachin's runs</p>
 
-            <ul class="list-group" id="batsmenList">
+            <ul class="list-group batsmen-grid" id="batsmenList">
                 <!-- Populated by JavaScript -->
             </ul>
 
-            <div class="input-group">
-                <label for="inputField1">Enter name of top scorer:</label>
-                <input type="text" id="inputField1" />
-            </div>
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="inputField1" class="label-left">Enter name of top scorer:</label>
+                </div>
 
-            <div class="input-group">
-                <label for="inputField2">Runs Scored by Sachin Tendulkar:</label>
-                <input type="text" id="inputField2" />
+                <div class="input-group-right">
+                    <input type="text" id="inputField1" name="user-input-name" placeholder="Type your name...">
+                </div>
             </div>
 
             <div class="message" id="successMessage1" role="status" aria-live="polite">
-                <span class="icon">✓</span>
                 <span>Correct! The top scorer is correctly identified.</span>
             </div>
 
             <div class="message" id="failureMessage1" role="status" aria-live="polite">
-                <span class="icon">✗</span>
                 <span id="topScorerError">Incorrect! Please try again.</span>
             </div>
 
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="inputField2" class="label-left">Runs Scored by Sachin Tendulkar:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="inputField2" name="user-input-name" placeholder="Type your name...">
+                </div>
+            </div>
+
             <div class="message" id="successMessage2" role="status" aria-live="polite">
-                <span class="icon">✓</span>
                 <span id="sachinSuccess">Correct! Sachin Tendulkar scored the right amount.</span>
             </div>
 
             <div class="message" id="failureMessage2" role="status" aria-live="polite">
-                <span class="icon">✗</span>
                 <span id="sachinError">Incorrect! Please try again.</span>
             </div>
         </div>

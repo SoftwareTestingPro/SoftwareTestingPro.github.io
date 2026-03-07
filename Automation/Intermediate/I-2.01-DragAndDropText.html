@@ -27,19 +27,16 @@
             <h1>Drag and Drop Centered</h1>
             <p class="lead">Drag and Drop the button 'Drag Me' to other container</p>
 
-            <div class="container-wrapper">
-                <div class="container" id="container1">
-                    <div class="draggable" id="draggableText" draggable="true">Drag Me</div>
+            <div class="container-wrapper" style="display: flex; gap: 20px; justify-content: center;">
+                <div class="container" id="container1" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: #f9f9f9; width: 200px; text-align: center;">
+                    <div class="draggable" id="draggableText" draggable="true" style="background: #4caf50; color: white; padding: 10px; border-radius: 5px; cursor: move;">Drag Me</div>
                 </div>
-                <div class="container dropzone" id="container2">
+                <div class="container dropzone" id="container2" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: #e3f2fd; width: 200px; text-align: center;">
                     Drop Here
                 </div>
             </div>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Success! The text has been dropped.</span>
-            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! The text has been dropped.</span></div>
         </div>
     </main>
 </div>
