@@ -61,7 +61,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 0;
     padding: 0;
 }
 
@@ -74,6 +74,13 @@ main {
     background: var(--card);
     border-radius: var(--radius);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: -60px auto 0;
+    width: 100%;
+    max-width: var(--card-max-width, 800px);
+    padding: 10px 24px;
+    text-align: center;
+    min-height: 80vh;
+    max-height: 80vh;
 }
 
 .task-navigation {
@@ -138,14 +145,13 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 200px); /* Ensure footer is pushed down */
-    padding: 10px 24px; /* Add padding back to content area */
+    min-height: 100vh;
+    padding: 10px 24px;
 }
 
 /* Sticky footer after content */
 .site-footer {
-    position: relative; /* Changed from fixed to relative */
-    margin-top: 20px; /* Space above footer */
+    position: relative;
     width: 100%;
     background: var(--card);
     border-top: 1px solid var(--border);
@@ -181,15 +187,15 @@ p.lead {
 
 .input-group {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    justify-content: space-between;
     margin-bottom: 5px;
 }
 
 label {
-    font-size: 13px;
+    font-size: 12px;
     color: #333;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 input[type="text"] {
@@ -200,6 +206,8 @@ input[type="text"] {
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: right;
+    width: 200px;
 }
 
 input[type="text"]:focus {
@@ -214,31 +222,39 @@ input[type="text"]:focus {
     border-radius: 8px;
     font-size: 13px;
     border: 1px solid;
+    white-space: nowrap;
 }
 
 .message.success {
-    display: flex;
-    background-color: #e6f7ea;
     color: #155724;
-    border-color: #81e6b0;
-    align-items: center;
-    gap: 8px;
+    font-weight: normal;
+    font-size: 12px;
+    border: none;
+    background: none;
+}
+
+.message.success::before {
+    content: "✓ ";
 }
 
 .message.failure {
-    display: flex;
-    background-color: #fff0f0;
     color: #6b1220;
-    border-color: #f5b5ba;
-    flex-direction: column;
-    gap: 8px;
+    font-weight: normal;
+    font-size: 12px;
+    border: none;
+    background: none;
+    flex-direction: row;
+}
+
+.message.failure::before {
+    content: "✕ ";
 }
 
 .message-row {
     display: flex;
     gap: 10px;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .value-box {
@@ -1094,7 +1110,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 0;
     padding: 0;
 }
 
@@ -1107,6 +1123,13 @@ main {
     background: var(--card);
     border-radius: var(--radius);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: -60px auto 0;
+    width: 100%;
+    max-width: var(--card-max-width, 800px);
+    padding: 10px 24px;
+    text-align: center;
+    min-height: 80vh;
+    max-height: 80vh;
 }
 
 /* Ensure header and footer content is visible */
@@ -1126,14 +1149,13 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 200px); /* Ensure footer is pushed down */
-    padding: 10px 24px; /* Add padding back to content area */
+    min-height: 100vh;
+    padding: 10px 24px;
 }
 
 /* Sticky footer after content */
 .site-footer {
-    position: relative; /* Changed from fixed to relative */
-    margin-top: 20px; /* Space above footer */
+    position: relative;
     width: 100%;
     background: var(--card);
     border-top: 1px solid var(--border);
@@ -1215,31 +1237,41 @@ p.lead {
     border-radius: 8px;
     font-size: 13px;
     border: 1px solid;
+    white-space: nowrap;
 }
 
 .message.success {
-    display: flex;
-    background-color: #e6f7ea;
     color: #155724;
-    border-color: #81e6b0;
-    align-items: center;
-    gap: 8px;
+    font-weight: normal;
+    font-size: 12px;
+    border: none;
+    background: none;
+}
+
+.message.success::before {
+    content: "✓ ";
 }
 
 .message.failure {
-    display: flex;
-    background-color: #fff0f0;
     color: #6b1220;
-    border-color: #f5b5ba;
-    flex-direction: column;
-    gap: 8px;
+    font-weight: normal;
+    font-size: 12px;
+    border: none;
+    background: none;
+    flex-direction: row;
 }
 
-.message.info {
-    display: block;
-    background-color: #e3f2fd;
-    color: #1565c0;
-    border-left: 4px solid #2196f3;
+.message.failure::before {
+    content: "✕ ";
+}
+
+.message.detailed-failure {
+    color: #6b1220;
+    font-weight: normal;
+    font-size: 12px;
+    border: none;
+    background: none;
+    flex-direction: row;
 }
 
 #rubiks-cube {
@@ -1498,15 +1530,9 @@ input[type="text"] {
     pointer-events: auto;
 }
 
-#successMessage {
-    margin-top: 20px;
-    padding: 12px;
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    display: none;
-    font-weight: bold;
+#expectedValue::before,
+#actualValue::before {
+    content: "";
 }
 
 /* Random Popup Styles */
@@ -2099,59 +2125,6 @@ input[type="color"] {
 
 .failure {
     color: red;
-}
-/ *   S i g n a t u r e   P a d   S t y l e s   * / 
- c a n v a s   { 
-         b o r d e r :   2 p x   s o l i d   # 0 0 0 ; 
-         c u r s o r :   c r o s s h a i r ; 
-         b a c k g r o u n d - c o l o r :   # f f f ; 
- } 
- 
- . c o n t r o l s   { 
-         m a r g i n - t o p :   1 0 p x ; 
- } 
- 
- b u t t o n   { 
-         p a d d i n g :   8 p x   1 6 p x ; 
-         f o n t - s i z e :   1 4 p x ; 
-         m a r g i n :   0   5 p x ; 
-         c u r s o r :   p o i n t e r ; 
- } 
- 
- # m e s s a g e   { 
-         m a r g i n - t o p :   1 0 p x ; 
-         c o l o r :   g r e e n ; 
-         f o n t - w e i g h t :   b o l d ; 
-         m i n - h e i g h t :   2 0 p x ; 
- } 
- 
- 
-/* B-1.26-CaseValidation Styles */
-.checkbox-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.checkbox-item {
-    margin-right: 10px;
-}
-
-.validate-btn {
-    padding: 8px 16px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.validate-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(107,33,168,0.3);
 }
 
 /* I-2.28-CompareImages Message Styles */

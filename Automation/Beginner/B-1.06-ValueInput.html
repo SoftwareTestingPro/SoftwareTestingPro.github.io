@@ -38,27 +38,8 @@
                 <input type="text" id="destinationInput" placeholder="Enter the text from the field above">
             </div>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
-                <span>Correct — the entered text matches the source.</span>
-            </div>
-
-            <div class="message" id="failureMessage" role="status" aria-live="polite">
-                <div class="message-row">
-                    <span class="icon">✕</span>
-                    <strong>Does not match</strong>
-                </div>
-                <div class="message-row">
-                    <div>
-                        <span style="color: inherit; font-size: 12px;">Expected:</span>
-                        <div class="value-box" id="expectedValue"></div>
-                    </div>
-                    <div>
-                        <span style="color: inherit; font-size: 12px;">Entered:</span>
-                        <div class="value-box" id="actualValue"></div>
-                    </div>
-                </div>
-            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
         </div>
     </main>
 </div>

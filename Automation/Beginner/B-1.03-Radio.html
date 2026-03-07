@@ -46,13 +46,11 @@
             </div>
 
             <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span class="icon">✓</span>
                 <span>Correct! You selected the right option.</span>
             </div>
 
             <div class="message" id="failureMessage" role="status" aria-live="polite">
-                <span class="icon">✕</span>
-                <span>Incorrect! Please select the "Male" option.</span>
+                <span>Expected: Male, Selected: <span id="actualValue"></span></span>
             </div>
         </div>
     </main>
@@ -64,6 +62,7 @@
         const radioOptions = document.querySelectorAll('input[name="gender"]');
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
+        const actualValue = document.getElementById('actualValue');
 
         // Hide messages initially
         successMessage.style.display = 'none';
@@ -79,109 +78,14 @@
                     successMessage.classList.add('success');
                     failureMessage.style.display = 'none';
                     failureMessage.classList.remove('failure');
+                    actualValue.textContent = '';
                 } else {
                     successMessage.style.display = 'none';
                     successMessage.classList.remove('success');
                     failureMessage.style.display = 'flex';
                     failureMessage.classList.add('failure');
+                    actualValue.textContent = selected;
                 }
-            });
-        });
-    </script>
-</body>
-</html>
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #333;
-        }
-
-        .radio-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .radio-group label {
-            font-size: 1em;
-            color: #333;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .radio-group input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .success-message {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Select Your Gender</h1>
-        <div class="radio-group">
-            <label>
-                <input type="radio" name="gender" value="male">
-                Male
-            </label>
-            <label>
-                <input type="radio" name="gender" value="female">
-                Female
-            </label>
-            <label>
-                <input type="radio" name="gender" value="other">
-                Other
-            </label>
-            <label>
-                <input type="radio" name="gender" value="preferNotToSay">
-                Prefer not to say
-            </label>
-        </div>
-        <div class="success-message" id="successMessage">
-            <!-- Message will be updated by JavaScript -->
-        </div>
-    </div>
-    <script>
-        const radioButtons = document.querySelectorAll('input[name="gender"]');
-        const successMessage = document.getElementById('successMessage');
-
-        radioButtons.forEach(radio => {
-            radio.addEventListener('change', () => {
-                const selectedValue = document.querySelector('input[name="gender"]:checked').value;
-                let message = '';
-
-                switch (selectedValue) {
-                    case 'male':
-                        message = 'You have selected Male.';
-                        break;
-                    case 'female':
-                        message = 'You have selected Female.';
-                        break;
-                    case 'other':
-                        message = 'You have selected Other.';
-                        break;
-                    case 'preferNotToSay':
-                        message = 'You have selected Prefer not to say.';
-                        break;
-                }
-
-                successMessage.textContent = message;
-                successMessage.style.display = 'block'; // Show success message
             });
         });
     </script>
