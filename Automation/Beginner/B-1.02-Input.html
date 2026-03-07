@@ -27,9 +27,15 @@
             <h1>Input Validation</h1>
             <p class="lead">Please Fill Out the Following Information.</p>
 
-            <div class="input-group">
-                <label for="user-input-name">Enter your first name:</label>
-                <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name..." class="form-control">
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="user-input-name" class="label-left">Enter your first name:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
+                </div>
+            </div>
 
                 <div class="message success" id="nameSuccessMessage" role="status" aria-live="polite">
                     <span>Name is valid!</span>
@@ -38,12 +44,16 @@
                 <div class="message failure" id="nameFailureMessage" role="status" aria-live="polite">
                     <span>Please enter letters only</span>
                 </div>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="user-input-age" class="label-left">Enter your age:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age">
+                </div>
             </div>
-
-            <div class="input-group">
-                <label for="user-input-age">Enter your age:</label>
-                <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age" class="form-control">
-
                 <div class="message success" id="ageSuccessMessage" role="status" aria-live="polite">
                     <span>Age is valid!</span>
                 </div>
@@ -51,19 +61,22 @@
                 <div class="message failure" id="ageFailureMessage" role="status" aria-live="polite">
                     <span>Please enter digits only</span>
                 </div>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="text-input" class="label-left">Enter "text within double quotes" in the input field:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="text-input" placeholder="Enter label text within quotes">
+                </div>
+            </div>
+             <div class="message success" id="textSuccessMessage" role="status" aria-live="polite">
+                    <span>Text is valid!</span>
             </div>
 
-            <div class="input-group">
-                <label for="text-input">Enter "text within double quotes" in the input field:</label>
-                <input type="text" id="text-input" class="form-control" placeholder="Enter label text within quotes">
-
-                <div class="message success" id="textSuccessMessage" role="status" aria-live="polite">
-                    <span>Text is valid!</span>
-                </div>
-
-                <div class="message failure" id="textFailureMessage" role="status" aria-live="polite">
-                    <span>Please enter: "text within double quotes"</span>
-                </div>
+            <div class="message failure" id="textFailureMessage" role="status" aria-live="polite">
+                <span>Please enter: "text within double quotes"</span>
             </div>
         </div>
     </main>

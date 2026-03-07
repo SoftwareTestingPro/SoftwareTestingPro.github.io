@@ -185,17 +185,42 @@ p.lead {
     line-height: 1.5;
 }
 
-.input-group {
+.input-group-parent {
     display: flex;
-    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 5px;
+    align-self: flex-start;
+    width: 100%;
 }
 
-label {
-    font-size: 12px;
+.input-group-left {
+    width: 150px;
+}
+
+.input-group-right {
+    flex: 1;
+}
+
+.label-left {
+    font-size: 14px !important;
     color: #333;
-    font-weight: 500;
+    font-weight: normal !important;
     white-space: nowrap;
+    width: 100%;
+    text-align: left;
+    margin-top: 30px !important;
+}
+
+.input-field-right {
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: right;
+    width: 100%;
 }
 
 input[type="text"] {
@@ -208,6 +233,7 @@ input[type="text"] {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     text-align: right;
     width: 200px;
+    margin-left: auto !important;
 }
 
 input[type="text"]:focus {
