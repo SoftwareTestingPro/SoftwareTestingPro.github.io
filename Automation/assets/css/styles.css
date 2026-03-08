@@ -20,7 +20,7 @@ body {
     background: var(--bg);
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
     padding: 0;
     color: #111827;
 }
@@ -38,13 +38,17 @@ main {
 }
 
 #footer-placeholder {
-    /* height: auto; */
+    position: absolute;
+    top: 94vh;
+    width: 100%;
+    text-align: center;
 }
 
 .content-wrapper {
     height: 80vh;
     display: flex;
     flex-direction: column;
+    margin-top: 5vh;
 }
 
 .card {
