@@ -47,14 +47,15 @@ input[type="text"]:focus {
 .list-group {
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 20px auto;
+    width: 70%;
 }
 
 .list-group-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
+    padding: 6px 15px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     margin-bottom: 10px;

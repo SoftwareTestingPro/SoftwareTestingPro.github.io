@@ -28,23 +28,29 @@
             <h1>Select Gender</h1>
             <p class="lead">Select the "Male" radio button to complete this task.</p>
 
-            <div class="radio-list">
-                <label class="radio-label">
-                    <input type="radio" name="gender" value="male">
-                    <span class="radio-custom"></span>
-                    Male
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="gender" value="female">
-                    <span class="radio-custom"></span>
-                    Female
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="gender" value="other">
-                    <span class="radio-custom"></span>
-                    Other
-                </label>
-            </div>
+            <ul class="radio-list">
+                <li>
+                    <label>
+                        <input type="radio" name="gender" value="male">
+                        <span class="radio-custom"></span>
+                        Male
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="radio" name="gender" value="female">
+                        <span class="radio-custom"></span>
+                        Female
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="radio" name="gender" value="other">
+                        <span class="radio-custom"></span>
+                        Other
+                    </label>
+                </li>
+            </ul>
 
             <div class="message" id="successMessage" role="status" aria-live="polite">
                 <span>Correct! You selected the right option.</span>

@@ -1,13 +1,14 @@
 
 
 .button-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
+    justify-items: center;
 }
 
 .button-container button {
+    width: 120px;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -27,13 +28,47 @@
     background-color: #0056b3;
 }
 
-.input-group {
-    text-align: center;
-    margin-bottom: 5px;
+.input-group-parent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    align-self: flex-start;
+    width: 100%;
 }
 
+.input-group-left {
+    width: 150px;
+}
 
+.input-group-right {
+    flex: 1;
+}
 
+.label-left {
+    font-size: 14px !important;
+    color: #333;
+    font-weight: normal !important;
+    white-space: nowrap;
+    width: 100%;
+    text-align: left;
+    margin-top: 30px !important;
+}
 
+input[type="text"] {
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: right;
+    width: 200px;
+    margin-left: auto !important;
+}
 
+input[type="text"]:focus {
+    border-color: #9fb7ff;
+    box-shadow: 0 4px 12px rgba(60, 120, 255, 0.08);
+}
 

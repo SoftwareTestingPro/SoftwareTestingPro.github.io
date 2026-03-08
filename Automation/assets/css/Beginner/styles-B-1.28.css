@@ -64,6 +64,11 @@ input[type="text"]:focus {
     font-size: 16px;
 }
 
+#orderSummary {
+    margin: 0 auto;
+    text-align: center;
+}
+
 
 
 

@@ -1,8 +1,8 @@
 
 
 .slider-container {
-    width: 300px;
-    margin: 20px 0;
+    margin: 20px auto;
+    width: 70%;
 }
 
 .slider {
@@ -14,9 +14,3 @@
     margin-top: 10px;
     color: #333;
 }
-
-
-
-
-
-

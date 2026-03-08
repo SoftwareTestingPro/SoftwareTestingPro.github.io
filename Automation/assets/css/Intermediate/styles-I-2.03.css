@@ -1,5 +1,4 @@
 
-
 .table-responsive {
     overflow-x: auto;
 }
@@ -8,18 +7,48 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: none;
 }
 
 th, td {
-    padding: 8px 12px;
+    padding: 12px 16px;
     text-align: left;
-    border-bottom: 1px solid var(--border);
+    border: none;
 }
 
 th {
     background: var(--bg);
-    font-weight: 600;
     color: var(--muted);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+tbody tr:nth-child(even) {
+    background: rgba(107, 33, 168, 0.02);
+}
+
+tbody tr:nth-child(odd) {
+    background: var(--card);
+}
+
+tbody tr:hover {
+    background: rgba(107, 33, 168, 0.08);
+    transform: translateY(-1px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+caption {
+    caption-side: top;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--muted);
+    text-align: center;
+    font-size: 18px;
 }
 
 

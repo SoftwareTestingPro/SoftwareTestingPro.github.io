@@ -2,15 +2,17 @@
 
 .math-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
     justify-content: center;
     margin-bottom: 5px;
+    margin-top: 10%;
+    place-items: center;
 }
 
 .math-button {
-    width: 120px;
-    height: 60px;
+    width: 10rem;
+    height: 10rem;
     border: none;
     background-color: #e0e0e0;
     cursor: pointer;
@@ -20,6 +22,34 @@
     align-items: center;
     position: relative;
     border-radius: 5px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .math-buttons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.3rem;
+        margin-top: 5%;
+    }
+
+    .math-button {
+        width: 8rem;
+        height: 8rem;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .math-buttons {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .math-button {
+        width: 12rem;
+        height: 12rem;
+        font-size: 16px;
+    }
 }
 
 

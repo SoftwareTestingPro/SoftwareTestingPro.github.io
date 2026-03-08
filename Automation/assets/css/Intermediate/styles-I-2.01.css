@@ -1,7 +1,37 @@
+.container-wrapper {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
 
+.container {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    width: 300px;
+    height: 300px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
+.container.dropzone {
+    background: #e3f2fd;
+}
 
-
-
-
-
+.draggable {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: move;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

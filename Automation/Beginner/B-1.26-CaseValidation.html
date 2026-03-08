@@ -52,39 +52,34 @@
         const checkboxContainer = document.getElementById('checkboxContainer');
         const checkboxData = [];
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 8; i++) {
             let name = generateRandomName();
             let isUpperCase = name === name.toUpperCase();
             checkboxData.push({ name, isUpperCase });
 
-            const row = document.createElement('div');
-            row.className = 'checkbox-group';
+            const label = document.createElement('label');
 
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.className = 'checkbox-item';
             checkbox.setAttribute('data-index', i);
             checkbox.setAttribute('value', name);
             checkbox.setAttribute('title', name); // optional tooltip
 
-            const labelText = document.createElement('span');
-            labelText.textContent = name;
-
-            row.appendChild(checkbox);
-            row.appendChild(labelText);
-            checkboxContainer.appendChild(row);
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(name));
+            checkboxContainer.appendChild(label);
         }
 
         // Ensure at least one uppercase item exists
         if (!checkboxData.some(item => item.isUpperCase)) {
             checkboxData[0].name = checkboxData[0].name.toUpperCase();
             checkboxData[0].isUpperCase = true;
-            const firstLabel = checkboxContainer.children[0].querySelector('span');
-            firstLabel.textContent = checkboxData[0].name;
+            const firstLabel = checkboxContainer.children[0];
+            firstLabel.lastChild.textContent = checkboxData[0].name;
         }
 
         function validateSelection() {
-            const checkboxes = document.querySelectorAll('.checkbox-item');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
             let isValid = true;
 
             checkboxes.forEach(checkbox => {

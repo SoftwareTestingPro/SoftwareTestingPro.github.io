@@ -6,7 +6,7 @@
     <title>Random Buttons</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.09.css">
-    <script src="../../components.js"></script>
+    <script src="../assets/components/components.js"></script>
 </head>
 <body>
 
@@ -33,8 +33,18 @@
                 <!-- Buttons will be added here dynamically -->
             </div>
 
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="inputField" class="label-left">Enter total number of buttons:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="inputField" placeholder="Enter number of buttons..." maxlength="10">
+                </div>
+            </div>
+
             <div class="input-group">
-                <input type="text" id="inputField" placeholder="Enter number of buttons..." maxlength="10">
+
             </div>
 
             <div class="message" id="successMessage" role="status" aria-live="polite">

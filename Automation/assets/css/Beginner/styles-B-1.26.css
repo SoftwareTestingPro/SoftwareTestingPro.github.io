@@ -1,21 +1,37 @@
 
-
-.checkbox-container {
+/* Modern Checkbox Group Styles */
+.checkbox-group {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 5px;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
 }
 
-.checkbox-row {
+.checkbox-group label {
     display: flex;
     align-items: center;
-    gap: 10px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 120px;
+    text-align: center;
+    font-weight: 500;
+    color: #495057;
 }
 
-.checkbox-item {
+.checkbox-group label:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox-group input[type="checkbox"] {
     margin-right: 8px;
+    accent-color: #007bff;
 }
 
 .validate-btn {
