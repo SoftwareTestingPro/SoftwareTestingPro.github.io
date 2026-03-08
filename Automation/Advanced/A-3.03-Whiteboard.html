@@ -24,18 +24,13 @@
 
     <main class="card">
         <div class="card-content">
-        <h1>Whiteboard Drawing Challenge</h1>
-        <p class="lead">Draw a square on the whiteboard below and test it.</p>
-
-            <div class="header">
+            <h1>Whiteboard Drawing Challenge</h1>
+            <p class="lead">Draw a square on the whiteboard below and test it.</p>
+            <canvas id="whiteboard" width="800" height="400" style="width: 800px; height: 400px; border: 2px solid #000;"></canvas>
+            <div class="button-enabled">
                 <button onclick="checkShape()">Test Your Shape</button>
-                <button onclick="clearCanvas()">Clear</button>
             </div>
-            <canvas id="whiteboard" width="400" height="300" style="border: 1px solid #000; background: #fff;"></canvas>
-            <div id="message-display">
-                <div id="successMessage" style="display: none;"></div>
-                <div id="failureMessage" style="display: none;"></div>
-            </div>
+            <div id="message" class="message"></div>
         </div>
     </main>
 </div>
@@ -45,88 +40,85 @@
     <script>
         const canvas = document.getElementById('whiteboard');
         const ctx = canvas.getContext('2d');
-        const successMessage = document.getElementById('successMessage');
-        const failureMessage = document.getElementById('failureMessage');
-        let drawing = false;
+        const message = document.getElementById('message');
+        let isDrawing = false;
         let path = [];
 
-        // Hide messages on load
-        successMessage.style.display = 'none';
-        failureMessage.style.display = 'none';
-        successMessage.classList.remove('success');
-        failureMessage.classList.remove('failure');
+        function getPos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (evt.clientX - rect.left) * scaleX,
+                y: (evt.clientY - rect.top) * scaleY
+            };
+        }
 
         function startDrawing(e) {
-            drawing = true;
-            clearCanvas(); // Clear previous drawing
-            path = [{ x: e.offsetX, y: e.offsetY }];
+            isDrawing = true;
+            const pos = getPos(canvas, e);
+            path = [{ x: pos.x, y: pos.y }];
             ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
+            ctx.moveTo(pos.x, pos.y);
         }
 
         function draw(e) {
-            if (!drawing) return;
-            path.push({ x: e.offsetX, y: e.offsetY });
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
+            if (isDrawing) {
+                const pos = getPos(canvas, e);
+                path.push({ x: pos.x, y: pos.y });
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            }
         }
 
         function stopDrawing() {
-            drawing = false;
+            isDrawing = false;
         }
 
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            path = [];
-            successMessage.style.display = 'none';
-            failureMessage.style.display = 'none';
-            successMessage.classList.remove('success');
-            failureMessage.classList.remove('failure');
-        }
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
 
         function checkShape() {
             if (path.length < 50) {
-                messageDisplay.textContent = "It doesn't look like a square. The drawing is too small.";
-                messageDisplay.className = 'failure';
-                return;
-            }
-
-            const minX = Math.min(...path.map(p => p.x));
-            const maxX = Math.max(...path.map(p => p.x));
-            const minY = Math.min(...path.map(p => p.y));
-            const maxY = Math.max(...path.map(p => p.y));
-
-            const width = maxX - minX;
-            const height = maxY - minY;
-            const aspectRatio = width / height;
-
-            const startPoint = path[0];
-            const endPoint = path[path.length - 1];
-            const distance = Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
-
-            // Check for square-like properties
-            const isClosed = distance < 30;
-            const isSquareLike = aspectRatio > 0.75 && aspectRatio < 1.25;
-
-            // Calculate shape characteristics
-            const curvature = calculateCurvature(path);
-            const irregularity = calculateIrregularity(path);
-            const cornerCount = detectCorners(path);
-
-            if (isSquareLike && isClosed && curvature < 0.3) {
-                successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
-                failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
-                successMessage.textContent = "Success! That looks like a square.";
+                message.textContent = "It doesn't look like a square. The drawing is too small.";
+                message.classList.add('failure');
+                message.classList.remove('success');
             } else {
-                // Generate funny feedback based on what was actually drawn
-                const feedback = identifyShape(curvature, aspectRatio, irregularity, cornerCount);
-                failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
-                successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
-                failureMessage.textContent = feedback;
+                const minX = Math.min(...path.map(p => p.x));
+                const maxX = Math.max(...path.map(p => p.x));
+                const minY = Math.min(...path.map(p => p.y));
+                const maxY = Math.max(...path.map(p => p.y));
+
+                const width = maxX - minX;
+                const height = maxY - minY;
+                const aspectRatio = width / height;
+
+                const startPoint = path[0];
+                const endPoint = path[path.length - 1];
+                const distance = Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
+
+                // Check for square-like properties
+                const isClosed = distance < 30;
+                const isSquareLike = aspectRatio > 0.75 && aspectRatio < 1.25;
+
+                // Calculate shape characteristics
+                const curvature = calculateCurvature(path);
+                const irregularity = calculateIrregularity(path);
+                const cornerCount = detectCorners(path);
+
+                if (isSquareLike && isClosed && curvature < 0.3) {
+                    message.textContent = "Success! That looks like a square.";
+                    message.classList.add('success');
+                    message.classList.remove('failure');
+                } else {
+                    // Generate funny feedback based on what was actually drawn
+                    const feedback = identifyShape(curvature, aspectRatio, irregularity, cornerCount);
+                    message.textContent = feedback;
+                    message.classList.add('failure');
+                    message.classList.remove('success');
+                }
             }
         }
 
@@ -207,21 +199,21 @@
 
         function identifyShape(curvature, aspectRatio, irregularity, cornerCount) {
             const funnyMessages = [
-                "That's a beautiful 🔵 circle! Almost looks like a donut. Hungry?",
-                "Looks like an 🐧 penguin egg to me! Cool drawing though.",
-                "That's more of an 🌕 egg shape. Scrambled success incoming!",
-                "Wow, a 🐢 turtle shell! But we need a square here.",
-                "That's definitely an ⚽ ball! No square corners in this stadium.",
-                "I see a 🐙 octopus in this! Very wavy and wiggly.",
-                "Looks like a 🌊 wavy snake. Slithering away from squares, huh?",
-                "That's a 🎂 lumpy cake! Delicious but not square enough.",
-                "I see a 🧿 blob! Very organic and free-flowing.",
-                "That looks like a 🪲 beetle! But we need 4 corners, not curves.",
-                "Resembles a 🥝 kiwi fruit! Bumpy and uneven.",
-                "That's a 🎨 masterpiece of chaos! But not a square.",
-                "Looks like a 🦠 virus! Very roundish and curvy.",
-                "I see a 🌀 tornado! Spinning but not square.",
-                "That's more of a 🫧 bubble! Pop goes the square!"
+                "That's a beautiful circle! Almost looks like a donut. Hungry?",
+                "Looks like an penguin egg to me! Cool drawing though.",
+                "That's more of an egg shape. Scrambled success incoming!",
+                "Wow, a turtle shell! But we need a square here.",
+                "That's definitely a ball! No square corners in this stadium.",
+                "I see an octopus in this! Very wavy and wiggly.",
+                "Looks like a wavy snake. Slithering away from squares, huh?",
+                "That's a lumpy cake! Delicious but not square enough.",
+                "I see a blob! Very organic and free-flowing.",
+                "That looks like a beetle! But we need 4 corners, not curves.",
+                "Resembles a kiwi fruit! Bumpy and uneven.",
+                "That's a masterpiece of chaos! But not a square.",
+                "Looks like a virus! Very roundish and curvy.",
+                "I see a tornado! Spinning but not square.",
+                "That's more of a bubble! Pop goes the square!"
             ];
 
             // Determine shape type based on characteristics
@@ -236,30 +228,15 @@
                 return funnyMessages[Math.floor(Math.random() * 5)];
             } else if (cornerCount > 5) {
                 // Too many corners
-                return "That's a wild polygon! Looks like you drew a 🏰 fortress with too many corners!";
+                return "That's a wild polygon! Looks like you drew a fortress with too many corners!";
             } else if (aspectRatio < 0.6 || aspectRatio > 1.6) {
                 // Very elongated
-                return "That's looking more like a 🍌 banana or pencil! Needs to be more square.";
+                return "That's looking more like a banana or pencil! Needs to be more square.";
             } else {
                 // Generic failure
                 return funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
             }
         }
-
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-
-        function resizeCanvas() {
-            const style = getComputedStyle(canvas);
-            canvas.width = parseInt(style.width);
-            canvas.height = parseInt(style.height);
-        }
-
-        window.addEventListener('load', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
-    });
-</script>
+    </script>
 </body>
 </html>

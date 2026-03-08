@@ -31,8 +31,8 @@
 
         <!-- Success and failure messages -->
         <div id="messageContainer">
-            <div class="success-message" id="successMessage">Congratulations! Well done!</div>
-            <div class="failure-message" id="failureMessage">Sorry, you missed it!</div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;"><span>Congratulations! Well done!</span></div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite" style="display: none;"><span>Sorry, you missed it!</span></div>
         </div>
         </div>
     </main>
@@ -66,15 +66,16 @@
 
             // After 5 seconds, hide the label and create the button
             setTimeout(function() {
-                labelText.style.display = 'none';
                 countdown.style.display = 'none';
 
                 // Create the button element
                 var button = document.createElement('button');
                 button.id = 'showButton';
-                button.className = 'btn btn-primary btn-lg';
+                button.className = 'button';
                 button.textContent = 'Click Me';
-                document.querySelector('.card-content').appendChild(button);
+                button.style.backgroundColor = '#007bff';
+                const messageContainer = document.getElementById('messageContainer');
+                document.querySelector('.card-content').insertBefore(button, messageContainer);
 
                 // Show the button instantly
                 button.style.display = 'block';
@@ -91,7 +92,7 @@
                         successMessage.style.display = 'none';
                         successMessage.classList.remove('success');
                     }
-                }, 500);
+                }, 2000);
 
                 // If the button is clicked, show the success message
                 button.addEventListener('click', function() {

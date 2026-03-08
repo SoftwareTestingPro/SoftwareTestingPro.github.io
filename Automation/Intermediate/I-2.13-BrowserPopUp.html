@@ -24,13 +24,21 @@
         <main class="card">
             <div class="card-content">
                 <h1>Random Life Quote</h1>
-                <p class="lead">Click below button to fetch a quote and enter the quote in the input field:</p>
+                <p class="lead">Click below button to fetch a quote and enter the displayed quote in the input field:</p>
 
-                <div class="container">
+                <div class="button-enabled">
                     <button onclick="openQuoteWindow()">Get a Random Life Quote</button>
                 </div>
 
-                <input type="text" id="userInput" name="userInput" disabled>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="userInput" class="label-left">Enter the quote:</label>
+                    </div>
+
+                    <div class="input-group-right" style="width: 900px;">
+                        <input type="text" id="userInput" placeholder="Enter the quote here" disabled>
+                    </div>
+                </div>
 
                 <div class="message" id="result"></div>
             </div>
@@ -44,11 +52,11 @@
 
         function openQuoteWindow() {
     const quotes = [
-        "Life is what happens when you're busy making other plans. – John Lennon",
-        "The purpose of our lives is to be happy. – Dalai Lama",
-        "Get busy living or get busy dying. – Stephen King",
-        "You only live once, but if you do it right, once is enough. – Mae West",
-        "Many of life’s failures are people who did not realize how close they were to success when they gave up. – Thomas A. Edison"
+        "Life is short. – Unknown",
+        "Be happy. – Dalai Lama",
+        "Live simply. – Unknown",
+        "Dream big. – Unknown",
+        "Stay positive. – Unknown"
     ];
 
     displayedQuote = quotes[Math.floor(Math.random() * quotes.length)];

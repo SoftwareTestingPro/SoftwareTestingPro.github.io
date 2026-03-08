@@ -32,7 +32,6 @@
             </div>
 
             <div class="message" id="message" role="status" aria-live="polite">
-                <span class="icon">✓</span>
                 <span>Success! You clicked the button within a frame.</span>
             </div>
         </div>
@@ -77,11 +76,11 @@
         iframeDoc.close();
 
         // Add event listener for the button inside the iframe
-        iframe.onload = function() {
-            iframeDoc.getElementById('action-button').addEventListener('click', function() {
-                document.getElementById('message').innerHTML = `<div class="success">Success! You clicked the button within a frame.</div>`;
-            });
-        };
+        iframeDoc.getElementById('action-button').addEventListener('click', function() {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'flex';
+            messageDiv.classList.add('success');
+        });
     </script>
 </body>
 </html>

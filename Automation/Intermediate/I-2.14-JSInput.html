@@ -23,15 +23,23 @@
 
     <main class="card">
       <div class="card-content">
-        <h1>Secure Input Field</h1>
-        <p class="lead">Enter Your Country Name</p>
+        <h1>Javascript Input Field</h1>
+        <p class="lead">This input field is protected against normal automated scripts. You can use Javascript to input text.</p>
 
-        <div class="input-wrapper" id="wrapper">
-          <input type="text" id="secureInput" class="protected-input" placeholder="Try typing..." />
-          <div class="shield" id="shield"></div>
+          <div class="input-group-parent">
+              <div class="input-group-left">
+                  <label for="secureInput" class="label-left">Enter Your Country Name:</label>
+              </div>
+
+              <div class="input-group-right">
+                  <input type="text" id="secureInput" class="protected-input" name="user-input-name" placeholder="Type your country name...">
+                  <div class="shield" id="shield"></div>
+              </div>
+          </div>
+          
+        <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">
+            <span>You typed: </span>
         </div>
-
-        <div id="successMessage"></div>
       </div>
     </main>
   </div>
@@ -57,8 +65,13 @@
     });
 
     input.addEventListener("input", () => {
-      successMessage.textContent = `✅ You typed: ${input.value}`;
-      successMessage.style.display = "block";
+      if (input.value) {
+        const span = successMessage.querySelector('span');
+        span.textContent = `Country name entered: ${input.value}`;
+        successMessage.style.display = 'flex';
+      } else {
+        successMessage.style.display = 'none';
+      }
     });
   </script>
 
