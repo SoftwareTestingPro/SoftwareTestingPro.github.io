@@ -35,9 +35,11 @@ function loadHeader() {
                         </svg>
                         <span style="font-size: 14px; font-weight: 500;">Home</span>
                     </a>
-                    <div style="font-size: 13px; opacity: 0.9;">
-                        Automation › Beginner
-                    </div>
+                    <button class="hamburger" onclick="toggleMenu()" style="background: none; border: none; color: white; cursor: pointer; padding: 6px;">
+                        <span style="display: block; width: 20px; height: 2px; background: white; margin: 3px 0; transition: 0.3s;"></span>
+                        <span style="display: block; width: 20px; height: 2px; background: white; margin: 3px 0; transition: 0.3s;"></span>
+                        <span style="display: block; width: 20px; height: 2px; background: white; margin: 3px 0; transition: 0.3s;"></span>
+                    </button>
                 </div>
             </header>
         `;
@@ -58,9 +60,15 @@ function loadHeader() {
             .then(html => {
                 console.log('External header loaded, replacing inline');
                 headerPlaceholder.innerHTML = html;
+                
+                // Add mobile menu after header is loaded
+                document.body.insertAdjacentHTML('afterbegin', '<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="../Beginner/B-1.01-Click.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="../Intermediate/I-2.01-DragAndDropText.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="../Advanced/A-3.01-HiddenElement.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>');
             })
             .catch(error => {
                 console.log('External header failed, keeping inline header:', error.message);
+                
+                // Add mobile menu after header is loaded (fallback)
+                document.body.insertAdjacentHTML('afterbegin', '<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="../Beginner/B-1.01-Click.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="../Intermediate/I-2.01-DragAndDropText.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="../Advanced/A-3.01-HiddenElement.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>');
             });
     } else {
         console.log('Header placeholder NOT found');
@@ -119,5 +127,25 @@ function loadFooter() {
             });
     } else {
         console.log('Footer placeholder NOT found');
+    }
+}
+
+function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'block';
+        // Add event listener to close on outside click
+        menu.addEventListener('click', closeMenuOnOutsideClick);
+    } else {
+        menu.style.display = 'none';
+        // Remove event listener
+        menu.removeEventListener('click', closeMenuOnOutsideClick);
+    }
+}
+
+function closeMenuOnOutsideClick(event) {
+    const menuContent = document.querySelector('.menu-content');
+    if (!menuContent.contains(event.target)) {
+        toggleMenu();
     }
 }
