@@ -1,18 +1,16 @@
-
-
 .drag-drop-images {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
     flex-wrap: wrap;
 }
 
 .drop-container {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
     flex-wrap: wrap;
 }
 
@@ -22,10 +20,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--muted);
     background: var(--bg);
-    min-height: 50px;
+    min-height: 3.125rem;
     transition: all 0.3s ease;
 }
 
@@ -38,8 +36,81 @@
     text-align: center;
 }
 
+@media (max-width: 1440px) {
+    .drag-drop-images {
+        gap: 1.125rem;
+        margin-bottom: 1.125rem;
+    }
+    .drop-container {
+        gap: 1.125rem;
+        margin-bottom: 1.125rem;
+    }
+    .drop-zone {
+        font-size: 0.8125rem;
+        min-height: 2.9375rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .drag-drop-images {
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .drop-container {
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .drop-zone {
+        font-size: 0.75rem;
+        min-height: 2.75rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .drag-drop-images {
+        gap: 0.875rem;
+        margin-bottom: 0.875rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    .drop-container {
+        gap: 0.875rem;
+        margin-bottom: 0.875rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    .drop-zone {
+        font-size: 0.6875rem;
+        min-height: 2.5625rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .drag-drop-images {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    .drop-container {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    .drop-zone {
+        font-size: 0.625rem;
+        min-height: 2.375rem;
+    }
+}
 
-
+@media (max-width: 375px) {
+    .drag-drop-images {
+        gap: 0.625rem;
+        margin-bottom: 0.625rem;
+    }
+    .drop-container {
+        gap: 0.625rem;
+        margin-bottom: 0.625rem;
+    }
+    .drop-zone {
+        font-size: 0.5625rem;
+        min-height: 2.1875rem;
+    }
+}

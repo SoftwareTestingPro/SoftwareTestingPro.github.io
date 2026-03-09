@@ -1,16 +1,16 @@
 .container-wrapper {
     display: flex;
-    gap: 20px;
+    gap: 1.25rem;
     justify-content: center;
 }
 
 .container {
     border: 1px solid #ddd;
-    padding: 20px;
+    padding: 1.25rem;
     border-radius: 8px;
     background: #f9f9f9;
-    width: 300px;
-    height: 300px;
+    width: 18.75rem;
+    height: 18.75rem;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -25,13 +25,85 @@
 .draggable {
     background: #4caf50;
     color: white;
-    padding: 10px;
+    padding: 0.625rem;
     border-radius: 5px;
     cursor: move;
-    width: 120px;
-    height: 120px;
+    width: 7.5rem;
+    height: 7.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+@media (max-width: 1440px) {
+    .container-wrapper {
+        gap: 1.125rem;
+    }
+    .container {
+        padding: 1.125rem;
+        width: 17.5rem;
+        height: 17.5rem;
+    }
+    .draggable {
+        padding: 0.5625rem;
+        width: 7rem;
+        height: 7rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container-wrapper {
+        gap: 1rem;
+        flex-direction: column;
+    }
+    .container {
+        padding: 1rem;
+        width: 16rem;
+        height: 16rem;
+    }
+    .draggable {
+        padding: 0.5rem;
+        width: 6.5rem;
+        height: 6.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0.875rem;
+        width: 14rem;
+        height: 14rem;
+    }
+    .draggable {
+        padding: 0.4375rem;
+        width: 6rem;
+        height: 6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0.75rem;
+        width: 12rem;
+        height: 12rem;
+    }
+    .draggable {
+        padding: 0.375rem;
+        width: 5rem;
+        height: 5rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .container {
+        padding: 0.625rem;
+        width: 10rem;
+        height: 10rem;
+    }
+    .draggable {
+        padding: 0.3125rem;
+        width: 4rem;
+        height: 4rem;
+    }
 }

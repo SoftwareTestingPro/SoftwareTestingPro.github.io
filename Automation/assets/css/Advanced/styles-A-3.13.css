@@ -1,9 +1,7 @@
-
-
 .sortable {
     cursor: pointer;
     position: relative;
-    padding-right: 20px;
+    padding-right: 1.25rem;
 }
 
 .sortable::after {
@@ -14,22 +12,102 @@
     transform: translateY(-50%);
     width: 0;
     height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 5px solid var(--muted);
+    border-left: 0.3125rem solid transparent;
+    border-right: 0.3125rem solid transparent;
+    border-bottom: 0.3125rem solid var(--muted);
 }
 
 .sortable.asc::after {
-    border-bottom: 5px solid var(--accent);
+    border-bottom: 0.3125rem solid var(--accent);
 }
 
 .sortable.desc::after {
-    border-top: 5px solid var(--accent);
+    border-top: 0.3125rem solid var(--accent);
     border-bottom: none;
 }
 
 
+@media (max-width: 1440px) {
+    .sortable {
+        padding-right: 1.1875rem;
+    }
+    .sortable::after {
+        border-left: 0.3rem solid transparent;
+        border-right: 0.3rem solid transparent;
+        border-bottom: 0.3rem solid var(--muted);
+    }
+    .sortable.asc::after {
+        border-bottom: 0.3rem solid var(--accent);
+    }
+    .sortable.desc::after {
+        border-top: 0.3rem solid var(--accent);
+    }
+}
 
+@media (max-width: 1024px) {
+    .sortable {
+        padding-right: 1.125rem;
+    }
+    .sortable::after {
+        border-left: 0.2875rem solid transparent;
+        border-right: 0.2875rem solid transparent;
+        border-bottom: 0.2875rem solid var(--muted);
+    }
+    .sortable.asc::after {
+        border-bottom: 0.2875rem solid var(--accent);
+    }
+    .sortable.desc::after {
+        border-top: 0.2875rem solid var(--accent);
+    }
+}
 
+@media (max-width: 768px) {
+    .sortable {
+        padding-right: 1rem;
+    }
+    .sortable::after {
+        border-left: 0.275rem solid transparent;
+        border-right: 0.275rem solid transparent;
+        border-bottom: 0.275rem solid var(--muted);
+    }
+    .sortable.asc::after {
+        border-bottom: 0.275rem solid var(--accent);
+    }
+    .sortable.desc::after {
+        border-top: 0.275rem solid var(--accent);
+    }
+}
 
+@media (max-width: 480px) {
+    .sortable {
+        padding-right: 0.875rem;
+    }
+    .sortable::after {
+        border-left: 0.25rem solid transparent;
+        border-right: 0.25rem solid transparent;
+        border-bottom: 0.25rem solid var(--muted);
+    }
+    .sortable.asc::after {
+        border-bottom: 0.25rem solid var(--accent);
+    }
+    .sortable.desc::after {
+        border-top: 0.25rem solid var(--accent);
+    }
+}
 
+@media (max-width: 375px) {
+    .sortable {
+        padding-right: 0.75rem;
+    }
+    .sortable::after {
+        border-left: 0.225rem solid transparent;
+        border-right: 0.225rem solid transparent;
+        border-bottom: 0.225rem solid var(--muted);
+    }
+    .sortable.asc::after {
+        border-bottom: 0.225rem solid var(--accent);
+    }
+    .sortable.desc::after {
+        border-top: 0.225rem solid var(--accent);
+    }
+}

@@ -1,15 +1,13 @@
-
-
 .images {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
 }
 
 .images img {
-    width: 150px;
-    height: 150px;
+    width: 9.375rem;
+    height: 9.375rem;
     border-radius: var(--radius);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
@@ -18,19 +16,105 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
 }
 
 .radio-group label {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.3125rem;
     cursor: pointer;
 }
 
 
+@media (max-width: 1440px) {
+    .images {
+        gap: 1.125rem;
+        margin-bottom: 1.125rem;
+    }
+    .images img {
+        width: 8.75rem;
+        height: 8.75rem;
+    }
+    .radio-group {
+        gap: 0.6rem;
+        margin-bottom: 1.125rem;
+    }
+    .radio-group label {
+        gap: 0.3rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .images {
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+    .images img {
+        width: 8rem;
+        height: 8rem;
+    }
+    .radio-group {
+        gap: 0.575rem;
+        margin-bottom: 1rem;
+    }
+    .radio-group label {
+        gap: 0.2875rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .images {
+        gap: 0.875rem;
+        margin-bottom: 0.875rem;
+    }
+    .images img {
+        width: 7rem;
+        height: 7rem;
+    }
+    .radio-group {
+        gap: 0.55rem;
+        margin-bottom: 0.875rem;
+    }
+    .radio-group label {
+        gap: 0.275rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .images {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    .images img {
+        width: 6rem;
+        height: 6rem;
+    }
+    .radio-group {
+        gap: 0.525rem;
+        margin-bottom: 0.75rem;
+    }
+    .radio-group label {
+        gap: 0.2625rem;
+    }
+}
 
+@media (max-width: 375px) {
+    .images {
+        gap: 0.625rem;
+        margin-bottom: 0.625rem;
+    }
+    .images img {
+        width: 5rem;
+        height: 5rem;
+    }
+    .radio-group {
+        gap: 0.5rem;
+        margin-bottom: 0.625rem;
+    }
+    .radio-group label {
+        gap: 0.25rem;
+    }
+}

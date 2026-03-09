@@ -7,23 +7,82 @@
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 20px solid var(--accent);
+    border-left: 0.625rem solid transparent;
+    border-right: 0.625rem solid transparent;
+    border-bottom: 1.25rem solid var(--accent);
     z-index: 10;
 }
 
 .form-control {
-    padding: 8px 12px;
+    padding: 0.5rem 0.75rem;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    font-size: 14px;
+    font-size: 0.875rem;
     width: 100%;
-    max-width: 300px;
+    max-width: 18.75rem;
 }
 
+@media (max-width: 1440px) {
+    .pointer {
+        border-left: 0.6rem solid transparent;
+        border-right: 0.6rem solid transparent;
+        border-bottom: 1.2rem solid var(--accent);
+    }
+    .form-control {
+        padding: 0.475rem 0.7125rem;
+        font-size: 0.8125rem;
+        max-width: 17.8125rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .pointer {
+        border-left: 0.575rem solid transparent;
+        border-right: 0.575rem solid transparent;
+        border-bottom: 1.15rem solid var(--accent);
+    }
+    .form-control {
+        padding: 0.45rem 0.675rem;
+        font-size: 0.75rem;
+        max-width: 16.875rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .pointer {
+        border-left: 0.55rem solid transparent;
+        border-right: 0.55rem solid transparent;
+        border-bottom: 1.1rem solid var(--accent);
+    }
+    .form-control {
+        padding: 0.425rem 0.6375rem;
+        font-size: 0.6875rem;
+        max-width: 15rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .pointer {
+        border-left: 0.525rem solid transparent;
+        border-right: 0.525rem solid transparent;
+        border-bottom: 1.05rem solid var(--accent);
+    }
+    .form-control {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.625rem;
+        max-width: 13.125rem;
+    }
+}
 
-
+@media (max-width: 375px) {
+    .pointer {
+        border-left: 0.5rem solid transparent;
+        border-right: 0.5rem solid transparent;
+        border-bottom: 1rem solid var(--accent);
+    }
+    .form-control {
+        padding: 0.375rem 0.5625rem;
+        font-size: 0.5625rem;
+        max-width: 11.25rem;
+    }
+}

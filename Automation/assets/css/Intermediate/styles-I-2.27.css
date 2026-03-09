@@ -1,22 +1,65 @@
-
-
 .radio-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
 }
 
 .radio-group label {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.3125rem;
     cursor: pointer;
 }
 
 
+@media (max-width: 1440px) {
+    .radio-group {
+        gap: 0.6rem;
+        margin-bottom: 1.125rem;
+    }
+    .radio-group label {
+        gap: 0.3rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .radio-group {
+        gap: 0.575rem;
+        margin-bottom: 1rem;
+    }
+    .radio-group label {
+        gap: 0.2875rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .radio-group {
+        gap: 0.55rem;
+        margin-bottom: 0.875rem;
+    }
+    .radio-group label {
+        gap: 0.275rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .radio-group {
+        gap: 0.525rem;
+        margin-bottom: 0.75rem;
+    }
+    .radio-group label {
+        gap: 0.2625rem;
+    }
+}
 
+@media (max-width: 375px) {
+    .radio-group {
+        gap: 0.5rem;
+        margin-bottom: 0.625rem;
+    }
+    .radio-group label {
+        gap: 0.25rem;
+    }
+}

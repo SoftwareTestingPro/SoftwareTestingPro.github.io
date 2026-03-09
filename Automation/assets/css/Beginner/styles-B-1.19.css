@@ -1,15 +1,13 @@
-
-
 .input-group-parent {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
     align-self: flex-start;
     width: 100%;
 }
 
 .input-group-left {
-    width: 150px;
+    width: 9.375rem;
 }
 
 .input-group-right {
@@ -17,25 +15,25 @@
 }
 
 .label-left {
-    font-size: 14px !important;
+    font-size: 0.875rem !important;
     color: #333;
     font-weight: normal !important;
     white-space: nowrap;
     width: 100%;
     text-align: left;
-    margin-top: 30px !important;
+    margin-top: 1.875rem !important;
 }
 
 input[type="text"] {
-    padding: 10px 12px;
-    font-size: 15px;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.9375rem;
     border: 1px solid var(--border);
     border-radius: 8px;
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     text-align: right;
-    width: 200px;
+    width: 12.5rem;
     margin-left: auto !important;
 }
 
@@ -53,14 +51,14 @@ input[type="text"]:focus {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-height: 200px;
+    max-height: 12.5rem;
     overflow-y: auto;
     z-index: 1000;
     display: none;
 }
 
 .dropdown div {
-    padding: 10px;
+    padding: 0.625rem;
     cursor: pointer;
 }
 
@@ -68,8 +66,102 @@ input[type="text"]:focus {
     background-color: #f0f0f0;
 }
 
+@media (max-width: 1440px) {
+    .input-group-left {
+        width: 8.75rem;
+    }
+    input[type="text"] {
+        width: 11.25rem;
+        font-size: 14px;
+        padding: 0.5625rem 0.6875rem;
+    }
+    .label-left {
+        font-size: 13px !important;
+    }
+    .dropdown {
+        max-height: 11.875rem;
+    }
+    .dropdown div {
+        padding: 0.6rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .input-group-left {
+        width: 8.125rem;
+    }
+    input[type="text"] {
+        width: 10rem;
+        font-size: 13px;
+        padding: 0.5rem 0.625rem;
+    }
+    .label-left {
+        font-size: 12px !important;
+    }
+    .dropdown {
+        max-height: 11.25rem;
+    }
+    .dropdown div {
+        padding: 0.575rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .input-group-left {
+        width: 7.5rem;
+    }
+    input[type="text"] {
+        width: 8.75rem;
+        font-size: 12px;
+        padding: 0.4375rem 0.5625rem;
+    }
+    .label-left {
+        font-size: 11px !important;
+    }
+    .dropdown {
+        max-height: 10.625rem;
+    }
+    .dropdown div {
+        padding: 0.55rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .input-group-left {
+        width: 6.875rem;
+    }
+    input[type="text"] {
+        width: 7.5rem;
+        font-size: 11px;
+        padding: 0.375rem 0.5rem;
+    }
+    .label-left {
+        font-size: 10px !important;
+    }
+    .dropdown {
+        max-height: 10rem;
+    }
+    .dropdown div {
+        padding: 0.525rem;
+    }
+}
 
-
+@media (max-width: 375px) {
+    .input-group-left {
+        width: 6.25rem;
+    }
+    input[type="text"] {
+        width: 6.25rem;
+        font-size: 10px;
+        padding: 0.3125rem 0.4375rem;
+    }
+    .label-left {
+        font-size: 9px !important;
+    }
+    .dropdown {
+        max-height: 9.375rem;
+    }
+    .dropdown div {
+        padding: 0.5rem;
+    }
+}

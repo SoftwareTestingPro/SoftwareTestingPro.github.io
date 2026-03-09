@@ -1,22 +1,72 @@
-
-
 .iframe-container {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
     flex-wrap: wrap;
 }
 
 .iframe-container iframe {
-    width: 300px;
-    height: 200px;
+    width: 18.75rem;
+    height: 12.5rem;
     border: 2px solid var(--border);
     border-radius: var(--radius);
 }
 
 
+@media (max-width: 1440px) {
+    .iframe-container {
+        gap: 1.125rem;
+        margin-bottom: 1.125rem;
+    }
+    .iframe-container iframe {
+        width: 17.8125rem;
+        height: 11.875rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .iframe-container {
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    .iframe-container iframe {
+        width: 16.875rem;
+        height: 11.25rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .iframe-container {
+        gap: 0.875rem;
+        margin-bottom: 0.875rem;
+    }
+    .iframe-container iframe {
+        width: 15rem;
+        height: 10rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .iframe-container {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    .iframe-container iframe {
+        width: 13.125rem;
+        height: 8.75rem;
+    }
+}
 
+@media (max-width: 375px) {
+    .iframe-container {
+        gap: 0.625rem;
+        margin-bottom: 0.625rem;
+    }
+    .iframe-container iframe {
+        width: 11.25rem;
+        height: 7.5rem;
+    }
+}

@@ -1,10 +1,8 @@
-
-
 .container {
     position: relative;
-    width: 400px;
-    height: 300px;
-    margin: 20px auto;
+    width: 25rem;
+    height: 18.75rem;
+    margin: 1.25rem auto;
     background: var(--bg);
     border-radius: var(--radius);
     border: 2px solid var(--border);
@@ -12,14 +10,14 @@
 
 .draggable {
     position: absolute;
-    width: 50px;
-    height: 50px;
+    width: 3.125rem;
+    height: 3.125rem;
     background: var(--accent);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: bold;
     cursor: move;
     border-radius: var(--radius);
@@ -32,12 +30,12 @@
 
 .horizontal {
     top: 50%;
-    left: 10px;
+    left: 0.625rem;
     transform: translateY(-50%);
 }
 
 .vertical {
-    top: 10px;
+    top: 0.625rem;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -47,21 +45,135 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
+    width: 5rem;
+    height: 5rem;
     background: var(--bg);
     border: 2px solid var(--accent);
     border-radius: var(--radius);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: bold;
     color: var(--accent);
 }
 
+@media (max-width: 1440px) {
+    .container {
+        width: 23.75rem;
+        height: 17.8125rem;
+        margin: 1.125rem auto;
+    }
+    .draggable {
+        width: 2.9375rem;
+        height: 2.9375rem;
+        font-size: 1.4375rem;
+    }
+    .horizontal {
+        left: 0.6rem;
+    }
+    .vertical {
+        top: 0.6rem;
+    }
+    .combined-box {
+        width: 4.75rem;
+        height: 4.75rem;
+        font-size: 1.4375rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .container {
+        width: 22.5rem;
+        height: 16.875rem;
+        margin: 1rem auto;
+    }
+    .draggable {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.375rem;
+    }
+    .horizontal {
+        left: 0.575rem;
+    }
+    .vertical {
+        top: 0.575rem;
+    }
+    .combined-box {
+        width: 4.5rem;
+        height: 4.5rem;
+        font-size: 1.375rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .container {
+        width: 20rem;
+        height: 15rem;
+        margin: 0.875rem auto;
+    }
+    .draggable {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.3125rem;
+    }
+    .horizontal {
+        left: 0.55rem;
+    }
+    .vertical {
+        top: 0.55rem;
+    }
+    .combined-box {
+        width: 4rem;
+        height: 4rem;
+        font-size: 1.3125rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .container {
+        width: 17.5rem;
+        height: 13.125rem;
+        margin: 0.75rem auto;
+    }
+    .draggable {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1.25rem;
+    }
+    .horizontal {
+        left: 0.525rem;
+    }
+    .vertical {
+        top: 0.525rem;
+    }
+    .combined-box {
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.25rem;
+    }
+}
 
-
+@media (max-width: 375px) {
+    .container {
+        width: 15rem;
+        height: 11.25rem;
+        margin: 0.625rem auto;
+    }
+    .draggable {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.1875rem;
+    }
+    .horizontal {
+        left: 0.5rem;
+    }
+    .vertical {
+        top: 0.5rem;
+    }
+    .combined-box {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.1875rem;
+    }
+}

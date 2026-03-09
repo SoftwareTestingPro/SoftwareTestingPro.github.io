@@ -1,24 +1,57 @@
-
-
 .input-group {
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: 0.3125rem;
 }
 
 textarea {
     width: 100%;
-    height: 120px;
-    padding: 10px;
-    font-size: 16px;
+    height: 7.5rem;
+    padding: 0.625rem;
+    font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
     resize: vertical;
-    margin-bottom: 5px;
+    margin-bottom: 0.3125rem;
 }
 
 
+@media (max-width: 1440px) {
+    textarea {
+        height: 7rem;
+        padding: 0.6rem;
+        font-size: 0.95rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    textarea {
+        height: 6.5rem;
+        padding: 0.575rem;
+        font-size: 0.9rem;
+    }
+}
 
+@media (max-width: 768px) {
+    textarea {
+        height: 6rem;
+        padding: 0.55rem;
+        font-size: 0.85rem;
+    }
+}
 
+@media (max-width: 480px) {
+    textarea {
+        height: 5.5rem;
+        padding: 0.525rem;
+        font-size: 0.8rem;
+    }
+}
 
+@media (max-width: 375px) {
+    textarea {
+        height: 5rem;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+}

@@ -1,10 +1,8 @@
-
-
 .buttons {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
     flex-wrap: wrap;
 }
 
@@ -12,7 +10,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 0.625rem;
     border-radius: var(--radius);
     transition: all 0.3s ease;
 }
@@ -22,8 +20,8 @@
 }
 
 .shape {
-    width: 80px;
-    height: 80px;
+    width: 5rem;
+    height: 5rem;
     margin: 0 auto;
     border: 2px solid var(--accent);
     background: var(--card);
@@ -40,9 +38,9 @@
 .shape.triangle {
     width: 0;
     height: 0;
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
-    border-bottom: 80px solid var(--accent);
+    border-left: 2.5rem solid transparent;
+    border-right: 2.5rem solid transparent;
+    border-bottom: 5rem solid var(--accent);
     border: none;
     background: none;
     position: relative;
@@ -52,20 +50,20 @@
     content: '';
     position: absolute;
     top: 0;
-    left: -40px;
+    left: -2.5rem;
     width: 0;
     height: 0;
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
-    border-bottom: 80px solid var(--accent);
+    border-left: 2.5rem solid transparent;
+    border-right: 2.5rem solid transparent;
+    border-bottom: 5rem solid var(--accent);
 }
 
 .shape.hexagon {
     position: relative;
-    width: 80px;
-    height: 46px;
+    width: 5rem;
+    height: 2.875rem;
     background: var(--accent);
-    margin: 27px auto;
+    margin: 1.6875rem auto;
 }
 
 .shape.hexagon::before,
@@ -74,23 +72,224 @@
     position: absolute;
     width: 0;
     height: 0;
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
+    border-left: 2.5rem solid transparent;
+    border-right: 2.5rem solid transparent;
     left: 0;
 }
 
 .shape.hexagon::before {
     bottom: 100%;
-    border-bottom: 27px solid var(--accent);
+    border-bottom: 1.6875rem solid var(--accent);
 }
 
 .shape.hexagon::after {
     top: 100%;
-    border-top: 27px solid var(--accent);
+    border-top: 1.6875rem solid var(--accent);
 }
 
+@media (max-width: 1440px) {
+    .buttons {
+        gap: 1.125rem;
+        margin-bottom: 1.125rem;
+    }
+    .shape-button {
+        padding: 0.6rem;
+    }
+    .shape {
+        width: 4.75rem;
+        height: 4.75rem;
+    }
+    .shape.triangle {
+        border-left: 2.375rem solid transparent;
+        border-right: 2.375rem solid transparent;
+        border-bottom: 4.75rem solid var(--accent);
+    }
+    .shape.triangle::after {
+        left: -2.375rem;
+        border-left: 2.375rem solid transparent;
+        border-right: 2.375rem solid transparent;
+        border-bottom: 4.75rem solid var(--accent);
+    }
+    .shape.hexagon {
+        width: 4.75rem;
+        height: 2.71875rem;
+        margin: 1.59375rem auto;
+    }
+    .shape.hexagon::before,
+    .shape.hexagon::after {
+        border-left: 2.375rem solid transparent;
+        border-right: 2.375rem solid transparent;
+    }
+    .shape.hexagon::before {
+        border-bottom: 1.59375rem solid var(--accent);
+    }
+    .shape.hexagon::after {
+        border-top: 1.59375rem solid var(--accent);
+    }
+}
 
+@media (max-width: 1024px) {
+    .buttons {
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .shape-button {
+        padding: 0.575rem;
+    }
+    .shape {
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+    .shape.triangle {
+        border-left: 2.25rem solid transparent;
+        border-right: 2.25rem solid transparent;
+        border-bottom: 4.5rem solid var(--accent);
+    }
+    .shape.triangle::after {
+        left: -2.25rem;
+        border-left: 2.25rem solid transparent;
+        border-right: 2.25rem solid transparent;
+        border-bottom: 4.5rem solid var(--accent);
+    }
+    .shape.hexagon {
+        width: 4.5rem;
+        height: 2.5625rem;
+        margin: 1.5rem auto;
+    }
+    .shape.hexagon::before,
+    .shape.hexagon::after {
+        border-left: 2.25rem solid transparent;
+        border-right: 2.25rem solid transparent;
+    }
+    .shape.hexagon::before {
+        border-bottom: 1.5rem solid var(--accent);
+    }
+    .shape.hexagon::after {
+        border-top: 1.5rem solid var(--accent);
+    }
+}
 
+@media (max-width: 768px) {
+    .buttons {
+        gap: 0.875rem;
+        margin-bottom: 0.875rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    .shape-button {
+        padding: 0.55rem;
+    }
+    .shape {
+        width: 4rem;
+        height: 4rem;
+    }
+    .shape.triangle {
+        border-left: 2rem solid transparent;
+        border-right: 2rem solid transparent;
+        border-bottom: 4rem solid var(--accent);
+    }
+    .shape.triangle::after {
+        left: -2rem;
+        border-left: 2rem solid transparent;
+        border-right: 2rem solid transparent;
+        border-bottom: 4rem solid var(--accent);
+    }
+    .shape.hexagon {
+        width: 4rem;
+        height: 2.3125rem;
+        margin: 1.34375rem auto;
+    }
+    .shape.hexagon::before,
+    .shape.hexagon::after {
+        border-left: 2rem solid transparent;
+        border-right: 2rem solid transparent;
+    }
+    .shape.hexagon::before {
+        border-bottom: 1.34375rem solid var(--accent);
+    }
+    .shape.hexagon::after {
+        border-top: 1.34375rem solid var(--accent);
+    }
+}
 
+@media (max-width: 480px) {
+    .buttons {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    .shape-button {
+        padding: 0.525rem;
+    }
+    .shape {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+    .shape.triangle {
+        border-left: 1.75rem solid transparent;
+        border-right: 1.75rem solid transparent;
+        border-bottom: 3.5rem solid var(--accent);
+    }
+    .shape.triangle::after {
+        left: -1.75rem;
+        border-left: 1.75rem solid transparent;
+        border-right: 1.75rem solid transparent;
+        border-bottom: 3.5rem solid var(--accent);
+    }
+    .shape.hexagon {
+        width: 3.5rem;
+        height: 2.0625rem;
+        margin: 1.1875rem auto;
+    }
+    .shape.hexagon::before,
+    .shape.hexagon::after {
+        border-left: 1.75rem solid transparent;
+        border-right: 1.75rem solid transparent;
+    }
+    .shape.hexagon::before {
+        border-bottom: 1.1875rem solid var(--accent);
+    }
+    .shape.hexagon::after {
+        border-top: 1.1875rem solid var(--accent);
+    }
+}
 
-
+@media (max-width: 375px) {
+    .buttons {
+        gap: 0.625rem;
+        margin-bottom: 0.625rem;
+    }
+    .shape-button {
+        padding: 0.5rem;
+    }
+    .shape {
+        width: 3rem;
+        height: 3rem;
+    }
+    .shape.triangle {
+        border-left: 1.5rem solid transparent;
+        border-right: 1.5rem solid transparent;
+        border-bottom: 3rem solid var(--accent);
+    }
+    .shape.triangle::after {
+        left: -1.5rem;
+        border-left: 1.5rem solid transparent;
+        border-right: 1.5rem solid transparent;
+        border-bottom: 3rem solid var(--accent);
+    }
+    .shape.hexagon {
+        width: 3rem;
+        height: 1.8125rem;
+        margin: 1.03125rem auto;
+    }
+    .shape.hexagon::before,
+    .shape.hexagon::after {
+        border-left: 1.5rem solid transparent;
+        border-right: 1.5rem solid transparent;
+    }
+    .shape.hexagon::before {
+        border-bottom: 1.03125rem solid var(--accent);
+    }
+    .shape.hexagon::after {
+        border-top: 1.03125rem solid var(--accent);
+    }
+}

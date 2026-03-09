@@ -1,20 +1,18 @@
-
-
 .button-group {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
 }
 
 .button-group button {
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     background: var(--accent);
     color: white;
     border: none;
     border-radius: var(--radius);
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .button-group button:hover {
@@ -22,15 +20,15 @@
 }
 
 .validation-section {
-    margin-top: 20px;
+    margin-top: 1.25rem;
 }
 
 .country-display {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 }
 
 .country-name {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: bold;
     color: var(--accent);
 }
@@ -38,18 +36,144 @@
 .radio-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.625rem;
     align-items: flex-start;
 }
 
 .radio-option {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
 }
 
+@media (max-width: 1440px) {
+    .button-group {
+        gap: 0.6rem;
+        margin-bottom: 1.125rem;
+    }
+    .button-group button {
+        padding: 0.6rem 1.1875rem;
+        font-size: 0.95rem;
+    }
+    .validation-section {
+        margin-top: 1.125rem;
+    }
+    .country-display {
+        margin-bottom: 1.125rem;
+    }
+    .country-name {
+        font-size: 1.0625rem;
+    }
+    .radio-group {
+        gap: 0.6rem;
+    }
+    .radio-option {
+        gap: 0.6rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .button-group {
+        gap: 0.575rem;
+        margin-bottom: 1rem;
+    }
+    .button-group button {
+        padding: 0.575rem 1.125rem;
+        font-size: 0.9rem;
+    }
+    .validation-section {
+        margin-top: 1rem;
+    }
+    .country-display {
+        margin-bottom: 1rem;
+    }
+    .country-name {
+        font-size: 1rem;
+    }
+    .radio-group {
+        gap: 0.575rem;
+    }
+    .radio-option {
+        gap: 0.575rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .button-group {
+        gap: 0.55rem;
+        margin-bottom: 0.875rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    .button-group button {
+        padding: 0.55rem 1.0625rem;
+        font-size: 0.85rem;
+    }
+    .validation-section {
+        margin-top: 0.875rem;
+    }
+    .country-display {
+        margin-bottom: 0.875rem;
+    }
+    .country-name {
+        font-size: 0.9375rem;
+    }
+    .radio-group {
+        gap: 0.55rem;
+    }
+    .radio-option {
+        gap: 0.55rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .button-group {
+        gap: 0.525rem;
+        margin-bottom: 0.75rem;
+    }
+    .button-group button {
+        padding: 0.525rem 1rem;
+        font-size: 0.8rem;
+    }
+    .validation-section {
+        margin-top: 0.75rem;
+    }
+    .country-display {
+        margin-bottom: 0.75rem;
+    }
+    .country-name {
+        font-size: 0.875rem;
+    }
+    .radio-group {
+        gap: 0.525rem;
+    }
+    .radio-option {
+        gap: 0.525rem;
+    }
+}
 
-
+@media (max-width: 375px) {
+    .button-group {
+        gap: 0.5rem;
+        margin-bottom: 0.625rem;
+    }
+    .button-group button {
+        padding: 0.5rem 0.9375rem;
+        font-size: 0.75rem;
+    }
+    .validation-section {
+        margin-top: 0.625rem;
+    }
+    .country-display {
+        margin-bottom: 0.625rem;
+    }
+    .country-name {
+        font-size: 0.8125rem;
+    }
+    .radio-group {
+        gap: 0.5rem;
+    }
+    .radio-option {
+        gap: 0.5rem;
+    }
+}

@@ -1,17 +1,15 @@
-
-
 .list-container {
     list-style: none;
     padding: 0;
     margin: 0 auto;
-    width: 300px;
+    width: 18.75rem;
     background: var(--card);
     border-radius: var(--radius);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .list-item {
-    padding: 10px 15px;
+    padding: 0.625rem 0.9375rem;
     border-bottom: 1px solid var(--border);
     background: var(--card);
     cursor: move;
@@ -26,8 +24,47 @@
     border-bottom: none;
 }
 
+@media (max-width: 1440px) {
+    .list-container {
+        width: 17.8125rem;
+    }
+    .list-item {
+        padding: 0.6rem 0.9rem;
+    }
+}
 
+@media (max-width: 1024px) {
+    .list-container {
+        width: 16.875rem;
+    }
+    .list-item {
+        padding: 0.575rem 0.8625rem;
+    }
+}
 
+@media (max-width: 768px) {
+    .list-container {
+        width: 15rem;
+    }
+    .list-item {
+        padding: 0.55rem 0.825rem;
+    }
+}
 
+@media (max-width: 480px) {
+    .list-container {
+        width: 13.125rem;
+    }
+    .list-item {
+        padding: 0.525rem 0.7875rem;
+    }
+}
 
-
+@media (max-width: 375px) {
+    .list-container {
+        width: 11.25rem;
+    }
+    .list-item {
+        padding: 0.5rem 0.75rem;
+    }
+}

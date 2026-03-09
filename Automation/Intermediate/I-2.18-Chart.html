@@ -29,12 +29,17 @@
                 <p class="lead">Enter Month with Highest Sales</p>
 
                 <canvas id="salesChart"></canvas>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="monthInput" class="label-left">Enter Month with Highest Sales:</label>
+                    </div>
 
-                <div class="input-container">
-                    <label for="monthInput">Enter Month with Highest Sales:</label>
-                    <input type="text" id="monthInput">
-                    <div id="message" class="message"></div>
+                    <div class="input-group-right">
+                        <input type="text" id="monthInput" name="user-input-month" placeholder="Month Name">
+                    </div>
                 </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Selected:</span> <span id="selectedValue"></span></span></div>
             </div>
         </main>
     </div>
@@ -71,6 +76,7 @@
                 }]
             },
             options: {
+                responsive: true,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -89,16 +95,32 @@
             }
         });
 
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValue = document.getElementById('expectedValue');
+        const selectedValue = document.getElementById('selectedValue');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+
         document.getElementById('monthInput').addEventListener('input', function() {
             const userInput = this.value.trim();
-            const messageElement = document.getElementById('message');
 
             if (userInput.toLowerCase() === monthWithMaxSales.toLowerCase()) {
-                messageElement.textContent = 'Success! You entered the correct month.';
-                messageElement.style.color = 'green';
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                messageElement.textContent = `Failure! The correct month is ${monthWithMaxSales}.`;
-                messageElement.style.color = 'red';
+                expectedValue.textContent = monthWithMaxSales;
+                selectedValue.textContent = userInput;
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
         });
     </script>
