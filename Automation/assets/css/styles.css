@@ -30,7 +30,7 @@ main {
 }
 
 #header-placeholder {
-    height: 10vh;
+    height: 3rem;
 }
 
 .gap {
@@ -45,10 +45,10 @@ main {
 }
 
 .content-wrapper {
-    height: 80vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
-    margin-top: 5vh;
+    margin-top: 0;
 }
 
 .card {
@@ -56,12 +56,12 @@ main {
     background: var(--card);
     border-radius: var(--radius);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin: -60px auto 0;
+    margin: 1.5rem auto 0;
     width: 100%;
     max-width: var(--card-max-width, 800px);
     padding: 0.625rem 1.5rem;
     text-align: center;
-    min-height: 80vh;
+    height: 90vh;
 }
 
 h1 {
@@ -85,21 +85,23 @@ p.lead {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0;
-    padding: 0;
+    order: 2;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: var(--card-max-width, 800px);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .nav-btn {
-    display: inline-flex;
+    display: block;
     align-items: center;
     gap: 8px;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
     background: var(--accent);
     color: white;
     text-decoration: none;
     border-radius: var(--radius);
-    font-weight: 500;
-    font-size: 0.875rem;
     transition: all 0.3s ease;
     border: 1px solid var(--accent);
 }
@@ -186,8 +188,9 @@ p.lead {
     .card {
         padding: 0.5rem 1rem;
         max-width: none;
-        min-height: 80vh;
+        min-height: 40rem;
         width: 90%;
+        margin: 0.5rem auto 0;
     }
 
     #footer-placeholder {
@@ -206,7 +209,7 @@ p.lead {
     }
 
     .nav-btn {
-        padding: 0.4rem 0.8rem;
+        padding: 0.6rem 1rem;
         font-size: 0.8rem;
         gap: 0.4rem;
     }
@@ -220,14 +223,38 @@ p.lead {
         padding: 0.5rem;
         margin-top: 0.6rem;
     }
+
+    #header-placeholder {
+        display: none;
+    }
+
+    #footer-placeholder {
+        display: none;
+    }
+
+    .card-nav {
+        width: 90%;
+        height: 3rem;
+    }
+
+    .nav-btn:hover {
+        transform: none;
+    }
+}
+
+@media (max-height: 768px) {
+    .card {
+        min-height: 25rem;
+    }
 }
 
 @media (max-width: 480px) {
     .card {
         padding: 0.3rem 0.6rem;
         max-width: none;
-        min-height: 80vh;
+        min-height: 40rem;
         width: 90%;
+        margin: 1.5rem auto 0;
     }
 
     #footer-placeholder {
@@ -246,7 +273,7 @@ p.lead {
     }
 
     .nav-btn {
-        padding: 0.25rem 0.5rem;
+        padding: 0.5rem 1rem;
         font-size: 0.7rem;
         gap: 0.25rem;
     }
@@ -260,14 +287,34 @@ p.lead {
         padding: 0.3rem;
         margin-top: 0.4rem;
     }
+
+    #header-placeholder {
+        display: none;
+    }
+
+    #footer-placeholder {
+        display: none;
+    }
+
+    .card-nav {
+        width: 90%;
+        height: 3rem;
+    }
+
+    .nav-btn:hover {
+        transform: none;
+    }
+
+    .nav-btn-prev {
 }
 
 @media (max-width: 375px) {
     .card {
         padding: 0.25rem 0.5rem;
         max-width: none;
-        min-height: 80vh;
+        min-height: 40rem;
         width: 90%;
+        margin: 1.5rem auto 0;
     }
 
     #footer-placeholder {
@@ -286,7 +333,7 @@ p.lead {
     }
 
     .nav-btn {
-        padding: 0.2rem 0.4rem;
+        padding: 0.4rem 0.8rem;
         font-size: 0.65rem;
         gap: 0.2rem;
     }
@@ -299,5 +346,18 @@ p.lead {
         font-size: 0.6rem;
         padding: 0.25rem;
         margin-top: 0.35rem;
+    }
+
+    #header-placeholder {
+        display: none;
+    }
+
+    .card-nav {
+        width: 90%;
+        height: 3rem;
+    }
+
+    .nav-btn:hover {
+        transform: none;
     }
 }
