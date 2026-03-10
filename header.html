@@ -17,17 +17,11 @@
 </header>
 
 <script>
-// Update home link based on current path
+// Update home link to project root index.html
 document.addEventListener('DOMContentLoaded', function() {
     const homeLink = document.querySelector('.home-link');
-    const currentPath = window.location.pathname;
-    
-    if (currentPath.includes('/Automation/Beginner/')) {
-        homeLink.href = '../../index.html';
-    } else if (currentPath.includes('/Automation/')) {
-        homeLink.href = '../index.html';
-    } else {
-        homeLink.href = 'index.html';
-    }
+    const pathSegments = window.location.pathname.split('/').filter(segment => segment);
+    const upLevels = pathSegments.length;
+    homeLink.href = '../'.repeat(upLevels) + 'index.html';
 });
 </script>

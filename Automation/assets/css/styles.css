@@ -312,6 +312,25 @@ p.lead {
     color: #22c55e;
 }
 
+.tasks-overview-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.tasks-overview-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tasks-overview-btn:hover {
+    background-color: #0056b3;
+}
+
 @media (max-height: 768px) {
     .card {
         min-height: 25rem;
@@ -434,4 +453,23 @@ p.lead {
 
 #expectedValue {
     color: #22c55e;
+}
+
+.tasks-overview-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.tasks-overview-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tasks-overview-btn:hover {
+    background-color: #0056b3;
 }
