@@ -26,6 +26,46 @@
     border-bottom: none;
 }
 
+#employeeTable {
+    width: 100%;
+    max-width: 800px;
+    margin: 1.25rem auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+#employeeTable th,
+#employeeTable td {
+    padding: 0.3rem;
+    text-align: center;
+    border: 1px solid #e6e9ef;
+}
+
+#employeeTable th {
+    background: #ccc;
+    color: #333;
+    font-weight: 600;
+    position: relative;
+}
+
+#employeeTable tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+#employeeTable tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+#employeeTable tbody tr:nth-child(even) {
+    background-color: #f6f7fb;
+}
+
+#employeeTable tbody tr:nth-child(even):hover {
+    background-color: #f0f2f5;
+}
+
 
 @media (max-width: 1440px) {
     .sortable {
@@ -41,6 +81,13 @@
     }
     .sortable.desc::after {
         border-top: 0.3rem solid var(--accent);
+    }
+    #employeeTable {
+        max-width: 700px;
+    }
+    #employeeTable th,
+    #employeeTable td {
+        padding: 0.4rem;
     }
 }
 
@@ -59,6 +106,14 @@
     .sortable.desc::after {
         border-top: 0.2875rem solid var(--accent);
     }
+    #employeeTable {
+        max-width: 600px;
+    }
+    #employeeTable th,
+    #employeeTable td {
+        padding: 0.35rem;
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -75,6 +130,15 @@
     }
     .sortable.desc::after {
         border-top: 0.275rem solid var(--accent);
+    }
+    #employeeTable {
+        max-width: 100%;
+        margin: 1rem auto;
+    }
+    #employeeTable th,
+    #employeeTable td {
+        padding: 0.3rem;
+        font-size: 0.85rem;
     }
 }
 
@@ -93,6 +157,11 @@
     .sortable.desc::after {
         border-top: 0.25rem solid var(--accent);
     }
+    #employeeTable th,
+    #employeeTable td {
+        padding: 0.25rem;
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 375px) {
@@ -109,5 +178,10 @@
     }
     .sortable.desc::after {
         border-top: 0.225rem solid var(--accent);
+    }
+    #employeeTable th,
+    #employeeTable td {
+        padding: 0.2rem;
+        font-size: 0.75rem;
     }
 }

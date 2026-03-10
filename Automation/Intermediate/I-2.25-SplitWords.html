@@ -77,7 +77,7 @@
 
                 <div class="message" id="successMessage">Success! You've entered the correct words.</div>
 
-                <div class="error-message" id="errorMessage">Failure! The words are not correct.</div>
+                <div class="message error-message" id="errorMessage">Failure! The words are not correct.</div>
             </div>
         </main>
     </div>
@@ -134,14 +134,14 @@
         const errorMessage = document.getElementById('errorMessage');
 
         if (isCorrect && Array.from(inputs).every(input => input.value.trim() !== "")) {
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
+            successMessage.classList.add('success');
+            errorMessage.classList.remove('failure');
         } else if (Array.from(inputs).every(input => input.value.trim() !== "")) {
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'block';
+            successMessage.classList.remove('success');
+            errorMessage.classList.add('failure');
         } else {
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            errorMessage.classList.remove('failure');
         }
     }
 
