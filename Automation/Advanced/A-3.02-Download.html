@@ -26,18 +26,17 @@
     <main class="card">
         <div class="card-content">
         <h1>File Download Challenge</h1>
-        <p class="lead">Download the file and enter the time it took to complete in seconds.</p>
-        <a href="../assets/sample-100mb-file.zip" download onclick="disintegrate(this)">Click here to download a file</a>
+        <p class="lead">Download the file and enter the time it took to complete downloading.</p>
+        <a href="../assets/sample-100mb-file.zip" download class="download-btn">Click here to download a file</a>
         <div class="input-group-parent">
             <div class="input-group-left">
                 <label for="user-input" class="label-left">Enter duration (In Seconds):</label>
             </div>
 
             <div class="input-group-right">
-                <input type="text" id="user-input" name="user-input" placeholder="Enter duration in seconds" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="text" id="user-input" name="user-input" placeholder="Duration in seconds" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
         </div>
-        
         <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">
             <span>I cannot access your machine to verify it but expect you were able to fetch it.</span>
         </div>

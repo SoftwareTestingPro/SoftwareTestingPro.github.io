@@ -3,7 +3,7 @@
     grid-template-columns: repeat(3, 6.25rem);
     grid-template-rows: repeat(3, 6.25rem);
     gap: 0.3125rem;
-    margin: 0 auto;
+    margin: 3rem auto;
     width: fit-content;
 }
 

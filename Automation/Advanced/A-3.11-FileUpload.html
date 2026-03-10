@@ -28,7 +28,10 @@
         <h1>File Upload Challenge</h1>
         <p class="lead">Upload a file and verify the success message.</p>
 
-        <input type="file" id="fileUpload">
+        <input type="file" id="fileUpload" style="display: none">
+        <div class="button-enabled">
+            <button onclick="document.getElementById('fileUpload').click()">Upload File</button>
+        </div>
         <div class="file-path" id="filePath"></div>
         <div class="message success" id="successMessage">File uploaded successfully!</div>
     </div>

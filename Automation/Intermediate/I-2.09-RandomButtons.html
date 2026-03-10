@@ -95,12 +95,37 @@
 
         expectedCount.textContent = buttonCount;
 
+        function setGridColumns() {
+            const screenWidth = window.innerWidth;
+            let maxColumns;
+            if (screenWidth > 1024) maxColumns = 4;
+            else if (screenWidth > 768) maxColumns = 3;
+            else if (screenWidth > 480) maxColumns = 2;
+            else maxColumns = 1;
+
+            let rows, columns;
+            switch (buttonCount) {
+                case 4: rows = 2; columns = 2; break;
+                case 5: rows = 2; columns = 3; break;
+                case 6: rows = 2; columns = 3; break;
+                case 7: rows = 2; columns = 4; break;
+                case 8: rows = 2; columns = 4; break;
+                case 9: rows = 3; columns = 3; break;
+                case 10: rows = 3; columns = 4; break;
+            }
+            columns = Math.min(columns, maxColumns);
+            container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+        }
+
         for (let i = 1; i <= buttonCount; i++) {
             const button = document.createElement('button');
             button.textContent = getRandomName(usedNames);
             button.id = 'button' + i;
             container.appendChild(button);
         }
+
+        setGridColumns();
+        window.addEventListener('resize', setGridColumns);
 
         inputField.addEventListener('input', () => {
             // Remove non-digit characters

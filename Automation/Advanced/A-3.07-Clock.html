@@ -42,8 +42,8 @@
             <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" />
             <button id="submit-btn">Submit</button>
           </div>
-          <div id="successMessage" class="message success"></div>
-          <div id="failureMessage" class="message failure"></div>
+          <div id="successMessage" class="message success" style="display: none;"></div>
+          <div id="failureMessage" class="message failure" style="display: none;"></div>
         </div>
       </div>
     </main>
@@ -91,7 +91,7 @@
       ) {
         failureMessage.style.display = 'flex';
         failureMessage.classList.add('failure');
-        failureMessage.textContent = "❌ Invalid format! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
+        failureMessage.textContent = "Invalid format! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
         return;
       }
 
@@ -108,7 +108,7 @@
       } else {
         failureMessage.style.display = 'flex';
         failureMessage.classList.add('failure');
-        failureMessage.textContent = `❌ Incorrect! The actual time is ${expectedTime}`;
+        failureMessage.textContent = `Incorrect! The actual time is ${expectedTime}`;
       }
     }
 

@@ -25,17 +25,16 @@
 
         <main class="card">
             <div class="card-content">
-                <h1>Dynamic Progress Bar</h1>
-                <p class="lead">Click the button to start the progress bar and complete it.</p>
-
-                <h4>Click on below button once progress bar completes</h4>
-                <div id="status"></div>
+                <h1>Dynamic Progress Bar Challenge</h1>
+                <p class="lead">Wait for the progress bar to reach 100%, then click the button. Clicking too early will result in a failure.</p>
                 <div id="progress-bar-container">
                     <div id="progress-bar"></div>
                 </div>
-                <button id="action-button">Click Me!</button>
-                <div id="successMessage" class="message success"></div>
-                <div id="failureMessage" class="message failure"></div>
+                <div class="button-enabled">
+                    <button id="action-button">Click Me After 100%!</button>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! Button was clicked after completion..</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you You clicked too early.</span></div>
             </div>
         </main>
     </div>
@@ -65,8 +64,8 @@
         const styleSheet = document.createElement('style');
         styleSheet.innerHTML = `
             @keyframes ${animationName} {
-                from { transform: scaleX(0); }
-                to { transform: scaleX(1); }
+                from { width: 0; }
+                to { width: 100%; }
             }
         `;
         document.head.appendChild(styleSheet);

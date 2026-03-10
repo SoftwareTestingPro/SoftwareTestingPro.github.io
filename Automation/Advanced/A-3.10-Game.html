@@ -26,11 +26,10 @@
     <main class="card">
       <div class="card-content">
       <h1>Platformer Game Challenge</h1>
-      <p class="lead">Use arrow keys and spacebar to reach the top platform.</p>
+      <p class="lead">Use the spacebar and arrow keys to reach the top platform and verify the congratulations message.</p>
 
     <canvas id="gameCanvas" width="800" height="400"></canvas>
     <div class="message success" id="successMessage">Congratulations! You reached the top platform!</div>
-    <h3 class="label">Use the spacebar and arrow keys to reach the top platform and verify the congratulations message.</h3>
   </div>
     </main>
   </div>
@@ -70,7 +69,10 @@
       { x: canvas.width * 0.80, y: canvas.height - canvas.height * 0.80, width: 150, height: 10, color: 'yellow', isTopPlatform: true }
     ];
 
-    window.addEventListener('keydown', (e) => keys[e.code] = true);
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') e.preventDefault();
+      keys[e.code] = true;
+    });
     window.addEventListener('keyup', (e) => keys[e.code] = false);
 
     // Track previous Y position for better collision detection

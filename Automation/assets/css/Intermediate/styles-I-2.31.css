@@ -1,0 +1,58 @@
+
+
+
+
+
+#draggableImage {
+    width: 200px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+#dropBox {
+    width: 200px;
+    height: 133px;
+    border: 2px dashed #ccc;
+    text-align: center;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#dropBox.over {
+    background-color: #f0f0f0;
+}
+
+
+
+@media (max-width: 1440px) {
+    body {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1024px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 375px) {
+    body {
+        font-size: 11px;
+    }
+}

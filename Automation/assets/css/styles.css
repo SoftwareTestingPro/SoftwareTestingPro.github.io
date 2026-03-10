@@ -223,7 +223,7 @@ p.lead {
 }
 
 .message.success::before {
-    content: "✓ ";
+    content: "✅ ";
 }
 
 .message.failure {
@@ -237,7 +237,7 @@ p.lead {
 }
 
 .message.failure::before {
-    content: "✕ ";
+    content: "❌ ";
 }
 
 .message.detailed-failure {
@@ -306,6 +306,10 @@ p.lead {
     .nav-btn:hover {
         transform: none;
     }
+}
+
+#expectedValue {
+    color: #22c55e;
 }
 
 @media (max-height: 768px) {
@@ -426,4 +430,8 @@ p.lead {
     .nav-btn:hover {
         transform: none;
     }
+}
+
+#expectedValue {
+    color: #22c55e;
 }

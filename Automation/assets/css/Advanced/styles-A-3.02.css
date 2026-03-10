@@ -1,9 +1,23 @@
+.download-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    margin-top: 4rem;
+}
+
 .input-group-parent {
     display: flex;
     align-items: center;
     margin-bottom: 0.625rem;
     align-self: flex-start;
     width: 100%;
+    margin-top: 4rem;
 }
 
 .input-group-left {
@@ -22,6 +36,7 @@
     width: 100%;
     text-align: left;
     margin-top: 1.875rem !important;
+    margin-left: 11rem;
 }
 
 input[type="text"] {

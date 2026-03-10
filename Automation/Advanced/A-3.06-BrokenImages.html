@@ -32,12 +32,16 @@
         <p class="lead">Count the number of broken images among the displayed flags and enter the count.</p>
 
         <section class="images-container" id="images-container" aria-live="polite"></section>
-        <section class="input-container">
-            <label for="user-input">Enter count of broken images:</label>
-            <input type="number" id="user-input" name="user-input">
-            <div id="successMessage" class="success-message" style="display: none;"></div>
-            <div id="failureMessage" class="failure-message" style="display: none;"></div>
-        </section>
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="user-input" class="label-left">Enter count of broken images:</label>
+                </div>
+                <div class="input-group-right">
+                    <input type="text" id="user-input" name="user-input" placeholder="Image Count">
+                </div>
+            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
         </div>
     </main>
 </div>
@@ -116,7 +120,8 @@
                 successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
                 failureMessage.classList.add('failure');
-                failureMessage.textContent = 'Failure! Incorrect value entered.';
+                document.getElementById('expectedValue').textContent = brokenImageCount.toString();
+                document.getElementById('actualValue').textContent = userInput.toString();
             }
         });
     </script>

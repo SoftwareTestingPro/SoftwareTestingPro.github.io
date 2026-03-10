@@ -1,5 +1,6 @@
 .image-container {
     margin-bottom: 1.25rem;
+    margin-top: 5rem;
 }
 
 .image-container img {
@@ -33,6 +34,7 @@
     width: 100%;
     text-align: left;
     margin-top: 1.875rem !important;
+    margin-left: 11rem;
 }
 
 input[type="text"] {
