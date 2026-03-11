@@ -1,88 +1,57 @@
-
-
+.wheel-container {
+  position: relative;
+  text-align: center;
+}
+#wheelCanvas {
+  width: 35%;
+  height: auto;
+  border-radius: 50%;
+}
+#spinButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+#spinButton i {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
 .pointer {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 0.625rem solid transparent;
-    border-right: 0.625rem solid transparent;
-    border-bottom: 1.25rem solid var(--accent);
-    z-index: 10;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 40px solid red;
 }
-
-.form-control {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 0.875rem;
-    width: 100%;
-    max-width: 18.75rem;
+#result {
+  margin-top: 20px;
+  text-align: center;
+  width: 35%;
 }
-
-@media (max-width: 1440px) {
-    .pointer {
-        border-left: 0.6rem solid transparent;
-        border-right: 0.6rem solid transparent;
-        border-bottom: 1.2rem solid var(--accent);
-    }
-    .form-control {
-        padding: 0.475rem 0.7125rem;
-        font-size: 0.8125rem;
-        max-width: 17.8125rem;
-    }
+#selectedNameMessage {
+  font-size: 20px;
+  margin-top: 15px;
 }
-
-@media (max-width: 1024px) {
-    .pointer {
-        border-left: 0.575rem solid transparent;
-        border-right: 0.575rem solid transparent;
-        border-bottom: 1.15rem solid var(--accent);
-    }
-    .form-control {
-        padding: 0.45rem 0.675rem;
-        font-size: 0.75rem;
-        max-width: 16.875rem;
-    }
+.message { display: none; } #successMessage { color: green; } #failureMessage { color: red; } .message { display: none; } #validationMessage {
+  font-size: 18px;
+  margin-top: 10px;
 }
-
-@media (max-width: 768px) {
-    .pointer {
-        border-left: 0.55rem solid transparent;
-        border-right: 0.55rem solid transparent;
-        border-bottom: 1.1rem solid var(--accent);
-    }
-    .form-control {
-        padding: 0.425rem 0.6375rem;
-        font-size: 0.6875rem;
-        max-width: 15rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .pointer {
-        border-left: 0.525rem solid transparent;
-        border-right: 0.525rem solid transparent;
-        border-bottom: 1.05rem solid var(--accent);
-    }
-    .form-control {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.625rem;
-        max-width: 13.125rem;
-    }
-}
-
-@media (max-width: 375px) {
-    .pointer {
-        border-left: 0.5rem solid transparent;
-        border-right: 0.5rem solid transparent;
-        border-bottom: 1rem solid var(--accent);
-    }
-    .form-control {
-        padding: 0.375rem 0.5625rem;
-        font-size: 0.5625rem;
-        max-width: 11.25rem;
-    }
-}
+.message { display: none; padding: 10px; margin: 10px 0; border-radius: 5px; } #successMessage { display: none; color: green; background: #d4edda; border: 1px solid #c3e6cb; } #failureMessage { display: none; color: red; background: #f8d7da; border: 1px solid #f5c6cb; }

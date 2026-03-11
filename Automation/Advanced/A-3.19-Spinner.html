@@ -71,169 +71,129 @@
       <h1>Spinner Challenge</h1>
       <p class="lead">Spin the wheel and enter the selected name.</p>
 
-    <canvas id="wheelCanvas" width="300" height="300" style="display: block; margin: 0 auto;"></canvas>
-    <div class="pointer"></div>
-    <button id="spinButton"><i>SPIN</i></button>
-  </div>
 
-      <div id="result">
-        <label>Click Center of Wheel to Spin.</label><br>
-        <label>Enter the selected name:</label>
-        <input type="text" id="nameInput" class="form-control" placeholder="Type name here">
-        <p id="selectedNameMessage" class="mt-3 font-weight-bold"></p>
-        <div id="successMessage" class="message success"></div>
-        <div id="failureMessage" class="message failure"></div>
+
+      <div class="wheel-container">
+          <canvas id="wheelCanvas" width="450" height="450"></canvas>
+          <div class="pointer"></div>
+          <button id="spinButton"><i>SPIN</i></button>
+      </div>
+
+      <div class="input-group-parent">
+          <div class="input-group-left">
+              <label for="nameInput" class="label-left">Enter the selected name:</label>
+          </div>
+
+          <div class="input-group-right">
+              <input type="text" id="nameInput" class="form-control" placeholder="Type name here">
+          </div>
+      </div>
+      <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+      <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
       </div>
     </main>
   </div>
 
   <div id="footer-placeholder"></div>
+    <script>
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const spinButton = document.getElementById('spinButton');
+        const nameInput = document.getElementById('nameInput');
+        const selectedNameMessage = document.getElementById('selectedNameMessage');
+        const validationMessage = document.getElementById('validationMessage');
 
-  <script>
-    const canvas = document.getElementById('wheelCanvas');
-    const ctx = canvas.getContext('2d');
-    const spinButton = document.getElementById('spinButton');
-    const nameInput = document.getElementById('nameInput');
-    const selectedNameMessage = document.getElementById('selectedNameMessage');
-    const successMessage = document.getElementById('successMessage');
-    const failureMessage = document.getElementById('failureMessage');
+        const names = ['Sushil', 'Deepika', 'Kavya', 'Jyoti', 'Avinash', 'Riddhima', 'Saroj', 'Rivansh'];
+        const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#FF5722', '#8BC34A', '#FFC107', '#673AB7', '#E91E63'];
 
-    // Hide messages on load
-    successMessage.style.display = 'none';
-    failureMessage.style.display = 'none';
-    successMessage.classList.remove('success');
-    failureMessage.classList.remove('failure');
-
-    const names = ['Sushil', 'Deepika', 'Kavya', 'Jyoti', 'Avinash', 'Riddhima', 'Saroj', 'Rivansh'];
-    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#FF5722', '#8BC34A', '#FFC107', '#673AB7', '#E91E63'];
-
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-
-    const shuffledNames = shuffle([...names]);
-    const shuffledColors = shuffle([...colors]);
-
-    const numberOfSegments = shuffledNames.length;
-    const anglePerSegment = (2 * Math.PI) / numberOfSegments;
-    let currentRotation = 0;
-    let selectedName = '';
-
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) - 20;
-
-    function drawWheel() {
-      let startAngle = currentRotation;
-      for (let i = 0; i < numberOfSegments; i++) {
-        const endAngle = startAngle + anglePerSegment;
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-        ctx.closePath();
-        ctx.fillStyle = shuffledColors[i];
-        ctx.fill();
-
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.rotate(startAngle + anglePerSegment / 2);
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 12px Arial';
-        ctx.fillText(shuffledNames[i], radius - 20, 10);
-        ctx.restore();
-
-        startAngle = endAngle;
-      }
-    }
-
-    // Draw pointer/notch at the top (inverted and bigger)
-    ctx.beginPath();
-    ctx.moveTo(centerX, 40);
-    ctx.lineTo(centerX - 15, 10);
-    ctx.lineTo(centerX + 15, 10);
-    ctx.closePath();
-    ctx.fillStyle = 'white';
-    ctx.fill();
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    drawWheel();
-
-    spinButton.addEventListener('click', () => {
-      let spinSpeed = 10;
-      const spin = setInterval(() => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        currentRotation += spinSpeed * (Math.PI / 180);
-        drawWheel();
-        spinSpeed *= 0.98;
-
-        if (spinSpeed < 0.5) {
-          clearInterval(spin);
-
-          const endAngle = (2 * Math.PI - currentRotation % (2 * Math.PI)) % (2 * Math.PI);
-          const pointerAngle = (endAngle - Math.PI / 2 + 2 * Math.PI) % (2 * Math.PI);
-          const selectedSegment = Math.floor(pointerAngle / anglePerSegment) % numberOfSegments;
-          selectedName = shuffledNames[selectedSegment];
-
-          drawWheel(); // Redraw to show pointer on final wheel
-
-          selectedNameMessage.textContent = ``;
-          successMessage.textContent = '';
-          failureMessage.textContent = '';
-          successMessage.style.display = 'none';
-          failureMessage.style.display = 'none';
-          successMessage.classList.remove('success');
-          failureMessage.classList.remove('failure');
-          nameInput.value = '';
+        function shuffle(array) {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
         }
-      }, 10);
-    });
 
-    nameInput.addEventListener('input', () => {
-      const inputValue = nameInput.value.trim().toLowerCase();
-      const selectedValue = selectedName.toLowerCase();
+        const shuffledNames = shuffle([...names]);
+        const shuffledColors = shuffle([...colors]);
 
-      if (inputValue === '') {
-        successMessage.style.display = 'none';
-        failureMessage.style.display = 'none';
-        successMessage.classList.remove('success');
-        failureMessage.classList.remove('failure');
-        return;
-      }
+        const numberOfSegments = shuffledNames.length;
+        const anglePerSegment = (2 * Math.PI) / numberOfSegments;
+        let currentRotation = 0;
+        let selectedName = '';
 
-      if (!selectedName) {
-        successMessage.style.display = 'none';
-        successMessage.classList.remove('success');
-        failureMessage.style.display = 'flex';
-        failureMessage.classList.add('failure');
-        failureMessage.textContent = "⏳ Please spin the wheel first!";
-        return;
-      }
+        function drawWheel() {
+          let startAngle = currentRotation;
+          for (let i = 0; i < numberOfSegments; i++) {
+            const endAngle = startAngle + anglePerSegment;
+            ctx.beginPath();
+            ctx.moveTo(225, 225);
+            ctx.arc(225, 225, 225, startAngle, endAngle);
+            ctx.closePath();
+            ctx.fillStyle = shuffledColors[i];
+            ctx.fill();
 
-      if (inputValue === selectedValue) {
-        successMessage.style.display = 'flex';
-        successMessage.classList.add('success');
-        failureMessage.style.display = 'none';
-        failureMessage.classList.remove('failure');
-        successMessage.textContent = "✅ Success! You entered the correct name.";
-      } else {
-        successMessage.style.display = 'none';
-        successMessage.classList.remove('success');
-        failureMessage.style.display = 'flex';
-        failureMessage.classList.add('failure');
-        failureMessage.textContent = "❌ Try again. That's not the selected name.";
-      }
-    });
-  </script>
+            ctx.save();
+            ctx.translate(225, 225);
+            ctx.rotate(startAngle + anglePerSegment / 2);
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 18px Arial';
+            ctx.fillText(shuffledNames[i], 200, 10);
+            ctx.restore();
+
+            startAngle = endAngle;
+          }
+        }
+
+        drawWheel();
+
+        spinButton.addEventListener('click', () => {
+          let spinSpeed = 10;
+          const spin = setInterval(() => {
+            ctx.clearRect(0, 0, 450, 450);
+            currentRotation += spinSpeed * (Math.PI / 180);
+            drawWheel();
+            spinSpeed *= 0.98;
+
+            if (spinSpeed < 0.5) {
+              clearInterval(spin);
+
+              const endAngle = (2 * Math.PI - currentRotation % (2 * Math.PI)) % (2 * Math.PI);
+              const pointerAngle = (endAngle - Math.PI / 2 + 2 * Math.PI) % (2 * Math.PI);
+              const selectedSegment = Math.floor(pointerAngle / anglePerSegment) % numberOfSegments;
+              selectedName = shuffledNames[selectedSegment];
+
+              selectedNameMessage.textContent = ``;
+              successMessage.style.display = 'none'; failureMessage.style.display = 'none';
+              nameInput.value = '';
+            }
+          }, 10);
+        });
+
+        nameInput.addEventListener('input', () => {
+          const inputValue = nameInput.value.trim().toLowerCase();
+          const selectedValue = selectedName.toLowerCase();
+
+          if (inputValue === '') {
+            successMessage.style.display = 'none'; failureMessage.style.display = 'none';
+            return;
+          }
+
+          if (!selectedName) {
+            validationMessage.textContent = "⏳ Please spin the wheel first!";
+            failureMessage.style.color = "orange";
+            return;
+          }
+
+          if (inputValue === selectedValue) {
+            validationMessage.textContent = "✅ Success! You entered the correct name.";
+            successMessage.style.color = "green";
+          } else {
+            validationMessage.textContent = "❌ Try again. That's not the selected name.";
+            failureMessage.style.color = "red";
+          }
+        });
+    </script>
 </body>
 </html>
-
-
-
-

@@ -70,10 +70,15 @@
             <div class="card-content">
             <h1>Image to Text Challenge</h1>
             <p class="lead">Extract the text from the image and enter it.</p>
-
-                <label for="user-input">Fetch displayed text from below image:</label>
                 <img src="../../img/shopping.jpg" alt="Image" id="Image">
-                <input type="text" id="user-input" name="user-input" placeholder="Enter fetched text here...">
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="user-input">Fetch displayed text from above image:</label>
+                    </div>
+                    <div class="input-group-right">
+                        <input type="text" id="user-input" name="user-input" placeholder="Enter fetched text here...">
+                    </div>
+                </div>
                 <div id="successMessage" class="message success"></div>
                 <div id="failureMessage" class="message failure"></div>
             </div>
@@ -95,7 +100,7 @@
             failureMessage.classList.remove('failure');
 
             userInput.addEventListener('input', () => {
-                const value = userInput.value.toLowerCase();
+                const value = userInput.value;
 
                 if (value === 'amazon') {
                     successMessage.style.display = 'flex';

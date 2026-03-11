@@ -1,5 +1,18 @@
 
+.input-group-parent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.625rem;
+    align-self: flex-start;
+    width: 100%;
+    margin-top: 5rem;
+}
 
+
+
+.input-group-right {
+    flex: 1;
+}
 
 
 

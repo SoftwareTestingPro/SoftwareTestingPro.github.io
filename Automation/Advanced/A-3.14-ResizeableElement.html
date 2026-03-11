@@ -125,8 +125,15 @@
             const startHeight = resizable.offsetHeight;
 
             function onMouseMove(e) {
-                resizable.style.width = `${startWidth + (e.clientX - startX)}px`;
-                resizable.style.height = `${startHeight + (e.clientY - startY)}px`;
+                const currentWidth = parseInt(resizable.style.width);
+                const currentHeight = parseInt(resizable.style.height);
+                
+                // Prevent resizing beyond 256x256
+                const newWidth = Math.min(256, Math.max(50, startWidth + (e.clientX - startX)));
+                const newHeight = Math.min(256, Math.max(50, startHeight + (e.clientY - startY)));
+                
+                resizable.style.width = `${newWidth}px`;
+                resizable.style.height = `${newHeight}px`;
             }
 
             function onMouseUp() {
