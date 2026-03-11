@@ -73,7 +73,7 @@
                 <a href="#" class="button" id="alertButton">Click to Generate Alert and Wait</a>
                 <div class="input-group">
                     <label for="inputField">After the alert appears, enter the duration (in seconds) it took to display:</label>
-                    <input type="number" id="inputField" name="inputField" min="1" step="1" disabled>
+                    <input type="number" id="inputField" name="inputField" min="1" step="1">
                 </div>
                 <div id="result"></div>
             </div>
@@ -83,39 +83,91 @@
     <div id="footer-placeholder"></div>
 
     <script>
+        let alertDisplayed = false;
+        let expectedTime = 0;
+
         document.getElementById('alertButton').addEventListener('click', function(e) {
             e.preventDefault();
 
+            // Disable button and show waiting message
+            const button = document.getElementById('alertButton');
+            button.disabled = true;
+            button.textContent = 'Waiting for alert...';
+            
+            // Reset result message and flag
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = '';
+            resultDiv.className = '';
+            alertDisplayed = false;
+
             const randomTime = Math.floor(Math.random() * 26) + 5; // Random time between 5 and 30 seconds
+            expectedTime = randomTime;
             const startTime = Date.now();
 
+            console.log('Alert will appear in:', randomTime, 'seconds');
+
             setTimeout(() => {
-                alert('This is an alert displayed anytime between 5 and 30 seconds!');
                 const endTime = Date.now();
                 const actualTime = Math.round((endTime - startTime) / 1000);
+                expectedTime = actualTime;
+                
+                console.log('Alert appeared after:', actualTime, 'seconds');
 
+                alert('This is an alert displayed anytime between 5 and 30 seconds!');
+
+                // Mark alert as displayed
+                alertDisplayed = true;
+
+                // Enable button
+                button.disabled = false;
+                button.textContent = 'Click to Generate Alert and Wait';
+                
+                // Focus on input field
+                document.getElementById('inputField').focus();
+
+                // Check if user already entered a value
                 const inputField = document.getElementById('inputField');
-                inputField.disabled = false; // Enable the input field after alert is displayed
-
-                inputField.addEventListener('input', () => {
-                    const userInput = parseInt(inputField.value);
-                    const resultDiv = document.getElementById('result');
-
-                    if (!isNaN(userInput)) {
-                        if (userInput === actualTime) {
-                            resultDiv.textContent = `Success! The alert appeared after ${actualTime} seconds.`;
-                            resultDiv.className = 'success';
-                        } else {
-                            resultDiv.textContent = `Failure! You calculated ${userInput} seconds, but it actually took ${actualTime} seconds.`;
-                            resultDiv.className = 'failure';
-                        }
-                    } else {
-                        resultDiv.textContent = 'Please enter a valid number in seconds.';
-                        resultDiv.className = '';
-                    }
-                });
+                if (inputField.value) {
+                    validateInput(inputField.value);
+                }
             }, randomTime * 1000);
         });
+
+        // Add input validation handler
+        document.getElementById('inputField').addEventListener('input', function(e) {
+            const userInput = e.target.value;
+            
+            if (!alertDisplayed && userInput) {
+                // User entered input before alert appeared
+                document.getElementById('result').textContent = 'Please click the button above and wait for the alert to appear first!';
+                document.getElementById('result').className = '';
+            } else if (alertDisplayed && userInput) {
+                // Alert has appeared, validate the input
+                validateInput(userInput);
+            } else if (!userInput) {
+                // Clear result when input is empty
+                document.getElementById('result').textContent = '';
+                document.getElementById('result').className = '';
+            }
+        });
+
+        function validateInput(userInput) {
+            const inputNum = parseInt(userInput);
+            const resultDiv = document.getElementById('result');
+
+            if (!isNaN(inputNum)) {
+                if (inputNum === expectedTime) {
+                    resultDiv.textContent = `Success! The alert appeared after ${expectedTime} seconds.`;
+                    resultDiv.className = 'success';
+                } else {
+                    resultDiv.textContent = `Failure! You calculated ${inputNum} seconds, but it actually took ${expectedTime} seconds.`;
+                    resultDiv.className = 'failure';
+                }
+            } else {
+                resultDiv.textContent = 'Please enter a valid number in seconds.';
+                resultDiv.className = '';
+            }
+        }
     </script>
 </body>
 </html>

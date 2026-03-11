@@ -70,14 +70,22 @@
                 <h1>Date</h1>
                 <p class="lead">Enter today's date in YYYY-MM-DD</p>
 
-                <input type="text" id="dateInput" placeholder="Enter date here">
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="dateInput" class="label-left">Enter current date in YYYY-MM-DD Format:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="dateInput" placeholder="Enter date here">
+                    </div>
+                </div>
 
                 <div class="message success" id="successMessage">
-                    Success! The date matches. ✅
+                    Success! The date matches.
                 </div>
 
                 <div class="message failure" id="failureMessage">
-                    Incorrect date. Please try again. ❌
+                    Incorrect date. Please try again.
                 </div>
             </div>
         </main>

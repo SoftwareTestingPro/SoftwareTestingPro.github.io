@@ -70,17 +70,26 @@
                 <h1>Input Fields Example</h1>
                 <p class="lead">Copy text from below Input Field</p>
 
-                <div class="input-group">
-                    <label for="inputField1">Copy text from below Input Field:</label>
-                    <input type="text" id="inputField1" readonly>
-                </div>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="inputField1">Copy text from following Input Field:</label>
+                    </div>
 
-                <div class="input-group">
-                    <label for="inputField2">Enter text copied from above Input Field:</label>
-                    <input type="text" id="inputField2">
+                    <div class="input-group-right">
+                        <input type="text" id="inputField1" readonly>
+                    </div>
                 </div>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="inputField2">Paste copied text in following Input Field:</label>
+                    </div>
 
-                <div id="message" class="message" role="alert"></div>
+                    <div class="input-group-right">
+                        <input type="text" id="inputField2">
+                    </div>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
             </div>
         </main>
     </div>
@@ -91,19 +100,24 @@
         document.addEventListener('DOMContentLoaded', () => {
             const inputField1 = document.getElementById('inputField1');
             const inputField2 = document.getElementById('inputField2');
-            const message = document.getElementById('message');
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+            const expectedValue = document.getElementById('expectedValue');
+            const actualValue = document.getElementById('actualValue');
 
             inputField1.value = Math.random().toString(36).substring(3);
 
             inputField2.addEventListener('input', () => {
                 if (inputField2.value === inputField1.value) {
-                    message.textContent = 'Success: The values match!';
-                    message.className = 'message success';
-                    message.style.display = 'block';
+                    successMessage.style.display = 'block';
+                    failureMessage.style.display = 'none';
+                    expectedValue.textContent = inputField1.value;
+                    actualValue.textContent = inputField2.value;
                 } else {
-                    message.textContent = 'Failure: The values do not match.';
-                    message.className = 'message failure';
-                    message.style.display = 'block';
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'block';
+                    expectedValue.textContent = inputField1.value;
+                    actualValue.textContent = inputField2.value;
                 }
             });
         });

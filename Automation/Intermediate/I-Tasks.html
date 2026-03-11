@@ -3,255 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automation Tasks</title>
-	<!-- Additional SEO Meta Tags -->
-	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
-	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-	<link rel="canonical" href="https://softwaretestingpro.github.io/Automation/All-Automation-Tasks.html">
-	<!-- Open Graph Tags -->
-	<meta property="og:title" content="Software Testing Pro - Automation Practice Platform">
-	<meta property="og:description" content="Practice software automation testing with interactive challenges for Selenium, Cypress, and more.">
-	<meta property="og:url" content="https://softwaretestingpro.github.io/Automation/All-Automation-Tasks.html">
-	<meta property="og:type" content="website">
-	<meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
-	<meta property="og:site_name" content="Software Testing Pro">
-	<!-- Twitter Card Tags -->
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:title" content="Software Testing Pro - Automation Practice Platform">
-	<meta name="twitter:description" content="Practice software automation testing with interactive challenges.">
-	<meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
-	<!-- Structured Data -->
-	<script type="application/ld+json">
-	{
-	  "@context": "https://schema.org",
-	  "@type": "WebSite",
-	  "name": "Software Testing Pro",
-	  "url": "https://softwaretestingpro.github.io",
-	  "description": "Practice platform for software automation testing with Beginner, Intermediate, and Advanced challenges.",
-	  "publisher": {
-	    "@type": "Organization",
-	    "name": "Software Testing Pro"
-	  }
-	}
-	</script>
-	<!-- Google Tag Manager -->
-	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-	})(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
-	<!-- End Google Tag Manager -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        .container {
-            display: flex;
-            justify-content: space-around;
-            max-width: 1200px;
-            width: 90%;
-            padding: 20px;
-            flex-wrap: wrap;
-        }
-        .box {
-            width: 25%;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: 10px;
-            text-align: center;
-        }
-        .box-header {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .links {
-            list-style-type: none;
-            padding: 0;
-            text-align: center;
-        }
-        .links li {
-            margin-bottom: 10px;
-        }
-        .links a {
-            display: block;
-            padding: 10px;
-            background-color: #f0f0f0;
-            text-decoration: none;
-            color: #333;
-            border-radius: 5px;
-            transition: background-color 2s ease;
-        }
-
-        /* Mobile Styles */
-        @media (max-width: 768px) {
-            .box {
-                width: 90%;
-                margin: 10px 0;
+    <meta name="description" content="Overview of Intermediate level automation testing tasks and challenges. Learn fundamental concepts with interactive exercises for Selenium, Cypress, and more.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Intermediate Level Automation Tasks Overview | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles-tasks.css">
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, Intermediate tasks, automation challenges">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-Tasks.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Intermediate Level Automation Tasks Overview | Software Testing Pro">
+    <meta property="og:description" content="Overview of Intermediate level automation testing tasks and challenges. Learn fundamental concepts with interactive exercises.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-Tasks.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Intermediate Level Automation Tasks Overview | Software Testing Pro">
+    <meta name="twitter:description" content="Overview of Intermediate level automation testing tasks and challenges.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "EducationalContent",
+            "headline": "Intermediate Level Automation Tasks Overview",
+            "description": "Overview of Intermediate level automation testing tasks and challenges. Learn fundamental concepts with interactive exercises for Selenium, Cypress, and more.",
+            "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-Tasks.html",
+            "publisher": {
+                "@type": "Organization",
+                "name": "Software Testing Pro"
             }
         }
-        /* Small mobile (landscape and portrait) */
-        @media (max-width: 480px) {
-            .box-header {
-                font-size: 20px;
-            }
-            .links a {
-                padding: 8px;
-                font-size: 14px;
-            }
-        }
-
-        /* Tablet and larger screens */
-        @media (min-width: 768px) and (max-width: 1200px) {
-            .box {
-                width: 40%;
-            }
-        }
-    </style>
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-	<!-- Google Tag Manager (noscript) -->
-	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
-	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-	<!-- End Google Tag Manager (noscript) -->
-    <div class="container">
-        <div class="box">
-			<div class="box-header">Beginner</div>
-				<ul class="links">
-					<li><a href="Beginner/B-1.01-Click.html">Click</a></li>			
-					<li><a href="Beginner/B-1.02-Input.html">Input Field</a></li>
-					<li><a href="Beginner/B-1.03-Radio.html">Radio button</a></li>
-					<li><a href="Beginner/B-1.04-Color.html">Color</a></li>
-					<li><a href="Beginner/B-1.05-Checkboxes.html">Checkboxes</a></li>
-					<li><a href="Beginner/B-1.06-ValueInput.html">Input Value</a></li>
-					<li><a href="Beginner/B-1.07-RadioList.html">Radio List</a></li>
-					<li><a href="Beginner/B-1.08-DropDown.html">Drop Down</a></li>
-					<li><a href="Beginner/B-1.09-DoubleClick.html">Double Click</a></li>
-					<li><a href="Beginner/B-1.10-RightClick.html">Right Click</a></li>
-					<li><a href="Beginner/B-1.11-PageTitle.html">Page Title</a></li>
-					<li><a href="Beginner/B-1.12-FetchURL.html">Fetch URL</a></li>
-					<li><a href="Beginner/B-1.13-DynamicProgressBar.html">Dynamic Progress Bar</a></li>
-					<li><a href="Beginner/B-1.14-Keystroke.html">KeyStroke</a></li>
-					<li><a href="Beginner/B-1.15-DatePicker.html">Date Picker</a></li>
-					<li><a href="Beginner/B-1.16-CaptureScreeshot.html">Capture Screenshot</a></li>
-					<li><a href="Beginner/B-1.17-Tooltip.html">Tooltip</a></li>
-					<li><a href="Beginner/B-1.18-PageSource.html">Page Source</a></li>
-					<li><a href="Beginner/B-1.19-AutoComplete.html">Auto Complete</a></li>
-					<li><a href="Beginner/B-1.20-ClickEnabledButton.html">Enabled And Disabled Buttons</a></li>
-					<li><a href="Beginner/B-1.21-CompareText.html">Compare Text</a></li>     
-					<li><a href="Beginner/B-1.22-ImagePath.html">Image Path</a></li>
-					<li><a href="Beginner/B-1.23-ColorOddOneOut.html">Color Odd One Out</a></li>
-					<li><a href="Beginner/B-1.24-MathOddOneOut.html">Math Odd One Out</a></li>
-					<li><a href="Beginner/B-1.25-HighlightText.html">Highlight Text</a></li>
-					<li><a href="Beginner/B-1.26-CaseValidation.html">Case Validation</a></li>
-					<li><a href="Beginner/B-1.27-MatchTheFollowing.html">Match The Following</a></li>
-					<li><a href="Beginner/B-1.28-OrderConfirmation.html">Order Confirmation</a></li>
-					<li><a href="Beginner/B-1.29-CharCounter.html">Char Counter</a></li>
-                    <li><a href="Beginner/B-1.30-VideoPlayer.html">Video Player</a></li>
-				</ul>
-			</div>
-        <div class="box">
-            <div class="box-header">Intermediate</div>
-				<ul class="links">
-					<li><a href="Intermediate/I-2.01-DragAndDropText.html">Drag And Drop Text</a></li>
-					<li><a href="Intermediate/I-2.02-HoverLink.html">Mouse Hover</a></li>
-					<li><a href="Intermediate/I-2.03-Train.html">Train Reservation</a></li>
-					<li><a href="Intermediate/I-2.04-Calendar.html">Calendar</a></li>
-					<li><a href="Intermediate/I-2.05-CricketScorecard.html">Cricket Scorecard</a></li>
-					<li><a href="Intermediate/I-2.06-Table.html">Table Data</a></li>
-					<li><a href="Intermediate/I-2.07-Rubix.html">Rubik's Cube</a></li>
-					<li><a href="Intermediate/I-2.08-Slider.html">Slider</a></li>
-					<li><a href="Intermediate/I-2.09-RandomButtons.html">Random Buttons</a></li>
-					<li><a href="Intermediate/I-2.10-Alerts.html">Alerts</a></li>
-					<li><a href="Intermediate/I-2.11-Progressbar.html">Progress bar</a></li>
-					<li><a href="Intermediate/I-2.12-Frame.html">Frame</a></li>
-					<li><a href="Intermediate/I-2.13-BrowserPopUp.html">Browser Pop Up</a></li>
-					<li><a href="Intermediate/I-2.14-JSInput.html">Input via JavaScript</a></li>
-					<li><a href="Intermediate/I-2.15-RandomPopUp.html">RandomPopUp</a></li>
-					<li><a href="Intermediate/I-2.16-RandomList.html">Random List</a></li>
-					<li><a href="Intermediate/I-2.17-LoadingResults.html">Loading Results</a></li>
-					<li><a href="Intermediate/I-2.18-Chart.html">Chart</a></li>
-					<li><a href="Intermediate/I-2.19-FetchDate.html">Fetch Date</a></li>
-					<li><a href="Intermediate/I-2.20-ValueInput.html">Input Value</a></li>
-					<li><a href="Intermediate/I-2.21-ScrollableList.html"> Terms and Conditions</a></li>
-					<li><a href="Intermediate/I-2.22-SortNumbers.html">Sort Numbers</a></li>
-					<li><a href="Intermediate/I-2.23-SortCharacters.html">Sort Characters</a></li>
-					<li><a href="Intermediate/I-2.24-SortWords.html">Sort Words</a></li>
-					<li><a href="Intermediate/I-2.25-SplitWords.html">Split Words</a></li>
-					<li><a href="Intermediate/I-2.26-ImagePosition.html">Image Position</a></li>
-					<li><a href="Intermediate/I-2.27-YoungestPerson.html">Youngest Person</a></li>
-					<li><a href="Intermediate/I-2.28-CompareImages.html">Compare Images</a></li>
-					<li><a href="Intermediate/I-2.29-ColorPicker.html">Color Picker</a></li>
-					<li><a href="Intermediate/I-2.30-DragAndDropImg.html">Drag And Drop Image</a></li>
-				</ul>
-			</div>
-        <div class="box">
-            <div class="box-header">Advanced</div>
-				<ul class="links">
-					<li><a href="Advanced/A-3.01-HiddenElement.html">Disappearing Element</a></li>
-					<li><a href="Advanced/A-3.02-Download.html">File Download</a></li>
-					<li><a href="Advanced/A-3.03-SignaturePad.html">Signature Pad</a></li>
-					<li><a href="Advanced/A-3.04-ReadQR.html">Read QR Code</a></li>
-					<li><a href="Advanced/A-3.05-MultipleDragDrop.html">Multiple Drag Drop</a></li>
-					<li><a href="Advanced/A-3.06-BrokenImages.html">Broken Images</a></li>
-					<li><a href="Advanced/A-3.07-Clock.html">Clock</a></li>
-					<li><a href="Advanced/A-3.08-ShapesOddOneOut.html">Shapes Odd One Out</a></li>                
-					<li><a href="Advanced/A-3.09-Location.html">Access Location</a></li>
-					<li><a href="Advanced/A-3.10-Game.html">Game</a></li>
-					<li><a href="Advanced/A-3.11-FileUpload.html">File Upload</a></li>
-					<li><a href="Advanced/A-3.12-Whiteboard.html">Whiteboard</a></li>
-					<li><a href="Advanced/A-3.13-SortableTable.html">Sortable Table</a></li>
-					<li><a href="Advanced/A-3.14-ResizeableElement.html">Resizeable Element</a></li>
-					<li><a href="Advanced/A-3.15-ContextMenu.html">Context Menu</a></li>
-					<li><a href="Advanced/A-3.16-ReadEmailContent.html">Read Email Content</a></li>
-					<li><a href="Advanced/A-3.17-SpeechToText.html">Speech To Text</a></li>
-					<li><a href="Advanced/A-3.18-ImageToText.html">Image To Text</a></li>
-					<li><a href="Advanced/A-3.19-Spinner.html">Spinner Wheel</a></li>
-					<li><a href="Advanced/A-3.20-AIQuiz.html">AI Quiz</a></li>
-					<li><a href="Advanced/A-3.21-InfiniteScroll.html">Infinite Scroll</a></li>
-					<li><a href="Advanced/A-3.22-XLSWriteData.html">Excel write Data</a></li>
-					<li><a href="Advanced/A-3.23-XLSReadData.html">Excel read Data</a></li>
-					<li><a href="Advanced/A-3.24-SortItems.html">Sort Items</a></li>
-					<li><a href="Advanced/A-3.25-DragableItemsXY.html">Dragable Items X Y</a></li>
-					<li><a href="Advanced/A-3.26-CharOddOneOut.html">Character Odd One Out</a></li>
-					<li><a href="Advanced/A-3.27-AudioOddOneOut.html">Audio Odd One Out</a></li>
-					<li><a href="Advanced/A-3.28-DragAndDropWithFrames.html">Drag And Drop Within Frames</a></li>
-					<li><a href="Advanced/A-3.29-DynamicProgressBar.html">Dynamic Progress Bar</a></li>
-                    <li><a href="Advanced/A-3.30-ReadingPdfFile.html">Reading PDF File</a></li>
-				</ul>
-			</div>
-		</div>
-    <script>
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
 
-        document.querySelectorAll('.links a').forEach(link => {
-            link.addEventListener('mouseover', () => {
-                link.style.backgroundColor = getRandomColor();
-            });
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-Intro.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Back to Introduction
+        </a>
+        <a href="I-2.01-DragAndDropText.html" class="nav-btn nav-btn-next">
+            Proceed to Tasks
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
 
-            link.addEventListener('mouseout', () => {
-                link.style.transition = 'background-color 2s ease';
-                link.style.backgroundColor = '#f0f0f0';
-            });
-        });
-    </script>
+    <main class="card">
+        <div class="card-content">
+            <h1>Intermediate Level Tasks</h1>
+            <p class="lead">Here's an overview of all the Intermediate-level automation tasks. Click on any task to start practicing!</p>
+            <ul class="task-list">
+                <li><a href="I-2.01-DragAndDropText.html">Drag And Drop Text</a></li>
+                <li><a href="I-2.02-HoverLink.html">Mouse Hover</a></li>
+                <li><a href="I-2.03-Train.html">Train Reservation</a></li>
+                <li><a href="I-2.04-Calendar.html">Calendar</a></li>
+                <li><a href="I-2.05-CricketScorecard.html">Cricket Scorecard</a></li>
+                <li><a href="I-2.06-Table.html">Table Data</a></li>
+                <li><a href="I-2.07-Rubix.html">Rubik's Cube</a></li>
+                <li><a href="I-2.08-Slider.html">Slider</a></li>
+                <li><a href="I-2.09-RandomButtons.html">Random Buttons</a></li>
+                <li><a href="I-2.10-Alerts.html">Alerts</a></li>
+                <li><a href="I-2.11-Progressbar.html">Progress bar</a></li>
+                <li><a href="I-2.12-Frame.html">Frame</a></li>
+                <li><a href="I-2.13-BrowserPopUp.html">Browser Pop Up</a></li>
+                <li><a href="I-2.14-JSInput.html">Input via JavaScript</a></li>
+                <li><a href="I-2.15-RandomPopUp.html">RandomPopUp</a></li>
+                <li><a href="I-2.16-RandomList.html">Random List</a></li>
+                <li><a href="I-2.17-LoadingResults.html">Loading Results</a></li>
+                <li><a href="I-2.18-Chart.html">Chart</a></li>
+                <li><a href="I-2.19-FetchDate.html">Fetch Date</a></li>
+                <li><a href="I-2.20-ValueInput.html">Input Value</a></li>
+                <li><a href="I-2.21-ScrollableList.html"> Terms and Conditions</a></li>
+                <li><a href="I-2.22-SortNumbers.html">Sort Numbers</a></li>
+                <li><a href="I-2.23-SortCharacters.html">Sort Characters</a></li>
+                <li><a href="I-2.24-SortWords.html">Sort Words</a></li>
+                <li><a href="I-2.25-SplitWords.html">Split Words</a></li>
+                <li><a href="I-2.26-ImagePosition.html">Image Position</a></li>
+                <li><a href="I-2.27-YoungestPerson.html">Youngest Person</a></li>
+                <li><a href="I-2.28-CompareImages.html">Compare Images</a></li>
+                <li><a href="I-2.29-ColorPicker.html">Color Picker</a></li>
+                <li><a href="I-2.30-DragAndDropImg.html">Drag And Drop Image</a></li>
+            </ul>
+        </div>
+    </main>
+</div>
+<div id="footer-placeholder"></div>
+<script src="../assets/components/components.js"></script>
 </body>
 </html>
-

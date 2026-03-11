@@ -73,7 +73,7 @@
 
                 <div class="word-boxes" id="wordBoxes"></div>
 
-                <div class="word-boxes">
+                <div class="input-boxes">
                     <div class="input-box"><input type="text" /></div>
                     <div class="input-box"><input type="text" /></div>
                     <div class="input-box"><input type="text" /></div>
@@ -81,7 +81,8 @@
                     <div class="input-box"><input type="text" /></div>
                 </div>
 
-                <div class="message" id="message">Success! The words are in alphabetical order.</div>
+                <div class="message success" id="successMessage">Success! The words are in alphabetical order.</div>
+                <div class="message failure" id="failureMessage">Failure! Please enter the correct words in alphabetical order.</div>
             </div>
         </main>
     </div>
@@ -121,18 +122,40 @@
 
     function addInputEventListeners(originalWords) {
         const inputBoxes = document.querySelectorAll('.input-box input');
-        const messageDiv = document.getElementById('message');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
 
         inputBoxes.forEach(input => {
             input.addEventListener('input', () => {
                 const userInput = Array.from(inputBoxes).map(input => input.value.trim());
-
-                if (userInput.every(word => word) && checkAlphabeticalOrder(userInput, originalWords)) {
-                    messageDiv.style.display = 'block';
-                    // Disable all input fields
-                    inputBoxes.forEach(input => input.disabled = true);
+                const allInputsFilled = userInput.every(word => word);
+                
+                if (allInputsFilled) {
+                    // Check if all words are from the original set
+                    const validWords = userInput.every(word => 
+                        originalWords.some(originalWord => 
+                            word.toLowerCase() === originalWord.toLowerCase()
+                        )
+                    );
+                    // Check if words are in alphabetical order
+                    const correctOrder = checkAlphabeticalOrder(userInput, originalWords);
+                    
+                    if (validWords && correctOrder) {
+                        successMessage.style.display = 'block';
+                        failureMessage.style.display = 'none';
+                        // Disable all input fields
+                        inputBoxes.forEach(input => input.disabled = true);
+                    } else {
+                        successMessage.style.display = 'none';
+                        failureMessage.style.display = 'block';
+                    }
                 } else {
-                    messageDiv.style.display = 'none';
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'none';
                 }
             });
         });

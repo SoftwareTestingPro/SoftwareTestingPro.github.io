@@ -81,7 +81,8 @@
                     <div class="input-box"><input type="text" maxlength="2" /></div>
                 </div>
 
-                <div class="message" id="message">Success! The numbers are in ascending order.</div>
+                <div class="message success" id="successMessage">Success! The numbers are in ascending order.</div>
+                <div class="message failure" id="failureMessage">Failure! Please enter the correct numbers in ascending order.</div>
             </div>
         </main>
     </div>
@@ -119,17 +120,36 @@
 
     function addInputEventListeners(randomNumbers) {
         const inputBoxes = document.querySelectorAll('.input-box input');
-        const messageDiv = document.getElementById('message');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
 
         inputBoxes.forEach(input => {
             input.addEventListener('input', () => {
                 const userInput = Array.from(inputBoxes).map(input => parseInt(input.value));
-                if (userInput.every(num => !isNaN(num)) && checkSortedOrder(userInput, randomNumbers)) {
-                    messageDiv.style.display = 'block';
-                    // Disable all input fields
-                    inputBoxes.forEach(input => input.disabled = true);
+                const allInputsFilled = userInput.every(num => !isNaN(num));
+                
+                if (allInputsFilled) {
+                    // Check if all numbers are from the original set
+                    const validNumbers = userInput.every(num => randomNumbers.includes(num));
+                    // Check if numbers are in ascending order
+                    const correctOrder = checkSortedOrder(userInput, randomNumbers);
+                    
+                    if (validNumbers && correctOrder) {
+                        successMessage.style.display = 'block';
+                        failureMessage.style.display = 'none';
+                        // Disable all input fields
+                        inputBoxes.forEach(input => input.disabled = true);
+                    } else {
+                        successMessage.style.display = 'none';
+                        failureMessage.style.display = 'block';
+                    }
                 } else {
-                    messageDiv.style.display = 'none';
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'none';
                 }
             });
         });

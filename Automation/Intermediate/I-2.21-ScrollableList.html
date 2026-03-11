@@ -105,11 +105,11 @@
                 <button id="acceptButton" disabled>I Accept</button>
 
                 <div class="message success" id="successMessage">
-                    Success! Terms accepted. ✅
+                    Success! Terms accepted.
                 </div>
 
                 <div class="message failure" id="failureMessage">
-                    Failure! Terms not accepted. ❌
+                    Failure! Terms not accepted.
                 </div>
             </div>
         </main>
@@ -137,7 +137,6 @@
         acceptButton.addEventListener('click', () => {
             acceptButton.classList.add('clicked');
             acceptButton.textContent = 'Accepted'; // Update button text
-            acceptButton.disabled = true; // Disable button after click
 
             // Show success message since terms were accepted
             successMessage.style.display = 'block';
@@ -146,7 +145,3 @@
     </script>
 </body>
 </html>
-
-
-
-

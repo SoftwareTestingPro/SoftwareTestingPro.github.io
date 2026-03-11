@@ -73,7 +73,7 @@
 
                 <div class="letter-boxes" id="letterBoxes"></div>
 
-                <div class="letter-boxes">
+                <div class="input-boxes">
                     <div class="input-box"><input type="text" maxlength="1" /></div>
                     <div class="input-box"><input type="text" maxlength="1" /></div>
                     <div class="input-box"><input type="text" maxlength="1" /></div>
@@ -81,8 +81,8 @@
                     <div class="input-box"><input type="text" maxlength="1" /></div>
                 </div>
 
-                <div class="message" id="message">Success! The letters are in alphabetical order.</div>
-                <div class="invalid-message" id="invalidMessage">Invalid input! Please enter a letter from above.</div>
+                <div class="message success" id="successMessage">Success! The letters are in alphabetical order.</div>
+                <div class="message failure" id="failureMessage">Failure! Please enter the correct letters in alphabetical order.</div>
             </div>
         </main>
     </div>
@@ -145,19 +145,36 @@
 
     function addInputEventListeners(randomLetters) {
         const inputBoxes = document.querySelectorAll('.input-box input');
-        const messageDiv = document.getElementById('message');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
 
         inputBoxes.forEach(input => {
             input.addEventListener('input', () => {
-                if (validateInput(input, randomLetters)) {
-                    const userInput = Array.from(inputBoxes).map(input => input.value.toUpperCase());
-                    if (userInput.every(letter => letter) && checkAlphabeticalOrder(userInput, randomLetters)) {
-                        messageDiv.style.display = 'block';
+                const userInput = Array.from(inputBoxes).map(input => input.value.toUpperCase());
+                const allInputsFilled = userInput.every(letter => letter);
+                
+                if (allInputsFilled) {
+                    // Check if all letters are from the original set
+                    const validLetters = userInput.every(letter => randomLetters.includes(letter));
+                    // Check if letters are in alphabetical order
+                    const correctOrder = checkAlphabeticalOrder(userInput, randomLetters);
+                    
+                    if (validLetters && correctOrder) {
+                        successMessage.style.display = 'block';
+                        failureMessage.style.display = 'none';
                         // Disable all input fields
                         inputBoxes.forEach(input => input.disabled = true);
                     } else {
-                        messageDiv.style.display = 'none';
+                        successMessage.style.display = 'none';
+                        failureMessage.style.display = 'block';
                     }
+                } else {
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'none';
                 }
             });
         });

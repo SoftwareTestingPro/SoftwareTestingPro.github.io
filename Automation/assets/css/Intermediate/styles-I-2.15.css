@@ -1,6 +1,6 @@
 .button {
     display: inline-block;
-    margin: 0.625rem;
+    margin: 5rem 0.625rem;
     padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
     cursor: pointer;
@@ -10,6 +10,13 @@
     max-width: 12.5rem;
     text-align: center;
     color: white;
+    background-color: #007bff;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
 }
 
 .input-group {
@@ -20,7 +27,7 @@
 
 @media (max-width: 1440px) {
     .button {
-        margin: 0.6rem;
+        margin: 1.8rem 0.6rem;
         padding: 0.7125rem 1.425rem;
         font-size: 0.8125rem;
         max-width: 11.875rem;
@@ -32,7 +39,7 @@
 
 @media (max-width: 1024px) {
     .button {
-        margin: 0.575rem;
+        margin: 1.6rem 0.575rem;
         padding: 0.675rem 1.35rem;
         font-size: 0.75rem;
         max-width: 11.25rem;
@@ -44,7 +51,7 @@
 
 @media (max-width: 768px) {
     .button {
-        margin: 0.55rem;
+        margin: 1.4rem 0.55rem;
         padding: 0.6375rem 1.275rem;
         font-size: 0.6875rem;
         max-width: 10.625rem;
@@ -56,7 +63,7 @@
 
 @media (max-width: 480px) {
     .button {
-        margin: 0.525rem;
+        margin: 1.2rem 0.525rem;
         padding: 0.6rem 1.2rem;
         font-size: 0.675rem;
         max-width: 9.375rem;
@@ -68,7 +75,7 @@
 
 @media (max-width: 375px) {
     .button {
-        margin: 0.5rem;
+        margin: 1rem 0.5rem;
         padding: 0.5625rem 1.125rem;
         font-size: 0.625rem;
         max-width: 7.8125rem;

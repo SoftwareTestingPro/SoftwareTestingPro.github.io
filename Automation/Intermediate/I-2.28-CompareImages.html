@@ -133,11 +133,11 @@
     function checkAnswer(userSaysSame) {
       const message = document.getElementById('message');
       if (userSaysSame === areSame) {
-        message.textContent = '✅ Success! You got it right.';
+        message.textContent = 'Success! You got it right.';
         message.classList.add('success');
         message.classList.remove('failure');
       } else {
-        message.textContent = '❌ Failure! That was incorrect.';
+        message.textContent = 'Failure! That was incorrect.';
         message.classList.add('failure');
         message.classList.remove('success');
       }

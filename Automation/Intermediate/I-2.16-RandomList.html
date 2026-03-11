@@ -102,13 +102,15 @@
         }
 
         function generateItemList() {
-            const numItems = getRandomInt(3, 10); // Random number of items between 3 and 10
+            const numItems = getRandomInt(3, 6); // Random number of items between 3 and 6
+            const numBlankItems = getRandomInt(2, 3); // Random number of blank items between 2 and 3
             const shuffledItems = items.sort(() => 0.5 - Math.random());
             const selectedItems = shuffledItems.slice(0, numItems);
 
             const itemList = document.getElementById('itemList');
             itemList.innerHTML = ''; // Clear previous list
 
+            // Add visible items
             selectedItems.forEach(item => {
                 const listItem = document.createElement('li');
                 listItem.classList.add('item');
@@ -116,7 +118,17 @@
                 itemList.appendChild(listItem);
             });
 
-            return numItems;
+            // Add hidden blank items (not displayed and not counted)
+            for (let i = 0; i < numBlankItems; i++) {
+                const blankItem = document.createElement('li');
+                blankItem.classList.add('item');
+                blankItem.style.display = 'none';
+                blankItem.textContent = '';
+                itemList.appendChild(blankItem);
+            }
+
+            console.log(`Generated ${numItems} visible items and ${numBlankItems} hidden blank items`);
+            return numItems; // Only return visible items count for calculation
         }
 
         // Store the number of items for comparison
