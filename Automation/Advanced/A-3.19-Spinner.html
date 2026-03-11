@@ -71,8 +71,6 @@
       <h1>Spinner Challenge</h1>
       <p class="lead">Spin the wheel and enter the selected name.</p>
 
-
-
       <div class="wheel-container">
           <canvas id="wheelCanvas" width="450" height="450"></canvas>
           <div class="pointer"></div>
@@ -88,8 +86,6 @@
               <input type="text" id="nameInput" class="form-control" placeholder="Type name here">
           </div>
       </div>
-      <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
-      <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
       </div>
     </main>
   </div>
@@ -101,7 +97,7 @@
         const spinButton = document.getElementById('spinButton');
         const nameInput = document.getElementById('nameInput');
         const selectedNameMessage = document.getElementById('selectedNameMessage');
-        const validationMessage = document.getElementById('validationMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
         const names = ['Sushil', 'Deepika', 'Kavya', 'Jyoti', 'Avinash', 'Riddhima', 'Saroj', 'Rivansh'];
         const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#FF5722', '#8BC34A', '#FFC107', '#673AB7', '#E91E63'];
@@ -164,7 +160,7 @@
               const selectedSegment = Math.floor(pointerAngle / anglePerSegment) % numberOfSegments;
               selectedName = shuffledNames[selectedSegment];
 
-              selectedNameMessage.textContent = ``;
+              selectedNameMessage.textContent = '';
               successMessage.style.display = 'none'; failureMessage.style.display = 'none';
               nameInput.value = '';
             }
@@ -181,16 +177,16 @@
           }
 
           if (!selectedName) {
-            validationMessage.textContent = "⏳ Please spin the wheel first!";
+            failureMessage.textContent = "⏳ Please spin the wheel first!";
             failureMessage.style.color = "orange";
             return;
           }
 
           if (inputValue === selectedValue) {
-            validationMessage.textContent = "✅ Success! You entered the correct name.";
+            failureMessage.textContent = "✅ Success! You entered the correct name.";
             successMessage.style.color = "green";
           } else {
-            validationMessage.textContent = "❌ Try again. That's not the selected name.";
+            failureMessage.textContent = "❌ Try again. That's not the selected name.";
             failureMessage.style.color = "red";
           }
         });

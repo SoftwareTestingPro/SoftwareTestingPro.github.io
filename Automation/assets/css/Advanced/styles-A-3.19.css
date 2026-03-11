@@ -46,12 +46,4 @@
   text-align: center;
   width: 35%;
 }
-#selectedNameMessage {
-  font-size: 20px;
-  margin-top: 15px;
-}
-.message { display: none; } #successMessage { color: green; } #failureMessage { color: red; } .message { display: none; } #validationMessage {
-  font-size: 18px;
-  margin-top: 10px;
-}
-.message { display: none; padding: 10px; margin: 10px 0; border-radius: 5px; } #successMessage { display: none; color: green; background: #d4edda; border: 1px solid #c3e6cb; } #failureMessage { display: none; color: red; background: #f8d7da; border: 1px solid #f5c6cb; }
+#successMessage, #failureMessage { display: block; }
