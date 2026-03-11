@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.16.css">
     <script src="../assets/components/components.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 	<!-- Additional SEO Meta Tags -->
 	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
 	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -72,14 +73,25 @@
                 <h1>Email OTP Challenge</h1>
                 <p class="lead">Enter your email to receive an OTP and verify it.</p>
 
-                <div class="email-flex">
-                    <label for="emailInput">Enter your email address:</label>
-                    <input type="email" id="emailInput" placeholder="Enter your email">
-                    <button id="submitEmail">Submit</button>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="emailInput" class="label-left">Enter your email address:</label>
+                    </div>
+                    <div class="input-group-right">
+                        <input type="email" id="emailInput" placeholder="Enter your email">
+                    </div>
+                </div>
+                <div class="button-enabled">
+                </div>
+                <div class="button-enabled">
+                    <button id="submitEmail">Send OTP</button>
                 </div>
 
-                <div class="otp-input" id="otpSection">
-                    <label for="otpInput">Enter the OTP sent to your email:</label>
+                <div class="message send-success" id="sendSuccessMessage">
+                    OTP sent successfully! Check your email for the code.
+                </div>
+
+                <div class="otp-input" id="otpSection" style="display: none;">
                     <div class="otp-flex">
                         <input type="text" id="otpInput" placeholder="Enter OTP">
                         <button id="submitOTP">Verify OTP</button>
@@ -99,44 +111,59 @@
     <div id="footer-placeholder"></div>
 
     <script>
-        // Initialize EmailJS
-        (function() {
-            emailjs.init("sushilsingh7688@gmail.com"); // Replace with your EmailJS user ID
-        })();
+        console.log('Script start');
+
+        emailjs.init("zdoh6O0VE2D3_ifLq");
 
         let generatedOTP = '';
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
+        const sendSuccessMessage = document.getElementById('sendSuccessMessage');
 
-        // Hide messages on load
         successMessage.style.display = 'none';
         failureMessage.style.display = 'none';
+        sendSuccessMessage.style.display = 'none';
         successMessage.classList.remove('success');
         failureMessage.classList.remove('failure');
+        sendSuccessMessage.classList.remove('send-success');
 
         function generateOTP() {
             return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
         }
 
+        // Generate OTP on page load
+        window.addEventListener('load', () => {
+            generatedOTP = generateOTP();
+            console.log('Generated OTP:', generatedOTP);
+        });
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
         document.getElementById('submitEmail').addEventListener('click', () => {
             const email = document.getElementById('emailInput').value;
-            if (email) {
-                generatedOTP = generateOTP();
-                // Send OTP email using EmailJS
-                emailjs.send("service_hi9ry4q", "template_svo6wdd", {
-                    to_email: email,
-                    otp: generatedOTP,
-                }).then(function(response) {
-                    console.log('Email sent successfully:', response);
-                    // Show OTP input field
-                    document.getElementById('otpSection').style.display = 'block';
-                }, function(error) {
-                    console.log('Failed to send email:', error);
-                    alert('Failed to send OTP email. Please check your email address and try again.');
-                });
-            } else {
+            if (!email || !validateEmail(email)) {
                 alert('Please enter a valid email address.');
+                return;
             }
+            generatedOTP = generateOTP();
+            // Send OTP email using EmailJS
+            emailjs.send("service_7z2h26s", "template_svo6wdd", {
+                to_email: email,
+                otp: generatedOTP,
+            }).then(function(response) {
+                console.log('Email sent successfully:', response);
+                // Show OTP input field
+                document.getElementById('otpSection').style.display = 'block';
+                // Show send success message
+                sendSuccessMessage.style.display = 'block';
+                sendSuccessMessage.classList.add('send-success');
+            }, function(error) {
+                console.log('Failed to send email:', error);
+                alert('Failed to send OTP email. Please check your email address and try again.');
+            });
         });
 
         document.getElementById('submitOTP').addEventListener('click', () => {

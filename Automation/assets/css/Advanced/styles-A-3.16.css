@@ -1,6 +1,47 @@
-.otp-input {
-    display: none;
-    margin-top: 1.25rem;
+.input-group-parent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    align-self: flex-start;
+    width: 100%;
+    margin-top: 4rem;
+}
+
+.input-group-left {
+    width: 150px;
+}
+
+.input-group-right {
+    flex: 1;
+}
+
+.label-left {
+    font-size: 14px !important;
+    color: #333;
+    font-weight: normal !important;
+    white-space: nowrap;
+    width: 100%;
+    text-align: left;
+    margin-top: 30px !important;
+    padding-left: 12rem;
+}
+
+input[type="email"] {
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: right;
+    width: 250px;
+    margin-left: auto !important;
+}
+
+input[type="email"]:focus {
+    border-color: #9fb7ff;
+    box-shadow: 0 4px 12px rgba(60, 120, 255, 0.08);
 }
 
 .otp-input label {
@@ -8,6 +49,10 @@
     margin-bottom: 0.625rem;
     font-size: 0.875rem;
     color: var(--muted);
+}
+
+.otp-flex {
+    margin-top: 5rem;
 }
 
 .otp-input input {
@@ -20,18 +65,44 @@
     margin-bottom: 0.625rem;
 }
 
-.otp-input button {
-    padding: 0.625rem 1.25rem;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 1rem;
+.button-enabled {
+    margin-top: 0.5rem;
 }
 
-.otp-input button:hover {
-    background: #5a35a8;
+.button-enabled button {
+    background-color: #24A0ED !important;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.message.send-success {
+    color: var(--success);
+    font-weight: normal;
+    font-size: 0.75rem;
+    border: none;
+    background: none;
+    display: block;
+}
+
+.message.send-success::before {
+    content: "✅ ";
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.98);
 }
 
 @media (max-width: 1440px) {
@@ -48,9 +119,9 @@
         max-width: 11.875rem;
         margin-bottom: 0.6rem;
     }
-    .otp-input button {
-        padding: 0.6rem 1.1875rem;
-        font-size: 0.95rem;
+    button {
+        padding: 0.5625rem 1.125rem;
+        font-size: 0.95em;
     }
 }
 
@@ -68,9 +139,9 @@
         max-width: 11.25rem;
         margin-bottom: 0.575rem;
     }
-    .otp-input button {
-        padding: 0.575rem 1.125rem;
-        font-size: 0.9rem;
+    button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9em;
     }
 }
 
@@ -88,9 +159,9 @@
         max-width: 10rem;
         margin-bottom: 0.55rem;
     }
-    .otp-input button {
-        padding: 0.55rem 1.0625rem;
-        font-size: 0.85rem;
+    button {
+        padding: 0.4375rem 0.875rem;
+        font-size: 0.85em;
     }
 }
 
@@ -108,9 +179,9 @@
         max-width: 8.75rem;
         margin-bottom: 0.525rem;
     }
-    .otp-input button {
-        padding: 0.525rem 1rem;
-        font-size: 0.8rem;
+    button {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.8em;
     }
 }
 
@@ -128,8 +199,8 @@
         max-width: 7.5rem;
         margin-bottom: 0.5rem;
     }
-    .otp-input button {
-        padding: 0.5rem 0.9375rem;
-        font-size: 0.75rem;
+    button {
+        padding: 0.3125rem 0.625rem;
+        font-size: 0.75em;
     }
 }
