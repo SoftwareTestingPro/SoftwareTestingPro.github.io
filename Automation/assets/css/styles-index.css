@@ -1,0 +1,556 @@
+:root {
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --accent: #6b21a8;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --border: #e6e9ef;
+    --radius: 12px;
+    --card-max-width: 900px;
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 0;
+    color: #111827;
+}
+
+#header-placeholder {
+}
+
+.site-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 0;
+    margin: 0;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: block !important;
+    visibility: visible !important;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home-link {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: opacity 0.3s ease;
+}
+
+.home-link:hover {
+    opacity: 0.8;
+}
+
+.home-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.home-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.hamburger {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-wrapper {
+    flex: 1;
+    max-width: var(--card-max-width);
+    margin: 0 auto;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.scrollable-card {
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.card-content {
+    padding: 32px;
+}
+
+.card-content h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    text-align: center;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card-content h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.card-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.card-content p {
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.lead {
+    font-size: 1.25rem;
+    color: #374151 !important;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #667eea;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Animated Section */
+.animated-section {
+    margin: 3rem 0;
+}
+
+/* Benefits Grid */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.benefit-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-left: 4px solid #667eea;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-left-color: #764ba2;
+}
+
+.benefit-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.benefit-card h3 {
+    color: #111827;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.benefit-card p {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+/* Areas Section */
+.areas-section {
+    margin: 3rem 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    padding: 2rem;
+    border-radius: 16px;
+}
+
+.areas-section h3 {
+    text-align: center;
+    color: #111827;
+    margin-bottom: 2rem;
+}
+
+.areas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.area-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-left: 4px solid #f093fb;
+}
+
+.area-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border-left-color: #f5576c;
+}
+
+/* Platform Section */
+.platform-section {
+    margin: 3rem 0;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.feature-card {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.feature-card h4 {
+    color: #111827;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.feature-card ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.feature-card li {
+    margin-bottom: 0.75rem;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+/* Learning Benefits */
+.learning-benefits {
+    margin: 3rem 0;
+}
+
+.benefits-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.benefit-item {
+    background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-left: 4px solid #16a34a;
+}
+
+.benefit-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border-left-color: #15803d;
+}
+
+/* CTA Section */
+.cta-section {
+    background: var(--secondary-gradient);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    margin-top: 3rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(245, 87, 108, 0.3);
+}
+
+.cta-section h2 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.cta-section p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.cta-primary {
+    background: white;
+    color: #f5576c;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cta-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cta-secondary {
+    background: transparent;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: 2px solid white;
+    transition: all 0.3s ease;
+}
+
+.cta-secondary:hover {
+    background: white;
+    color: #f5576c;
+    transform: scale(1.05);
+}
+
+/* Navigation */
+.card-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.nav-btn {
+    position: relative;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.nav-btn:hover {
+    background-color: #0056b3;
+}
+
+.nav-btn-prev::before {
+    content: "← ";
+    margin-right: 5px;
+}
+
+.nav-btn-next::after {
+    content: " →";
+    margin-left: 5px;
+}
+
+.nav-icon {
+    display: none; /* Hide the span since we use ::before/::after */
+}
+
+/* Footer */
+#footer-placeholder {
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 15px;
+    }
+
+    .card-content {
+        padding: 24px;
+    }
+
+    .card-content h1 {
+        font-size: 1.875rem;
+    }
+
+    .card-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .benefits-list {
+        grid-template-columns: 1fr;
+    }
+
+    .areas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav-btn {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .cta-section {
+        padding: 2rem 1.5rem;
+    }
+
+    .cta-section h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-content {
+        padding: 20px;
+    }
+
+    .card-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .card-content h2 {
+        font-size: 1.25rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .benefit-card,
+    .feature-card {
+        padding: 1.5rem;
+    }
+
+    .cta-section {
+        padding: 2rem 1rem;
+    }
+}

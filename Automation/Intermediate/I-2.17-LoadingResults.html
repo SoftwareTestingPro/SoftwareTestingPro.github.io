@@ -70,6 +70,8 @@
                 <h1>Thumbnails with ISBN Data</h1>
                 <p class="lead">Fetch ISBNs of Thumbnails Displayed in next screens, Store and Input them in last page</p>
 
+                <div id="thumbnailsLabel" class="instruction-text">Get ready to observe the thumbnails and their ISBN numbers...</div>
+
                 <div class="thumbnails" id="thumbnailContainer"></div>
 
                 <div class="input-container" id="inputContainer">
@@ -158,6 +160,9 @@
                 } else {
                     messageElement.innerHTML = '<div class="failure">Failure! Some ISBNs are incorrect.</div>';
                 }
+
+                // Show the message element
+                messageElement.style.display = 'block';
             }
 
             // Initialize
@@ -167,7 +172,7 @@
                     thumbnailsLabel.style.display = 'none';
                     displayThumbnail(0);
                 }, 1000);
-            }, 5000);
+            }, 10000);
         });
     </script>
 </body>
