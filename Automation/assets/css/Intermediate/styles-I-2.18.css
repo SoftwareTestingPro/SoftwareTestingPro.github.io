@@ -43,7 +43,7 @@ input[type="text"]:focus {
 }
 
 canvas {
-    height: 300px;
+    height: 340px !important;
 }
 
 @media (max-width: 1440px) {

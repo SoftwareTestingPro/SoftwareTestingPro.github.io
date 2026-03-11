@@ -91,6 +91,10 @@
         const failureMessage = document.getElementById('failureMessage');
         const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+
         inputField.addEventListener('input', () => {
             if (inputField.value.trim() === today) {
                 successMessage.style.display = 'block';

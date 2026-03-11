@@ -29,7 +29,7 @@ function loadHeader() {
         headerPlaceholder.innerHTML = `
             <header style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 0; margin: 0; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: block !important; visibility: visible !important;">
                 <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between;">
-                    <a href="../../index.html" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 6px; transition: opacity 0.3s ease;">
+                    <a href="../../index.html" class="home-link" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 6px; transition: opacity 0.3s ease;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                         </svg>
@@ -45,6 +45,14 @@ function loadHeader() {
         `;
         
         console.log('Header set with inline content');
+        
+        // Update home link dynamically
+        const homeLink = headerPlaceholder.querySelector('.home-link');
+        if (homeLink) {
+            const pathSegments = window.location.pathname.split('/').filter(segment => segment);
+            const upLevels = pathSegments.length; // Go up to root
+            homeLink.href = '../'.repeat(upLevels) + 'index.html';
+        }
         
         // Try to load external header (but fallback to inline is already set)
         const basePath = getBasePath();

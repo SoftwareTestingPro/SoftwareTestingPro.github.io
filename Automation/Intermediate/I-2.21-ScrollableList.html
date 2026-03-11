@@ -103,6 +103,14 @@
                 </div>
 
                 <button id="acceptButton" disabled>I Accept</button>
+
+                <div class="message success" id="successMessage">
+                    Success! Terms accepted. ✅
+                </div>
+
+                <div class="message failure" id="failureMessage">
+                    Failure! Terms not accepted. ❌
+                </div>
             </div>
         </main>
     </div>
@@ -112,6 +120,12 @@
     <script>
         const terms = document.querySelector('.terms');
         const acceptButton = document.getElementById('acceptButton');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
 
         terms.addEventListener('scroll', () => {
             if (terms.scrollTop + terms.clientHeight >= terms.scrollHeight) {
@@ -124,6 +138,10 @@
             acceptButton.classList.add('clicked');
             acceptButton.textContent = 'Accepted'; // Update button text
             acceptButton.disabled = true; // Disable button after click
+
+            // Show success message since terms were accepted
+            successMessage.style.display = 'block';
+            failureMessage.style.display = 'none';
         });
     </script>
 </body>
