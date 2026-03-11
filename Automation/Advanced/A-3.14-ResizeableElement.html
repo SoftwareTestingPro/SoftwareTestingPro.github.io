@@ -74,7 +74,6 @@
                 <div class="size-display" id="sizeDisplay">Size: 200px x 200px</div>
 
                 <div id="resizable">
-                    Resize me to 256px x 256px using the bottom right icon!
                     <div class="resize-handle" id="resizeHandle"></div>
                 </div>
 
@@ -114,6 +113,11 @@
         window.addEventListener('load', updateSizeDisplay);
 
         resizeHandle.addEventListener('mousedown', function (e) {
+            const currentWidth = resizable.offsetWidth;
+            const currentHeight = resizable.offsetHeight;
+            if (currentWidth === 256 && currentHeight === 256) {
+                return; // Disable resizing when target size is reached
+            }
             e.preventDefault();
             const startX = e.clientX;
             const startY = e.clientY;

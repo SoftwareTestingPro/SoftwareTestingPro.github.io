@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Practice email OTP verification and content reading techniques. This advanced tutorial covers email parsing, OTP validation, and testing email-based authentication in automation testing scenarios.">
+    <meta name="description" content="Practice email OTP verification and testing. This advanced tutorial covers OTP generation, email simulation, and verification testing in automation testing scenarios.">
     <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
-    <title>Read Email Content Challenge - Email Parsing Testing Tutorial | Software Testing Pro</title>
+    <title>Email OTP Verification Challenge - OTP Testing Tutorial | Software Testing Pro</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.16.css">
     <script src="../assets/components/components.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 	<!-- Additional SEO Meta Tags -->
 	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
 	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 	<link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.16-ReadEmailContent.html">
 	<!-- Open Graph Tags -->
-	<meta property="og:title" content="Read Email Content Challenge - Email Parsing Testing Tutorial | Software Testing Pro">
-	<meta property="og:description" content="Learn email content reading and parsing techniques. This advanced tutorial covers email interfaces, content extraction, and testing email-based UI elements in automation testing scenarios.">
+	<meta property="og:title" content="Email OTP Verification Challenge - OTP Testing Tutorial | Software Testing Pro">
+	<meta property="og:description" content="Learn OTP verification and email-based authentication techniques. This advanced tutorial covers OTP generation, email simulation, and testing verification processes in automation testing scenarios.">
 	<meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.16-ReadEmailContent.html">
 	<meta property="og:type" content="article">
 	<meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
 	<meta property="og:site_name" content="Software Testing Pro">
 	<!-- Twitter Card Tags -->
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:title" content="Read Email Content Challenge - Email Parsing Testing Tutorial | Software Testing Pro">
-	<meta name="twitter:description" content="Learn email content reading and parsing techniques. This advanced tutorial covers email interfaces.">
+	<meta name="twitter:title" content="Email OTP Verification Challenge - OTP Testing Tutorial | Software Testing Pro">
+	<meta name="twitter:description" content="Learn OTP verification and email-based authentication techniques. This advanced tutorial covers OTP generation.">
 	<meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
 	<!-- Structured Data -->
 	<script type="application/ld+json">
 	{
 	  "@context": "https://schema.org",
 	  "@type": "EducationalContent",
-	  "headline": "Read Email Content Challenge - Email Parsing Testing Tutorial",
-	  "description": "Learn email content reading and parsing techniques. This advanced tutorial covers email interfaces, content extraction, and testing email-based UI elements in automation testing scenarios.",
+	  "headline": "Email OTP Verification Challenge - OTP Testing Tutorial",
+	  "description": "Learn OTP verification and email-based authentication techniques. This advanced tutorial covers OTP generation, email simulation, and testing verification processes in automation testing scenarios.",
 	  "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.16-ReadEmailContent.html",
 	  "publisher": {
 	    "@type": "Organization",
@@ -68,16 +69,21 @@
 
         <main class="card">
             <div class="card-content">
+                <h1>Email OTP Challenge</h1>
                 <p class="lead">Enter your email to receive an OTP and verify it.</p>
 
-                <label for="emailInput">Enter your email address:</label>
-                <input type="email" id="emailInput" placeholder="Enter your email">
-                <button id="submitEmail">Submit</button>
+                <div class="email-flex">
+                    <label for="emailInput">Enter your email address:</label>
+                    <input type="email" id="emailInput" placeholder="Enter your email">
+                    <button id="submitEmail">Submit</button>
+                </div>
 
                 <div class="otp-input" id="otpSection">
                     <label for="otpInput">Enter the OTP sent to your email:</label>
-                    <input type="text" id="otpInput" placeholder="Enter OTP">
-                    <button id="submitOTP">Verify OTP</button>
+                    <div class="otp-flex">
+                        <input type="text" id="otpInput" placeholder="Enter OTP">
+                        <button id="submitOTP">Verify OTP</button>
+                    </div>
                 </div>
 
                 <div class="message" id="successMessage">
@@ -93,6 +99,11 @@
     <div id="footer-placeholder"></div>
 
     <script>
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("sushilsingh7688@gmail.com"); // Replace with your EmailJS user ID
+        })();
+
         let generatedOTP = '';
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
@@ -111,11 +122,18 @@
             const email = document.getElementById('emailInput').value;
             if (email) {
                 generatedOTP = generateOTP();
-                // Simulate sending email
-                console.log(`Sending OTP ${generatedOTP} to ${email}`);
-                
-                // Show OTP input field
-                document.getElementById('otpSection').style.display = 'block';
+                // Send OTP email using EmailJS
+                emailjs.send("service_hi9ry4q", "template_svo6wdd", {
+                    to_email: email,
+                    otp: generatedOTP,
+                }).then(function(response) {
+                    console.log('Email sent successfully:', response);
+                    // Show OTP input field
+                    document.getElementById('otpSection').style.display = 'block';
+                }, function(error) {
+                    console.log('Failed to send email:', error);
+                    alert('Failed to send OTP email. Please check your email address and try again.');
+                });
             } else {
                 alert('Please enter a valid email address.');
             }
