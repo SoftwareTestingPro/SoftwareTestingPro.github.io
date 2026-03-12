@@ -1,7 +1,69 @@
+/* Table Styles */table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
 
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
 
+th {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    text-align: center;
+}
 
+td {
+    font-size: 14px;
+    color: #495057;
+    text-align: center;
+}
 
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    th, td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+    
+    th {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    th, td {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+}
 
 @media (max-width: 1440px) {
     body {

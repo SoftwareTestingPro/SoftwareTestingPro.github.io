@@ -69,7 +69,7 @@
     <main class="card">
         <div class="card-content">
         <h1>Excel Read Data Challenge</h1>
-        <p class="lead">Read the data from the Excel file and enter it in the fields.</p>
+        <p class="lead">Read the data from the Excel file created in previous challenge and enter it in the fields.</p>
 
         <table>
             <tr>
@@ -78,60 +78,113 @@
                 <th>Position</th>
             </tr>
             <tr>
-                <td><input type="text" placeholder="Enter Name"></td>
-                <td><input type="text" placeholder="Enter Department"></td>
-                <td><input type="text" placeholder="Enter Position"></td>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
             </tr>
             <tr>
-                <td><input type="text" placeholder="Enter Name"></td>
-                <td><input type="text" placeholder="Enter Department"></td>
-                <td><input type="text" placeholder="Enter Position"></td>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
             </tr>
             <tr>
-                <td><input type="text" placeholder="Enter Name"></td>
-                <td><input type="text" placeholder="Enter Department"></td>
-                <td><input type="text" placeholder="Enter Position"></td>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
             </tr>
             <tr>
-                <td><input type="text" placeholder="Enter Name"></td>
-                <td><input type="text" placeholder="Enter Department"></td>
-                <td><input type="text" placeholder="Enter Position"></td>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
             </tr>
             <tr>
-                <td><input type="text" placeholder="Enter Name"></td>
-                <td><input type="text" placeholder="Enter Department"></td>
-                <td><input type="text" placeholder="Enter Position"></td>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
             </tr>
         </table>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-    </table>
+        
+        <div id="success-message" style="display: none; margin-top: 20px; padding: 15px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; color: #155724; font-weight: bold; text-align: center;">
+            ✓ Excellent! You've successfully entered all the correct data from the Excel file.
+        </div>
+        
+        <div id="failure-message" style="display: none; margin-top: 20px; padding: 15px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; color: #721c24; font-weight: bold; text-align: center;">
+            ✗ The data entered doesn't match the expected Excel data. Please check the values and try again.
+        </div>
+        
         </div>
     </main>
 </div>
 
 <div id="footer-placeholder"></div>
+
+<script>
+// Expected data in the exact sequence
+const expectedData = [
+    { name: "John Doe", department: "Engineering", position: "Software Engineer" },
+    { name: "Jane Smith", department: "Marketing", position: "Marketing Manager" },
+    { name: "Emily Johnson", department: "Human Resources", position: "HR Specialist" },
+    { name: "Michael Brown", department: "Sales", position: "Sales Representative" },
+    { name: "Linda Wilson", department: "Finance", position: "Financial Analyst" }
+];
+
+function validateInputs() {
+    const inputs = document.querySelectorAll('input[type="text"]');
+    const successMessage = document.getElementById('success-message');
+    const failureMessage = document.getElementById('failure-message');
+    
+    // Check if all inputs are filled
+    let allFilled = true;
+    inputs.forEach(input => {
+        if (input.value.trim() === '') {
+            allFilled = false;
+        }
+    });
+    
+    if (!allFilled) {
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+        return;
+    }
+    
+    // Validate data in sequence
+    let isCorrect = true;
+    for (let i = 0; i < expectedData.length; i++) {
+        const baseIndex = i * 3;
+        const nameInput = inputs[baseIndex];
+        const deptInput = inputs[baseIndex + 1];
+        const posInput = inputs[baseIndex + 2];
+        
+        if (nameInput.value.trim() !== expectedData[i].name ||
+            deptInput.value.trim() !== expectedData[i].department ||
+            posInput.value.trim() !== expectedData[i].position) {
+            isCorrect = false;
+            break;
+        }
+    }
+    
+    // Show appropriate message
+    if (isCorrect) {
+        successMessage.style.display = 'block';
+        failureMessage.style.display = 'none';
+    } else {
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'block';
+    }
+}
+
+// Add event listeners to all input fields
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input[type="text"]');
+    inputs.forEach(input => {
+        input.addEventListener('input', validateInputs);
+        input.addEventListener('paste', function() {
+            setTimeout(validateInputs, 10); // Small delay to allow paste to complete
+        });
+    });
+});
+</script>
+
 </body>
 </html>
 
