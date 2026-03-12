@@ -5,6 +5,7 @@
     padding: 0.625rem 1.25rem;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 2rem;
 }
 
 button {
@@ -32,6 +33,7 @@ button:active {
     margin-bottom: 0.625rem;
     align-self: flex-start;
     width: 100%;
+    margin-top: 5rem;
 }
 
 .input-group-left {
@@ -49,6 +51,7 @@ button:active {
     white-space: nowrap;
     width: 100%;
     text-align: left;
+    margin-left: 14rem;
     margin-top: 1.875rem !important;
 }
 
@@ -60,7 +63,8 @@ input[type="text"] {
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    text-align: right;
+    text-align: left;
+    margin-left: 2rem;
     width: 12.5rem;
     margin-left: auto !important;
 }
