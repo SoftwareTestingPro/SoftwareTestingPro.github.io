@@ -2,22 +2,38 @@
     list-style: none;
     padding: 0;
     margin: 6rem auto 0;
-    width: 18.75rem;
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 20rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+    overflow: hidden;
 }
 
 .list-item {
-    padding: 0.625rem 0.9375rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--card);
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f1f3f4;
+    background: #ffffff;
     cursor: move;
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.list-item::before {
+    content: "⋮⋮";
+    color: #9ca3af;
+    font-size: 0.8rem;
+    opacity: 0.6;
 }
 
 .list-item:hover {
-    background: var(--bg);
+    background: #f8fafc;
+    transform: translateX(2px);
 }
 
 .list-item:last-child {

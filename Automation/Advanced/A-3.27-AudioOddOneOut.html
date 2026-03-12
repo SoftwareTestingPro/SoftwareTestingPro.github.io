@@ -60,7 +60,7 @@
             <span class="nav-icon">←</span>
             Previous
         </a>
-        <a href="A-3.28-DragAndDropWithFrames.html" class="nav-btn nav-btn-next">
+        <a href="A-3.28-DragAndDropWithinFrames.html" class="nav-btn nav-btn-next">
             Next
             <span class="nav-icon">→</span>
         </a>
@@ -121,14 +121,13 @@
 
     button.appendChild(playIcon);
 
-    // Add click event listener to play sound when icon is clicked
-    playIcon.onclick = (event) => {
-      event.stopPropagation(); // Prevent the button click event from firing
+    // Add click event listener to play sound when button is clicked
+    button.onclick = () => {
       playSound(sound);
     };
 
     // Add click event listener to button to determine if it is the odd sound
-    button.onclick = () => {
+    button.addEventListener('click', () => {
       if (sound === oddSound) {
         successMessage.style.display = 'flex';
         successMessage.classList.add('success');
@@ -142,7 +141,7 @@
         failureMessage.classList.add('failure');
         failureMessage.textContent = 'Failure! Try again.';
       }
-    };
+    });
 
     buttonContainer.appendChild(button);
   });

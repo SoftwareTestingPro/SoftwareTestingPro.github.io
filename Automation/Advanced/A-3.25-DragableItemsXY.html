@@ -69,7 +69,7 @@
     <main class="card">
         <div class="card-content">
         <h1>Draggable Items Challenge</h1>
-        <p class="lead">Drag and position the X and Y items to merge them.</p>
+        <p class="lead">Drag and position the X and Y items to merge them. Note: X can only move horizontally and Y can only move vertically. Success message will be displayed only when they are exactly overlapped.</p>
 
         <div class="container">
             <div id="horizontal" class="draggable horizontal">X</div>
@@ -99,19 +99,21 @@
             const positionElements = () => {
                 if (successDisplayed) return;
                 const containerRect = container.getBoundingClientRect();
-                const labelHeight = document.querySelector('.label').offsetHeight;
                 const maxX = containerRect.width - horizontalElement.offsetWidth;
-                const maxY = containerRect.height - verticalElement.offsetHeight - labelHeight;
+                const maxY = containerRect.height - horizontalElement.offsetHeight;
 
-                const xLeft = Math.random() * (maxX / 2);
-                const xTop = Math.random() * maxY;
-                const yLeft = xLeft + horizontalElement.offsetWidth + Math.random() * (maxX - xLeft - horizontalElement.offsetWidth);
-                const yTop = Math.random() * (maxY - verticalElement.offsetHeight);
+                // Generate random positions ensuring they don't overlap initially
+                const xLeft = Math.random() * (maxX * 0.7); // Keep X in left 70%
+                const xTop = Math.random() * (maxY * 0.8); // Keep Y in top 80%
+                
+                // Position Y in right side to avoid initial overlap
+                const yLeft = maxX * 0.3 + Math.random() * (maxX * 0.6);
+                const yTop = Math.random() * (maxY * 0.8);
 
                 horizontalElement.style.left = `${xLeft}px`;
-                horizontalElement.style.top = `${xTop + labelHeight}px`;
+                horizontalElement.style.top = `${xTop}px`;
                 verticalElement.style.left = `${yLeft}px`;
-                verticalElement.style.top = `${yTop + labelHeight}px`;
+                verticalElement.style.top = `${yTop}px`;
             };
 
             const checkOverlap = () => {
@@ -130,12 +132,17 @@
                     successMessage.classList.add('success');
                     horizontalElement.style.display = 'none';
                     verticalElement.style.display = 'none';
-                    combinedBox.style.left = `${xRect.left - container.getBoundingClientRect().left}px`;
-                    combinedBox.style.top = `${xRect.top - container.getBoundingClientRect().top}px`;
+                    
+                    // Position combinedBox at the exact position where X and Y overlapped
+                    const containerRect = container.getBoundingClientRect();
+                    combinedBox.style.left = `${xRect.left - containerRect.left}px`;
+                    combinedBox.style.top = `${xRect.top - containerRect.top}px`;
                     combinedBox.style.width = `${xRect.width}px`;
                     combinedBox.style.height = `${xRect.height}px`;
                     combinedBox.textContent = 'XY';
                     combinedBox.style.display = 'flex';
+                    combinedBox.style.position = 'absolute';
+                    combinedBox.style.transform = 'none'; // Remove center transform
                     successDisplayed = true;
                 }
             };

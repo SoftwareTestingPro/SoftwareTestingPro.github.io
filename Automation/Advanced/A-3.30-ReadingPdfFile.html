@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.30.css">
     <script src="../assets/components/components.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Additional SEO Meta Tags -->
     <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -69,7 +70,7 @@
     <main class="card">
         <div class="card-content">
             <h1>PDF File Reader</h1>
-            <p class="lead">Enter your country name and verify if it matches the PDF content.</p>
+            <p class="lead">Master the art of PDF content validation! Download the countries PDF file, carefully examine its contents, and then verify whether the randomly displayed country appears in the document. This advanced challenge tests your PDF reading skills, content extraction abilities, and data validation techniques essential for automation testing scenarios involving document processing.</p>
 
             <div class="button-group">
                 <button id="downloadBtn" onclick="generateAndDownloadPDF()">Download Countries PDF</button>
@@ -77,7 +78,6 @@
 
             <div class="validation-section" id="validationSection">
                 <div class="country-display">
-                    <p>Verify if this country is in the downloaded PDF:</p>
                     <div class="country-name" id="randomCountry"></div>
                 </div>
 
@@ -92,10 +92,8 @@
                     </div>
                 </div>
 
-                <button id="validateBtn" class="validate-btn" onclick="validateAnswer()">Validate</button>
-
-                <div class="message success" id="successMessage"></div>
-                <div class="message failure" id="failureMessage"></div>
+                <div class="message" id="successMessage"></div>
+                <div class="message" id="failureMessage"></div>
             </div>
         </div>
     </main>
@@ -104,20 +102,23 @@
 <div id="footer-placeholder"></div>
 
 <script>
-    const countries = [
-        'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola',
-        'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria',
-        'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados',
-        'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan',
-        'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei',
-        'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon',
-        'Canada', 'Cape Verde', 'Central African Republic', 'Chad', 'Chile',
-        'China', 'Colombia', 'Comoros', 'Congo', 'Costa Rica',
-        'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark',
-        'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt'
+    const allCountries = [
+        'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany',
+        'France', 'Japan', 'China', 'India', 'Brazil',
+        'Mexico', 'Italy', 'Spain', 'Russia', 'South Korea',
+        'Netherlands', 'Switzerland', 'Sweden', 'Norway', 'Denmark',
+        'Belgium', 'Austria', 'New Zealand', 'Singapore', 'Israel',
+        'Ireland', 'Portugal', 'Greece', 'Finland', 'Poland',
+        'Czech Republic', 'Hungary', 'Romania', 'Bulgaria', 'Croatia',
+        'Slovakia', 'Slovenia', 'Estonia', 'Latvia', 'Lithuania',
+        'Turkey', 'Egypt', 'South Africa', 'Argentina', 'Chile',
+        'Colombia', 'Peru', 'Venezuela', 'Malaysia', 'Thailand',
+        'Indonesia', 'Philippines', 'Vietnam', 'Pakistan', 'Bangladesh',
+        'Sri Lanka', 'Myanmar', 'Cambodia', 'Laos', 'Nepal'
     ];
 
     let selectedCountry = '';
+    let pdfCountries = []; // Store the countries used in current PDF
 
     function generateAndDownloadPDF() {
         try {
@@ -130,7 +131,10 @@
             doc.setFontSize(12);
             let yPosition = 30;
 
-            countries.forEach((country, index) => {
+            // Pick 10 random countries and sort them alphabetically
+            pdfCountries = [...allCountries].sort(() => Math.random() - 0.5).slice(0, 10).sort();
+            
+            pdfCountries.forEach((country, index) => {
                 if (yPosition > 280) {
                     doc.addPage();
                     yPosition = 20;
@@ -156,47 +160,43 @@
     }
 
     function showValidationSection() {
-        const allCountries = [
-            'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda',
-            'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain',
-            'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan',
-            'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria',
-            'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Cape Verde',
-            'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros',
-            'Congo', 'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark',
-            'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt',
-            'France', 'Germany', 'India', 'Japan', 'Mexico'
-        ];
-
         const isInPDF = Math.random() > 0.5;
 
         if (isInPDF) {
-            selectedCountry = countries[Math.floor(Math.random() * countries.length)];
+            selectedCountry = pdfCountries[Math.floor(Math.random() * pdfCountries.length)];
         } else {
-            const countriesNotInPDF = allCountries.filter(c => !countries.includes(c));
+            const countriesNotInPDF = allCountries.filter(c => !pdfCountries.includes(c));
             selectedCountry = countriesNotInPDF[Math.floor(Math.random() * countriesNotInPDF.length)];
         }
 
-        document.getElementById('randomCountry').textContent = selectedCountry;
+        document.getElementById('randomCountry').textContent = `Is ${selectedCountry} displayed in downloaded PDF file?`;
         document.getElementById('validationSection').classList.add('active');
+        
+        // Hide messages on page load
         document.getElementById('successMessage').style.display = 'none';
         document.getElementById('failureMessage').style.display = 'none';
+        document.getElementById('successMessage').classList.remove('success');
+        document.getElementById('failureMessage').classList.remove('failure');
+        
+        // Clear radio button selections
         document.querySelectorAll('input[name="verification"]').forEach(radio => radio.checked = false);
+        
+        // Add radio button change listeners to directly validate
+        document.querySelectorAll('input[name="verification"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                validateAnswer();
+            });
+        });
     }
 
     function validateAnswer() {
         const selectedOption = document.querySelector('input[name="verification"]:checked');
 
         if (!selectedOption) {
-            alert('Please select Yes or No');
             return;
         }
 
-        // disable validate button so user cannot submit multiple times
-        const validateBtn = document.getElementById('validateBtn');
-        if (validateBtn) validateBtn.disabled = true;
-
-        const isInPDF = countries.includes(selectedCountry);
+        const isInPDF = pdfCountries.includes(selectedCountry);
         const userSaidYes = selectedOption.value === 'yes';
         const isCorrect = isInPDF === userSaidYes;
 
@@ -205,11 +205,28 @@
 
         if (isCorrect) {
             successMessage.style.display = 'block';
+            successMessage.classList.add('success');
+            if (isInPDF) {
+                successMessage.textContent = 'Correct! The country is in the PDF.';
+            } else {
+                successMessage.textContent = 'Correct! The country is not in the PDF.';
+            }
             failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
         } else {
             successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
             failureMessage.style.display = 'block';
+            failureMessage.classList.add('failure');
+            if (isInPDF) {
+                failureMessage.textContent = 'Incorrect! The country is actually in the PDF.';
+            } else {
+                failureMessage.textContent = 'Incorrect! The country is actually not in the PDF.';
+            }
         }
+        
+        // Disable radio buttons after selection
+        document.querySelectorAll('input[name="verification"]').forEach(radio => radio.disabled = true);
     }
 </script>
 </body>
