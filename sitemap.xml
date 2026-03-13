@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Generated sitemap - lastmod set to 2025-03-13 -->
-
   <url>
     <loc>https://softwaretestingpro.github.io/</loc>
     <lastmod>2025-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Root pages -->
   <url>
     <loc>https://softwaretestingpro.github.io/index.html</loc>
     <lastmod>2025-03-13</lastmod>
@@ -46,16 +42,12 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-
-  <!-- Automation section -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/index.html</loc>
     <lastmod>2025-03-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Automation Beginner - Actual existing files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.01-Click.html</loc>
     <lastmod>2025-03-13</lastmod>
@@ -248,8 +240,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
-  <!-- Automation Intermediate - All existing files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.01-DragAndDropText.html</loc>
     <lastmod>2025-03-13</lastmod>
@@ -442,8 +432,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
-  <!-- Automation Advanced - All existing files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.01-HiddenElement.html</loc>
     <lastmod>2025-03-13</lastmod>
@@ -636,8 +624,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
-  <!-- Quiz section - All existing files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Quiz-Home.html</loc>
     <lastmod>2025-03-13</lastmod>
@@ -764,13 +750,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
-  <!-- Kids section - Only non-empty files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Kids/index.html</loc>
     <lastmod>2025-03-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-
 </urlset>
