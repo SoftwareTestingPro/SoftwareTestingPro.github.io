@@ -70,17 +70,23 @@
                 <h1>Random Household Items</h1>
                 <p class="lead">Master dynamic counting! Count all household items displayed below and input the exact total to prove your element enumeration skills.</p>
 
-                <div class="input-group">
-                    <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="userInput">Enter the count of household items displayed below:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
+                    </div>
                 </div>
 
                 <ul class="item-list" id="itemList"></ul>
 
-                <div class="message success-message" id="successMessage">
+                <div class="message" id="successMessage">
                     Correct! The number matches the count of household items.
                 </div>
 
-                <div class="message failure-message" id="failureMessage">
+                <div class="message" id="failureMessage">
                     Incorrect! The number does not match the count of household items.
                 </div>
             </div>

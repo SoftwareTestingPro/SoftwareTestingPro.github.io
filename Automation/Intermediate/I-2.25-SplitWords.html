@@ -73,7 +73,7 @@
                 <div class="sentence" id="sentence"></div>
                 <div class="input-container" id="inputContainer"></div>
                 <div class="message" id="successMessage">Success! You've entered the correct words.</div>
-                <div class="message error-message" id="errorMessage">Failure! The words are not correct.</div>
+                <div class="message" id="errorMessage">Failure! The words are not correct.</div>
             </div>
         </main>
     </div>
@@ -108,7 +108,7 @@
         words.forEach((word, index) => {
             const inputField = document.createElement('input');
             inputField.type = 'text';
-            inputField.maxLength = word.length;
+            inputField.maxLength = 20;
             inputField.placeholder = `Word ${index + 1}`;
             inputField.addEventListener('input', () => validateInput(words));
 
