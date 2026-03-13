@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Generated sitemap - lastmod set to 2026-03-03 -->
+  <!-- Generated sitemap - lastmod set to 2025-03-13 -->
 
   <url>
     <loc>https://softwaretestingpro.github.io/</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,858 +12,764 @@
   <!-- Root pages -->
   <url>
     <loc>https://softwaretestingpro.github.io/index.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Developer.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/privacy.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/terms.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/disclosure.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-
-  <!-- Automation section (Examples include Beginner, Intermediate, Advanced) -->
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Home.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/faq.html</loc>
+    <lastmod>2025-03-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Automation section -->
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/index.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Instructions.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
 
-  <!-- Automation Beginner -->
+  <!-- Automation Beginner - Actual existing files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.01-Click.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.02-Input.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.03-Radio.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.04-Checkbox.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.04-Color.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.05-Dropdown.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.05-Checkboxes.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.06-FileUpload.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.06-ValueInput.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.07-ColorPicker.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.07-RadioList.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.08-DatePicker.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.08-DropDown.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.09-MultipleWindows.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.09-DoubleClick.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.10-Alert.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.10-RightClick.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.11-Prompt.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.11-PageTitle.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.12-Confirm.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.12-FetchURL.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.13-Scroll.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.13-DynamicProgressBar.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.14-Resize.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.14-Keystroke.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.15-Hover.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.15-DatePicker.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.16-DragAndDrop.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.16-CaptureScreeshot.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.17-KeyPress.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.17-Tooltip.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.18-ContextMenu.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.18-PageSource.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.19-DoubleClick.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.19-AutoComplete.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.20-Slider.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.20-ClickEnabledButton.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.21-Spinner.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.21-CompareText.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.22-TextToSpeech.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.22-ImagePath.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.23-SpeechToText.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.23-ColorOddOneOut.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.24-VideoRecording.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.24-MathOddOneOut.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.25-AudioRecording.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.25-HighlightText.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.26-ImageCapture.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.26-CaseValidation.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.27-FileDownload.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.27-MatchTheFollowing.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.28-FileEncryption.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.28-OrderConfirmation.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.29-FileDecryption.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.29-CharCounter.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.30-Database.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-1.30-VideoPlayer.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-Intro.html</loc>
+    <lastmod>2025-03-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Beginner/B-Tasks.html</loc>
+    <lastmod>2025-03-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
-  <!-- Automation Intermediate - All 30 files -->
+  <!-- Automation Intermediate - All existing files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.01-DragAndDropText.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.02-HoverLink.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.03-Train.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.04-Calendar.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.05-CricketScorecard.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.06-Table.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.07-Rubix.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.08-Slider.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.09-RandomButtons.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.10-Alerts.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.11-Progressbar.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.12-Frame.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.13-BrowserPopUp.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.14-JSInput.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.15-RandomPopUp.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.16-RandomList.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.17-LoadingResults.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.18-Chart.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.19-FetchDate.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.20-ValueInput.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.21-ScrollableList.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.22-SortNumbers.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.23-SortCharacters.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.24-SortWords.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.25-SplitWords.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.26-ImagePosition.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.27-YoungestPerson.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.28-CompareImages.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.29-ColorPicker.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.30-SignaturePad.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-2.30-DragAndDropImg.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-Intro.html</loc>
+    <lastmod>2025-03-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Intermediate/I-Tasks.html</loc>
+    <lastmod>2025-03-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
-  <!-- Automation Advanced - All 30 files -->
+  <!-- Automation Advanced - All existing files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.01-HiddenElement.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.02-Download.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.03-Whiteboard.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.03-SignaturePad.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.04-ReadQR.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.05-MultipleDragDrop.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.06-BrokenImages.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.07-Clock.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.08-ShapesOddOneOut.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.09-Location.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.10-Game.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.11-FileUpload.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.12-DragAndDropImg.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.12-Whiteboard.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.13-SortableTable.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.14-ResizeableElement.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.15-ContextMenu.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.16-ReadEmailContent.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.17-SpeechToText.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.18-ImageToText.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.19-Spinner.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.20-AIQuiz.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.21-InfiniteScroll.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.22-XLSWriteData.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.23-XLSReadData.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.24-SortItems.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.25-DragableItemsXY.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.26-CharOddOneOut.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.27-AudioOddOneOut.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.28-DragAndDropWithFrames.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.28-DragAndDropWithinFrames.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.29-DynamicProgressBar.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-3.30-ReadingPdfFile.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-Intro.html</loc>
+    <lastmod>2025-03-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/Automation/Advanced/A-Tasks.html</loc>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Quiz section - All 21 files -->
+  <!-- Quiz section - All existing files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Quiz-Home.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Advanced-Java.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/API.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Basic-Java.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Cucumber.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Functional-Testing.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/GIT.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/JavaScript.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Jenkins.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/JIRA.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Load-Testing.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Maven.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Mobile-Testing.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Performance-Testing.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Playwright.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Postman.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Rest-Assured.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Selenium.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/TestNG.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/TypeScript.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://softwaretestingpro.github.io/Quiz/Web-Services.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
-  <!-- Kids section - All 15 files -->
+  <!-- Kids section - Only non-empty files -->
   <url>
     <loc>https://softwaretestingpro.github.io/Kids/index.html</loc>
-    <lastmod>2026-03-03</lastmod>
+    <lastmod>2025-03-13</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/LetterSeries.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/NumberSeries.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Relationship.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <!-- Kids Easy section -->
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Easy/index.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Easy/kid.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Easy/Odd-Equations.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Easy/Odd-Objects.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <!-- Kids Medium section -->
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Medium/index.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Medium/Maths-Grade3-MixEquations.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Medium/Odd-Equations.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Medium/Odd-Objects.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <!-- Kids Hard section -->
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Hard/index.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Hard/Odd-Equations.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/Kids/Hard/Odd-Objects.html</loc>
-    <lastmod>2026-03-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-<!-- Blog section -->
-  <url>
-    <loc>https://softwaretestingpro.github.io/blog/</loc>
-    <lastmod>2026-03-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/blog/selenium-tutorial-2026.html</loc>
-    <lastmod>2026-03-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/blog/cypress-vs-playwright-vs-selenium.html</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/blog/selenium-interview-questions.html</loc>
-    <lastmod>2026-03-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/blog/page-object-model-tutorial.html</loc>
-    <lastmod>2026-03-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/blog/postman-api-testing-guide.html</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://softwaretestingpro.github.io/blog/qa-career-guide-2026.html</loc>
-    <lastmod>2026-02-28</lastmod>
-    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
