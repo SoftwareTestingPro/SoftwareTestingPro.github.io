@@ -272,12 +272,12 @@ p.lead {
     }
 
     h1 {
-        font-size: 1rem;
+        font-size: 1.2rem;
         margin: 1rem 0 0.4rem;
     }
 
     p.lead {
-        font-size: 0.95rem;
+        font-size: 1.05rem;
         margin: 0 0 1rem;
     }
 
@@ -359,12 +359,12 @@ p.lead {
     }
 
     h1 {
-        font-size: 0.8rem;
+        font-size: 1rem;
         margin: 0.6rem 0 0.25rem;
     }
 
     p.lead {
-        font-size: 0.9rem;
+        font-size: 1rem;
         margin: 0 0 0.6rem;
     }
 
@@ -419,12 +419,12 @@ p.lead {
     }
 
     h1 {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         margin: 0.5rem 0 0.2rem;
     }
 
     p.lead {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         margin: 0 0 0.5rem;
     }
 
