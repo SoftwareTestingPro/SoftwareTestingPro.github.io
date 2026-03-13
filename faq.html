@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Frequently asked questions about software testing, Selenium, test automation, and QA careers. Get answers to common testing questions and learn best practices.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Software Testing FAQ - Common Questions & Answers | Software Testing Pro</title>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing faq, selenium questions, test automation questions, qa interview questions, testing career questions, selenium tutorial">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="author" content="Sushil Singh - Automation Expert">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/faq.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Software Testing FAQ - Common Questions & Answers">
+    <meta property="og:description" content="Get answers to frequently asked questions about software testing, Selenium, and QA careers.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/faq.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/faq-og.jpg">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Software Testing FAQ - Common Questions">
+    <meta property="twitter:description" content="Get answers to frequently asked questions about software testing and Selenium.">
+    <meta property="twitter:image" content="https://softwaretestingpro.github.io/assets/images/faq-twitter.jpg">
+    <meta property="twitter:creator" content="@sushilsingh">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is Selenium WebDriver?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Selenium WebDriver is an open-source tool for automating web browsers. It allows you to write scripts that control web browsers programmatically for testing purposes."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I start learning Selenium?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Start with basic programming knowledge, then learn Selenium WebDriver fundamentals. Practice with our free platform offering 90+ hands-on exercises from beginner to advanced levels."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What programming languages does Selenium support?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Selenium supports Java, Python, C#, Ruby, JavaScript, and other programming languages. Java and Python are the most popular choices."
+                }
+            }
+        ]
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+            color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+        
+        .faq-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .faq-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .faq-subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
+        }
+        
+        .faq-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .category-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+            color: #e2e8f0;
+        }
+        
+        .faq-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+        
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: color 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            color: #6366f1;
+        }
+        
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-question.active i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            color: #cbd5e1;
+            line-height: 1.8;
+            display: none;
+        }
+        
+        .faq-answer.active {
+            display: block;
+        }
+        
+        .faq-answer a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .faq-answer a:hover {
+            color: #818cf8;
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #6366f1;
+            text-decoration: none;
+            margin-bottom: 40px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #818cf8;
+        }
+        
+        .back-link i {
+            margin-right: 10px;
+        }
+        
+        .search-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-input {
+            background: transparent;
+            border: none;
+            color: #e2e8f0;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+        }
+        
+        .search-input::placeholder {
+            color: #94a3b8;
+        }
+        
+        @media (max-width: 768px) {
+            .faq-title {
+                font-size: 2rem;
+            }
+            
+            .faq-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="faq-container">
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+        
+        <div class="faq-header">
+            <h1 class="faq-title">Software Testing FAQ</h1>
+            <p class="faq-subtitle">Get answers to frequently asked questions about software testing, Selenium, and QA careers</p>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search FAQ..." id="faqSearch">
+        </div>
+        
+        <div class="faq-categories">
+            <div class="category-btn active" data-category="all">All Questions</div>
+            <div class="category-btn" data-category="selenium">Selenium</div>
+            <div class="category-btn" data-category="testing">Testing Basics</div>
+            <div class="category-btn" data-category="career">Career</div>
+            <div class="category-btn" data-category="tools">Tools</div>
+        </div>
+        
+        <div class="faq-section">
+            <!-- Selenium Questions -->
+            <div class="faq-item" data-category="selenium">
+                <div class="faq-question">
+                    What is Selenium WebDriver?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Selenium WebDriver is an open-source tool for automating web browsers. It allows you to write scripts that control web browsers programmatically for testing purposes. It's the most popular web automation framework used by QA professionals worldwide.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="selenium">
+                <div class="faq-question">
+                    How do I start learning Selenium?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Start with basic programming knowledge (Java or Python recommended), then learn Selenium WebDriver fundamentals. Practice with our <a href="Automation/index.html">free platform</a> offering 90+ hands-on exercises from beginner to advanced levels. Begin with basic operations like clicking buttons and filling forms, then progress to complex scenarios.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="selenium">
+                <div class="faq-question">
+                    What programming languages does Selenium support?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Selenium supports multiple programming languages including Java, Python, C#, Ruby, JavaScript, and PHP. Java and Python are the most popular choices due to their extensive community support and rich libraries.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="selenium">
+                <div class="faq-question">
+                    What is the difference between Selenium IDE, WebDriver, and Grid?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Selenium IDE is a record-and-playback tool for simple automation, WebDriver is the main API for browser automation, and Grid allows running tests on multiple machines and browsers simultaneously. WebDriver is the most commonly used for professional test automation.
+                </div>
+            </div>
+            
+            <!-- Testing Basics Questions -->
+            <div class="faq-item" data-category="testing">
+                <div class="faq-question">
+                    What is software testing?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Software testing is the process of evaluating and verifying that a software application works as expected. It involves executing software components to identify defects, ensure quality, and validate that requirements are met before deployment.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="testing">
+                <div class="faq-question">
+                    What are the different types of testing?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Common types include: Unit Testing, Integration Testing, System Testing, Acceptance Testing, Performance Testing, Security Testing, Usability Testing, and Regression Testing. Each serves different purposes in the software development lifecycle.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="testing">
+                <div class="faq-question">
+                    What is the difference between manual and automated testing?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Manual testing involves human testers executing test cases manually, while automated testing uses scripts and tools to run tests automatically. Automated testing is faster, more reliable for repetitive tasks, and cost-effective in the long run.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="testing">
+                <div class="faq-question">
+                    What is test automation?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Test automation is the use of software tools and scripts to control the execution of tests, compare actual outcomes with expected results, and report test status. It helps reduce manual effort, increase test coverage, and improve testing efficiency.
+                </div>
+            </div>
+            
+            <!-- Career Questions -->
+            <div class="faq-item" data-category="career">
+                <div class="faq-question">
+                    How do I start a career in software testing?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Start by learning testing fundamentals, then gain hands-on experience with automation tools like Selenium. Build a portfolio of projects, get certifications (ISTQB, Selenium), and practice with our <a href="Automation/index.html">free exercises</a>. Networking and continuous learning are also important.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="career">
+                <div class="faq-question">
+                    What skills are needed for a QA tester?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Key skills include: understanding of testing methodologies, programming knowledge (Java/Python), familiarity with automation tools, database knowledge, analytical thinking, communication skills, and attention to detail. Soft skills like problem-solving and teamwork are also crucial.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="career">
+                <div class="faq-question">
+                    What is the average salary for a QA tester?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Salaries vary by location and experience level. Entry-level QA testers typically earn $50,000-70,000, mid-level $70,000-90,000, and senior/test automation engineers can earn $90,000-130,000+ annually. Automation specialists generally command higher salaries.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="career">
+                <div class="faq-question">
+                    Is software testing a good career choice?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, software testing offers excellent career opportunities with growing demand for QA professionals. The field offers good salary potential, career growth opportunities, and the chance to work with cutting-edge technologies. Automation skills are particularly valuable.
+                </div>
+            </div>
+            
+            <!-- Tools Questions -->
+            <div class="faq-item" data-category="tools">
+                <div class="faq-question">
+                    What are the best test automation tools?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Popular tools include Selenium WebDriver (web automation), Cypress (modern JavaScript framework), Playwright (Microsoft's automation tool), Postman (API testing), JUnit/TestNG (testing frameworks), and Jenkins (CI/CD). The best choice depends on your specific needs.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="tools">
+                <div class="faq-question">
+                    What is the difference between Selenium and Cypress?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Selenium is a more established tool with broader browser support and language options, while Cypress is newer, faster, and provides better debugging capabilities. Cypress is JavaScript-only, while Selenium supports multiple languages. Both are excellent choices for different scenarios.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="tools">
+                <div class="faq-question">
+                    What tools are used for API testing?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Popular API testing tools include Postman (user-friendly interface), REST Assured (Java library), Insomnia (alternative to Postman), SoapUI (for SOAP APIs), and JMeter (for performance testing). Postman is the most widely used for manual and automated API testing.
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="tools">
+                <div class="faq-question">
+                    What is continuous integration in testing?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Continuous Integration (CI) is the practice of automatically building and testing code changes frequently. Tools like Jenkins, GitHub Actions, and Azure DevOps run automated tests whenever code is committed, ensuring early detection of issues and maintaining code quality.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // FAQ Toggle Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const answer = this.nextElementSibling;
+                answer.classList.toggle('active');
+            });
+        });
+        
+        // Category Filter Functionality
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const category = this.dataset.category;
+                const faqItems = document.querySelectorAll('.faq-item');
+                
+                faqItems.forEach(item => {
+                    if (category === 'all' || item.dataset.category === category) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Search Functionality
+        document.getElementById('faqSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

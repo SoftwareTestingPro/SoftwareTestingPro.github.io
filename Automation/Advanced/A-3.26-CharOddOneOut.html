@@ -3,73 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Odd One Out Game</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f9;
+  <meta name="description" content="Challenge your character pattern recognition skills. This advanced tutorial covers odd one out identification, pattern analysis, and testing cognitive UI elements in automation testing scenarios.">
+  <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+  <title>Character Odd One Out Challenge - Character Identification Testing Tutorial | Software Testing Pro</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.26.css">
+  <script src="../assets/components/components.js"></script>
+  <!-- Additional SEO Meta Tags -->
+  <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.26-CharOddOneOut.html">
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Character Odd One Out Challenge - Character Identification Testing Tutorial | Software Testing Pro">
+  <meta property="og:description" content="Learn character pattern recognition and odd one out identification. This advanced tutorial covers visual character comparison, pattern matching, and testing character-based interfaces in automation testing scenarios.">
+  <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.26-CharOddOneOut.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <meta property="og:site_name" content="Software Testing Pro">
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Character Odd One Out Challenge - Character Identification Testing Tutorial | Software Testing Pro">
+  <meta name="twitter:description" content="Learn character pattern recognition and odd one out identification. This advanced tutorial covers visual character comparison.">
+  <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalContent",
+    "headline": "Character Odd One Out Challenge - Character Identification Testing Tutorial",
+    "description": "Learn character pattern recognition and odd one out identification. This advanced tutorial covers visual character comparison, pattern matching, and testing character-based interfaces in automation testing scenarios.",
+    "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.26-CharOddOneOut.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Software Testing Pro"
     }
-    .container {
-      width: 90%;
-      max-width: 400px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    button {
-      padding: 15px;
-      font-size: 18px;
-      background-color: #3498db;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
-    #message {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    @media (max-width: 600px) {
-      .container {
-        width: 85%;
-      }
-      button {
-        font-size: 16px;
-        padding: 10px;
-      }
-    }
-  </style>
+  }
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+  <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
 
-<div class="container">
-  <h2>Select the odd Tile</h2>
-  <div class="buttons" id="buttonContainer"></div>
-  <div id="message"></div>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.25-DragableItemsXY.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.27-AudioOddOneOut.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Character Odd One Out</h1>
+        <p class="lead">Master character analysis! Identify the unique character among similar ones to prove your pattern recognition skills.</p>
+
+        <div class="buttons" id="buttonContainer"></div>
+        <div id="successMessage" class="message"></div>
+        <div id="failureMessage" class="message"></div>
+        </div>
+    </main>
 </div>
 
+<div id="footer-placeholder"></div>
+
 <script>
+  const successMessage = document.getElementById('successMessage');
+  const failureMessage = document.getElementById('failureMessage');
+
+  // Hide messages on load
+  successMessage.style.display = 'none';
+  failureMessage.style.display = 'none';
+  successMessage.classList.remove('success');
+  failureMessage.classList.remove('failure');
+
   const characters = ['A', 'B', 'C', 'D', 'E', 'F'];  // Example character options
   const numbers = ['1', '2', '3', '4', '5', '6'];      // Example number options
   const emojis = ['😊', '😂', '😎', '🤔', '😅'];       // Example emoji options
@@ -106,14 +126,25 @@
   });
 
   function checkOddOneOut(isOddOneOut) {
-    const messageDiv = document.getElementById('message');
     if (isOddOneOut) {
-      messageDiv.innerHTML = '<span style="color: green;">Success! You found the odd one out!</span>';
+      successMessage.style.display = 'flex';
+      successMessage.classList.add('success');
+      failureMessage.style.display = 'none';
+      failureMessage.classList.remove('failure');
+      successMessage.textContent = 'Success! You found the odd one out!';
     } else {
-      messageDiv.innerHTML = '<span style="color: red;">Failure! Try again.</span>';
+      successMessage.style.display = 'none';
+      successMessage.classList.remove('success');
+      failureMessage.style.display = 'flex';
+      failureMessage.classList.add('failure');
+      failureMessage.textContent = 'Failure! Try again.';
     }
   }
 </script>
 
 </body>
 </html>
+
+
+
+

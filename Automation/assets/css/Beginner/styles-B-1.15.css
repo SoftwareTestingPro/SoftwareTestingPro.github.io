@@ -1,0 +1,144 @@
+.input-group-parent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.625rem;
+    align-self: flex-start;
+    width: 100%;
+}
+
+.input-group-left {
+    width: 9.375rem;
+}
+
+.input-group-right {
+    flex: 1;
+}
+
+.label-left {
+    font-size: 0.875rem !important;
+    color: #333;
+    font-weight: normal !important;
+    white-space: nowrap;
+    width: 100%;
+    text-align: left;
+    margin-top: 1.875rem !important;
+}
+
+.date-picker-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.25rem;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.date-picker-wrapper svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    fill: #555;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+        fill: #ff0000;
+    }
+    25% {
+        opacity: 0.5;
+        fill: #00ff00;
+    }
+    50% {
+        opacity: 1;
+        fill: #0000ff;
+    }
+    75% {
+        opacity: 0.5;
+        fill: #ffff00;
+    }
+}
+
+@media (max-width: 1440px) {
+    .input-group-left {
+        width: 8.75rem;
+    }
+    .label-left {
+        font-size: 13px !important;
+    }
+    .date-picker-wrapper {
+        margin-top: 1.125rem;
+    }
+    .date-picker-wrapper svg {
+        width: 1.1875rem;
+        height: 1.1875rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .input-group-left {
+        width: 8.125rem;
+    }
+    .label-left {
+        font-size: 12px !important;
+    }
+    .date-picker-wrapper {
+        margin-top: 1rem;
+    }
+    .date-picker-wrapper svg {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .input-group-left {
+        width: 7.5rem;
+    }
+    .label-left {
+        font-size: 11px !important;
+    }
+    .date-picker-wrapper {
+        margin-top: 0.875rem;
+    }
+    .date-picker-wrapper svg {
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-group-left {
+        width: 6.875rem;
+    }
+    .label-left {
+        font-size: 10px !important;
+    }
+    .date-picker-wrapper {
+        margin-top: 0.75rem;
+    }
+    .date-picker-wrapper svg {
+        width: 0.9375rem;
+        height: 0.9375rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .input-group-left {
+        width: 6.25rem;
+    }
+    .label-left {
+        font-size: 9px !important;
+    }
+    .date-picker-wrapper {
+        margin-top: 0.625rem;
+    }
+    .date-picker-wrapper svg {
+        width: 0.875rem;
+        height: 0.875rem;
+    }
+}

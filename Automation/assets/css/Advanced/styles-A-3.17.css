@@ -1,0 +1,127 @@
+.label {
+    display: block;
+    margin-bottom: 0.625rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+.icon-button {
+    font-size: 3rem;
+    color: var(--accent);
+    cursor: pointer;
+    margin-bottom: 1.25rem;
+    display: block;
+}
+
+.icon-button:hover {
+    color: #5a35a8;
+}
+
+.input-container {
+    margin-bottom: 1.25rem;
+}
+
+.input-container input {
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    width: 100%;
+    max-width: 18.75rem;
+}
+
+
+@media (max-width: 1440px) {
+    .label {
+        margin-bottom: 0.6rem;
+        font-size: 0.8125rem;
+    }
+    .icon-button {
+        font-size: 2.85rem;
+        margin-bottom: 1.125rem;
+    }
+    .input-container {
+        margin-bottom: 1.125rem;
+    }
+    .input-container input {
+        padding: 0.6rem 0.7125rem;
+        font-size: 0.95rem;
+        max-width: 17.8125rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .label {
+        margin-bottom: 0.575rem;
+        font-size: 0.75rem;
+    }
+    .icon-button {
+        font-size: 2.7rem;
+        margin-bottom: 1rem;
+    }
+    .input-container {
+        margin-bottom: 1rem;
+    }
+    .input-container input {
+        padding: 0.575rem 0.675rem;
+        font-size: 0.9rem;
+        max-width: 16.875rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .label {
+        margin-bottom: 0.55rem;
+        font-size: 0.6875rem;
+    }
+    .icon-button {
+        font-size: 2.55rem;
+        margin-bottom: 0.875rem;
+    }
+    .input-container {
+        margin-bottom: 0.875rem;
+    }
+    .input-container input {
+        padding: 0.55rem 0.6375rem;
+        font-size: 0.85rem;
+        max-width: 15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .label {
+        margin-bottom: 0.525rem;
+        font-size: 0.625rem;
+    }
+    .icon-button {
+        font-size: 2.4rem;
+        margin-bottom: 0.75rem;
+    }
+    .input-container {
+        margin-bottom: 0.75rem;
+    }
+    .input-container input {
+        padding: 0.525rem 0.6rem;
+        font-size: 0.8rem;
+        max-width: 13.125rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .label {
+        margin-bottom: 0.5rem;
+        font-size: 0.5625rem;
+    }
+    .icon-button {
+        font-size: 2.25rem;
+        margin-bottom: 0.625rem;
+    }
+    .input-container {
+        margin-bottom: 0.625rem;
+    }
+    .input-container input {
+        padding: 0.5rem 0.5625rem;
+        font-size: 0.75rem;
+        max-width: 11.25rem;
+    }
+}

@@ -1,0 +1,119 @@
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    justify-items: center;
+    margin-bottom: 1.25rem;
+    margin-top: 4rem;
+}
+
+.shape-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.625rem;
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shape-button:hover {
+    background: var(--bg);
+}
+
+.shape {
+    width: 5rem;
+    height: 5rem;
+    border: 2px solid var(--accent);
+    background: var(--card);
+    margin-top: 0.5rem;
+}
+
+.shape.circle {
+    border-color: red;
+    border-radius: 50%;
+    background: red;
+}
+
+.shape.square {
+    border-color: blue;
+    border-radius: 0;
+    background: blue;
+}
+
+.shape.triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    background: green;
+    border: none;
+}
+
+.shape.hexagon {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: yellow;
+    border: none;
+}
+
+@media (max-width: 1440px) {
+    .buttons {
+        gap: 1.125rem;
+        margin-bottom: 1.125rem;
+    }
+    .shape-button {
+        padding: 0.6rem;
+    }
+    .shape {
+        width: 4.75rem;
+        height: 4.75rem;
+    }
+
+@media (max-width: 1024px) {
+    .buttons {
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .shape-button {
+        padding: 0.575rem;
+    }
+    .shape {
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+
+@media (max-width: 768px) {
+    .buttons {
+        gap: 2rem;
+        justify-items: center;
+    }
+    .shape-button {
+        padding: 0.55rem;
+    }
+    .shape {
+        width: 4rem;
+        height: 4rem;
+    }
+
+@media (max-width: 480px) {
+    .buttons {
+        gap: 1.5rem;
+    }
+    .shape-button {
+        padding: 0.525rem;
+    }
+    .shape {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+@media (max-width: 375px) {
+    .buttons {
+        gap: 1.25rem;
+    }
+    .shape-button {
+        padding: 0.5rem;
+    }
+    .shape {
+        width: 3rem;
+        height: 3rem;
+    }

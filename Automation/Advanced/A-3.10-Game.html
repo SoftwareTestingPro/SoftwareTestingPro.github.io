@@ -3,64 +3,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Platformer Game Challenge</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+  <meta name="description" content="Explore platformer game mechanics and interactive testing. This advanced tutorial covers game controls, collision detection, and testing dynamic interactive elements in automation testing scenarios.">
+  <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+  <title>Platformer Game Challenge - Interactive Game Testing Tutorial | Software Testing Pro</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.10.css">
+  <script src="../assets/components/components.js"></script>
+  <!-- Additional SEO Meta Tags -->
+  <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.10-Game.html">
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Game Challenge - Interactive Testing Tutorial | Software Testing Pro">
+  <meta property="og:description" content="Learn interactive game testing and complex UI validation techniques. This advanced tutorial covers game mechanics, scoring systems, and testing dynamic interactive elements in automation testing scenarios.">
+  <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.10-Game.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <meta property="og:site_name" content="Software Testing Pro">
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Game Challenge - Interactive Testing Tutorial | Software Testing Pro">
+  <meta name="twitter:description" content="Learn interactive game testing and complex UI validation techniques. This advanced tutorial covers game mechanics.">
+  <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalContent",
+    "headline": "Game Challenge - Interactive Testing Tutorial",
+    "description": "Learn interactive game testing and complex UI validation techniques. This advanced tutorial covers game mechanics, scoring systems, and testing dynamic interactive elements in automation testing scenarios.",
+    "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.10-Game.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Software Testing Pro"
     }
-
-    .container {
-      width: 800px;
-      background-color: #fff;
-      border: 2px solid #333;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    canvas {
-      background-color: #87CEEB;
-    }
-
-    .message {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      color: #4caf50;
-      display: none;
-      white-space: nowrap;
-    }
-
-    .label {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #000;
-      text-align: center;
-    }
-  </style>
+  }
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+  <!-- End Google Tag Manager -->
 </head>
 <body>
-  <div class="container">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+  <div id="header-placeholder"></div>
+
+  <div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.09-Location.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.11-FileUpload.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+      <div class="card-content">
+      <h1>Platformer Game Challenge</h1>
+      <p class="lead">Master game automation! Use keyboard controls to navigate the platformer game and reach the top to demonstrate your gaming interaction skills.</p>
+
     <canvas id="gameCanvas" width="800" height="400"></canvas>
-    <div class="message" id="congratulationMessage">Congratulations! You reached the top platform!</div>
-    <h3 class="label">Use the spacebar and arrow keys to reach the top platform and verify the congratulations message.</h3>
+    <div class="message success" id="successMessage">Congratulations! You reached the top platform!</div>
   </div>
+    </main>
+  </div>
+
+  <div id="footer-placeholder"></div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const message = document.getElementById('congratulationMessage');
+    const successMessage = document.getElementById('successMessage');
+
+    // Hide message on load
+    successMessage.style.display = 'none';
+    successMessage.classList.remove('success');
 
     const gravity = 0.5;
     const friction = 0.9;
@@ -86,7 +112,10 @@
       { x: canvas.width * 0.80, y: canvas.height - canvas.height * 0.80, width: 150, height: 10, color: 'yellow', isTopPlatform: true }
     ];
 
-    window.addEventListener('keydown', (e) => keys[e.code] = true);
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') e.preventDefault();
+      keys[e.code] = true;
+    });
     window.addEventListener('keyup', (e) => keys[e.code] = false);
 
     // Track previous Y position for better collision detection
@@ -150,7 +179,12 @@
         ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
       });
 
-      message.style.display = topPlatformReached ? 'block' : 'none';
+      successMessage.style.display = topPlatformReached ? 'flex' : 'none';
+      if (topPlatformReached) {
+        successMessage.classList.add('success');
+      } else {
+        successMessage.classList.remove('success');
+      }
 
       requestAnimationFrame(gameLoop);
     }
@@ -159,3 +193,7 @@
   </script>
 </body>
 </html>
+
+
+
+

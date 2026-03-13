@@ -3,133 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enabled Disabled Buttons</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            text-align: center;
-            max-width: 90%;
-            width: 400px;
-        }
-        .label {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-        .button-container button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff; /* Default button color */
-            transition: background-color 0.3s ease;
-        }
-        .button-container button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        .button-container button:hover:not(:disabled) {
-            background-color: #0056b3; /* Darker color on hover */
-        }
-        .message {
-            margin-top: 15px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .success {
-            color: green;
-        }
-
-        /* Responsive styling */
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-                max-width: 85%; /* Adjust to fit smaller screens */
-            }
-
-            .label {
-                font-size: 16px; /* Smaller font size */
-            }
-
-            .button-container button {
-                font-size: 14px; /* Adjust font size for buttons */
-                padding: 8px 16px; /* Reduce padding */
-                min-width: 120px; /* Ensure buttons are not too small */
-            }
-
-            .message {
-                font-size: 14px; /* Smaller font size for messages */
-            }
-        }
-    </style>
+    <meta name="description" content="Learn to test button states and interactions. This tutorial covers identifying enabled and disabled buttons, handling button state changes, and validating clickable elements in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Enabled/Disabled Buttons Challenge - Button State Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.20.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.20-ClickEnabledButton.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Enabled/Disabled Buttons Challenge - Button State Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn button state management and validation techniques. This beginner tutorial covers enabled/disabled button states, timing, and interaction testing in automation scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.20-ClickEnabledButton.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Enabled/Disabled Buttons Challenge - Button State Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn button state management and validation techniques. This beginner tutorial covers enabled/disabled button states.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Enabled/Disabled Buttons Challenge - Button State Testing Tutorial",
+      "description": "Learn button state management and validation techniques. This beginner tutorial covers enabled/disabled button states, timing, and interaction testing in automation scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.20-ClickEnabledButton.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-<div class="container">
-    <div class="label">Select the enabled button:</div>
-    <div class="button-container" id="buttonContainer">
-        <!-- Buttons will be inserted here by JavaScript -->
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.19-AutoComplete.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.21-CompareText.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Enabled/Disabled Buttons</h1>
+                <p class="lead">Master button state detection! Identify and click the only enabled button among disabled ones to prove your element inspection skills.</p>
+
+                <div class="button-container" id="buttonContainer">
+                    <!-- Buttons will be inserted here by JavaScript -->
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You clicked the enabled button.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>You clicked the disabled button.</span></div>
+            </div>
+        </main>
     </div>
-    <div id="message" class="message"></div>
-</div>
 
-<script>
-    function generateRandomString(length) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let result = '';
-        for (let i = 0; i < length; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
+    <div id="footer-placeholder"></div>
+
+    <script>
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
         }
-        return result;
-    }
 
-    function setupButtons() {
-        const buttonContainer = document.getElementById('buttonContainer');
-        const buttonCount = 5;
-        const enabledIndex = Math.floor(Math.random() * buttonCount);
-        const buttons = [];
+        function setupButtons() {
+            const buttonContainer = document.getElementById('buttonContainer');
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+            const buttonCount = 5;
+            const enabledIndex = Math.floor(Math.random() * buttonCount);
 
-        for (let i = 0; i < buttonCount; i++) {
-            const button = document.createElement('button');
-            button.textContent = `Button ${i + 1}`;
-            button.id = generateRandomString(8);
-            button.className = generateRandomString(5);
-            button.name = generateRandomString(6);
-            button.disabled = i !== enabledIndex; // Only one button enabled
-            button.addEventListener('click', function() {
-                if (!this.disabled) {
-                    document.getElementById('message').textContent = 'Success! You clicked the enabled button.';
-                    document.getElementById('message').className = 'message success';
+            for (let i = 0; i < buttonCount; i++) {
+                const buttonWrapper = document.createElement('div');
+                buttonWrapper.style.display = 'inline-block';
+                buttonWrapper.style.margin = '5px';
+
+                const button = document.createElement('button');
+                button.textContent = `Button ${i + 1}`;
+                button.id = generateRandomString(8);
+                button.className = generateRandomString(5);
+                button.name = generateRandomString(6);
+                button.disabled = i !== enabledIndex;
+                if (button.disabled) {
+                    button.style.pointerEvents = 'none';
                 }
-            });
-            buttonContainer.appendChild(button);
+
+                buttonWrapper.appendChild(button);
+
+                buttonWrapper.addEventListener('click', function() {
+                    if (!button.disabled) {
+                        successMessage.style.display = 'flex';
+                        successMessage.classList.add('success');
+                        failureMessage.style.display = 'none';
+                        failureMessage.classList.remove('failure');
+                    } else {
+                        successMessage.style.display = 'none';
+                        successMessage.classList.remove('success');
+                        failureMessage.style.display = 'flex';
+                        failureMessage.classList.add('failure');
+                    }
+                });
+
+                buttonContainer.appendChild(buttonWrapper);
+            }
         }
-    }
 
-    // Initialize buttons
-    setupButtons();
-</script>
-
+        // Initialize buttons and hide message
+        setupButtons();
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('failureMessage').style.display = 'none';
+    </script>
 </body>
 </html>
+
+
+

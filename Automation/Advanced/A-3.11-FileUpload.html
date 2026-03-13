@@ -3,91 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 10px; /* Added padding for better spacing on mobile */
-            box-sizing: border-box;
-        }
-
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 100%; /* Full width on small screens */
-            max-width: 400px; /* Max width for larger screens */
-            box-sizing: border-box;
-        }
-
-        h3 {
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        input[type="file"] {
-            margin: 10px 0;
-            font-size: 16px;
-        }
-
-        .file-path {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .success-message {
-            margin-top: 10px;
-            font-size: 16px;
-            color: green;
-            display: none;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            h3 {
-                font-size: 16px; /* Adjust heading size for smaller screens */
-            }
-
-            input[type="file"] {
-                font-size: 14px; /* Smaller font size for file input */
-            }
-
-            .file-path, .success-message {
-                font-size: 14px; /* Adjust font size for better readability */
-            }
-        }
-    </style>
+    <meta name="description" content="Practice file upload functionality and validation. This advanced tutorial covers file input handling, upload validation, and testing file-based interactions in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>File Upload Challenge - Upload Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.11.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.11-FileUpload.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="File Upload Challenge - Upload Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn file upload handling and validation techniques. This advanced tutorial covers file input controls, upload validation, and testing file submission processes in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.11-FileUpload.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="File Upload Challenge - Upload Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn file upload handling and validation techniques. This advanced tutorial covers file input controls.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "File Upload Challenge - Upload Testing Tutorial",
+      "description": "Learn file upload handling and validation techniques. This advanced tutorial covers file input controls, upload validation, and testing file submission processes in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.11-FileUpload.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h3>Upload a file and verify success message</h3>
-        <input type="file" id="fileUpload">
-        <div class="file-path" id="filePath"></div>
-        <div class="success-message" id="successMessage">File uploaded successfully!</div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.10-Game.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.12-Whiteboard.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>File Upload Challenge</h1>
+        <p class="lead">Master file upload automation! Select and upload a file to demonstrate your file handling and form submission skills.</p>
+
+        <input type="file" id="fileUpload" style="display: none">
+        <div class="button-enabled">
+            <button onclick="document.getElementById('fileUpload').click()">Upload File</button>
+        </div>
+        <div class="file-path" id="filePath"></div>
+        <div class="message success" id="successMessage">File uploaded successfully!</div>
+    </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
     <script>
+        const successMessage = document.getElementById('successMessage');
+
+        // Hide message on load
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+
         document.getElementById('fileUpload').addEventListener('change', function(event) {
             const filePath = document.getElementById('filePath');
-            const successMessage = document.getElementById('successMessage');
             const file = event.target.files[0];
 
             if (file) {
                 filePath.textContent = `File Path: ${file.name}`;
-                successMessage.style.display = 'block';
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
             } else {
                 filePath.textContent = '';
                 successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
             }
         });
     </script>
 </body>
 </html>
+
+
+
+

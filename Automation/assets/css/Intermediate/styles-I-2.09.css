@@ -1,0 +1,183 @@
+.button-container {
+    display: grid;
+    gap: 0.625rem;
+    justify-items: center;
+    margin-top: 4rem;
+}
+
+.button-container button {
+    width: 7.5rem;
+    padding: 0.625rem 1.25rem;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #007bff;
+    transition: background-color 0.3s ease;
+}
+
+.button-container button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.button-container button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.input-group-parent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.625rem;
+    align-self: flex-start;
+    width: 100%;
+    margin-top: 3rem;
+}
+
+.input-group-left {
+    width: 9.375rem;
+}
+
+.input-group-right {
+    flex: 1;
+}
+
+.label-left {
+    font-size: 0.875rem !important;
+    color: #333;
+    font-weight: normal !important;
+    white-space: nowrap;
+    width: 100%;
+    text-align: left;
+    margin-top: 1.875rem !important;
+    margin-left: 11rem;
+}
+
+input[type="text"] {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.9375rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: right;
+    width: 12.5rem;
+    margin-left: auto !important;
+}
+
+input[type="text"]:focus {
+    border-color: #9fb7ff;
+    box-shadow: 0 4px 12px rgba(60, 120, 255, 0.08);
+}
+
+@media (max-width: 1440px) {
+    .button-container {
+        gap: 0.6rem;
+    }
+    .button-container button {
+        width: 7rem;
+        padding: 0.6rem 1.1875rem;
+        font-size: 0.95rem;
+    }
+    .input-group-left {
+        width: 8.75rem;
+    }
+    input[type="text"] {
+        width: 11.25rem;
+        font-size: 14px;
+        padding: 0.5625rem 0.6875rem;
+    }
+    .label-left {
+        font-size: 13px !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .button-container {
+        gap: 0.575rem;
+    }
+    .button-container button {
+        width: 6.5rem;
+        padding: 0.575rem 1.125rem;
+        font-size: 0.9rem;
+    }
+    .input-group-left {
+        width: 8.125rem;
+    }
+    input[type="text"] {
+        width: 10rem;
+        font-size: 13px;
+        padding: 0.5rem 0.625rem;
+    }
+    .label-left {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .button-container {
+        gap: 0.55rem;
+    }
+    .button-container button {
+        width: 6rem;
+        padding: 0.55rem 1.0625rem;
+        font-size: 0.85rem;
+    }
+    .input-group-left {
+        width: 7.5rem;
+    }
+    input[type="text"] {
+        width: 8.75rem;
+        font-size: 12px;
+        padding: 0.4375rem 0.5625rem;
+    }
+    .label-left {
+        font-size: 11px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .button-container {
+        gap: 0.525rem;
+    }
+    .button-container button {
+        width: 5.5rem;
+        padding: 0.525rem 1rem;
+        font-size: 0.8rem;
+    }
+    .input-group-left {
+        width: 6.875rem;
+    }
+    input[type="text"] {
+        width: 7.5rem;
+        font-size: 11px;
+        padding: 0.375rem 0.5rem;
+    }
+    .label-left {
+        font-size: 10px !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .button-container {
+        gap: 0.5rem;
+    }
+    .button-container button {
+        width: 5rem;
+        padding: 0.5rem 0.9375rem;
+        font-size: 0.75rem;
+    }
+    .input-group-left {
+        width: 6.25rem;
+    }
+    input[type="text"] {
+        width: 6.25rem;
+        font-size: 10px;
+        padding: 0.3125rem 0.4375rem;
+    }
+    .label-left {
+        font-size: 9px !important;
+    }
+}

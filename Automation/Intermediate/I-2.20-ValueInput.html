@@ -3,62 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Fields Example</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container-box {
-            max-width: 400px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .full-height {
-            height: 100vh;
-        }
-        .alert {
-            display: none;
-        }
-    </style>
+    <meta name="description" content="Explore input field validation and testing techniques. This intermediate tutorial covers form input handling, data validation, and user input processing in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Value Input Challenge - Value Validation Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.20.css">
+    <script src="../assets/components/components.js"></script>
+	<!-- Additional SEO Meta Tags -->
+	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+	<link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.20-ValueInput.html">
+	<!-- Open Graph Tags -->
+	<meta property="og:title" content="Value Input Challenge - Value Validation Testing Tutorial | Software Testing Pro">
+	<meta property="og:description" content="Learn input value handling and validation techniques. This intermediate tutorial covers text input manipulation, value setting, and testing form inputs in automation testing scenarios.">
+	<meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.20-ValueInput.html">
+	<meta property="og:type" content="article">
+	<meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<meta property="og:site_name" content="Software Testing Pro">
+	<!-- Twitter Card Tags -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Value Input Challenge - Value Validation Testing Tutorial | Software Testing Pro">
+	<meta name="twitter:description" content="Learn input value handling and validation techniques. This intermediate tutorial covers text input manipulation.">
+	<meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<!-- Structured Data -->
+	<script type="application/ld+json">
+	{
+	  "@context": "https://schema.org",
+	  "@type": "EducationalContent",
+	  "headline": "Value Input Challenge - Value Validation Testing Tutorial",
+	  "description": "Learn input value handling and validation techniques. This intermediate tutorial covers text input manipulation, value setting, and testing form inputs in automation testing scenarios.",
+	  "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.20-ValueInput.html",
+	  "publisher": {
+	    "@type": "Organization",
+	    "name": "Software Testing Pro"
+	  }
+	}
+	</script>
+	<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+	<!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="d-flex justify-content-center align-items-center full-height">
-        <div class="container-box">
-            <h4 class="text-center">Input Validations</h4>
-            <div class="form-group">
-                <label for="inputField1">Copy text from below Input Field:</label>
-                <input type="text" class="form-control" id="inputField1" readonly>
-            </div>
-            <div class="form-group">
-                <label for="inputField2">Enter text copied from above Input Field:</label>
-                <input type="text" class="form-control" id="inputField2">
-            </div>
-            <div id="message" class="alert" role="alert"></div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.19-FetchDate.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.21-ScrollableList.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Input Fields Example</h1>
+                <p class="lead">Master text replication! Copy the exact text from the source input field to demonstrate your data transfer and validation skills.</p>
+
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="inputField1">Copy text from following Input Field:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="inputField1" readonly>
+                    </div>
+                </div>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="inputField2">Paste copied text in following Input Field:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="inputField2">
+                    </div>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const inputField1 = document.getElementById('inputField1');
             const inputField2 = document.getElementById('inputField2');
-            const message = document.getElementById('message');
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+            const expectedValue = document.getElementById('expectedValue');
+            const actualValue = document.getElementById('actualValue');
 
             inputField1.value = Math.random().toString(36).substring(3);
 
             inputField2.addEventListener('input', () => {
                 if (inputField2.value === inputField1.value) {
-                    message.textContent = 'Success: The values match!';
-                    message.className = 'alert alert-success';
-                    message.style.display = 'block';
+                    successMessage.style.display = 'block';
+                    failureMessage.style.display = 'none';
+                    expectedValue.textContent = inputField1.value;
+                    actualValue.textContent = inputField2.value;
                 } else {
-                    message.textContent = 'Failure: The values do not match.';
-                    message.className = 'alert alert-danger';
-                    message.style.display = 'block';
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'block';
+                    expectedValue.textContent = inputField1.value;
+                    actualValue.textContent = inputField2.value;
                 }
             });
         });
     </script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+
+
+

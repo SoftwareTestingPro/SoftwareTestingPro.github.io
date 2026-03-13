@@ -1,0 +1,49 @@
+.wheel-container {
+  position: relative;
+  text-align: center;
+}
+#wheelCanvas {
+  width: 35%;
+  height: auto;
+  border-radius: 50%;
+}
+#spinButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+#spinButton i {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.pointer {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 40px solid red;
+}
+#result {
+  margin-top: 20px;
+  text-align: center;
+  width: 35%;
+}
+#successMessage, #failureMessage { display: block; }

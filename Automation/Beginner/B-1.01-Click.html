@@ -3,101 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click Action</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        .box {
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 90%; /* Adjusted for mobile responsiveness */
-            margin: 0 auto; /* Center the box on mobile */
-        }
-
-        .banner {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px 5px 0 0;
-            margin-bottom: 20px;
-        }
-
-        .banner h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .level-info {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .success-message {
-            color: green;
-            font-weight: bold;
-            display: none;
-            margin-top: 20px;
-        }
-
-        .box button {
-            display: inline-block;
-            background-color: #007bff;
-            color: #fff;
-            font-weight: bold;
-            padding: 10px 20px;
-            border: 2px solid #007bff;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .box button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Responsive styling for small devices */
-        @media (max-width: 600px) {
-            .box {
-                width: 81%; /* 90% width for smaller mobile screens */
-            }
-
-            .banner h1 {
-                font-size: 20px; /* Reduce font size for smaller screens */
-            }
-
-            .box button {
-                font-size: 14px; /* Adjust button font size */
-                padding: 10px 15px;
-            }
-        }
-    </style>
+    <meta name="description" content="Learn how to interact with click actions on web elements. This beginner tutorial covers button clicks, event handling, and user interactions in web automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Click Challenge - Button Click Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.01.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.01-Click.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Click Challenge - Button Click Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master button click testing techniques. This beginner tutorial covers basic click interactions, element selection, and validating user actions in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.01-Click.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Click Challenge - Button Click Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master button click testing techniques. This beginner tutorial covers basic click interactions.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Click Challenge - Button Click Testing Tutorial",
+      "description": "Master button click testing techniques. This beginner tutorial covers basic click interactions, element selection, and validating user actions in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.01-Click.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="box">
-        <div class="level-info">
-            <p>Click the below button</p>
-        </div>
-        <button id="clickButton">Click Me</button>
-        <div id="successMessage" class="success-message">Success! You clicked the button.</div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="B-Intro.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Back to Introduction
+        </a>
+        <a href="B-1.02-Input.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
     </div>
 
-    <script>
-        document.getElementById('clickButton').addEventListener('click', function() {
-            document.getElementById('successMessage').style.display = 'block';
-        });
-    </script>
+    <main class="card">
+        <div class="card-content">
+            <h1>Click Action</h1>
+            <p class="lead">Master the art of clicking! Test your automation skills by precisely targeting and clicking the button below.</p>
+
+            <div class="button-enabled">
+                <button id="clickButton" type="button">Click Me</button>
+            </div>
+
+            <div class="message" id="successMessage" role="status" aria-live="polite">You successfully clicked the button.</div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script>
+    const clickButton = document.getElementById('clickButton');
+    const successMessage = document.getElementById('successMessage');
+
+    // Hide success message initially
+    successMessage.style.display = 'none';
+    successMessage.classList.remove('success');
+
+    clickButton.addEventListener('click', function() {
+        successMessage.style.display = 'flex';
+        successMessage.classList.add('success');
+    });
+</script>
 </body>
 </html>
+
+
+

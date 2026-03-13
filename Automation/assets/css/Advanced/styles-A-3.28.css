@@ -1,0 +1,139 @@
+.iframe-container {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    margin: 6rem 0 1.25rem 0;
+    flex-wrap: wrap;
+}
+
+.iframe-container iframe {
+    width: 18.75rem;
+    height: 12.5rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.frame-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.frame-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.frame-draggable {
+    width: 120px;
+    height: 50px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: grab;
+    transition: background-color 0.3s ease;
+    margin-top: 70px;
+}
+
+.frame-draggable:hover {
+    background-color: #45a049;
+}
+
+.frame-dropContainer {
+    width: 120px;
+    height: 50px;
+    background-color: #f8f9fa;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #aaa;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 70px;
+}
+
+.frame-dropContainer:hover {
+    background-color: #e6e6e6;
+}
+
+.frame-dropContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.frame-message {
+    position: absolute;
+    bottom: 20px;
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+@media (max-width: 1440px) {
+    .iframe-container {
+        gap: 1.125rem;
+        margin-bottom: 1.125rem;
+    }
+    .iframe-container iframe {
+        width: 17.8125rem;
+        height: 11.875rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .iframe-container {
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    .iframe-container iframe {
+        width: 16.875rem;
+        height: 11.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .iframe-container {
+        gap: 0.875rem;
+        margin-bottom: 0.875rem;
+    }
+    .iframe-container iframe {
+        width: 15rem;
+        height: 10rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .iframe-container {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    .iframe-container iframe {
+        width: 13.125rem;
+        height: 8.75rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .iframe-container {
+        gap: 0.625rem;
+        margin-bottom: 0.625rem;
+    }
+    .iframe-container iframe {
+        width: 11.25rem;
+        height: 7.5rem;
+    }
+}

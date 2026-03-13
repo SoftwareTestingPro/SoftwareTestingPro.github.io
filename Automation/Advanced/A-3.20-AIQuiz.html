@@ -3,77 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Quiz</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-        .quiz-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            width: 80%;
-            max-width: 500px;
-            text-align: center;
-        }
-        .options {
-            margin: 20px 0;
-            text-align: center;
-        }
-        .options div {
-            margin: 10px 0;
-            display: inline-block;
-            text-align: left;
-        }
-        .options input {
-            margin-right: 10px;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
-            display: none;
-        }
-        .success {
-            color: green;
-        }
-        .failure {
-            color: red;
-        }
-    </style>
+    <meta name="description" content="Experience AI-powered quiz functionality and adaptive questioning. This advanced tutorial covers intelligent question generation, answer validation, and testing AI-driven interfaces in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>AI Quiz Challenge - AI Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.20.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.20-AIQuiz.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="AI Quiz Challenge - AI Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn AI quiz interaction and validation techniques. This advanced tutorial covers AI-generated content, quiz functionality, and testing intelligent UI elements in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.20-AIQuiz.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AI Quiz Challenge - AI Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn AI quiz interaction and validation techniques. This advanced tutorial covers AI-generated content.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "AI Quiz Challenge - AI Testing Tutorial",
+      "description": "Learn AI quiz interaction and validation techniques. This advanced tutorial covers AI-generated content, quiz functionality, and testing intelligent UI elements in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.20-AIQuiz.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="quiz-container">
-        <h2 id="question">Loading question...</h2>
-        <div class="options">
-            <div>
-                <input type="radio" id="option1" name="option" value="">
-                <label for="option1">Option 1</label>
-            </div>
-            <div>
-                <input type="radio" id="option2" name="option" value="">
-                <label for="option2">Option 2</label>
-            </div>
-            <div>
-                <input type="radio" id="option3" name="option" value="">
-                <label for="option3">Option 3</label>
-            </div>
-            <div>
-                <input type="radio" id="option4" name="option" value="">
-                <label for="option4">Option 4</label>
-            </div>
-        </div>
-        <div id="message" class="message"></div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.19-Spinner.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.21-InfiniteScroll.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
 
+    <main class="card">
+        <div class="card-content">
+            <h1>AI Quiz Challenge</h1>
+            <p class="lead">Master AI interaction! Answer the intelligent quiz questions correctly to demonstrate your comprehension and automation skills.</p>
+
+            <h2 id="question">Loading question...</h2>
+            <div class="options">
+                <div>
+                    <input type="radio" id="option1" name="option" value="">
+                    <span class="radio-custom"></span>
+                    <label for="option1">Option 1</label>
+                </div>
+                <div>
+                    <input type="radio" id="option2" name="option" value="">
+                    <label for="option2">Option 2</label>
+                </div>
+                <div>
+                    <input type="radio" id="option3" name="option" value="">
+                    <label for="option3">Option 3</label>
+                </div>
+                <div>
+                    <input type="radio" id="option4" name="option" value="">
+                    <label for="option4">Option 4</label>
+                </div>
+            </div>
+            <div id="message" class="message"></div>
+            </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
     <script>
-        const questions = [            
+        const questions = [
     { "question": "What is the capital of Afghanistan?", "answer": "Kabul", "options": ["Kabul", "Kandahar", "Herat", "Mazar-i-Sharif"] },
     { "question": "What is the capital of Albania?", "answer": "Tirana", "options": ["Tirana", "Durres", "Shkoder", "Fier"] },
     { "question": "What is the capital of Algeria?", "answer": "Algiers", "options": ["Algiers", "Oran", "Constantine", "Annaba"] },
@@ -310,7 +335,7 @@
                         message.textContent = "🎉 Correct! 🎉";
                         message.className = "message success";
                     } else {
-                        message.textContent = "❌ Incorrect. Try again! ❌";
+                        message.textContent = "Incorrect. Try again!";
                         message.className = "message failure";
                     }
                     message.style.display = 'block';

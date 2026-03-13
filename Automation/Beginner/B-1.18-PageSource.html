@@ -3,74 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Validator</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            width: 80%;
-            max-width: 600px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-
-        .message {
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .success {
-            color: green;
-        }
-
-        .failure {
-            color: red;
-        }
-    </style>
+    <meta name="description" content="Learn page source validation techniques. This tutorial covers HTML source extraction, validation of page content, and testing DOM structure and elements in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Page Source Validation Challenge - HTML Source Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.18.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.18-PageSource.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Page Source Validation Challenge - HTML Source Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn page source inspection and validation techniques. This beginner tutorial covers HTML source retrieval, content parsing, and source code analysis in automation scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.18-PageSource.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Page Source Validation Challenge - HTML Source Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn page source inspection and validation techniques. This beginner tutorial covers HTML source retrieval.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Page Source Validation Challenge - HTML Source Testing Tutorial",
+      "description": "Learn page source inspection and validation techniques. This beginner tutorial covers HTML source retrieval, content parsing, and source code analysis in automation scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.18-PageSource.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h2>Enter HTML Page Source Code</h2>
-        <textarea id="textInput" placeholder="Input HTML page source code here..."></textarea>
-        <div id="message" class="message"></div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.17-Tooltip.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.19-AutoComplete.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Page Source Validation</h1>
+                <p class="lead">Master page source extraction! Capture and input the complete HTML source code to prove your automation can read page structure.</p>
+                <div class="input-group">
+                    <label for="textInput">Enter HTML Page Source Code:</label>
+                    <textarea id="textInput" placeholder="Input HTML page source code here..." style="height: 150px;"></textarea>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully entered page source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like this is not the correct page source</span></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const textInput = document.getElementById('textInput');
-        const message = document.getElementById('message');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
         textInput.addEventListener('input', function() {
             const inputValue = textInput.value;
-            if (inputValue.includes('<html lang="en">')) {
-                message.textContent = 'Success! Page source entered';
-                message.className = 'message success';
+            // A simple check. A more robust check would be to compare the entire source.
+            if (inputValue.includes('<html lang="en">') && inputValue.includes('Page Source Validation')) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                message.textContent = 'Failure. This is not page source';
-                message.className = 'message failure';
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
         });
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
     </script>
 </body>
 </html>
+
+
+
+

@@ -3,117 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A page displaying thumbnails with dynamic ISBN data.">
-    <title>Thumbnails with ISBN Data</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        .thumbnails-label {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .thumbnails {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .thumbnail {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 150px;
-            text-align: center;
-            padding: 10px;
-            border: 2px solid #ddd;
-            opacity: 0;
-            transition: opacity 1s ease;
-            margin: 0 10px;
-        }
-
-        .thumbnail img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-
-        .isbn {
-            font-size: 14px;
-            color: #333;
-            margin-top: 10px;
-        }
-
-        .input-container {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .input-container label {
-            display: block;
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .input-container input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 230px;
-            box-sizing: border-box;
-        }
-
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .success {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-
-        .failure {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-    </style>
+    <meta name="description" content="Learn dynamic loading and thumbnail display techniques. This intermediate tutorial covers asynchronous data loading, ISBN data handling, and testing dynamic content updates in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Loading Results Challenge - Loading Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.17.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.17-LoadingResults.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Loading Results Challenge - Loading Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn loading states and result validation techniques. This intermediate tutorial covers asynchronous operations, loading indicators, and testing dynamic content updates in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.17-LoadingResults.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Loading Results Challenge - Loading Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn loading states and result validation techniques. This intermediate tutorial covers asynchronous operations.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Loading Results Challenge - Loading Testing Tutorial",
+      "description": "Learn loading states and result validation techniques. This intermediate tutorial covers asynchronous operations, loading indicators, and testing dynamic content updates in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.17-LoadingResults.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div id="mainContent">
-        <div class="thumbnails-label" id="thumbnailsLabel">
-            Fetch ISBNs of Thumbnails Displayed in next screens, Store and Input them in last page
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.16-RandomList.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.18-Chart.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="thumbnails" id="thumbnailContainer"></div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Thumbnails with ISBN Data</h1>
+                <p class="lead">Master data collection! Capture ISBN numbers from displayed thumbnails and store them for input on the final page to prove your memory skills.</p>
 
-        <div class="input-container" id="inputContainer">
-            <div id="inputFields"></div>
-            <div id="message" class="message"></div>
-        </div>
+                <div id="thumbnailsLabel" class="instruction-text">Get ready to observe the thumbnails and their ISBN numbers...</div>
+
+                <div class="thumbnails" id="thumbnailContainer"></div>
+
+                <div class="input-container" id="inputContainer">
+                    <div id="inputFields"></div>
+                    <div id="message" class="message"></div>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -191,6 +160,9 @@
                 } else {
                     messageElement.innerHTML = '<div class="failure">Failure! Some ISBNs are incorrect.</div>';
                 }
+
+                // Show the message element
+                messageElement.style.display = 'block';
             }
 
             // Initialize
@@ -200,8 +172,11 @@
                     thumbnailsLabel.style.display = 'none';
                     displayThumbnail(0);
                 }, 1000);
-            }, 5000);
+            }, 10000);
         });
     </script>
 </body>
 </html>
+
+
+

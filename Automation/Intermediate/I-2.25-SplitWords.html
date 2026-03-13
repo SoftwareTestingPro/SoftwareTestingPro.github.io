@@ -3,105 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentence Input Validation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 600px; /* Set max-width for desktop */
-            width: 100%;
-            box-sizing: border-box; /* Ensure padding and border are included in the width */
-        }
-
-        .container h2 {
-            margin: 0 0 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .sentence {
-            margin-bottom: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .input-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .input-container input {
-            width: calc(100% / 5 - 10px); /* Adjust input width to fit 5 inputs in a row */
-            padding: 8px;
-            font-size: 16px;
-            text-align: center;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            background-color: white;
-            box-shadow: none; /* Removed shadow */
-        }
-
-        .input-container input:focus {
-            outline: none;
-            border: 2px solid #4CAF50;
-        }
-
-        .message {
-            margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .error-message {
-            margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                max-width: 90%; /* Adjust max-width for mobile devices */
-            }
-        }
-    </style>
+    <meta name="description" content="Learn sentence input validation and word splitting techniques. This intermediate tutorial covers text parsing, word extraction, and validating sentence structures in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Sentence Input Validation Challenge - Text Splitting Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.25.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.25-SplitWords.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Split Words Challenge - Word Splitting Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn word splitting and text parsing techniques. This intermediate tutorial covers string manipulation, text processing, and validating split text in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.25-SplitWords.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Split Words Challenge - Word Splitting Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn word splitting and text parsing techniques. This intermediate tutorial covers string manipulation.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Split Words Challenge - Word Splitting Testing Tutorial",
+      "description": "Learn word splitting and text parsing techniques. This intermediate tutorial covers string manipulation, text processing, and validating split text in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.25-SplitWords.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-<div class="container">
-    <h2>Enter the Words in the Same Sequence in the Input Fields Below:</h2>
-    <div class="sentence" id="sentence"></div>
-    <div class="input-container" id="inputContainer"></div>
-    <div class="message" id="successMessage">Success! You've entered the correct words.</div>
-    <div class="error-message" id="errorMessage">Failure! The words are not correct.</div>
-</div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.24-SortWords.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.26-ImagePosition.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Sentence Input Validation</h1>
+                <p class="lead">Master word segmentation! Split the displayed sentence into individual words and input them in correct sequence to prove your parsing skills.</p>
+                <div class="sentence" id="sentence"></div>
+                <div class="input-container" id="inputContainer"></div>
+                <div class="message" id="successMessage">Success! You've entered the correct words.</div>
+                <div class="message" id="errorMessage">Failure! The words are not correct.</div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
 
 <script>
     const sentences = [
@@ -131,7 +108,7 @@
         words.forEach((word, index) => {
             const inputField = document.createElement('input');
             inputField.type = 'text';
-            inputField.maxLength = word.length;
+            inputField.maxLength = 20;
             inputField.placeholder = `Word ${index + 1}`;
             inputField.addEventListener('input', () => validateInput(words));
 
@@ -153,14 +130,14 @@
         const errorMessage = document.getElementById('errorMessage');
 
         if (isCorrect && Array.from(inputs).every(input => input.value.trim() !== "")) {
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
+            successMessage.classList.add('success');
+            errorMessage.classList.remove('failure');
         } else if (Array.from(inputs).every(input => input.value.trim() !== "")) {
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'block';
+            successMessage.classList.remove('success');
+            errorMessage.classList.add('failure');
         } else {
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            errorMessage.classList.remove('failure');
         }
     }
 
@@ -170,3 +147,7 @@
 
 </body>
 </html>
+
+
+
+

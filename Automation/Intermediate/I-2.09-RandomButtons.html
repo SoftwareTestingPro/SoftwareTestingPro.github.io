@@ -3,102 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Buttons</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            width: 50%;
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-        }
-
-        .button-container {
-            margin-bottom: 20px;
-        }
-
-        button {
-            margin: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        input[type="text"] {
-            padding: 10px;
-            width: 100%;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            max-width: 220px; /* Set a maximum width */
-            text-align: center; /* Center-align text inside input field */
-        }
-
-        .success-message, .failure-message {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .failure-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    <meta name="description" content="Learn random button generation and testing techniques. This intermediate tutorial covers dynamic button creation, random layouts, and validating button interactions in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Random Buttons Challenge - Dynamic Button Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.09.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.09-RandomButtons.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Random Buttons Challenge - Button Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn random button interaction and validation techniques. This intermediate tutorial covers dynamic button testing, random element selection, and handling variable UI in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.09-RandomButtons.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Random Buttons Challenge - Button Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn random button interaction and validation techniques. This intermediate tutorial covers dynamic button testing.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Random Buttons Challenge - Button Testing Tutorial",
+      "description": "Learn random button interaction and validation techniques. This intermediate tutorial covers dynamic button testing, random element selection, and handling variable UI in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.09-RandomButtons.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
 
-<div class="container">
-    <label for="buttonContainer">Count total buttons and enter value in Input Field</label>
-    <div class="button-container" id="buttonContainer">
-        <!-- Buttons will be added here dynamically -->
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.08-Slider.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.10-Alerts.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
-    <input type="text" id="inputField" placeholder="Enter the number of buttons..." maxlength="10">
-    <div class="success-message" id="successMessage">
-        Correct! The number of buttons matches the input value.
-    </div>
-    <div class="failure-message" id="failureMessage">
-        Incorrect. The number of buttons does not match the input value.
-    </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Random Buttons</h1>
+            <p class="lead">Master element counting! Count all visible buttons and input the exact total to prove your element enumeration skills.</p>
+
+            <div class="button-container" id="buttonContainer">
+                <!-- Buttons will be added here dynamically -->
+            </div>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="inputField" class="label-left">Enter total number of buttons:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="inputField" placeholder="Enter number of buttons..." maxlength="10">
+                </div>
+            </div>
+
+            <div class="input-group">
+
+            </div>
+
+            <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span>Correct! The count of buttons match the input value.</span>
+            </div>
+
+            <div class="message" id="failureMessage" role="status" aria-live="polite">
+                <span>Incorrect. <span style="color: black;">Expected:</span> <span id="expectedCount"></span> <span style="color: black;">Entered:</span> <span id="enteredCount"></span></span>
+            </div>
+        </div>
+    </main>
 </div>
+
+<div id="footer-placeholder"></div>
 
 <script>
     function getRandomInt(min, max) {
@@ -120,10 +122,42 @@
         const inputField = document.getElementById('inputField');
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
+        const expectedCount = document.getElementById('expectedCount');
+        const enteredCount = document.getElementById('enteredCount');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
 
         const numberOfButtons = getRandomInt(4, 10);
         const usedNames = new Set();
         let buttonCount = numberOfButtons;
+
+        expectedCount.textContent = buttonCount;
+
+        function setGridColumns() {
+            const screenWidth = window.innerWidth;
+            let maxColumns;
+            if (screenWidth > 1024) maxColumns = 4;
+            else if (screenWidth > 768) maxColumns = 3;
+            else if (screenWidth > 480) maxColumns = 2;
+            else maxColumns = 1;
+
+            let rows, columns;
+            switch (buttonCount) {
+                case 4: rows = 2; columns = 2; break;
+                case 5: rows = 2; columns = 3; break;
+                case 6: rows = 2; columns = 3; break;
+                case 7: rows = 2; columns = 4; break;
+                case 8: rows = 2; columns = 4; break;
+                case 9: rows = 3; columns = 3; break;
+                case 10: rows = 3; columns = 4; break;
+            }
+            columns = Math.min(columns, maxColumns);
+            container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+        }
 
         for (let i = 1; i <= buttonCount; i++) {
             const button = document.createElement('button');
@@ -132,6 +166,9 @@
             container.appendChild(button);
         }
 
+        setGridColumns();
+        window.addEventListener('resize', setGridColumns);
+
         inputField.addEventListener('input', () => {
             // Remove non-digit characters
             inputField.value = inputField.value.replace(/\D/g, '');
@@ -139,11 +176,16 @@
             const userInput = parseInt(inputField.value, 10);
 
             if (Number.isInteger(userInput) && userInput === buttonCount) {
-                successMessage.style.display = 'block'; // Show success message
-                failureMessage.style.display = 'none'; // Hide failure message
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                successMessage.style.display = 'none'; // Hide success message
-                failureMessage.style.display = 'block'; // Show failure message
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                enteredCount.textContent = isNaN(userInput) ? '(none)' : userInput;
             }
         });
     };
@@ -151,3 +193,6 @@
 
 </body>
 </html>
+
+
+

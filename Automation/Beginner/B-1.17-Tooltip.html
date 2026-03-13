@@ -3,104 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rainbow Text with Tooltip</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            width: 300px;
-        }
-        .rainbow-text {
-            font-size: 1.5em;
-            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 20px;
-            cursor: pointer;
-            position: relative;
-        }
-        .rainbow-text:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 120%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            white-space: nowrap;
-        }
-        .rainbow-text:hover::before {
-            content: '';
-            position: absolute;
-            bottom: 110%;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 5px;
-            border-style: solid;
-            border-color: rgba(0, 0, 0, 0.7) transparent transparent transparent;
-        }
-        input[type="text"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 1em;
-        }
-        .success {
-            color: #28a745;
-        }
-        .failure {
-            color: #dc3545;
-        }
-    </style>
+    <meta name="description" content="Practice tooltip validation and hover interactions. This tutorial teaches how to test tooltip content, handle mouse hover events, and validate dynamic UI elements that appear on hover in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Tooltip Validation Challenge - Hover Interaction Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.17.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.17-Tooltip.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Tooltip Validation Challenge - Hover Interaction Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn tooltip interaction and validation techniques. This beginner tutorial covers hover effects, tooltip display, and UI element testing in automation scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.17-Tooltip.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tooltip Validation Challenge - Hover Interaction Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn tooltip interaction and validation techniques. This beginner tutorial covers hover effects.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Tooltip Validation Challenge - Hover Interaction Testing Tutorial",
+      "description": "Learn tooltip interaction and validation techniques. This beginner tutorial covers hover effects, tooltip display, and UI element testing in automation scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.17-Tooltip.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <div class="rainbow-text" data-tooltip="I am a Tooltip">
-            Header Text With Tooltip
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.16-CaptureScreeshot.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.18-PageSource.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <div id="label">Mouse Hover on Above Header Text and Enter Displayed Tooltip Text in Below Input Field</div><br></br>
-        <input type="text" id="inputField" placeholder="Enter Tooltip Text Here">
-        <div class="message" id="result"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Tooltip Validation</h1>
+                <p class="lead">Master tooltip interaction! Hover over the rainbow text to reveal hidden messages, then capture and input the tooltip text precisely.</p>
+
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="rainbow-text" data-tooltip="I am a Tooltip">
+                        Hover Me For Tooltip
+                    </div>
+                </div>
+
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="inputField" class="label-left">Enter the title of this webpage:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="inputField" placeholder="Enter the tooltip text here">
+                    </div>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Tooltip matched.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Tooltip does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+            </div>
+        </main>
     </div>
 
+    <div id="footer-placeholder"></div>
+
     <script>
-        document.getElementById('inputField').addEventListener('input', function() {
-            const inputField = document.getElementById('inputField');
+        const inputField = document.getElementById('inputField');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValueDisplay = document.getElementById('expectedValue');
+        const actualValueDisplay = document.getElementById('actualValue');
+
+        const tooltipText = document.querySelector('.rainbow-text').getAttribute('data-tooltip');
+        expectedValueDisplay.textContent = tooltipText;
+
+        inputField.addEventListener('input', function() {
             const userInput = inputField.value;
-            const tooltipText = document.querySelector('.rainbow-text').getAttribute('data-tooltip');
-            const resultDiv = document.getElementById('result');
+            actualValueDisplay.textContent = userInput;
 
             if (userInput === tooltipText) {
-                resultDiv.textContent = 'Success! The entered text matches the tooltip text.';
-                resultDiv.className = 'message success';
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else if (userInput) {
-                resultDiv.textContent = `Failure! You entered "${userInput}", but the tooltip text is "${tooltipText}".`;
-                resultDiv.className = 'message failure';
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             } else {
-                resultDiv.textContent = '';
-                resultDiv.className = 'message';
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             }
         });
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
     </script>
 </body>
 </html>
+
+
+
+

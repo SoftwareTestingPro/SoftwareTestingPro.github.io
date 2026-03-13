@@ -3,87 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image URL Verification</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: auto; /* Fit to content */
-            max-width: 90%; /* Adjust max-width for better fit on mobile */
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        .container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .input-group label {
-            font-size: 16px;
-            color: #555;
-            display: block;
-            margin-bottom: 5px; /* Adjust spacing for better mobile view */
-        }
-        .input-group input {
-            width: calc(100% - 20px); /* Full width minus padding */
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        .message {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-        .success {
-            color: green;
-        }
-        .failure {
-            color: red;
-        }
-
-        /* Media Query for larger screens */
-        @media (min-width: 768px) {
-            .container {
-                max-width: 80%; /* Increase container width by 20% on larger screens */
-            }
-        }
-    </style>
+    <meta name="description" content="Learn image URL and path validation techniques. This tutorial covers verifying image sources, handling media paths, and testing image loading functionality in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Image URL Verification Challenge - Media Path Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.22.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.22-ImagePath.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Image Path Challenge - Image Source Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn image source validation and path testing techniques. This beginner tutorial covers image src attributes, path verification, and visual element testing in automation scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.22-ImagePath.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Image Path Challenge - Image Source Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn image source validation and path testing techniques. This beginner tutorial covers image src attributes.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Image Path Challenge - Image Source Testing Tutorial",
+      "description": "Learn image source validation and path testing techniques. This beginner tutorial covers image src attributes, path verification, and visual element testing in automation scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.22-ImagePath.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-    <div class="container">
-        <img id="image" src="" alt="Random Image">
-        <div class="input-group">
-            <label for="imageURL">Enter Image Source URL:</label>
-            <input type="text" id="imageURL" placeholder="">
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.21-CompareText.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.23-ColorOddOneOut.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <div id="message" class="message"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Image URL Verification</h1>
+                <p class="lead">Master image attribute extraction! Capture and input the exact source URL of the displayed image to prove your element inspection mastery.</p>
+
+                <img id="image" src="" alt="Random Image" style="display: block; margin: 0 auto 20px auto;">
+
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="imageURL" class="label-left">Enter the source URL of this image:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="imageURL" placeholder="Enter the image URL here" aria-describedby="imageMessage">
+                    </div>
+                </div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Source URL Successfully verified.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Source URL Does not match. <span style="color: black;">Expected:</span> <span id="expectedUrl"></span> <span style="color: black;">Entered:</span> <span id="actualUrl"></span></span></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const imageElement = document.getElementById('image');
         const urlInput = document.getElementById('imageURL');
-        const messageElement = document.getElementById('message');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedUrlDisplay = document.getElementById('expectedUrl');
+        const actualUrlDisplay = document.getElementById('actualUrl');
 
         const imageUrls = [
             'https://picsum.photos/250/250',
@@ -98,26 +112,41 @@
             const randomImageUrl = imageUrls[randomIndex];
             imageElement.src = randomImageUrl;
             imageElement.dataset.src = randomImageUrl;
+            expectedUrlDisplay.textContent = randomImageUrl;
         }
 
-        function checkURL() {
+        function validateInput() {
             const inputUrl = urlInput.value.trim();
             const correctUrl = imageElement.dataset.src;
 
-            if (inputUrl === correctUrl) {
-                messageElement.textContent = 'Success! The URL is correct.';
-                messageElement.className = 'message success';
-            } else if (inputUrl === '') {
-                messageElement.textContent = '';
+            if (inputUrl === '') {
+                // Clear messages if input is empty
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
+                actualUrlDisplay.textContent = '';
+            } else if (inputUrl === correctUrl) {
+                // Success case
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                messageElement.textContent = 'Failure! The URL is incorrect.';
-                messageElement.className = 'message failure';
+                // Failure case
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                actualUrlDisplay.textContent = inputUrl;
             }
         }
 
-        urlInput.addEventListener('input', checkURL);
+        urlInput.addEventListener('input', validateInput);
+        urlInput.addEventListener('blur', validateInput);
         window.addEventListener('load', setRandomImage);
     </script>
-
 </body>
 </html>
+
+
+
+

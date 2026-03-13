@@ -3,113 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Alert</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-        }
-        .input-group {
-            margin-top: 20px;
-            text-align: left;
-        }
-        label {
-            font-size: 1em;
-            color: #333;
-        }
-        input[type="number"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-top: 5px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        a.button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #007bff;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        a.button:hover {
-            background-color: #0056b3;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 1em;
-        }
-        .success {
-            color: #28a745;
-        }
-        .failure {
-            color: #dc3545;
-        }
-    </style>
+    <meta name="description" content="Explore random alert generation and popup testing techniques. This intermediate tutorial covers dynamic modal dialogs, random content display, and handling unpredictable UI elements in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Random PopUp Challenge - PopUp Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.15.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.15-RandomPopUp.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Random PopUp Challenge - PopUp Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn random popup handling and validation techniques. This intermediate tutorial covers unpredictable modal dialogs, popup timing, and testing dynamic UI elements in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.15-RandomPopUp.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Random PopUp Challenge - PopUp Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn random popup handling and validation techniques. This intermediate tutorial covers unpredictable modal dialogs.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Random PopUp Challenge - PopUp Testing Tutorial",
+      "description": "Learn random popup handling and validation techniques. This intermediate tutorial covers unpredictable modal dialogs, popup timing, and testing dynamic UI elements in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.15-RandomPopUp.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <a href="#" class="button" id="alertButton">Click to Generate Alert and Wait</a>
-        <div class="input-group">
-            <label for="inputField">After the alert appears, enter the duration (in seconds) it took to display:</label>
-            <input type="number" id="inputField" name="inputField" min="1" step="1" disabled>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.14-JSInput.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.16-RandomList.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <div id="result"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Random Alert</h1>
+                <p class="lead">Master random alert handling! Click to generate unpredictable alerts and wait for them to prove your timing and patience skills.</p>
+
+                <a href="#" class="button" id="alertButton">Click to Generate Alert and Wait</a>
+                <div class="input-group">
+                    <label for="inputField">After the alert appears, enter the duration (in seconds) it took to display:</label>
+                    <input type="number" id="inputField" name="inputField" min="1" step="1">
+                </div>
+                <div id="result"></div>
+            </div>
+        </main>
     </div>
 
+    <div id="footer-placeholder"></div>
+
     <script>
+        let alertDisplayed = false;
+        let expectedTime = 0;
+
         document.getElementById('alertButton').addEventListener('click', function(e) {
             e.preventDefault();
 
+            // Disable button and show waiting message
+            const button = document.getElementById('alertButton');
+            button.disabled = true;
+            button.textContent = 'Waiting for alert...';
+            
+            // Reset result message and flag
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = '';
+            resultDiv.className = '';
+            alertDisplayed = false;
+
             const randomTime = Math.floor(Math.random() * 26) + 5; // Random time between 5 and 30 seconds
+            expectedTime = randomTime;
             const startTime = Date.now();
 
+            console.log('Alert will appear in:', randomTime, 'seconds');
+
             setTimeout(() => {
-                alert('This is an alert displayed anytime between 5 and 30 seconds!');
                 const endTime = Date.now();
                 const actualTime = Math.round((endTime - startTime) / 1000);
+                expectedTime = actualTime;
+                
+                console.log('Alert appeared after:', actualTime, 'seconds');
 
+                alert('This is an alert displayed anytime between 5 and 30 seconds!');
+
+                // Mark alert as displayed
+                alertDisplayed = true;
+
+                // Enable button
+                button.disabled = false;
+                button.textContent = 'Click to Generate Alert and Wait';
+                
+                // Focus on input field
+                document.getElementById('inputField').focus();
+
+                // Check if user already entered a value
                 const inputField = document.getElementById('inputField');
-                inputField.disabled = false; // Enable the input field after alert is displayed
-
-                inputField.addEventListener('input', () => {
-                    const userInput = parseInt(inputField.value);
-                    const resultDiv = document.getElementById('result');
-
-                    if (!isNaN(userInput)) {
-                        if (userInput === actualTime) {
-                            resultDiv.textContent = `Success! The alert appeared after ${actualTime} seconds.`;
-                            resultDiv.className = 'success';
-                        } else {
-                            resultDiv.textContent = `Failure! You calculated ${userInput} seconds, but it actually took ${actualTime} seconds.`;
-                            resultDiv.className = 'failure';
-                        }
-                    } else {
-                        resultDiv.textContent = 'Please enter a valid number in seconds.';
-                        resultDiv.className = '';
-                    }
-                });
+                if (inputField.value) {
+                    validateInput(inputField.value);
+                }
             }, randomTime * 1000);
         });
+
+        // Add input validation handler
+        document.getElementById('inputField').addEventListener('input', function(e) {
+            const userInput = e.target.value;
+            
+            if (!alertDisplayed && userInput) {
+                // User entered input before alert appeared
+                document.getElementById('result').textContent = 'Please click the button above and wait for the alert to appear first!';
+                document.getElementById('result').className = '';
+            } else if (alertDisplayed && userInput) {
+                // Alert has appeared, validate the input
+                validateInput(userInput);
+            } else if (!userInput) {
+                // Clear result when input is empty
+                document.getElementById('result').textContent = '';
+                document.getElementById('result').className = '';
+            }
+        });
+
+        function validateInput(userInput) {
+            const inputNum = parseInt(userInput);
+            const resultDiv = document.getElementById('result');
+
+            if (!isNaN(inputNum)) {
+                if (inputNum === expectedTime) {
+                    resultDiv.textContent = `Success! The alert appeared after ${expectedTime} seconds.`;
+                    resultDiv.className = 'success';
+                } else {
+                    resultDiv.textContent = `Failure! You calculated ${inputNum} seconds, but it actually took ${expectedTime} seconds.`;
+                    resultDiv.className = 'failure';
+                }
+            } else {
+                resultDiv.textContent = 'Please enter a valid number in seconds.';
+                resultDiv.className = '';
+            }
+        }
     </script>
 </body>
 </html>
+
+
+
+

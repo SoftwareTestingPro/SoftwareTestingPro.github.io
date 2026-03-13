@@ -3,164 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Validation</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f2f5;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 400px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-        }
-
-        .header {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .checkbox-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .checkbox-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .validate-btn {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .validate-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .message {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .success {
-            color: green;
-        }
-
-        .failure {
-            color: red;
-        }
-    </style>
+    <meta name="description" content="Practice case validation techniques for text inputs. This tutorial teaches how to validate uppercase, lowercase, and mixed case text, and handle case-sensitive validation in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Case Validation Challenge - Text Case Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.26.css">
+    <script src="../assets/components/components.js"></script>
+	<!-- Additional SEO Meta Tags -->
+	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+	<link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.26-CaseValidation.html">
+	<!-- Open Graph Tags -->
+	<meta property="og:title" content="Case Validation Challenge - Text Case Testing Tutorial | Software Testing Pro">
+	<meta property="og:description" content="Learn text case validation and transformation techniques. This beginner tutorial covers uppercase/lowercase checking, text formatting, and case sensitivity in automation testing scenarios.">
+	<meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.26-CaseValidation.html">
+	<meta property="og:type" content="article">
+	<meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<meta property="og:site_name" content="Software Testing Pro">
+	<!-- Twitter Card Tags -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Case Validation Challenge - Text Case Testing Tutorial | Software Testing Pro">
+	<meta name="twitter:description" content="Learn text case validation and transformation techniques. This beginner tutorial covers uppercase/lowercase checking.">
+	<meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<!-- Structured Data -->
+	<script type="application/ld+json">
+	{
+	  "@context": "https://schema.org",
+	  "@type": "EducationalContent",
+	  "headline": "Case Validation Challenge - Text Case Testing Tutorial",
+	  "description": "Learn text case validation and transformation techniques. This beginner tutorial covers uppercase/lowercase checking, text formatting, and case sensitivity in automation testing scenarios.",
+	  "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.26-CaseValidation.html",
+	  "publisher": {
+	    "@type": "Organization",
+	    "name": "Software Testing Pro"
+	  }
+	}
+	</script>
+	<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+	<!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-<div class="container">
-    <div class="header">Select All Upper Case Strings</div>
-    <div class="checkbox-container" id="checkboxContainer">
-        <!-- Checkboxes will be generated here -->
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.25-HighlightText.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.27-MatchTheFollowing.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Case Validation</h1>
+                <p class="lead">Master case sensitivity validation! Identify and select all checkboxes containing pure uppercase strings to prove your pattern recognition skills.</p>
+                <div class="checkbox-group" id="checkboxContainer">
+                    <!-- Checkboxes will be generated here -->
+                </div>
+                <button class="validate-btn" onclick="validateSelection()">Validate Selection</button>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You selected all uppercase items correctly.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! Please select only the uppercase items.</span></div>
+            </div>
+        </main>
     </div>
-    <button class="validate-btn" onclick="validateSelection()">Validate Selection</button>
-    <div class="message" id="message"></div>
-</div>
 
-<script>
-    function generateRandomName() {
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        let name = "";
-        for (let i = 0; i < 5; i++) {
-            name += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return Math.random() < 0.5 ? name.toUpperCase() : name;
-    }
+    <div id="footer-placeholder"></div>
 
-    const checkboxContainer = document.getElementById('checkboxContainer');
-    const checkboxData = [];
-
-for (let i = 0; i < 5; i++) {
-    let name = generateRandomName();
-    let isUpperCase = name === name.toUpperCase();
-    checkboxData.push({ name, isUpperCase });
-
-    const row = document.createElement('div');
-    row.className = 'checkbox-row';
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'checkbox-item';
-    checkbox.setAttribute('data-index', i);
-    checkbox.setAttribute('value', name);
-    checkbox.setAttribute('title', name); // optional tooltip
-
-    const labelText = document.createElement('span');
-    labelText.textContent = name;
-
-    row.appendChild(checkbox);
-    row.appendChild(labelText);
-    checkboxContainer.appendChild(row);
-}
-
-    // Ensure at least one uppercase item exists
-    if (!checkboxData.some(item => item.isUpperCase)) {
-        checkboxData[0].name = checkboxData[0].name.toUpperCase();
-        checkboxData[0].isUpperCase = true;
-        const firstLabel = checkboxContainer.children[0].querySelector('span');
-        firstLabel.textContent = checkboxData[0].name;
-    }
-
-    function validateSelection() {
-        const checkboxes = document.querySelectorAll('.checkbox-item');
-        let isValid = true;
-
-        checkboxes.forEach(checkbox => {
-            const index = parseInt(checkbox.getAttribute('data-index'));
-            const isUpperCase = checkboxData[index].isUpperCase;
-
-            if (isUpperCase && !checkbox.checked) {
-                isValid = false;
-            } else if (!isUpperCase && checkbox.checked) {
-                isValid = false;
+    <script>
+        function generateRandomName() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            let name = "";
+            for (let i = 0; i < 5; i++) {
+                name += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-        });
-
-        const message = document.getElementById('message');
-        if (isValid) {
-            message.textContent = "Success! You selected all uppercase items correctly.";
-            message.className = "message success";
-        } else {
-            message.textContent = "Failure! Please select only/all the uppercase items.";
-            message.className = "message failure";
+            return Math.random() < 0.5 ? name.toUpperCase() : name;
         }
-    }
-</script>
 
+        const checkboxContainer = document.getElementById('checkboxContainer');
+        const checkboxData = [];
+
+        for (let i = 0; i < 8; i++) {
+            let name = generateRandomName();
+            let isUpperCase = name === name.toUpperCase();
+            checkboxData.push({ name, isUpperCase });
+
+            const label = document.createElement('label');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.setAttribute('data-index', i);
+            checkbox.setAttribute('value', name);
+            checkbox.setAttribute('title', name); // optional tooltip
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(name));
+            checkboxContainer.appendChild(label);
+        }
+
+        // Ensure at least one uppercase item exists
+        if (!checkboxData.some(item => item.isUpperCase)) {
+            checkboxData[0].name = checkboxData[0].name.toUpperCase();
+            checkboxData[0].isUpperCase = true;
+            const firstLabel = checkboxContainer.children[0];
+            firstLabel.lastChild.textContent = checkboxData[0].name;
+        }
+
+        function validateSelection() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            let isValid = true;
+
+            checkboxes.forEach(checkbox => {
+                const index = parseInt(checkbox.getAttribute('data-index'));
+                const isUpperCase = checkboxData[index].isUpperCase;
+
+                if (isUpperCase && !checkbox.checked) {
+                    isValid = false;
+                } else if (!isUpperCase && checkbox.checked) {
+                    isValid = false;
+                }
+            });
+
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+            
+            if (isValid) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            } else {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+            }
+        }
+    </script>
 </body>
 </html>
+
+
+
+

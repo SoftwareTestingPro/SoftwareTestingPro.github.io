@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn drag and drop functionality across iframe boundaries. This advanced tutorial covers cross-frame interactions, frame communication, and testing multi-frame UI elements in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Modern Drag and Drop Between Frames Challenge - Cross-Frame Interaction Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.28.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.28-DragAndDropWithFrames.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Drag and Drop With Frames Challenge - Frame Drag Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn drag and drop within iframe elements. This advanced tutorial covers frame-specific interactions, cross-frame dragging, and testing frame-based drag operations in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.28-DragAndDropWithFrames.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Drag and Drop With Frames Challenge - Frame Drag Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn drag and drop within iframe elements. This advanced tutorial covers frame-specific interactions.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Drag and Drop With Frames Challenge - Frame Drag Testing Tutorial",
+      "description": "Learn drag and drop within iframe elements. This advanced tutorial covers frame-specific interactions, cross-frame dragging, and testing frame-based drag operations in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.28-DragAndDropWithFrames.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
+</head>
+<body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.27-AudioOddOneOut.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.29-DynamicProgressBar.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Drag and Drop with Frames</h1>
+        <p class="lead">Master cross-frame dragging! Drag the element from left frame to right frame container to demonstrate your iframe communication skills.</p>
+
+        <div class="iframe-container">
+            <iframe id="frame1" srcdoc="
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <link rel='stylesheet' href='../assets/css/Advanced/styles-A-3.28.css'>
+                </head>
+                <body class='frame-body'>
+                    <div class='frame-container'>					
+                        <div id='drag1' class='frame-draggable' draggable='true' ondragstart='parent.drag(event)'>Drag Me</div>
+                    </div>
+                </body>
+                </html>
+            "></iframe>
+            <iframe id="frame2" srcdoc="
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <link rel='stylesheet' href='../assets/css/Advanced/styles-A-3.28.css'>
+                </head>
+                <body class='frame-body'>
+                    <div class='frame-container'>
+                        <div id='dropContainer' class='frame-dropContainer' ondrop='parent.drop(event)' ondragover='parent.allowDrop(event)'>
+                            Drop Here
+                        </div>
+                    </div>
+                </body>
+                </html>
+            "></iframe>
+        </div>
+        <div id="successMessage" class="message success"></div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+    <script>
+        const successMessage = document.getElementById('successMessage');
+
+        // Hide message on load
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+
+        // Drag and drop functionality (in the parent window to work between frames)
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var draggedElement = document.getElementById('frame1').contentWindow.document.getElementById(data);
+            var dropTarget = document.getElementById('frame2').contentWindow.document.getElementById('dropContainer');
+            dropTarget.textContent = '';
+            draggedElement.style.marginTop = '0';
+            dropTarget.appendChild(draggedElement);
+
+            // Display success message
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            successMessage.textContent = "Element successfully dropped!";
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+

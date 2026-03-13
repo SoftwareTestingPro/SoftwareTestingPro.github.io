@@ -3,67 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rubik's Cube</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        #message {
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        #rubiks-cube {
-            display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-template-rows: repeat(3, 100px);
-            gap: 5px;
-        }
-
-        .block {
-            width: 100px;
-            height: 100px;
-            cursor: pointer;
-        }
-
-        .success-message, .failure-message {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .failure-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    <meta name="description" content="Explore Rubik's cube solving and 3D interaction testing. This intermediate tutorial covers cube rotations, color validation, and handling complex 3D elements in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Rubix Challenge - Puzzle Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.07.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.07-Rubix.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Rubix Challenge - Puzzle Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn puzzle interaction and rubik's cube testing techniques. This intermediate tutorial covers interactive elements, state validation, and handling complex UI in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.07-Rubix.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rubix Challenge - Puzzle Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn puzzle interaction and rubik's cube testing techniques. This intermediate tutorial covers interactive elements.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Rubix Challenge - Puzzle Testing Tutorial",
+      "description": "Learn puzzle interaction and rubik's cube testing techniques. This intermediate tutorial covers interactive elements, state validation, and handling complex UI in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.07-Rubix.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div id="message">Click the unique block!</div>
-    <div id="rubiks-cube"></div>
-    <div class="success-message" id="successMessage">
-        Congratulations! You clicked the unique block!
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.06-Table.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.08-Slider.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Rubik's Cube</h1>
+                <p class="lead">Master pattern recognition! Analyze the Rubik's cube and identify the uniquely colored block to prove your visual analysis skills.</p>
+                <div id="rubiks-cube"></div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Congratulations! You clicked the unique block!</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Try again!</span></div>
+            </div>
+        </main>
     </div>
-    <div class="failure-message" id="failureMessage">
-        Try again!
-    </div>
+    <div id="footer-placeholder"></div>
+
+    <script src="../../components.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const rubiksCube = document.getElementById('rubiks-cube');
@@ -93,10 +108,14 @@
                 block.addEventListener('click', () => {
                     if (i === distinctIndex) {
                         successMessage.style.display = 'block'; // Show success message
+                        successMessage.classList.add('success');
                         failureMessage.style.display = 'none'; // Hide failure message
+                        failureMessage.classList.remove('failure');
                     } else {
                         successMessage.style.display = 'none'; // Hide success message
+                        successMessage.classList.remove('success');
                         failureMessage.style.display = 'block'; // Show failure message
+                        failureMessage.classList.add('failure');
                     }
                 });
                 rubiksCube.appendChild(block);
@@ -105,3 +124,6 @@
     </script>
 </body>
 </html>
+
+
+

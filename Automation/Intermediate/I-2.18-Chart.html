@@ -3,64 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Volume of a company</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 80%;
-            max-width: 800px;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border-radius: 10px;
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
-        }
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
-        .input-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        label {
-            font-size: 18px;
-            margin-right: 10px;
-        }
-        input {
-            padding: 5px;
-            font-size: 16px;
-        }
-        .message {
-            margin-top: 10px;
-            font-size: 18px;
-        }
-    </style>
+    <meta name="description" content="Explore chart and data visualization testing techniques. This intermediate tutorial covers sales data representation, chart interactions, and validating graphical data displays in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Chart Challenge - Data Visualization Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.18.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.18-Chart.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Chart Challenge - Data Visualization Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn chart interaction and data visualization techniques. This intermediate tutorial covers chart elements, data points, and testing graphical data representations in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.18-Chart.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Chart Challenge - Data Visualization Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn chart interaction and data visualization techniques. This intermediate tutorial covers chart elements.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Chart Challenge - Data Visualization Testing Tutorial",
+      "description": "Learn chart interaction and data visualization techniques. This intermediate tutorial covers chart elements, data points, and testing graphical data representations in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.18-Chart.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h1>Sales per Month FY 2023-24</h1>
-        <canvas id="salesChart"></canvas>
-        <div class="input-container">
-            <label for="monthInput">Enter Month with Highest Sales:</label>
-            <input type="text" id="monthInput">
-            <div id="message" class="message"></div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.17-LoadingResults.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.19-FetchDate.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Monthly Data FY 2023-24</h1>
+                <p class="lead">Master chart data analysis! Analyze the monthly sales chart and identify the highest performing month to prove your data interpretation skills.</p>
+
+                <canvas id="salesChart"></canvas>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="monthInput" class="label-left">Enter Month with Highest Sales:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="monthInput" name="user-input-month" placeholder="Month Name">
+                    </div>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Selected:</span> <span id="selectedValue"></span></span></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <!-- Include Chart.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -92,6 +118,7 @@
                 }]
             },
             options: {
+                responsive: true,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -110,18 +137,38 @@
             }
         });
 
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValue = document.getElementById('expectedValue');
+        const selectedValue = document.getElementById('selectedValue');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+
         document.getElementById('monthInput').addEventListener('input', function() {
             const userInput = this.value.trim();
-            const messageElement = document.getElementById('message');
 
             if (userInput.toLowerCase() === monthWithMaxSales.toLowerCase()) {
-                messageElement.textContent = 'Success! You entered the correct month.';
-                messageElement.style.color = 'green';
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                messageElement.textContent = `Failure! The correct month is ${monthWithMaxSales}.`;
-                messageElement.style.color = 'red';
+                expectedValue.textContent = monthWithMaxSales;
+                selectedValue.textContent = userInput;
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
         });
     </script>
 </body>
 </html>
+
+
+
+

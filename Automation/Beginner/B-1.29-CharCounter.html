@@ -3,98 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Character Count Challenge</title>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
-        .container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 90%; max-width: 500px; }
-        h2 { margin-top: 0; }
-        textarea {
-            width: 100%;
-            height: 120px;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            resize: vertical;
-        }
-        #input-area {
-            margin-top: 20px;
-        }
-        #input-area label {
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        #input-area input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 80px;
-        }
-        #message-display {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            min-height: 20px;
-        }
-        .success { color: green; }
-        .failure { color: red; }
-    </style>
+    <meta name="description" content="Practice character counting and text length validation. This tutorial covers counting characters, validating input lengths, and handling text limits in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Character Counter Challenge - Counter Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.29.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.29-CharCounter.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Character Counter Challenge - Counter Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn character counting and validation techniques. This beginner tutorial covers text length checking, counter functionality, and input validation in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.29-CharCounter.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Character Counter Challenge - Counter Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn character counting and validation techniques. This beginner tutorial covers text length checking.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Character Counter Challenge - Counter Testing Tutorial",
+      "description": "Learn character counting and validation techniques. This beginner tutorial covers text length checking, counter functionality, and input validation in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.29-CharCounter.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h2>Character Count Challenge</h2>
-        <p>A random quote is displayed below. Enter the number of alphabetic characters (a-z, A-Z) in the quote:</p>
-        <textarea id="text-input" rows="5" cols="50" readonly disabled></textarea>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-        <div id="input-area">
-            <label for="character-count">Character Count:</label>
-            <input type="number" id="character-count" name="character-count">
-            <button id="verify-button">Verify</button>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.28-OrderConfirmation.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.30-VideoPlayer.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div id="message-display"></div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Character Count Challenge</h1>
+                <p class="lead">Master character counting precision! Analyze the displayed quote and input the exact count of alphabetic characters to prove your text processing skills.</p>
+                <textarea id="text-input" rows="5" readonly disabled style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; background: var(--bg); resize: none;"></textarea>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="character-count" class="label-left">Character Count:</label>
+                    </div>
+                    <div class="input-group-right">
+                        <input type="text" id="character-count" name="character-count" placeholder="Enter count">
+                    </div>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You counted the characters accurately.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Count does not match. <span style="color: black;">Expected:</span> <span id="expectedCount"></span> <span style="color: black;">Entered:</span> <span id="actualCount"></span></span></div>
+            </div>
+        </main>
     </div>
-
+    <div id="footer-placeholder"></div>
     <script>
-        const textInput = document.getElementById('text-input');
-        const characterCountInput = document.getElementById('character-count');
-        const verifyButton = document.getElementById('verify-button');
-        const messageDisplay = document.getElementById('message-display');
-
         const quotes = [
-            "The only way to do great work is to love what you do.",
-            "Innovation distinguishes between a leader and a follower.",
-            "Strive not to be a success, but rather to be of value.",
-            "The mind is everything. What you think you become.",
-            "Your time is limited, don't waste it living someone else's life."
+            "The quick brown fox jumps over the lazy dog.",
+            "To be or not to be, that is the question.",
+            "All that glitters is not gold.",
+            "A journey of a thousand miles begins with a single step.",
+            "The early bird catches the worm."
         ];
 
-        function setRandomQuote() {
-            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            textInput.value = randomQuote;
+        const textInput = document.getElementById('text-input');
+        const characterCountInput = document.getElementById('character-count');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedCountDisplay = document.getElementById('expectedCount');
+        const actualCountDisplay = document.getElementById('actualCount');
+
+        // Function to count alphabetic characters only
+        function countAlphabeticChars(text) {
+            return (text.match(/[a-zA-Z]/g) || []).length;
         }
 
-        function checkAnswer() {
-            // Use regex to remove non-alphabetic characters and get the length
-            const characterCount = textInput.value.replace(/[^a-zA-Z]/g, '').length;
-            const userGuess = parseInt(characterCountInput.value);
+        // Function to set random quote
+        function setRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const selectedQuote = quotes[randomIndex];
+            textInput.value = selectedQuote;
+            return selectedQuote;
+        }
 
-            if (isNaN(userGuess)) {
-                messageDisplay.textContent = "Please enter a number.";
-                messageDisplay.className = "failure";
-            } else if (userGuess === characterCount) {
-                messageDisplay.textContent = "Success! You entered the correct character count.";
-                messageDisplay.className = "success";
+        // Function to verify character count
+        function verifyCount() {
+            const quote = textInput.value;
+            const actualCount = countAlphabeticChars(quote);
+            const userCount = parseInt(characterCountInput.value);
+
+            // Hide messages initially
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+
+            if (userCount === actualCount) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
             } else {
-                messageDisplay.textContent = `Incorrect. The quote has ${characterCount} alphabetic characters.`;
-                messageDisplay.className = "failure";
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                
+                // Populate expected and actual values
+                expectedCountDisplay.textContent = actualCount;
+                actualCountDisplay.textContent = isNaN(userCount) ? '0' : userCount;
             }
         }
 
-        window.addEventListener('load', setRandomQuote);
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setRandomQuote();
+            
+            // Add event listeners
+            characterCountInput.addEventListener('input', verifyCount);
 
-        verifyButton.addEventListener('click', checkAnswer);
+            // Hide messages initially
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+        });
     </script>
 </body>
 </html>
+
+
+
+

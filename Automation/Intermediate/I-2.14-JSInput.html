@@ -2,71 +2,93 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Secure Input Field</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Practice secure input field validation using JavaScript. This intermediate tutorial covers client-side validation, input sanitization, and secure form handling in automation testing scenarios.">
+  <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+  <title>JS Input Challenge - JavaScript Input Testing Tutorial | Software Testing Pro</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.14.css">
+  <script src="../assets/components/components.js"></script>
+  <!-- Additional SEO Meta Tags -->
+  <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.14-JSInput.html">
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="JS Input Challenge - JavaScript Input Testing Tutorial | Software Testing Pro">
+  <meta property="og:description" content="Learn JavaScript input interaction and validation techniques. This intermediate tutorial covers dynamic input handling, JavaScript execution, and testing script-based interactions in automation testing scenarios.">
+  <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.14-JSInput.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <meta property="og:site_name" content="Software Testing Pro">
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JS Input Challenge - JavaScript Input Testing Tutorial | Software Testing Pro">
+  <meta name="twitter:description" content="Learn JavaScript input interaction and validation techniques. This intermediate tutorial covers dynamic input handling.">
+  <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalContent",
+    "headline": "JS Input Challenge - JavaScript Input Testing Tutorial",
+    "description": "Learn JavaScript input interaction and validation techniques. This intermediate tutorial covers dynamic input handling, JavaScript execution, and testing script-based interactions in automation testing scenarios.",
+    "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.14-JSInput.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Software Testing Pro"
     }
-
-    h2 {
-      margin-bottom: 20px;
-    }
-
-    .input-wrapper {
-      position: relative;
-      width: 300px;
-    }
-
-    .protected-input {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #007bff;
-      border-radius: 6px;
-      background-color: #fff;
-      z-index: 1;
-      position: relative;
-    }
-
-    /* Overlay blocks keyboard focus and automation */
-    .shield {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      background: transparent;
-      pointer-events: auto;  /* catch clicks */
-    }
-
-    #successMessage {
-      margin-top: 20px;
-      padding: 12px;
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-      border-radius: 5px;
-      display: none;
-      font-weight: bold;
-    }
-  </style>
+  }
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+  <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+  <div id="header-placeholder"></div>
+  <div class="content-wrapper">
+    <div class="card-nav">
+      <a href="I-2.13-BrowserPopUp.html" class="nav-btn nav-btn-prev">
+        <span class="nav-icon">←</span>
+        Previous
+      </a>
+      <a href="I-2.15-RandomPopUp.html" class="nav-btn nav-btn-next">
+        Next
+        <span class="nav-icon">→</span>
+      </a>
+    </div>
 
-  <h2>Enter Your Country Name</h2>
-  <div class="input-wrapper" id="wrapper">
-    <input type="text" id="secureInput" class="protected-input" placeholder="Try typing..." />
-    <div class="shield" id="shield"></div>
+    <main class="card">
+      <div class="card-content">
+        <h1>Javascript Input Field</h1>
+        <p class="lead">Master JavaScript injection! Bypass automation protections by using JavaScript execution to input text in this secured field.</p>
+
+          <div class="input-group-parent">
+              <div class="input-group-left">
+                  <label for="secureInput" class="label-left">Enter Your Country Name:</label>
+              </div>
+
+              <div class="input-group-right">
+                  <input type="text" id="secureInput" class="protected-input" name="user-input-name" placeholder="Type your country name...">
+                  <div class="shield" id="shield"></div>
+              </div>
+          </div>
+          
+        <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">
+            <span>You typed: </span>
+        </div>
+      </div>
+    </main>
   </div>
-  <div id="successMessage"></div>
+
+  <div id="footer-placeholder"></div>
 
   <script>
     const input = document.getElementById("secureInput");
@@ -87,10 +109,19 @@
     });
 
     input.addEventListener("input", () => {
-      successMessage.textContent = `✅ You typed: ${input.value}`;
-      successMessage.style.display = "block";
+      if (input.value) {
+        const span = successMessage.querySelector('span');
+        span.textContent = `Country name entered: ${input.value}`;
+        successMessage.style.display = 'flex';
+      } else {
+        successMessage.style.display = 'none';
+      }
     });
   </script>
 
 </body>
 </html>
+
+
+
+

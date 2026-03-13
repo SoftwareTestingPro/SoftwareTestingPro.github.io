@@ -3,115 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Use this page to access your geolocation and get information about your current location, including country, city, and principal subdivision.">
-    <meta name="keywords" content="geolocation, location access, reverse geocoding, geolocation API, country information">
-    <meta name="author" content="Sushil Singh">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Geo Location">
-    <meta property="og:description" content="Use this page to access your geolocation and get information about your current location, including country, city, and principal subdivision.">
-    <meta property="og:image" content="URL_TO_IMAGE">
-    <meta property="og:url" content="URL_OF_THIS_PAGE">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Geo Location">
+    <meta name="description" content="Learn geolocation API usage and location data retrieval. This advanced tutorial covers GPS access, reverse geocoding, and testing location-based features in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Geo Location Challenge - Geolocation Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.09.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.09-Location.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Location Challenge - Geolocation Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn geolocation and location services testing techniques. This advanced tutorial covers GPS coordinates, location permissions, and testing location-based features in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.09-Location.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Geo Location">
-    <meta name="twitter:description" content="Use this page to access your geolocation and get information about your current location, including country, city, and principal subdivision.">
-    <meta name="twitter:image" content="URL_TO_IMAGE">
-    <title>Geo Location</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            padding: 10px; /* Added padding for better spacing on mobile */
-            box-sizing: border-box;
-        }
-
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            max-width: 100%; /* Ensure container does not overflow */
-            box-sizing: border-box;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #location-info {
-            margin-top: 20px;
-            font-size: 16px;
-        }
-
-        .success-message {
-            color: green;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        h3 {
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .container {
-                width: 100%; /* Full width on small screens */
-                padding: 15px; /* Adjust padding for smaller screens */
-            }
-
-            button {
-                width: 100%; /* Full width button on small screens */
-                font-size: 14px; /* Smaller font size */
-                padding: 12px; /* Adjust padding */
-            }
-
-            #location-info {
-                font-size: 14px; /* Smaller font size for better readability */
-            }
-
-            h3 {
-                font-size: 18px; /* Adjust heading size */
-            }
-        }
-    </style>
+    <meta name="twitter:title" content="Location Challenge - Geolocation Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn geolocation and location services testing techniques. This advanced tutorial covers GPS coordinates.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Location Challenge - Geolocation Testing Tutorial",
+      "description": "Learn geolocation and location services testing techniques. This advanced tutorial covers GPS coordinates, location permissions, and testing location-based features in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.09-Location.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 </head>
-<body>
-    <div class="container">
-        <h3 id="location-label">Click on the button below to see your current location</h3>
-        <button onclick="getLocation()">Click Here</button>
-        <div id="location-info"></div>
-        <div id="success-message" class="success-message" style="display: none;">Success! Location details have been retrieved.</div>
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.08-ShapesOddOneOut.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.10-Game.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
 
+    <main class="card">
+        <div class="card-content">
+        <h1>Geolocation Challenge</h1>
+        <p class="lead" id="location-label">Master geolocation access! Click to retrieve your location data and verify the displayed coordinates to prove your API handling skills.</p>
+
+        <button onclick="getLocation()">Click Here</button>
+        <div id="location-info"></div>
+        <div id="successMessage" class="message success"></div>
+        <div id="failureMessage" class="message failure"></div>
+    </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
     <script>
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.classList.remove('failure');
+
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
-                document.getElementById("location-info").innerHTML = "Geolocation is not supported by this browser.";
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                failureMessage.textContent = 'Geolocation is not supported by this browser.';
             }
         }
 
@@ -129,22 +107,31 @@
             // Update label, remove button, and display success message
             document.getElementById('location-label').textContent = 'Below are your location details';
             document.querySelector('button').remove();
-            document.getElementById('success-message').style.display = 'block';
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+            successMessage.textContent = 'Success! Location details have been retrieved.';
         }
 
         function showError(error) {
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+
             switch(error.code) {
                 case error.PERMISSION_DENIED:
-                    document.getElementById("location-info").innerHTML = "User denied the request for Geolocation.";
+                    failureMessage.textContent = 'User denied the request for Geolocation.';
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    document.getElementById("location-info").innerHTML = "Location information is unavailable.";
+                    failureMessage.textContent = 'Location information is unavailable.';
                     break;
                 case error.TIMEOUT:
-                    document.getElementById("location-info").innerHTML = "The request to get user location timed out.";
+                    failureMessage.textContent = 'The request to get user location timed out.';
                     break;
                 case error.UNKNOWN_ERROR:
-                    document.getElementById("location-info").innerHTML = "An unknown error occurred.";
+                    failureMessage.textContent = 'An unknown error occurred.';
                     break;
             }
         }
@@ -169,3 +156,7 @@
     </script>
 </body>
 </html>
+
+
+
+

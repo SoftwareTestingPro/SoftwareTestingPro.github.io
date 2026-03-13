@@ -1,0 +1,150 @@
+#instruction {
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--muted);
+    text-align: center;
+}
+
+#target-area {
+    width: 200px;
+    height: 100px;
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--muted);
+    margin: 1rem auto;
+    cursor: context-menu;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: box-shadow 0.3s ease;
+}
+
+#target-area:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+#context-menu {
+    position: absolute;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 1000;
+    min-width: 120px;
+}
+
+#context-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0;
+}
+
+#context-menu li {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid #e6e9ef;
+    font-size: 0.9rem;
+}
+
+#context-menu li:hover {
+    background: var(--accent);
+    color: white;
+}
+
+#context-menu li:last-child {
+    border-bottom: none;
+}
+
+
+@media (max-width: 1440px) {
+    #instruction {
+        font-size: 0.95rem;
+    }
+    #target-area {
+        width: 180px;
+        height: 90px;
+        font-size: 0.95rem;
+    }
+    body {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1024px) {
+    #instruction {
+        font-size: 0.9rem;
+    }
+    #target-area {
+        width: 160px;
+        height: 80px;
+        font-size: 0.9rem;
+    }
+    #context-menu li {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.85rem;
+    }
+    body {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    #instruction {
+        font-size: 0.85rem;
+    }
+    #target-area {
+        width: 140px;
+        height: 70px;
+        font-size: 0.85rem;
+    }
+    #context-menu li {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    body {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    #instruction {
+        font-size: 0.8rem;
+    }
+    #target-area {
+        width: 120px;
+        height: 60px;
+        font-size: 0.8rem;
+    }
+    #context-menu li {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.75rem;
+    }
+    body {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 375px) {
+    #instruction {
+        font-size: 0.75rem;
+    }
+    #target-area {
+        width: 100px;
+        height: 50px;
+        font-size: 0.75rem;
+    }
+    #context-menu li {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+    }
+    body {
+        font-size: 11px;
+    }
+}

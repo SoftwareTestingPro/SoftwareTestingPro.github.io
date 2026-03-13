@@ -1,0 +1,134 @@
+.word-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
+    margin-top: 10rem;
+    flex-wrap: wrap;
+}
+
+.word-box {
+    background: #808080;
+    color: white;
+    padding: 0.625rem;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 7.5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-box input {
+    width: 7.5rem;
+    padding: 0.625rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 1rem;
+}
+
+.input-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
+}
+
+@media (max-width: 1440px) {
+    .word-boxes {
+        gap: 0.6rem;
+        margin-bottom: 1.125rem;
+        margin-top: 1.8rem;
+    }
+    .word-box {
+        background: #808080;
+        padding: 0.6rem;
+        font-size: 0.95rem;
+        width: 7rem;
+    }
+    .input-box input {
+        width: 7rem;
+        padding: 0.6rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .word-boxes {
+        gap: 0.575rem;
+        margin-bottom: 1rem;
+        margin-top: 1.6rem;
+    }
+    .word-box {
+        background: #808080;
+        padding: 0.575rem;
+        font-size: 0.9rem;
+        width: 6.5rem;
+    }
+    .input-box input {
+        width: 6.5rem;
+        padding: 0.575rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .word-boxes {
+        gap: 0.55rem;
+        margin-bottom: 0.875rem;
+        margin-top: 1.4rem;
+    }
+    .word-box {
+        background: #808080;
+        padding: 0.55rem;
+        font-size: 0.85rem;
+        width: 6rem;
+    }
+    .input-box input {
+        width: 6rem;
+        padding: 0.55rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .word-boxes {
+        gap: 0.525rem;
+        margin-bottom: 0.75rem;
+        margin-top: 1.2rem;
+    }
+    .word-box {
+        background: #808080;
+        padding: 0.525rem;
+        font-size: 0.8rem;
+        width: 5.5rem;
+    }
+    .input-box input {
+        width: 5.5rem;
+        padding: 0.525rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .word-boxes {
+        gap: 0.5rem;
+        margin-bottom: 0.625rem;
+        margin-top: 1rem;
+    }
+    .word-box {
+        background: #808080;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+        width: 5rem;
+    }
+    .input-box input {
+        width: 5rem;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+}

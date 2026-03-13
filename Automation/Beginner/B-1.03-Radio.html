@@ -3,115 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Gender</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #333;
-        }
-
-        .radio-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .radio-group label {
-            font-size: 1em;
-            color: #333;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .radio-group input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .success-message {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-    </style>
+    <meta name="description" content="Learn how to test radio button selections in web forms. This tutorial covers gender selection, form validation, and user choice handling in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Radio Button Challenge - Radio Button Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.03.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.03-Radio.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Radio Button Challenge - Radio Button Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn radio button interaction and validation techniques. This beginner tutorial covers selection handling, option validation, and user choice testing in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.03-Radio.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Radio Button Challenge - Radio Button Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn radio button interaction and validation techniques. This beginner tutorial covers selection handling.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Radio Button Challenge - Radio Button Testing Tutorial",
+      "description": "Learn radio button interaction and validation techniques. This beginner tutorial covers selection handling, option validation, and user choice testing in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.03-Radio.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h1>Select Your Gender</h1>
-        <div class="radio-group">
-            <label>
-                <input type="radio" name="gender" value="male">
-                Male
-            </label>
-            <label>
-                <input type="radio" name="gender" value="female">
-                Female
-            </label>
-            <label>
-                <input type="radio" name="gender" value="other">
-                Other
-            </label>
-            <label>
-                <input type="radio" name="gender" value="preferNotToSay">
-                Prefer not to say
-            </label>
-        </div>
-        <div class="success-message" id="successMessage">
-            <!-- Message will be updated by JavaScript -->
-        </div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="B-1.02-Input.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
+        <a href="B-1.04-Color.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
     </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Select Gender</h1>
+            <p class="lead">Conquer radio button selection! Precisely target and select the "Male" option to demonstrate element interaction mastery.</p>
+
+            <ul class="radio-list">
+                <li>
+                    <label>
+                        <input type="radio" name="gender" value="male">
+                        <span class="radio-custom"></span>
+                        Male
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="radio" name="gender" value="female">
+                        <span class="radio-custom"></span>
+                        Female
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="radio" name="gender" value="other">
+                        <span class="radio-custom"></span>
+                        Other
+                    </label>
+                </li>
+            </ul>
+
+            <div class="message" id="successMessage" role="status" aria-live="polite">
+                <span>Correct! You selected the right option.</span>
+            </div>
+
+            <div class="message" id="failureMessage" role="status" aria-live="polite">
+                <span>Expected: Male, Selected: <span id="actualValue"></span></span>
+            </div>
+        </div>
+    </main>
+</div>
+
+    <div id="footer-placeholder"></div>
+
     <script>
-        const radioButtons = document.querySelectorAll('input[name="gender"]');
+        const radioOptions = document.querySelectorAll('input[name="gender"]');
         const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const actualValue = document.getElementById('actualValue');
 
-        radioButtons.forEach(radio => {
-            radio.addEventListener('change', () => {
-                const selectedValue = document.querySelector('input[name="gender"]:checked').value;
-                let message = '';
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
 
-                switch (selectedValue) {
-                    case 'male':
-                        message = 'You have selected Male.';
-                        break;
-                    case 'female':
-                        message = 'You have selected Female.';
-                        break;
-                    case 'other':
-                        message = 'You have selected Other.';
-                        break;
-                    case 'preferNotToSay':
-                        message = 'You have selected Prefer not to say.';
-                        break;
+        radioOptions.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selected = this.value;
+                if (selected === 'male') {
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('success');
+                    failureMessage.style.display = 'none';
+                    failureMessage.classList.remove('failure');
+                    actualValue.textContent = '';
+                } else {
+                    successMessage.style.display = 'none';
+                    successMessage.classList.remove('success');
+                    failureMessage.style.display = 'flex';
+                    failureMessage.classList.add('failure');
+                    actualValue.textContent = selected;
                 }
-
-                successMessage.textContent = message;
-                successMessage.style.display = 'block'; // Show success message
             });
         });
     </script>
 </body>
 </html>
+
+
+

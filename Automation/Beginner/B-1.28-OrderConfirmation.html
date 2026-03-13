@@ -3,82 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f9;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 350px;
-            padding: 20px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h3 {
-            margin-top: 0;
-        }
-        .item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-        }
-        .key {
-            font-weight: bold;
-            font-size: 14px;
-            color: #555;
-        }
-        .value {
-            font-size: 16px;
-        }
-        .input-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-        label {
-            font-size: 16px;
-        }
-        input[type="text"] {
-            padding: 5px;
-            width: 50%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .message {
-            margin-top: 15px;
-            font-size: 16px;
-            color: #28a745;
-        }
-        .message.failure {
-            color: #dc3545;
-        }
-    </style>
+    <meta name="description" content="Learn order confirmation and form submission testing. This tutorial covers validating order details, confirmation messages, and handling successful form submissions in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Order Confirmation Challenge - Confirmation Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.28.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.28-OrderConfirmation.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Order Confirmation Challenge - Confirmation Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn order confirmation and validation techniques. This beginner tutorial covers confirmation dialogs, user acceptance, and validating confirmation processes in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.28-OrderConfirmation.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Order Confirmation Challenge - Confirmation Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn order confirmation and validation techniques. This beginner tutorial covers confirmation dialogs.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Order Confirmation Challenge - Confirmation Testing Tutorial",
+      "description": "Learn order confirmation and validation techniques. This beginner tutorial covers confirmation dialogs, user acceptance, and validating confirmation processes in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.28-OrderConfirmation.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-<div class="container" id="orderSummary">
-    <!-- Order details will be populated here by JavaScript -->
-    <div class="input-row">
-        <label for="orderInput">Enter Order Number:</label>
-        <input type="text" id="orderInput" name="orderInput" placeholder="Order Number">
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="B-1.27-MatchTheFollowing.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
+        <a href="B-1.29-CharCounter.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
     </div>
-    <div class="message" id="message"></div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Order Confirmation</h1>
+            <p class="lead">Master data extraction! Locate and input the exact order number from randomly displayed details to prove your information gathering skills.</p>
+            <!-- Order details will be populated here by JavaScript -->
+            <div id="orderSummary" style="width: 70%;"></div>
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="orderInput" class="label-left">Enter Order Number:</label>
+                </div>
+                <div class="input-group-right">
+                    <input type="text" id="orderInput" name="orderInput" placeholder="Order Number" aria-describedby="orderMessage">
+                </div>
+            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! Order number matches.</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! Order number does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+        </div>
+    </main>
 </div>
+
+    <div id="footer-placeholder"></div>
 
 <script>
     // Function to generate a random 10-digit number
@@ -137,16 +145,28 @@
     // Function to check if the input matches the order number
     document.getElementById("orderInput").addEventListener("input", function () {
         const input = document.getElementById("orderInput").value;
-        const messageElement = document.getElementById("message");
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValue = document.getElementById('expectedValue');
+        const actualValue = document.getElementById('actualValue');
 
         if (input == orderNumber) {
-            messageElement.textContent = "Success: Order number matches!";
-            messageElement.className = "message success";
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
         } else if (input === "") {
-            messageElement.textContent = "";
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
         } else {
-            messageElement.textContent = "Failure: Order number does not match.";
-            messageElement.className = "message failure";
+            expectedValue.textContent = orderNumber;
+            actualValue.textContent = input;
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
         }
     });
 
@@ -156,3 +176,7 @@
 
 </body>
 </html>
+
+
+
+

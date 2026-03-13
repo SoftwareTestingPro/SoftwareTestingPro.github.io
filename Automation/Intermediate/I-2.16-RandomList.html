@@ -3,91 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Household Items</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            text-align: center;
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #333;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        label {
-            font-size: 1em;
-            color: #333;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        .item-list {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        .item {
-            background-color: #e9ecef;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 5px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 1.2em;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-        }
-        .success-message {
-            color: #4caf50;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-        .failure-message {
-            color: #dc3545;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+    <meta name="description" content="Practice random list generation and item selection techniques. This intermediate tutorial covers dynamic content lists, random data display, and validating list-based UI elements in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Random Household Items Challenge - Dynamic List Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.16.css">
+    <script src="../assets/components/components.js"></script>
+	<!-- Additional SEO Meta Tags -->
+	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+	<link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.16-RandomList.html">
+	<!-- Open Graph Tags -->
+	<meta property="og:title" content="Random Household Items Challenge - Dynamic List Testing Tutorial | Software Testing Pro">
+	<meta property="og:description" content="Learn random list interaction and validation techniques. This intermediate tutorial covers dynamic lists, item selection, and testing variable content in automation testing scenarios.">
+	<meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.16-RandomList.html">
+	<meta property="og:type" content="article">
+	<meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<meta property="og:site_name" content="Software Testing Pro">
+	<!-- Twitter Card Tags -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Random Household Items Challenge - Dynamic List Testing Tutorial | Software Testing Pro">
+	<meta name="twitter:description" content="Learn random list interaction and validation techniques. This intermediate tutorial covers dynamic lists.">
+	<meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<!-- Structured Data -->
+	<script type="application/ld+json">
+	{
+	  "@context": "https://schema.org",
+	  "@type": "EducationalContent",
+	  "headline": "Random Household Items Challenge - Dynamic List Testing Tutorial",
+	  "description": "Learn random list interaction and validation techniques. This intermediate tutorial covers dynamic lists, item selection, and testing variable content in automation testing scenarios.",
+	  "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.16-RandomList.html",
+	  "publisher": {
+	    "@type": "Organization",
+	    "name": "Software Testing Pro"
+	  }
+	}
+	</script>
+	<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+	<!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h1>Random Household Items</h1>
-        <div class="input-group">
-            <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.15-RandomPopUp.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.17-LoadingResults.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <ul class="item-list" id="itemList"></ul>
-        <div class="message success-message" id="successMessage">
-            Correct! The number matches the count of household items.
-        </div>
-        <div class="message failure-message" id="failureMessage">
-            Incorrect! The number does not match the count of household items.
-        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Random Household Items</h1>
+                <p class="lead">Master dynamic counting! Count all household items displayed below and input the exact total to prove your element enumeration skills.</p>
+
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="userInput">Enter the count of household items displayed below:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
+                    </div>
+                </div>
+
+                <ul class="item-list" id="itemList"></ul>
+
+                <div class="message" id="successMessage">
+                    Correct! The number matches the count of household items.
+                </div>
+
+                <div class="message" id="failureMessage">
+                    Incorrect! The number does not match the count of household items.
+                </div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const items = [
@@ -102,13 +108,15 @@
         }
 
         function generateItemList() {
-            const numItems = getRandomInt(3, 10); // Random number of items between 3 and 10
+            const numItems = getRandomInt(3, 6); // Random number of items between 3 and 6
+            const numBlankItems = getRandomInt(2, 3); // Random number of blank items between 2 and 3
             const shuffledItems = items.sort(() => 0.5 - Math.random());
             const selectedItems = shuffledItems.slice(0, numItems);
 
             const itemList = document.getElementById('itemList');
             itemList.innerHTML = ''; // Clear previous list
 
+            // Add visible items
             selectedItems.forEach(item => {
                 const listItem = document.createElement('li');
                 listItem.classList.add('item');
@@ -116,7 +124,17 @@
                 itemList.appendChild(listItem);
             });
 
-            return numItems;
+            // Add hidden blank items (not displayed and not counted)
+            for (let i = 0; i < numBlankItems; i++) {
+                const blankItem = document.createElement('li');
+                blankItem.classList.add('item');
+                blankItem.style.display = 'none';
+                blankItem.textContent = '';
+                itemList.appendChild(blankItem);
+            }
+
+            console.log(`Generated ${numItems} visible items and ${numBlankItems} hidden blank items`);
+            return numItems; // Only return visible items count for calculation
         }
 
         // Store the number of items for comparison
@@ -143,3 +161,7 @@
     </script>
 </body>
 </html>
+
+
+
+

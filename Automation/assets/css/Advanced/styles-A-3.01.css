@@ -1,0 +1,57 @@
+.button {
+    display: inline-block;
+    margin: 0.625rem auto;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    max-width: 12.5rem;
+    text-align: center;
+    color: white;
+}
+
+@media (max-width: 1440px) {
+    .button {
+        margin: 0.6rem auto;
+        padding: 0.7125rem 1.425rem;
+        font-size: 0.8125rem;
+        max-width: 11.875rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .button {
+        margin: 0.575rem auto;
+        padding: 0.675rem 1.35rem;
+        font-size: 0.75rem;
+        max-width: 11.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .button {
+        margin: 0.55rem auto;
+        padding: 0.6375rem 1.275rem;
+        font-size: 0.6875rem;
+        max-width: 10.625rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .button {
+        margin: 0.525rem auto;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.675rem;
+        max-width: 9.375rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .button {
+        margin: 0.5rem auto;
+        padding: 0.5625rem 1.125rem;
+        font-size: 0.625rem;
+        max-width: 7.8125rem;
+    }
+}

@@ -1,0 +1,95 @@
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 0.9375rem;
+}
+
+.hidden {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#timer {
+    font-size: 1.125rem;
+    margin-bottom: 0.3125rem;
+}
+
+#flagsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 100%;
+    transition: all 1s ease-in-out;
+}
+
+
+@media (max-width: 1440px) {
+    img {
+        margin-bottom: 0.875rem;
+    }
+    #timer {
+        font-size: 1.0625rem;
+        margin-bottom: 0.3rem;
+    }
+    #flagsContainer {
+        gap: 0.6rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    img {
+        margin-bottom: 0.8125rem;
+    }
+    #timer {
+        font-size: 1rem;
+        margin-bottom: 0.2875rem;
+    }
+    #flagsContainer {
+        gap: 0.575rem;
+    }
+}
+
+@media (max-width: 768px) {
+    img {
+        margin-bottom: 0.75rem;
+    }
+    #timer {
+        font-size: 0.9375rem;
+        margin-bottom: 0.275rem;
+    }
+    #flagsContainer {
+        gap: 0.55rem;
+    }
+}
+
+@media (max-width: 480px) {
+    img {
+        margin-bottom: 0.6875rem;
+    }
+    #timer {
+        font-size: 0.875rem;
+        margin-bottom: 0.2625rem;
+    }
+    #flagsContainer {
+        gap: 0.525rem;
+    }
+}
+
+@media (max-width: 375px) {
+    img {
+        margin-bottom: 0.625rem;
+    }
+    #timer {
+        font-size: 0.8125rem;
+        margin-bottom: 0.25rem;
+    }
+    #flagsContainer {
+        gap: 0.5rem;
+    }
+}

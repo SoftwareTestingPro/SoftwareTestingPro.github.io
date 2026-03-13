@@ -3,92 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match URL</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            text-align: center;
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #333;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1em;
-            color: #333;
-        }
-        input[type="text"] {
-            padding: 10px;
-            font-size: 1em;
-            width: calc(100% - 22px); /* Account for padding and border */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .message {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-        }
-        .failure-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-color: #f5c6cb;
-        }
-    </style>
+    <meta name="description" content="Practice URL validation and matching techniques. This tutorial teaches how to extract and validate current page URLs, handle browser navigation, and verify web address accuracy in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>URL Matching Challenge - Page URL Validation Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.12.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.12-FetchURL.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Fetch URL Challenge - URL Validation Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn URL fetching and validation techniques. This beginner tutorial covers browser URL retrieval, address validation, and basic navigation testing in automation scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.12-FetchURL.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fetch URL Challenge - URL Validation Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn URL fetching and validation techniques. This beginner tutorial covers browser URL retrieval.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Fetch URL Challenge - URL Validation Testing Tutorial",
+      "description": "Learn URL fetching and validation techniques. This beginner tutorial covers browser URL retrieval, address validation, and basic navigation testing in automation scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.12-FetchURL.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h1>Webpage URL</h1>
-        <label for="urlInput">Enter the URL of this webpage:</label>
-        <input type="text" id="urlInput" placeholder="Enter URL here">
-        <div class="message success-message" id="successMessage">
-            Success! The URL matches.
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.11-PageTitle.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.13-DynamicProgressBar.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <div class="message failure-message" id="failureMessage">
-            Failure! The URL does not match.
-        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>URL Matching</h1>
+                <p class="lead">Conquer URL extraction! Capture and input the complete webpage URL to demonstrate your automation can read browser address information.</p>
+
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="urlInput" class="label-left">Enter the URL of this webpage:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="urlInput" placeholder="Enter URL here">
+                    </div>
+                </div>
+
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const inputField = document.getElementById('urlInput');
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
-        const currentUrl = window.location.href; // Get the current URL
+        const expectedValueDisplay = document.getElementById('expectedValue');
+        const actualValueDisplay = document.getElementById('actualValue');
 
-        inputField.addEventListener('input', () => {
-            if (inputField.value.trim() === currentUrl) {
-                successMessage.style.display = 'block';
+        const currentUrl = window.location.href;
+        expectedValueDisplay.textContent = currentUrl;
+
+        function validateInput() {
+            const userInput = inputField.value.trim();
+
+            if (userInput === '') {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
                 failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+                actualValueDisplay.textContent = '';
+            } else if (userInput === currentUrl) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
-                failureMessage.style.display = 'block';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                actualValueDisplay.textContent = userInput;
             }
-        });
+        }
+
+        inputField.addEventListener('input', validateInput);
+        inputField.addEventListener('blur', validateInput);
     </script>
 </body>
 </html>
+
+
+
+

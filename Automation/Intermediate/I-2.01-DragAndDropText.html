@@ -1,114 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Drag and Drop Centered</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn drag and drop techniques with centered text elements. This intermediate tutorial covers dragging text items, drop zone validation, and handling drag-and-drop interactions in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Drag and Drop Text Challenge - Drag and Drop Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.01.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.01-DragAndDropText.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Drag and Drop Text Challenge - Drag and Drop Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn drag and drop techniques with centered text elements. This intermediate tutorial covers dragging text items, drop zone validation, and handling drag-and-drop interactions in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.01-DragAndDropText.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Drag and Drop Text Challenge - Drag and Drop Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn drag and drop techniques with centered text elements. This intermediate tutorial covers dragging text items.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Drag and Drop Text Challenge - Drag and Drop Testing Tutorial",
+      "description": "Learn drag and drop techniques with centered text elements. This intermediate tutorial covers dragging text items, drop zone validation, and handling drag-and-drop interactions in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.01-DragAndDropText.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
     }
-
-    #message {
-      font-size: 24px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .container-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .container {
-      width: 300px;
-      height: 200px;
-      border: 2px dashed #007BFF;
-      border-radius: 10px;
-      padding: 10px;
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-
-    .draggable {
-      background-color: #007BFF;
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: move;
-      text-align: center;
-      width: 100px;
-      user-select: none;
-    }
-
-    .dropzone {
-      border: 2px dashed #28A745;
-    }
-
-    .success-message {
-      padding: 10px;
-      margin-top: 20px;
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-      border-radius: 5px;
-      text-align: center;
-    }
-  </style>
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-  <div id="message">Drag and Drop the button 'Drag Me' to other container</div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
 
-  <div class="container-wrapper">
-    <div class="container" id="container1">
-      <div class="draggable" id="draggableText" draggable="true">Drag Me</div>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-Intro.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Back to Introduction
+        </a>
+        <a href="I-2.02-HoverLink.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
-    <div class="container dropzone" id="container2">
-      Drop Here
-    </div>
-  </div>
 
-  <script>
+    <main class="card">
+        <div class="card-content">
+            <h1>Drag and Drop Centered</h1>
+            <p class="lead">Master advanced drag-and-drop! Precisely move the 'Drag Me' button to the target container to demonstrate complex interaction skills.</p>
+
+            <div class="container-wrapper">
+                <div class="container" id="container1">
+                    <div class="draggable" id="draggableText" draggable="true">Drag Me</div>
+                </div>
+                <div class="container dropzone" id="container2">
+                    Drop Here
+                </div>
+            </div>
+
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! The square box has been dropped.</span></div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script>
     const draggableText = document.getElementById('draggableText');
     const container2 = document.getElementById('container2');
+    const successMessage = document.getElementById('successMessage');
+
+    // Hide success message initially
+    successMessage.style.display = 'none';
+    successMessage.classList.remove('success');
 
     draggableText.addEventListener('dragstart', (event) => {
-      event.dataTransfer.setData('text/plain', event.target.id);
+        event.dataTransfer.setData('text/plain', event.target.id);
     });
 
     container2.addEventListener('dragover', (event) => {
-      event.preventDefault();
+        event.preventDefault();
     });
 
     container2.addEventListener('drop', (event) => {
-      event.preventDefault();
-      const data = event.dataTransfer.getData('text/plain');
-      const dragged = document.getElementById(data);
+        event.preventDefault();
+        const data = event.dataTransfer.getData('text/plain');
+        const dragged = document.getElementById(data);
 
-      container2.appendChild(dragged);
+        // Hide "Drop Here" text
+        container2.textContent = '';
 
-      const oldMsg = container2.querySelector('.success-message');
-      if (oldMsg) oldMsg.remove();
+        // Rename "Drag Me" to "Dropped"
+        dragged.textContent = 'Dropped';
 
-      const success = document.createElement('div');
-      success.className = 'success-message';
-      success.textContent = '✅ Success! The text has been dropped.';
-      container2.appendChild(success);
+        container2.appendChild(dragged);
+
+        // Show success message
+        successMessage.style.display = 'flex';
+        successMessage.classList.add('success');
     });
-  </script>
+</script>
 </body>
 </html>
+
+
+
+

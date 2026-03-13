@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore whiteboard and shape drawing techniques. This advanced tutorial covers canvas interactions, shape creation, and testing drawing functionality in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Whiteboard Shape Challenge - Canvas Drawing Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.12.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.12-Whiteboard.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Whiteboard Shape Challenge - Canvas Drawing Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn whiteboard and canvas interaction techniques. This advanced tutorial covers drawing controls, canvas manipulation, and testing graphical interfaces in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.12-Whiteboard.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Whiteboard Shape Challenge - Canvas Drawing Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn whiteboard and canvas interaction techniques. This advanced tutorial covers drawing controls.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Whiteboard Shape Challenge - Canvas Drawing Testing Tutorial",
+      "description": "Learn whiteboard and canvas interaction techniques. This advanced tutorial covers drawing controls, canvas manipulation, and testing graphical interfaces in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.12-Whiteboard.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
+</head>
+<body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.11-FileUpload.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.13-SortableTable.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Whiteboard Drawing Challenge</h1>
+            <p class="lead">Master canvas drawing! Draw a perfect square on the whiteboard to demonstrate your shape creation and canvas manipulation skills.</p>
+            <canvas id="whiteboard" width="800" height="300" style="width: 100%; height: 37.5vw; max-height: 300px; border: 2px solid #000;"></canvas>
+            <div class="button-enabled">
+                <button onclick="checkShape()">Test Your Shape</button>
+                <button onclick="clearCanvas()">Clear Canvas</button>
+            </div>
+            <div id="message" class="message"></div>
+        </div>
+    </main>
+</div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const canvas = document.getElementById('whiteboard');
+        const ctx = canvas.getContext('2d');
+        const message = document.getElementById('message');
+        let isDrawing = false;
+        let path = [];
+
+        function getPos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (evt.clientX - rect.left) * scaleX,
+                y: (evt.clientY - rect.top) * scaleY
+            };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const pos = getPos(canvas, e);
+            path = [{ x: pos.x, y: pos.y }];
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        function draw(e) {
+            if (isDrawing) {
+                const pos = getPos(canvas, e);
+                path.push({ x: pos.x, y: pos.y });
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            }
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        function checkShape() {
+            if (path.length < 50) {
+                message.textContent = "It doesn't look like a square. The drawing is too small.";
+                message.classList.add('failure');
+                message.classList.remove('success');
+            } else {
+                const minX = Math.min(...path.map(p => p.x));
+                const maxX = Math.max(...path.map(p => p.x));
+                const minY = Math.min(...path.map(p => p.y));
+                const maxY = Math.max(...path.map(p => p.y));
+
+                const width = maxX - minX;
+                const height = maxY - minY;
+                const aspectRatio = width / height;
+
+                const startPoint = path[0];
+                const endPoint = path[path.length - 1];
+                const distance = Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
+
+                // Check for square-like properties
+                const isClosed = distance < 30;
+                const isSquareLike = aspectRatio > 0.75 && aspectRatio < 1.25;
+
+                // Calculate shape characteristics
+                const curvature = calculateCurvature(path);
+                const irregularity = calculateIrregularity(path);
+                const cornerCount = detectCorners(path);
+
+                if (isSquareLike && isClosed && curvature < 0.3) {
+                    message.textContent = "Success! That looks like a square.";
+                    message.classList.add('success');
+                    message.classList.remove('failure');
+                } else {
+                    // Generate funny feedback based on what was actually drawn
+                    const feedback = identifyShape(curvature, aspectRatio, irregularity, cornerCount);
+                    message.textContent = feedback;
+                    message.classList.add('failure');
+                    message.classList.remove('success');
+                }
+            }
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            path = [];
+            message.textContent = '';
+            message.classList.remove('success', 'failure');
+        }
+
+        function calculateCurvature(path) {
+            if (path.length < 3) return 0;
+
+            let totalCurvature = 0;
+            let count = 0;
+
+            for (let i = 1; i < path.length - 1; i++) {
+                const p1 = path[i - 1];
+                const p2 = path[i];
+                const p3 = path[i + 1];
+
+                const dx1 = p2.x - p1.x;
+                const dy1 = p2.y - p1.y;
+                const dx2 = p3.x - p2.x;
+                const dy2 = p3.y - p2.y;
+
+                const angle1 = Math.atan2(dy1, dx1);
+                const angle2 = Math.atan2(dy2, dx2);
+                const angleDiff = Math.abs(angle2 - angle1);
+
+                totalCurvature += angleDiff;
+                count++;
+            }
+
+            return count > 0 ? totalCurvature / count : 0;
+        }
+
+        function calculateIrregularity(path) {
+            if (path.length < 10) return 0;
+
+            let totalDeviation = 0;
+            const segmentLength = Math.floor(path.length / 10);
+
+            for (let i = 0; i < path.length - segmentLength; i += segmentLength) {
+                const p1 = path[i];
+                const p2 = path[i + segmentLength];
+                const distance = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+                totalDeviation += Math.abs(distance - (i + segmentLength - i) * 2);
+            }
+
+            return totalDeviation / 10;
+        }
+
+        function detectCorners(path) {
+            if (path.length < 5) return 0;
+
+            let corners = 0;
+            const threshold = 0.5; // Radian threshold for corner detection
+
+            for (let i = 5; i < path.length - 5; i += 5) {
+                const p1 = path[i - 5];
+                const p2 = path[i];
+                const p3 = path[i + 5];
+
+                const dx1 = p2.x - p1.x;
+                const dy1 = p2.y - p1.y;
+                const dx2 = p3.x - p2.x;
+                const dy2 = p3.y - p2.y;
+
+                const angle1 = Math.atan2(dy1, dx1);
+                const angle2 = Math.atan2(dy2, dx2);
+                let angleDiff = Math.abs(angle2 - angle1);
+
+                if (angleDiff > Math.PI) {
+                    angleDiff = 2 * Math.PI - angleDiff;
+                }
+
+                if (angleDiff > threshold && angleDiff < Math.PI - threshold) {
+                    corners++;
+                }
+            }
+
+            return corners;
+        }
+
+        function identifyShape(curvature, aspectRatio, irregularity, cornerCount) {
+            const funnyMessages = [
+                "That's a beautiful circle! Almost looks like a donut. Hungry?",
+                "Looks like an penguin egg to me! Cool drawing though.",
+                "That's more of an egg shape. Scrambled success incoming!",
+                "Wow, a turtle shell! But we need a square here.",
+                "That's definitely a ball! No square corners in this stadium.",
+                "I see an octopus in this! Very wavy and wiggly.",
+                "Looks like a wavy snake. Slithering away from squares, huh?",
+                "That's a lumpy cake! Delicious but not square enough.",
+                "I see a blob! Very organic and free-flowing.",
+                "That looks like a beetle! But we need 4 corners, not curves.",
+                "Resembles a kiwi fruit! Bumpy and uneven.",
+                "That's a masterpiece of chaos! But not a square.",
+                "Looks like a virus! Very roundish and curvy.",
+                "I see a tornado! Spinning but not square.",
+                "That's more of a bubble! Pop goes the square!"
+            ];
+
+            // Determine shape type based on characteristics
+            if (curvature > 0.5 && aspectRatio > 0.85 && aspectRatio < 1.15) {
+                // Circular/round shape
+                return funnyMessages[Math.floor(Math.random() * 5)]; // Circle messages
+            } else if (irregularity > 100) {
+                // Very irregular/messy
+                return funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+            } else if (cornerCount < 2) {
+                // Very few corners - likely circular
+                return funnyMessages[Math.floor(Math.random() * 5)];
+            } else if (cornerCount > 5) {
+                // Too many corners
+                return "That's a wild polygon! Looks like you drew a fortress with too many corners!";
+            } else if (aspectRatio < 0.6 || aspectRatio > 1.6) {
+                // Very elongated
+                return "That's looking more like a banana or pencil! Needs to be more square.";
+            } else {
+                // Generic failure
+                return funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+

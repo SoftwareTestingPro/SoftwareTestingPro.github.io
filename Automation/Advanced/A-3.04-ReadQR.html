@@ -3,113 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Decode the QR Code and enter the value in the text field below to see if you are correct.">
-    <meta name="keywords" content="QR Code, decode, input field, success message">
-    <meta name="author" content="Your Name">
-    <title>QR Code Decoder</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            width: 80%;
-            max-width: 600px;
-            text-align: center;
-        }
-        .image-container {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-        .image-container img {
-            width: auto;
-            height: auto;
-            max-width: 200px;
-            max-height: 200px;
-            border-radius: 5px;
-            transition: transform 0.3s ease;
-        }
-        .image-container:hover img {
-            transform: scale(1.1);
-        }
-        .image-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            color: #fff;
-            padding: 10px 0;
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .image-container:hover .image-overlay {
-            opacity: 1;
-        }
-        .input-container {
-            text-align: center;
-        }
-        .input-container label {
-            font-size: 18px;
-            margin-bottom: 10px;
-            display: block;
-        }
-        .input-container input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: calc(100% - 22px);
-            box-sizing: border-box;
-        }
-        .success-message {
-            color: green;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-        .failure-message {
-            color: red;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-    </style>
+    <meta name="description" content="Learn QR code decoding and validation techniques. This advanced tutorial covers barcode scanning, input validation, and testing QR code functionality in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Read QR Challenge - QR Code Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.04.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.04-ReadQR.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Read QR Challenge - QR Code Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn QR code reading and validation techniques. This advanced tutorial covers barcode scanning, QR code processing, and testing image-based data extraction in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.04-ReadQR.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Read QR Challenge - QR Code Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn QR code reading and validation techniques. This advanced tutorial covers barcode scanning.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Read QR Challenge - QR Code Testing Tutorial",
+      "description": "Learn QR code reading and validation techniques. This advanced tutorial covers barcode scanning, QR code processing, and testing image-based data extraction in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.04-ReadQR.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <main class="container">
-        <section class="image-container">
-            <img id="qr" src="../../img/qr.jpg" alt="QR Code">        
-        </section>
-        <section class="input-container">
-            <input type="text" id="user-input" name="user-input" placeholder="Decode above QR and enter the decoded text here">
-            <div id="message" class="success-message" aria-live="polite"></div>
-        </section>
-    </main>
-    <script>
-        document.getElementById('user-input').addEventListener('input', function() {
-            const correctValue = 'Congratulations... finally you did it'; // Replace with the actual decoded value
-            const userInput = this.value;
-            const message = document.getElementById('message');
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
 
-            if (userInput === correctValue) {
-                message.textContent = 'Success! You entered the correct value.';
-                message.className = 'success-message';
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.03-SignaturePad.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.05-MultipleDragDrop.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>QR Code</h1>
+        <p class="lead">Master QR code decoding! Extract and input the hidden text from the QR code to prove your image analysis skills.</p>
+
+        <section class="image-container">
+            <img id="qr" src="../../img/qr.jpg" alt="QR Code">
+        </section>
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="user-input" class="label-left">Enter the scanned text:</label>
+                </div>
+                <div class="input-group-right">
+                    <input type="text" id="user-input" name="user-input" placeholder="Decoded text">
+                </div>
+            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+    <script>
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValue = document.getElementById('expectedValue');
+        const actualValue = document.getElementById('actualValue');
+
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+
+        document.getElementById('user-input').addEventListener('input', function() {
+            const correctValue = 'Congratulations... you did it'; // Replace with the actual decoded value
+            const userInput = this.value;
+
+            if (userInput === '') {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            } else if (userInput === correctValue) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                message.textContent = 'Failure! Incorrect value entered.';
-                message.className = 'failure-message';
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                expectedValue.textContent = correctValue;
+                actualValue.textContent = userInput;
             }
         });
     </script>
 </body>
 </html>
+
+
+

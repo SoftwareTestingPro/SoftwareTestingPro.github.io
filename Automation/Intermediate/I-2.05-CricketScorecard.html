@@ -3,57 +3,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Top 5 Indian Batsmen</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    .container-box {
-      max-width: 400px;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  <meta name="description" content="Explore cricket scorecard and data table testing. This intermediate tutorial covers validating cricket statistics, table data extraction, and handling sports data in automation testing scenarios.">
+  <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+  <title>Top 5 Indian Batsmen Challenge - Cricket Scorecard Testing Tutorial | Software Testing Pro</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.05.css">
+  <script src="../assets/components/components.js"></script>
+  <!-- Additional SEO Meta Tags -->
+  <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.05-CricketScorecard.html">
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Cricket Scorecard Challenge - Data Table Testing Tutorial | Software Testing Pro">
+  <meta property="og:description" content="Learn data table interaction and cricket scorecard testing techniques. This intermediate tutorial covers table parsing, data extraction, and validating tabular data in automation testing scenarios.">
+  <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.05-CricketScorecard.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <meta property="og:site_name" content="Software Testing Pro">
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cricket Scorecard Challenge - Data Table Testing Tutorial | Software Testing Pro">
+  <meta name="twitter:description" content="Learn data table interaction and cricket scorecard testing techniques. This intermediate tutorial covers table parsing.">
+  <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalContent",
+    "headline": "Cricket Scorecard Challenge - Data Table Testing Tutorial",
+    "description": "Learn data table interaction and cricket scorecard testing techniques. This intermediate tutorial covers table parsing, data extraction, and validating tabular data in automation testing scenarios.",
+    "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.05-CricketScorecard.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Software Testing Pro"
     }
-    .full-height {
-      height: 100vh;
-    }
-    .list-group-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .validation-message {
-      font-size: 0.9em;
-      margin-top: 5px;
-    }
-    .tick {
-      color: green;
-    }
-    .cross {
-      color: red;
-    }
-  </style>
+  }
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+  <!-- End Google Tag Manager -->
 </head>
 <body>
-  <div class="d-flex justify-content-center align-items-center full-height">
-    <div class="container-box">
-      <h4 class="text-center">Top 5 Indian Batsmen</h4>
-      <ul class="list-group" id="batsmenList">
-        <!-- Populated by JavaScript -->
-      </ul>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
 
-      <div class="form-group">
-        <label for="inputField1">Enter name of the top scorer:</label>
-        <input type="text" class="form-control" id="inputField1" />
-        <div id="result1" class="validation-message"></div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputField2">Runs Scored by Sachin Tendulkar:</label>
-        <input type="text" class="form-control" id="inputField2" />
-        <div id="result2" class="validation-message"></div>
-      </div>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.04-Calendar.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.06-Table.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
-  </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Top 5 Indian Batsmen</h1>
+            <p class="lead">Master sports data analysis! Identify the top scorer and find Sachin's runs from the cricket statistics to prove your data extraction skills.</p>
+
+            <ul class="list-group batsmen-grid" id="batsmenList">
+                <!-- Populated by JavaScript -->
+            </ul>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="inputField1" class="label-left">Enter name of top scorer:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="inputField1" name="user-input-name" placeholder="Type your name...">
+                </div>
+            </div>
+
+            <div class="message" id="successMessage1" role="status" aria-live="polite">
+                <span>Correct! The top scorer is correctly identified.</span>
+            </div>
+
+            <div class="message" id="failureMessage1" role="status" aria-live="polite">
+                <span id="topScorerError">Incorrect! Please try again.</span>
+            </div>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="inputField2" class="label-left">Runs Scored by Sachin Tendulkar:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="inputField2" name="user-input-name" placeholder="Type your name...">
+                </div>
+            </div>
+
+            <div class="message" id="successMessage2" role="status" aria-live="polite">
+                <span id="sachinSuccess">Correct! Sachin Tendulkar scored the right amount.</span>
+            </div>
+
+            <div class="message" id="failureMessage2" role="status" aria-live="polite">
+                <span id="sachinError">Incorrect! Please try again.</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -66,10 +127,25 @@
       ];
 
       const batsmenList = document.getElementById('batsmenList');
-      const inputField1 = document.getElementById('inputField1');
-      const inputField2 = document.getElementById('inputField2');
-      const result1 = document.getElementById('result1');
-      const result2 = document.getElementById('result2');
+        const inputField1 = document.getElementById('inputField1');
+        const inputField2 = document.getElementById('inputField2');
+        const successMessage1 = document.getElementById('successMessage1');
+        const failureMessage1 = document.getElementById('failureMessage1');
+        const successMessage2 = document.getElementById('successMessage2');
+        const failureMessage2 = document.getElementById('failureMessage2');
+        const topScorerError = document.getElementById('topScorerError');
+        const sachinSuccess = document.getElementById('sachinSuccess');
+        const sachinError = document.getElementById('sachinError');
+
+        // Hide messages initially
+        successMessage1.style.display = 'none';
+        successMessage1.classList.remove('success');
+        failureMessage1.style.display = 'none';
+        failureMessage1.classList.remove('failure');
+        successMessage2.style.display = 'none';
+        successMessage2.classList.remove('success');
+        failureMessage2.style.display = 'none';
+        failureMessage2.classList.remove('failure');
 
       let scores = {};
       let sachinScore = 0;
@@ -82,11 +158,11 @@
         listItem.className = 'list-group-item';
 
         listItem.innerHTML = `
-          <span id="player-name-${index + 1}">${batsman}</span>
-          <span id="player-score-${index + 1}">${randomScore}</span>
-        `;
+                <span class="player-name">${batsman}</span>
+                <span class="player-score">${randomScore}</span>
+            `;
 
-        batsmenList.appendChild(listItem);
+            batsmenList.appendChild(listItem);
 
         if (batsman === 'Sachin Tendulkar') {
           sachinScore = randomScore;
@@ -94,26 +170,39 @@
       });
 
       function validateInputs() {
-        const topScorer = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-        const enteredTopScorer = inputField1.value.trim();
-        const enteredSachinScore = inputField2.value.trim();
+            const topScorer = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const enteredTopScorer = inputField1.value.trim();
+            const enteredSachinScore = inputField2.value.trim();
 
-        if (enteredTopScorer === topScorer) {
-          result1.innerHTML = '<span class="tick">&#10004;</span> Correct! The top scorer is correctly identified.';
-          result1.className = 'validation-message tick';
-        } else if (enteredTopScorer) {
-          result1.innerHTML = `<span class="cross">&#10008;</span> Incorrect! The top scorer is ${topScorer} with ${scores[topScorer]} runs.`;
-          result1.className = 'validation-message cross';
-        }
+            // Validate top scorer
+            if (enteredTopScorer === topScorer) {
+                successMessage1.style.display = 'flex';
+                successMessage1.classList.add('success');
+                failureMessage1.style.display = 'none';
+                failureMessage1.classList.remove('failure');
+            } else if (enteredTopScorer) {
+                topScorerError.textContent = `Incorrect! The top scorer is ${topScorer} with ${scores[topScorer]} runs.`;
+                successMessage1.style.display = 'none';
+                successMessage1.classList.remove('success');
+                failureMessage1.style.display = 'flex';
+                failureMessage1.classList.add('failure');
+            }
 
-        if (enteredSachinScore == sachinScore) {
-          result2.innerHTML = `<span class="tick">&#10004;</span> Correct! Sachin Tendulkar scored ${sachinScore}.`;
-          result2.className = 'validation-message tick';
-        } else if (enteredSachinScore) {
-          result2.innerHTML = `<span class="cross">&#10008;</span> Incorrect! Sachin Tendulkar scored ${sachinScore}.`;
-          result2.className = 'validation-message cross';
+            // Validate Sachin's score
+            if (enteredSachinScore == sachinScore) {
+                sachinSuccess.textContent = `Correct! Sachin Tendulkar scored ${sachinScore}.`;
+                successMessage2.style.display = 'flex';
+                successMessage2.classList.add('success');
+                failureMessage2.style.display = 'none';
+                failureMessage2.classList.remove('failure');
+            } else if (enteredSachinScore) {
+                sachinError.textContent = `Incorrect! Sachin Tendulkar scored ${sachinScore}.`;
+                successMessage2.style.display = 'none';
+                successMessage2.classList.remove('success');
+                failureMessage2.style.display = 'flex';
+                failureMessage2.classList.add('failure');
+            }
         }
-      }
 
       inputField1.addEventListener('input', validateInputs);
       inputField2.addEventListener('input', validateInputs);
@@ -121,3 +210,7 @@
   </script>
 </body>
 </html>
+
+
+
+

@@ -3,114 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Data Table</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 10px; /* Added padding for better spacing on mobile */
-            box-sizing: border-box;
-        }
-
-        table {
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin: 0 auto; /* Center the table */
-            width: auto; /* Fit to content */
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            word-wrap: break-word; /* Handle long text */
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        caption {
-            margin-bottom: 10px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            border: none;
-            padding: 8px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        input:focus {
-            outline: 2px solid #4CAF50;
-        }
-
-        /* Media query for smaller screens */
-        @media (max-width: 600px) {
-            table {
-                width: 100%; /* Full width for small screens */
-                display: block; /* Make table scrollable horizontally */
-                overflow-x: auto;
-            }
-
-            th, td {
-                padding: 8px; /* Reduced padding for better fit */
-                font-size: 14px; /* Smaller text for mobile */
-            }
-
-            caption {
-                font-size: 18px; /* Adjusted caption size */
-            }
-        }
-    </style>
+    <meta name="description" content="Learn Excel data reading and table import functionality. This advanced tutorial covers data import from spreadsheets, table population, and testing file parsing features in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>XLS Read Data Challenge - Excel Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.23.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.23-XLSReadData.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="XLS Read Data Challenge - Excel Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn Excel file reading and data extraction techniques. This advanced tutorial covers spreadsheet parsing, data import, and testing Excel file processing in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.23-XLSReadData.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="XLS Read Data Challenge - Excel Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn Excel file reading and data extraction techniques. This advanced tutorial covers spreadsheet parsing.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "XLS Read Data Challenge - Excel Testing Tutorial",
+      "description": "Learn Excel file reading and data extraction techniques. This advanced tutorial covers spreadsheet parsing, data import, and testing Excel file processing in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.23-XLSReadData.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <table>
-        <caption>Read data from the Excel file written in the previous example and enter values below</caption>
-        <tr>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Position</th>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="Enter Name"></td>
-            <td><input type="text" placeholder="Enter Department"></td>
-            <td><input type="text" placeholder="Enter Position"></td>
-        </tr>
-    </table>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.22-XLSWriteData.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.24-SortItems.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Excel Read Data Challenge</h1>
+        <p class="lead">Master Excel data extraction! Read the data from the previously created Excel file and input it correctly to demonstrate your spreadsheet reading skills.</p>
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Position</th>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+            </tr>
+            <tr>
+                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+            </tr>
+        </table>
+        
+        <div id="success-message" class="message" style="display: none;">Excellent! You've successfully entered all the correct data from the Excel file.</div>
+        
+        <div id="failure-message" class="message" style="display: none;">The data entered doesn't match the expected Excel data. Please check the values and try again.</div>
+        
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script>
+// Expected data in the exact sequence
+const expectedData = [
+    { name: "John Doe", department: "Engineering", position: "Software Engineer" },
+    { name: "Jane Smith", department: "Marketing", position: "Marketing Manager" },
+    { name: "Emily Johnson", department: "Human Resources", position: "HR Specialist" },
+    { name: "Michael Brown", department: "Sales", position: "Sales Representative" },
+    { name: "Linda Wilson", department: "Finance", position: "Financial Analyst" }
+];
+
+function validateInputs() {
+    const inputs = document.querySelectorAll('input[type="text"]');
+    const successMessage = document.getElementById('success-message');
+    const failureMessage = document.getElementById('failure-message');
+    
+    // Check if all inputs are filled
+    let allFilled = true;
+    inputs.forEach(input => {
+        if (input.value.trim() === '') {
+            allFilled = false;
+        }
+    });
+    
+    if (!allFilled) {
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+        return;
+    }
+    
+    // Validate data in sequence
+    let isCorrect = true;
+    for (let i = 0; i < expectedData.length; i++) {
+        const baseIndex = i * 3;
+        const nameInput = inputs[baseIndex];
+        const deptInput = inputs[baseIndex + 1];
+        const posInput = inputs[baseIndex + 2];
+        
+        if (nameInput.value.trim() !== expectedData[i].name ||
+            deptInput.value.trim() !== expectedData[i].department ||
+            posInput.value.trim() !== expectedData[i].position) {
+            isCorrect = false;
+            break;
+        }
+    }
+    
+    // Show appropriate message
+    if (isCorrect) {
+        successMessage.style.display = 'block';
+        failureMessage.style.display = 'none';
+    } else {
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'block';
+    }
+}
+
+// Add event listeners to all input fields
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input[type="text"]');
+    inputs.forEach(input => {
+        input.addEventListener('input', validateInputs);
+        input.addEventListener('paste', function() {
+            setTimeout(validateInputs, 10); // Small delay to allow paste to complete
+        });
+    });
+});
+</script>
+
 </body>
 </html>
+
+
+
+

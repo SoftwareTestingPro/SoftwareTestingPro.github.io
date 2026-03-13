@@ -3,92 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Comparison</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .label-bold {
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .text-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .text-item {
-            margin: 0 20px;
-        }
-        .text-label {
-            font-weight: bold;
-        }
-        .button-container {
-            margin-top: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:active {
-            background-color: #0056b3;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
+    <meta name="description" content="Practice text comparison and validation techniques. This tutorial teaches how to compare text content, validate string matching, and handle text-based assertions in automation testing environments.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Text Comparison Challenge - Content Validation Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.21.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.21-CompareText.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Compare Text Challenge - Text Comparison Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn text comparison and validation techniques. This beginner tutorial covers text matching, case sensitivity, and content verification in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.21-CompareText.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Compare Text Challenge - Text Comparison Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn text comparison and validation techniques. This beginner tutorial covers text matching.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Compare Text Challenge - Text Comparison Testing Tutorial",
+      "description": "Learn text comparison and validation techniques. This beginner tutorial covers text matching, case sensitivity, and content verification in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.21-CompareText.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-    <div class="container">
-        <div class="label-bold">Are both texts same ?</div>
-        <div class="text-container">
-            <div class="text-item">
-                <div class="text-label">Text 1:</div>
-                <div id="text1"></div>
-            </div>
-            <div class="text-item">
-                <div class="text-label">Text 2:</div>
-                <div id="text2"></div>
-            </div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.20-ClickEnabledButton.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.22-ImagePath.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <div class="button-container">
-            <button onclick="checkAnswer(true)">Yes</button>
-            <button onclick="checkAnswer(false)">No</button>
-        </div>
-        <div class="message" id="message"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Text Comparison</h1>
+                <p class="lead">Master text comparison logic! Analyze the two texts below and determine if they match perfectly to prove your validation skills.</p>
+                <div class="text-container" style="display: flex; gap: 20px; justify-content: center;">
+                    <div class="text-item" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #f9f9f9; width: 200px;">
+                        <div class="text-label">Text 1:</div>
+                        <div id="text1" class="value-box"></div>
+                    </div>
+                    <div class="text-item" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #f9f9f9; width: 200px;">
+                        <div class="text-label">Text 2:</div>
+                        <div id="text2" class="value-box"></div>
+                    </div>
+                </div>
+
+                <div class="button-container" style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <button onclick="checkAnswer(true)" style="padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">Yes</button>
+                    <button onclick="checkAnswer(false)" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">No</button>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct!</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect!</span></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const text1Element = document.getElementById('text1');
         const text2Element = document.getElementById('text2');
-        const messageElement = document.getElementById('message');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
         const texts = ["Hello", "World", "Text", "Example", "Random", "Comparison"];
 
-        // Function to generate random text, sometimes same, sometimes different
         function setRandomTexts() {
             const randomText1 = texts[Math.floor(Math.random() * texts.length)];
             const randomText2 = Math.random() > 0.5 ? randomText1 : texts[Math.floor(Math.random() * texts.length)];
@@ -102,16 +114,25 @@
             const isSuccess = (text1 === text2 && isTrueSelected) || (text1 !== text2 && !isTrueSelected);
 
             if (isSuccess) {
-                messageElement.textContent = "Correct!";
-                messageElement.style.color = "green";
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
-                messageElement.textContent = "Incorrect!";
-                messageElement.style.color = "red";
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
             }
         }
 
-        // Set random texts on page load
         setRandomTexts();
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
     </script>
 </body>
 </html>
+
+
+
+

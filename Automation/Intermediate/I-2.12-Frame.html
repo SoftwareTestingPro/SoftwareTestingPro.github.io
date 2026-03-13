@@ -3,66 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Button within a Frame</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f7f9fc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        .header {
-            margin-bottom: 20px;
-            font-size: 2em;
-            color: #333;
-        }
-
-        .iframe-container {
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            display: inline-block;
-        }
-
-        iframe {
-            border: none;
-            width: 300px;
-            height: 150px;
-        }
-
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .success {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-    </style>
+    <meta name="description" content="Practice button interactions within iframe elements. This intermediate tutorial covers frame navigation, iframe content testing, and handling nested document interactions in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Button within a Frame Challenge - Iframe Interaction Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.12.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.12-Frame.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Frame Challenge - Frame Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn iframe interaction and validation techniques. This intermediate tutorial covers frame switching, embedded content, and testing nested elements in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.12-Frame.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Frame Challenge - Frame Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn iframe interaction and validation techniques. This intermediate tutorial covers frame switching.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Frame Challenge - Frame Testing Tutorial",
+      "description": "Learn iframe interaction and validation techniques. This intermediate tutorial covers frame switching, embedded content, and testing nested elements in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.12-Frame.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <div class="header">Click the below button</div>
-        <div class="iframe-container">
-            <iframe src="about:blank" id="button-frame"></iframe>
-        </div>
-        <div id="message" class="message"></div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.11-Progressbar.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.13-BrowserPopUp.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Button within a Frame</h1>
+            <p class="lead">Master frame navigation! Switch to the iframe context and click the button inside to demonstrate your cross-frame interaction skills.</p>
+
+            <div class="iframe-container">
+                <iframe src="about:blank" id="button-frame"></iframe>
+            </div>
+
+            <div class="message" id="message" role="status" aria-live="polite">
+                <span>Success! You clicked the button within a frame.</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         // Create content for the iframe
@@ -71,40 +91,29 @@
 
         iframeDoc.open();
         iframeDoc.write(`
-            <style>
-                body {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100%;
-                    margin: 0;
-                    background-color: #fff;
-                }
-                .button {
-                    padding: 12px 24px;
-                    font-size: 18px;
-                    color: #fff;
-                    background-color: #007bff;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    transition: background-color 0.3s, transform 0.3s;
-                }
-                .button:hover {
-                    background-color: #0056b3;
-                    transform: scale(1.05);
-                }
-            </style>
-            <button class="button" id="action-button" type="button">Click Me</button>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.12.css">
+            </head>
+            <body class="iframe-body">
+                <button class="frame-button" id="action-button" type="button">Click Me</button>
+            </body>
+            </html>
         `);
         iframeDoc.close();
 
         // Add event listener for the button inside the iframe
-        iframe.onload = function() {
-            iframeDoc.getElementById('action-button').addEventListener('click', function() {
-                document.getElementById('message').innerHTML = `<div class="success">Success! You clicked the button within a frame.</div>`;
-            });
-        };
+        iframeDoc.getElementById('action-button').addEventListener('click', function() {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'flex';
+            messageDiv.classList.add('success');
+        });
     </script>
 </body>
 </html>
+
+
+
+

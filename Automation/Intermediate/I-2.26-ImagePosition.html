@@ -3,105 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Swap Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            box-sizing: border-box;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            max-width: 90vw;
-            width: auto;
-            box-sizing: border-box;
-        }
-        .header {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .text {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        .images {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .images img {
-            width: 200px;
-            height: 200px;
-            margin: 0 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-        .radio-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .radio-group label {
-            margin: 0 10px; /* Reduced margin for closer buttons */
-            font-size: 16px;
-        }
-        .radio-group span {
-            margin-right: 10px; /* Space between label and radio buttons */
-        }
-        .message {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .success {
-            color: green;
-        }
-        .failure {
-            color: red;
-        }
-        @media (max-width: 768px) {
-            .container {
-                max-width: 95vw;
-            }
-            .images img {
-                width: 150px;
-                height: 150px;
-            }
-        }
-    </style>
+    <meta name="description" content="Explore image positioning and swapping techniques. This intermediate tutorial covers visual element positioning, image interactions, and validating UI layout changes in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Image Position Challenge - Image Positioning Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.26.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.26-ImagePosition.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Image Position Challenge - Image Positioning Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn image positioning and layout validation techniques. This intermediate tutorial covers visual element positioning, CSS positioning, and testing image layouts in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.26-ImagePosition.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Image Position Challenge - Image Positioning Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn image positioning and layout validation techniques. This intermediate tutorial covers visual element positioning.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Image Position Challenge - Image Positioning Testing Tutorial",
+      "description": "Learn image positioning and layout validation techniques. This intermediate tutorial covers visual element positioning, CSS positioning, and testing image layouts in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.26-ImagePosition.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <div class="header">Image Swap Game</div>
-        <div class="text">Identify which image is displayed on the left.</div>
-        <div class="images">
-            <img id="image1" src="" alt="Image 1">
-            <img id="image2" src="" alt="Image 2">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.25-SplitWords.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.27-YoungestPerson.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <div class="radio-group">
-            <span>Select Image displayed on left:</span>
-            <label>
-                <input type="radio" name="imageChoice" value="Image 1">
-                Image 1
-            </label>
-            <label>
-                <input type="radio" name="imageChoice" value="Image 2">
-                Image 2
-            </label>
-        </div>
-        <div id="message" class="message"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Image Swap Game</h1>
+                <p class="lead">Master image position analysis! Identify which image is displayed on the left side to prove your visual discrimination and positioning skills.</p>
+
+                <div class="images">
+                    <img id="image1" src="" alt="Image 1">
+                    <img id="image2" src="" alt="Image 2">
+                </div>
+
+                <div class="radio-group">
+                    <span>Select Image displayed on left:</span>
+                    <label>
+                        <input type="radio" name="imageChoice" value="Image 1">
+                        Image 1
+                    </label>
+                    <label>
+                        <input type="radio" name="imageChoice" value="Image 2">
+                        Image 2
+                    </label>
+                </div>
+
+                <div id="message" class="message"></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         // Function to randomly swap images
@@ -161,3 +152,6 @@
     </script>
 </body>
 </html>
+
+
+

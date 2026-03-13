@@ -3,101 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Data Table</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 10px; /* Added padding for mobile view */
-            box-sizing: border-box;
-        }
-
-        table {
-            width: auto; /* Set to auto to fit content */
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-            margin: 0 auto; /* Center the table */
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            word-wrap: break-word; /* Handle long text */
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        caption {
-            margin-bottom: 10px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        /* Media query for smaller screens */
-        @media (max-width: 600px) {
-            table {
-                width: 100%; /* Full width for small screens */
-            }
-
-            th, td {
-                padding: 8px; /* Reduced padding for better fit */
-                font-size: 14px; /* Smaller text for mobile */
-            }
-
-            caption {
-                font-size: 18px; /* Adjusted caption size */
-            }
-        }
-    </style>
+    <meta name="description" content="Practice Excel data writing and table export functionality. This advanced tutorial covers data export to spreadsheets, table manipulation, and testing file generation features in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>XLS Write Data Challenge - Excel Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.22.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.22-XLSWriteData.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="XLS Write Data Challenge - Excel Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn Excel file writing and data manipulation techniques. This advanced tutorial covers spreadsheet operations, data export, and testing Excel file generation in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.22-XLSWriteData.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="XLS Write Data Challenge - Excel Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn Excel file writing and data manipulation techniques. This advanced tutorial covers spreadsheet operations.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "XLS Write Data Challenge - Excel Testing Tutorial",
+      "description": "Learn Excel file writing and data manipulation techniques. This advanced tutorial covers spreadsheet operations, data export, and testing Excel file generation in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.22-XLSWriteData.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <table>
-        <caption>Write Below Employee Data In an Excel File</caption>
-        <tr>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Position</th>
-        </tr>
-        <tr>
-            <td>John Doe</td>
-            <td>Engineering</td>
-            <td>Software Engineer</td>
-        </tr>
-        <tr>
-            <td>Jane Smith</td>
-            <td>Marketing</td>
-            <td>Marketing Manager</td>
-        </tr>
-        <tr>
-            <td>Emily Johnson</td>
-            <td>Human Resources</td>
-            <td>HR Specialist</td>
-        </tr>
-        <tr>
-            <td>Michael Brown</td>
-            <td>Sales</td>
-            <td>Sales Representative</td>
-        </tr>
-        <tr>
-            <td>Linda Wilson</td>
-            <td>Finance</td>
-            <td>Financial Analyst</td>
-        </tr>
-    </table>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.21-InfiniteScroll.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.23-XLSReadData.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Excel Write Data Challenge</h1>
+        <p class="lead">Master Excel automation! Write the displayed employee data to an Excel file to demonstrate your spreadsheet manipulation skills.</p>
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Position</th>
+            </tr>
+            <tr>
+                <td>John Doe</td>
+                <td>Engineering</td>
+                <td>Software Engineer</td>
+            </tr>
+            <tr>
+                <td>Jane Smith</td>
+                <td>Marketing</td>
+                <td>Marketing Manager</td>
+            </tr>
+            <tr>
+                <td>Emily Johnson</td>
+                <td>Human Resources</td>
+                <td>HR Specialist</td>
+            </tr>
+            <tr>
+                <td>Michael Brown</td>
+                <td>Sales</td>
+                <td>Sales Representative</td>
+            </tr>
+            <tr>
+                <td>Linda Wilson</td>
+                <td>Finance</td>
+                <td>Financial Analyst</td>
+            </tr>
+        </table>
+        </div>
+    </main>
+</div>
+<div id="footer-placeholder"></div>
 </body>
 </html>
+
+
+
+

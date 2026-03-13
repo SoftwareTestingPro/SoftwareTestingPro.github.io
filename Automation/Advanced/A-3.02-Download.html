@@ -3,138 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download File</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px; /* Default width for larger screens */
-            position: relative;
-        }
-
-        a.download-link {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            text-decoration: none;
-            color: #fff;
-            background-color: #007bff;
-            border-radius: 5px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: opacity 0.3s;
-        }
-
-        a.download-link:hover {
-            background-color: #0056b3;
-        }
-
-        /* Particle grid */
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #007bff;
-            border-radius: 50%;
-        }
-
-        .input-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .input-container label {
-            font-size: 18px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .input-container input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: calc(100% - 22px);
-            box-sizing: border-box;
-        }
-
-        /* Responsive styles for smaller screens */
-        @media (max-width: 768px) {
-            .container {
-                width: 90%;
-            }
-
-            a.download-link {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
-
-            .input-container label {
-                font-size: 16px;
-            }
-
-            .input-container input[type="text"] {
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                width: 90%; /* Full width on small mobile screens */
-                padding: 15px;
-            }
-
-            a.download-link {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-
-            .input-container label {
-                font-size: 14px;
-            }
-
-            .input-container input[type="text"] {
-                font-size: 12px;
-            }
-        }
-    </style>
+    <meta name="description" content="Practice file download and verification techniques. This advanced tutorial covers download triggers, file validation, and testing download functionality in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Download Challenge - File Download Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.02.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.02-Download.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Download Challenge - File Download Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn file download handling and validation techniques. This advanced tutorial covers download links, file verification, and testing download functionality in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.02-Download.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Download Challenge - File Download Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn file download handling and validation techniques. This advanced tutorial covers download links.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Download Challenge - File Download Testing Tutorial",
+      "description": "Learn file download handling and validation techniques. This advanced tutorial covers download links, file verification, and testing download functionality in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.02-Download.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <a href="https://sample-videos.com/zip/100mb.zip" class="download-link" download onclick="disintegrate(this)">Click here to download a file</a>
-        <div class="input-container">
-            <label for="user-input">How long did it take to download the file completely in your downloads folder:</label>
-            <input type="text" id="user-input" name="user-input" placeholder="Enter duration in seconds" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-        </div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.01-HiddenElement.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.03-SignaturePad.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
     </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>File Download Challenge</h1>
+        <p class="lead">Master file download automation! Download the test file and input the exact download duration to prove your file handling skills.</p>
+        <a href="../assets/sample-100mb-file.zip" download class="download-btn">Click here to download a file</a>
+        <div class="input-group-parent">
+            <div class="input-group-left">
+                <label for="user-input" class="label-left">Enter duration (In Seconds):</label>
+            </div>
+
+            <div class="input-group-right">
+                <input type="text" id="user-input" name="user-input" placeholder="Duration in seconds" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+        </div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">
+            <span>I cannot access your machine to verify it but expect you were able to fetch it.</span>
+        </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 
     <script>
+        const input = document.getElementById('user-input');
+        const successMessage = document.getElementById('successMessage');
+
+        input.addEventListener('input', () => {
+            if (input.value) {
+                successMessage.style.display = 'flex';
+            } else {
+                successMessage.style.display = 'none';
+            }
+        });
+
         function disintegrate(button) {
             // Create a particle container
             const particleContainer = document.createElement('div');
@@ -180,3 +148,7 @@
     </script>
 </body>
 </html>
+
+
+
+

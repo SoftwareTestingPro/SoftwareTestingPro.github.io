@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Player - Advanced Automation Task</title>
+    <meta name="description" content="Explore video player controls and media testing. This tutorial covers video playback, controls validation, and handling media elements in automation testing environments.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Video Player Challenge - Media Controls Testing Tutorial | Software Testing Pro</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
     <script>
@@ -12,598 +14,94 @@
         gtag('js', new Date());
         gtag('config', 'G-MCHF9RDWT6');
     </script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            max-width: 900px;
-            width: 100%;
-            padding: 30px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        .instructions {
-            background-color: #f0f8ff;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 5px;
-            color: #555;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .video-player {
-            background-color: #000;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-        }
-
-        video {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .play-pause-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-        }
-
-        .video-player:hover .play-pause-overlay,
-        .play-pause-overlay.show {
-            opacity: 1;
-        }
-
-        .play-pause-overlay.playing {
-            opacity: 0;
-        }
-
-        .play-pause-icon {
-            font-size: 80px;
-            filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.8));
-            animation: pulse 0.3s ease;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .controls {
-            background-color: #1a1a1a;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .progress-bar-container {
-            position: relative;
-            width: 100%;
-            height: 8px;
-            background-color: #444;
-            border-radius: 4px;
-            cursor: pointer;
-            overflow: visible;
-            transition: height 0.2s ease;
-        }
-
-        .progress-bar-container:hover {
-            height: 12px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background-color: #667eea;
-            width: 0%;
-            transition: width 0.1s linear;
-            position: relative;
-            border-radius: 4px;
-        }
-
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            right: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            background-color: #667eea;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.2s;
-            box-shadow: 0 0 8px rgba(102, 126, 234, 0.9);
-        }
-
-        .progress-bar-container:hover .progress-bar::after {
-            opacity: 1;
-        }
-
-        .controls-buttons {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background-color: #667eea;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        button:hover {
-            background-color: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            background-color: #999;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .speed-control {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .speed-control label {
-            color: #fff;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-
-        .speed-control select {
-            padding: 8px 12px;
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #667eea;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .time-display {
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            white-space: nowrap;
-            min-width: 100px;
-            text-align: right;
-        }
-
-        .volume-control {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-left: auto;
-        }
-
-        .volume-control label {
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .volume-slider {
-            width: 100px;
-            height: 5px;
-            accent-color: #667eea;
-            cursor: pointer;
-        }
-
-        .fullscreen-btn {
-            background-color: #667eea;
-            margin-left: 10px;
-        }
-
-        .message {
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            padding: 15px;
-            background-color: #e8f5e9;
-            border-radius: 5px;
-            display: none;
-            margin-top: 20px;
-            border-left: 4px solid #4caf50;
-        }
-
-        .message.success {
-            display: block;
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            border-left-color: #4caf50;
-        }
-
-        .message.info {
-            display: block;
-            background-color: #e3f2fd;
-            color: #1565c0;
-            border-left-color: #2196f3;
-        }
-
-        .subtitle-toggle {
-            background-color: #667eea;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 22px;
-            }
-
-            .controls-buttons {
-                gap: 8px;
-            }
-
-            button {
-                padding: 8px 15px;
-                font-size: 13px;
-            }
-
-            .volume-control {
-                margin-left: 0;
-                margin-top: 10px;
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .volume-slider {
-                flex: 1;
-                max-width: 150px;
-            }
-
-            .time-display {
-                min-width: 80px;
-            }
-
-            .speed-control {
-                order: -1;
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 18px;
-            }
-
-            .instructions {
-                font-size: 12px;
-                padding: 10px;
-            }
-
-            .controls-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            button {
-                width: 100%;
-                padding: 10px;
-            }
-
-            .time-display {
-                width: 100%;
-                text-align: center;
-            }
-
-            .speed-control {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .volume-control {
-                width: 100%;
-            }
-        }
-    </style>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.30.css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.30-VideoPlayer.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Video Player Challenge - Media Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn video player control and validation techniques. This beginner tutorial covers media controls, playback testing, and interactive media elements in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.30-VideoPlayer.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Video Player Challenge - Media Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn video player control and validation techniques. This beginner tutorial covers media controls.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Video Player Challenge - Media Testing Tutorial",
+      "description": "Learn video player control and validation techniques. This beginner tutorial covers media controls, playback testing, and interactive media elements in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.30-VideoPlayer.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>🎬 Video Player</h1>
-        <div class="instructions">
-            <strong>Instructions:</strong> Play the video, pause it, seek through the timeline, change playback speed, adjust volume, and toggle fullscreen.
-            The player should correctly track progress, display remaining time, and handle all controls.
-            Watch the entire video to see the success message.
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.29-CharCounter.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="../Intermediate/I-Intro.html" class="nav-btn nav-btn-next">
+                Proceed to Intermediate Tasks
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="video-player">
-            <div class="video-container">
-                <video id="videoPlayer">
+        <main class="card">
+            <div class="card-content">
+                <h1>Using Video Player controls</h1>
+                <p class="lead">Master video player automation! Control playback, adjust settings, and watch the complete video to demonstrate multimedia interaction mastery.</p>
+                <video id="player" controls style="width: 100%; height: 50vh;">
                     <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                <div class="play-pause-overlay" id="playPauseOverlay">
-                    <span class="play-pause-icon" id="overlayIcon">▶️</span>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You've watched the entire video successfully!</span></div>
             </div>
-            <div class="controls">
-                <div class="progress-bar-container" id="progressContainer">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-
-                <div class="controls-buttons">
-
-                    <button id="rewindBtn" title="Rewind 10 seconds">
-                        ⏪ -10s
-                    </button>
-
-                    <button id="forwardBtn" title="Forward 10 seconds">
-                        ⏩ +10s
-                    </button>
-
-                    <div class="speed-control">
-                        <label for="speedSelect">Speed:</label>
-                        <select id="speedSelect">
-                            <option value="0.5">0.5x</option>
-                            <option value="0.75">0.75x</option>
-                            <option value="1" selected>1x</option>
-                            <option value="1.25">1.25x</option>
-                            <option value="1.5">1.5x</option>
-                            <option value="2">2x</option>
-                        </select>
-                    </div>
-
-                    <div class="time-display">
-                        <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
-                    </div>
-
-                    <div class="volume-control">
-                        <label for="volumeSlider" title="Volume">🔊</label>
-                        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100">
-                    </div>
-
-                    <button id="fullscreenBtn" class="fullscreen-btn" title="Toggle Fullscreen">
-                        ⛶ Fullscreen
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="message" id="successMessage">
-            ✓ Congratulations! You've watched the entire video successfully!
-        </div>
-
-        <div class="message info" id="infoMessage"></div>
+        </main>
     </div>
 
+    <div id="footer-placeholder"></div>
+
     <script>
-        const video = document.getElementById('videoPlayer');
-        const videoContainer = document.querySelector('.video-container');
-        const playPauseOverlay = document.getElementById('playPauseOverlay');
-        const overlayIcon = document.getElementById('overlayIcon');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationEl = document.getElementById('duration');
-        const rewindBtn = document.getElementById('rewindBtn');
-        const forwardBtn = document.getElementById('forwardBtn');
-        const speedSelect = document.getElementById('speedSelect');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const successMessage = document.getElementById('successMessage');
-        const infoMessage = document.getElementById('infoMessage');
+    const player = new Plyr('#player');
+    const successMessage = document.getElementById('successMessage');
 
-        // Format time to MM:SS
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // Update duration when metadata is loaded
-        video.addEventListener('loadedmetadata', () => {
-            durationEl.textContent = formatTime(video.duration);
-            updateOverlayIcon();
-        });
-
-        // Update overlay icon based on video state
-        function updateOverlayIcon() {
-            if (video.paused) {
-                overlayIcon.textContent = '▶️';
-                playPauseOverlay.classList.remove('playing');
-                playPauseOverlay.classList.add('show');
-            } else {
-                overlayIcon.textContent = '⏸️';
-                playPauseOverlay.classList.add('playing');
-            }
-        }
-
-        // Play/Pause functionality via overlay
-        playPauseOverlay.addEventListener('click', (e) => {
-            e.stopPropagation();
-            togglePlayPause();
-        });
-
-        // Play/Pause via video container click
-        videoContainer.addEventListener('click', (e) => {
-            if (e.target === videoContainer || e.target === video) {
-                togglePlayPause();
-            }
-        });
-
-        function togglePlayPause() {
-            if (video.paused) {
-                video.play();
-                updateOverlayIcon();
-            } else {
-                video.pause();
-                updateOverlayIcon();
-            }
-        }
-
-        // Update progress bar and time
-        video.addEventListener('timeupdate', () => {
-            const percent = (video.currentTime / video.duration) * 100;
-            progressBar.style.width = percent + '%';
-            currentTimeEl.textContent = formatTime(video.currentTime);
-        });
-
-        // Hide overlay when playing, show when paused
-        video.addEventListener('play', () => {
-            updateOverlayIcon();
-            showInfoMessage('Playing... Use Space to pause, Arrow keys to skip');
-        });
-
-        video.addEventListener('pause', () => {
-            updateOverlayIcon();
-        });
-
-        // Seek functionality
-        progressContainer.addEventListener('click', (e) => {
-            const rect = progressContainer.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            video.currentTime = percent * video.duration;
-            showInfoMessage(`Seeked to ${formatTime(video.currentTime)}`);
-        });
-
-        // Keyboard seek (arrow keys)
-        document.addEventListener('keydown', (e) => {
-            if (document.activeElement === document.body) {
-                if (e.key === 'ArrowRight') {
-                    video.currentTime = Math.min(video.currentTime + 5, video.duration);
-                    showInfoMessage('⏩ Skipped forward 5 seconds');
-                } else if (e.key === 'ArrowLeft') {
-                    video.currentTime = Math.max(video.currentTime - 5, 0);
-                    showInfoMessage('⏪ Skipped backward 5 seconds');
-                } else if (e.key === ' ') {
-                    e.preventDefault();
-                    togglePlayPause();
-                }
-            }
-        });
-
-        // Rewind and Forward buttons
-        rewindBtn.addEventListener('click', () => {
-            video.currentTime = Math.max(video.currentTime - 10, 0);
-            showInfoMessage('⏪ Rewinded 10 seconds');
-        });
-
-        forwardBtn.addEventListener('click', () => {
-            video.currentTime = Math.min(video.currentTime + 10, video.duration);
-            showInfoMessage('⏩ Forwarded 10 seconds');
-        });
-
-        // Speed control
-        speedSelect.addEventListener('change', (e) => {
-            video.playbackRate = parseFloat(e.target.value);
-            showInfoMessage(`Playback speed: ${e.target.value}x`);
-        });
-
-        // Volume control
-        volumeSlider.addEventListener('input', (e) => {
-            video.volume = e.target.value / 100;
-            const volumePercent = e.target.value;
-            let volumeIcon = '🔊';
-            if (volumePercent == 0) volumeIcon = '🔇';
-            else if (volumePercent < 33) volumeIcon = '🔈';
-            else if (volumePercent < 66) volumeIcon = '🔉';
-
-            volumeSlider.previousElementSibling.textContent = volumeIcon;
-        });
-
-        // Fullscreen functionality
-        fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.querySelector('.video-player').requestFullscreen().catch(err => {
-                    console.log('Fullscreen request failed:', err);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        });
-
-        // Video ended
-        video.addEventListener('ended', () => {
-            updateOverlayIcon();
-            successMessage.style.display = 'block';
-            successMessage.className = 'message success';
-        });
-
-        // Show info message temporarily
-        function showInfoMessage(message) {
-            infoMessage.textContent = message;
-            infoMessage.className = 'message info';
-            infoMessage.style.display = 'block';
-            setTimeout(() => {
-                infoMessage.style.display = 'none';
-            }, 2000);
-        }
-
-        // Initialize
-        video.volume = 1;
-        updateOverlayIcon();
-    </script>
+    player.on('ended', () => {
+        successMessage.style.display = 'flex';
+        successMessage.className = 'message success';
+    });
+</script>
 </body>
 </html>
+
+
 

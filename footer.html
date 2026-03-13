@@ -1,0 +1,156 @@
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>Main Pages</h4>
+            <ul>
+                <li><a href="/index.html">🏠 Home</a></li>
+                <li><a href="/faq.html">❓ FAQ</a></li>
+                <li><a href="/Quiz/Quiz-Home.html">📝 Quizzes</a></li>
+                <li><a href="/Developer.html">👨‍💻 About Developer</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-section">
+            <h4>Practice Platform</h4>
+            <ul>
+                <li><a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a></li>
+                <li><a href="https://testcafe.io/" target="_blank" rel="noopener">TestCafe</a></li>
+                <li><a href="https://puppeteer.github.io/puppeteer/" target="_blank" rel="noopener">Puppeteer</a></li>
+                <li><a href="https://github.com/DevExpress/testcafe" target="_blank" rel="noopener">TestCafe GitHub</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-section">
+            <h4>Legal & Info</h4>
+            <ul>
+                <li><a href="/privacy.html">🔒 Privacy Policy</a></li>
+                <li><a href="/terms.html">📋 Terms of Service</a></li>
+                <li><a href="/disclosure.html">💰 Disclosure</a></li>
+                <li><a href="/sitemap.xml">🗺️ Site Map</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-section">
+            <h4>Resources</h4>
+            <ul>
+                <li><a href="https://www.selenium.dev/documentation/" target="_blank" rel="noopener">📖 Selenium Docs</a></li>
+                <li><a href="https://www.cypress.io/" target="_blank" rel="noopener">🌿 Cypress</a></li>
+                <li><a href="https://github.com/SoftwareTestingPro/SoftwareTestingPro.github.io" target="_blank" rel="noopener">💻 GitHub</a></li>
+                <li><a href="https://forms.gle/GFYLiy6VJ8b2BEKj6" target="_blank" rel="noopener">📧 Contact</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <p>&copy; 2026 Software Testing Pro. Educational content for automation testing.</p>
+        <div class="footer-links">
+            <a href="https://github.com/SoftwareTestingPro/SoftwareTestingPro.github.io" target="_blank" rel="noopener">GitHub</a>
+            <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to Top</a>
+        </div>
+    </div>
+</footer>
+
+<style>
+.site-footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #ecf0f1;
+    padding: 40px 0 20px;
+    margin-top: 40px;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.footer-section h4 {
+    color: #3498db;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.footer-section ul li a {
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    display: inline-block;
+}
+
+.footer-section ul li a:hover {
+    color: #3498db;
+    transform: translateX(3px);
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 30px auto 0;
+    padding: 20px;
+    border-top: 1px solid #34495e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 13px;
+    color: #95a5a6;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #2980b9;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        padding: 0 15px;
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .footer-bottom {
+        padding: 15px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-links {
+        justify-content: center;
+    }
+}
+</style>

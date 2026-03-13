@@ -3,165 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Validation</title>
-    <!-- Material Icons CSS -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0; /* Changed background color */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            flex-direction: column;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        h3 {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: inline-block;
-            margin-bottom: 5px;
-            font-size: 16px;
-            color: #333;
-            vertical-align: middle;
-        }
-
-        .input-container {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        input[type="text"] {
-            width: calc(100% - 30px);
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            vertical-align: middle;
-        }
-
-        .input-container .material-icons {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            display: none; /* Icons are hidden initially */
-        }
-
-        .input-container.valid .material-icons.valid-icon {
-            color: #28a745;
-            display: inline-block; /* Show check icon on valid input */
-        }
-
-        .input-container.invalid .material-icons.invalid-icon {
-            color: #dc3545;
-            display: inline-block; /* Show cross icon on invalid input */
-        }
-
-        /* Responsive styling */
-        @media (max-width: 768px) {
-            .container {
-                width: 85%; /* 90% width for mobile devices and tablets */
-                padding: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
-            }
-
-            label, input[type="text"] {
-                font-size: 14px;
-            }
-
-            input[type="text"] {
-                padding: 8px;
-            }
-
-            .material-icons {
-                font-size: 18px; /* Adjust icons for smaller devices */
-            }
-        }
-    </style>
+    <meta name="description" content="Master input validation techniques for web forms. This tutorial teaches how to test text inputs, validate user data, and handle form submissions in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Input Validation Challenge - Form Input Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.02.css">
+    <script src="../assets/components/components.js"></script>
+	<!-- Additional SEO Meta Tags -->
+	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+	<link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.02-Input.html">
+	<!-- Open Graph Tags -->
+	<meta property="og:title" content="Input Validation Challenge - Form Input Testing Tutorial | Software Testing Pro">
+	<meta property="og:description" content="Master input validation techniques for web forms. This tutorial teaches how to test text inputs, validate user data, and handle form submissions in automation testing scenarios.">
+	<meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.02-Input.html">
+	<meta property="og:type" content="article">
+	<meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<meta property="og:site_name" content="Software Testing Pro">
+	<!-- Twitter Card Tags -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Input Validation Challenge - Form Input Testing Tutorial | Software Testing Pro">
+	<meta name="twitter:description" content="Master input validation techniques for web forms. This tutorial teaches how to test text inputs.">
+	<meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<!-- Structured Data -->
+	<script type="application/ld+json">
+	{
+	  "@context": "https://schema.org",
+	  "@type": "EducationalContent",
+	  "headline": "Input Validation Challenge - Form Input Testing Tutorial",
+	  "description": "Master input validation techniques for web forms. This tutorial teaches how to test text inputs, validate user data, and handle form submissions in automation testing scenarios.",
+	  "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.02-Input.html",
+	  "publisher": {
+	    "@type": "Organization",
+	    "name": "Software Testing Pro"
+	  }
+	}
+	</script>
+	<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+	<!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h3>Please Fill Out the Following Information</h3>
-        <label for="user-input-name">Enter your first name:</label>
-        <div class="input-container">
-            <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
-            <span class="material-icons valid-icon">check_circle</span>
-            <span class="material-icons invalid-icon">cancel</span>
-        </div>
-        
-        <label for="user-input-age">Enter your age:</label>
-        <div class="input-container">
-            <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age">
-            <span class="material-icons valid-icon">check_circle</span>
-            <span class="material-icons invalid-icon">cancel</span>
-        </div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
 
-        <label for="text-input">Enter "text within double quotes" in the input field:</label>
-        <div class="input-container">
-            <input type="text" id="text-input" class="form-control" placeholder="Enter label text within quotes">
-            <span class="material-icons valid-icon">check_circle</span>
-            <span class="material-icons invalid-icon">cancel</span>
-        </div>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="B-1.01-Click.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
+        <a href="B-1.03-Radio.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
     </div>
 
-    <script>
-        const validateInput = (input, regex) => {
-            const value = input.value;
-            const parent = input.parentNode;
-            const validIcon = parent.querySelector('.valid-icon');
-            const invalidIcon = parent.querySelector('.invalid-icon');
+    <main class="card">
+        <div class="card-content">
+            <h1>Input Validation</h1>
+            <p class="lead">Unlock form validation mastery! Enter your name in the text field below to test input automation techniques.</p>
 
-            if (value === '') {
-                validIcon.style.display = 'none';
-                invalidIcon.style.display = 'none';
-            } else if (regex.test(value)) {
-                parent.classList.add('valid');
-                parent.classList.remove('invalid');
-                validIcon.style.display = 'inline-block';
-                invalidIcon.style.display = 'none';
-            } else {
-                parent.classList.add('invalid');
-                parent.classList.remove('valid');
-                validIcon.style.display = 'none';
-                invalidIcon.style.display = 'inline-block';
-            }
-        };
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="user-input-name" class="label-left">Enter your first name:</label>
+                </div>
 
-        document.getElementById('user-input-name').addEventListener('input', function() {
-            validateInput(this, /^[A-Za-z]+$/);
-        });
+                <div class="input-group-right">
+                    <input type="text" id="user-input-name" name="user-input-name" placeholder="Type your name...">
+                </div>
+            </div>
 
-        document.getElementById('user-input-age').addEventListener('input', function() {
-            validateInput(this, /^\d+$/);
-        });
+                <div class="message success" id="nameSuccessMessage" role="status" aria-live="polite">
+                    <span>Name is valid!</span>
+                </div>
 
-        document.getElementById('text-input').addEventListener('input', function() {
-            validateInput(this, /^text within double quotes$/);
-        });
-    </script>
+                <div class="message failure" id="nameFailureMessage" role="status" aria-live="polite">
+                    <span>Please enter letters only</span>
+                </div>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="user-input-age" class="label-left">Enter your age:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="user-input-age" name="user-input-age" maxlength="2" placeholder="Enter Your Age">
+                </div>
+            </div>
+                <div class="message success" id="ageSuccessMessage" role="status" aria-live="polite">
+                    <span>Age is valid!</span>
+                </div>
+
+                <div class="message failure" id="ageFailureMessage" role="status" aria-live="polite">
+                    <span>Please enter digits only</span>
+                </div>
+
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="text-input" class="label-left">Enter "text within double quotes" in the input field:</label>
+                </div>
+
+                <div class="input-group-right">
+                    <input type="text" id="text-input" placeholder="Enter label text within quotes">
+                </div>
+            </div>
+             <div class="message success" id="textSuccessMessage" role="status" aria-live="polite">
+                    <span>Text is valid!</span>
+            </div>
+
+            <div class="message failure" id="textFailureMessage" role="status" aria-live="polite">
+                <span>Please enter: "text within double quotes"</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script>
+    // Function to validate individual input and show appropriate message
+    function validateInput(inputId, regex, successId, failureId) {
+        const input = document.getElementById(inputId);
+        const successMessage = document.getElementById(successId);
+        const failureMessage = document.getElementById(failureId);
+
+        if (input.value === '') {
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+        } else if (regex.test(input.value)) {
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+        } else {
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
+        }
+    }
+
+    // Add event listeners for each input
+    document.getElementById('user-input-name').addEventListener('input', function() {
+        validateInput('user-input-name', /^[A-Za-z]+$/, 'nameSuccessMessage', 'nameFailureMessage');
+    });
+
+    document.getElementById('user-input-age').addEventListener('input', function() {
+        validateInput('user-input-age', /^\d+$/, 'ageSuccessMessage', 'ageFailureMessage');
+    });
+
+    document.getElementById('text-input').addEventListener('input', function() {
+        validateInput('text-input', /^text within double quotes$/, 'textSuccessMessage', 'textFailureMessage');
+    });
+
+    // Hide messages initially (following B-1.11 pattern)
+    document.getElementById('nameSuccessMessage').style.display = 'none';
+    document.getElementById('nameFailureMessage').style.display = 'none';
+    document.getElementById('ageSuccessMessage').style.display = 'none';
+    document.getElementById('ageFailureMessage').style.display = 'none';
+    document.getElementById('textSuccessMessage').style.display = 'none';
+    document.getElementById('textFailureMessage').style.display = 'none';
+</script>
 </body>
 </html>
+
+
+

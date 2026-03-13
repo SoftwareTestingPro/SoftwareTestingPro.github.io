@@ -3,60 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Drop Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        .image-container, .drop-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        .image-container img {
-            border: 2px solid #ccc;
-            padding: 5px;
-            cursor: grab;
-        }
-        .drop-zone {
-            border: 2px dashed #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            background-color: #f9f9f9;
-        }
-        .drop-zone span {
-            position: absolute;
-            color: #888;
-            font-size: 14px;
-            pointer-events: none;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
-            color: green;
-        }
-    </style>
+    <meta name="description" content="Practice multiple drag and drop operations with images. This advanced tutorial covers complex drag interactions, multiple element handling, and testing drag-and-drop functionality in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Image Drop Game Challenge - Multiple Drag and Drop Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.05.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.05-MultipleDragDrop.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Multiple Drag Drop Challenge - Advanced Drag Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn advanced drag and drop techniques with multiple elements. This advanced tutorial covers complex interactions, element ordering, and testing multi-item drag operations in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.05-MultipleDragDrop.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Multiple Drag Drop Challenge - Advanced Drag Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn advanced drag and drop techniques with multiple elements. This advanced tutorial covers complex interactions.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Multiple Drag Drop Challenge - Advanced Drag Testing Tutorial",
+      "description": "Learn advanced drag and drop techniques with multiple elements. This advanced tutorial covers complex interactions, element ordering, and testing multi-item drag operations in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.05-MultipleDragDrop.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <h2>Drop Image To Similar Size Drop Area</h2>
-    <div class="image-container">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.04-ReadQR.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.06-BrokenImages.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Multiple Drag and Drop</h1>
+        <p class="lead">Master complex drag-and-drop! Drag all images to their matching drop zones to demonstrate advanced element manipulation skills.</p>
+
+    <div class="drop-container" id="dropContainer">
+        <!-- Drop zones will be generated here -->
+    </div>
+
+    <div class="drag-drop-images">
         <img src="https://picsum.photos/100" alt="Image 1" width="100" height="100" draggable="true" id="img1">
         <img src="https://picsum.photos/150/200" alt="Image 2" width="150" height="200" draggable="true" id="img2">
         <img src="https://picsum.photos/120/150" alt="Image 3" width="120" height="150" draggable="true" id="img3">
         <img src="https://picsum.photos/200/100" alt="Image 4" width="200" height="100" draggable="true" id="img4">
     </div>
 
-    <div class="drop-container" id="dropContainer">
-        <!-- Drop zones will be generated here -->
-    </div>
-
     <div class="message" id="message"></div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <script>
         const images = [
@@ -69,6 +100,9 @@
         const dropContainer = document.getElementById('dropContainer');
         const messageDiv = document.getElementById('message');
         let droppedCount = 0;
+
+        // Hide message on load
+        messageDiv.style.display = 'none';
 
         // Separate the first image
         const firstImage = images[0];
@@ -112,10 +146,12 @@
                         dropZone.innerHTML = '';
                         dropZone.appendChild(draggedImage);
                         droppedCount++;
+                        messageDiv.style.display = 'flex';
                         messageDiv.textContent = `Successfully dropped ${droppedCount} of 4 images.`;
 
                         if (droppedCount === 4) {
                             messageDiv.textContent = 'All images successfully dropped!';
+                            messageDiv.classList.add('success');
                         }
                     } else {
                         alert('This drop zone already has an image.');
@@ -136,3 +172,7 @@
     </script>
 </body>
 </html>
+
+
+
+

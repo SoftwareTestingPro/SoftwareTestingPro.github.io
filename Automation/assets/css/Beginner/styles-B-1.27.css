@@ -1,0 +1,50 @@
+
+
+
+
+
+/* Greyed out effect for dropped items */
+.dropped-item {
+    opacity: 0.5;
+    background: #f8f9fa !important;
+    color: #6c757d !important;
+    border-color: #dee2e6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+.dropped-item:hover {
+    transform: none !important;
+    background: #f8f9fa !important;
+}
+
+
+@media (max-width: 1440px) {
+    body {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1024px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 375px) {
+    body {
+        font-size: 11px;
+    }
+}

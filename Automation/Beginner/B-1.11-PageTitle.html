@@ -3,194 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Title</title>
-    <style>
-        :root {
-            --bg: #f6f7fb;
-            --card: #ffffff;
-            --muted: #6b7280;
-            --accent: #6b21a8;
-            --success: #16a34a;
-            --danger: #dc2626;
-            --border: #e6e9ef;
-            --radius: 12px;
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-        }
-
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-
-        body {
-            background: var(--bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 24px;
-            color: #111827;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 520px;
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-            padding: 24px;
-            border: 1px solid var(--border);
-        }
-
-        h1 {
-            font-size: 18px;
-            margin: 0 0 8px;
-            color: #111827;
-        }
-
-        p.lead {
-            margin: 0 0 20px;
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        label {
-            font-size: 13px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        input[type="text"] {
-            padding: 10px 12px;
-            font-size: 15px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        input[type="text"]:focus {
-            border-color: #9fb7ff;
-            box-shadow: 0 4px 12px rgba(60, 120, 255, 0.08);
-        }
-
-        .message {
-            display: none;
-            margin-top: 12px;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            border: 1px solid;
-        }
-
-        .message.success {
-            display: flex;
-            background-color: #e6f7ea;
-            color: #155724;
-            border-color: #81e6b0;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .message.failure {
-            display: flex;
-            background-color: #fff0f0;
-            color: #6b1220;
-            border-color: #f5b5ba;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .message-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .value-box {
-            background: rgba(0, 0, 0, 0.03);
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-family: Menlo, Monaco, monospace;
-            font-size: 12px;
-            color: #1b1b1b;
-            word-break: break-word;
-        }
-
-        .icon {
-            font-weight: 700;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .visually-hidden {
-            position: absolute !important;
-            height: 1px;
-            width: 1px;
-            overflow: hidden;
-            clip: rect(1px, 1px, 1px, 1px);
-            white-space: nowrap;
-        }
-
-        @media (max-width: 420px) {
-            .card {
-                padding: 16px;
-            }
-
-            .message-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-    </style>
+    <meta name="description" content="Learn how to validate and match page titles in web testing. This tutorial covers title validation, DOM manipulation for page metadata, and ensuring correct page identification in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Match Title Challenge - Page Title Validation Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.11.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.11-PageTitle.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Page Title Challenge - Page Title Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn page title validation and browser tab testing. This beginner tutorial covers title verification, window properties, and basic browser automation in testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.11-PageTitle.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Page Title Challenge - Page Title Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn page title validation and browser tab testing. This beginner tutorial covers title verification.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Page Title Challenge - Page Title Testing Tutorial",
+      "description": "Learn page title validation and browser tab testing. This beginner tutorial covers title verification, window properties, and basic browser automation in testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.11-PageTitle.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <main class="card">
-        <h1>Web Page Title</h1>
-        <p class="lead">Enter the exact title of this webpage. Your input will be compared against the actual page title.</p>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-        <div class="input-group">
-            <label for="titleInput">Enter the title of this webpage:</label>
-            <input
-                type="text"
-                id="titleInput"
-                placeholder="Enter the page title here"
-                aria-describedby="titleMessage"
-            >
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.10-RightClick.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.12-FetchURL.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
         </div>
 
-        <div class="message success" id="successMessage" role="status" aria-live="polite">
-            <span class="icon">✓</span>
-            <span>Correct — title matches exactly.</span>
-        </div>
+        <main class="card">
+            <div class="card-content">
+                <h1>Match Title</h1>
+                <p class="lead">Master page title extraction! Capture and input the exact webpage title to prove your automation can read page metadata accurately.</p>
 
-        <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-            <div class="message-row">
-                <span class="icon">✕</span>
-                <strong>Does not match</strong>
-            </div>
-            <div class="message-row">
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Expected:</span>
-                    <div class="value-box" id="expectedTitle"></div>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="titleInput" class="label-left">Enter the title of this webpage:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input
+                            type="text"
+                            id="titleInput"
+                            placeholder="Enter the page title here"
+                            aria-describedby="titleMessage"
+                        >
+                    </div>
                 </div>
-                <div>
-                    <span style="color: inherit; font-size: 12px;">Entered:</span>
-                    <div class="value-box" id="actualTitle"></div>
-                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedTitle"></span> <span style="color: black;">Entered:</span> <span id="actualTitle"></span></span></div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         const inputField = document.getElementById('titleInput');
@@ -201,10 +102,6 @@
 
         const pageTitle = document.title;
 
-        // Initialize: hide all messages on page load
-        successMessage.style.display = 'none';
-        failureMessage.style.display = 'none';
-
         // Display expected title on load
         expectedTitleDisplay.textContent = pageTitle;
 
@@ -214,16 +111,22 @@
             if (userInput === '') {
                 // Clear messages if input is empty
                 successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
                 failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
                 actualTitleDisplay.textContent = '';
             } else if (userInput === pageTitle) {
                 // Success case
                 successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
             } else {
                 // Failure case
                 successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
                 actualTitleDisplay.textContent = userInput;
             }
         }
@@ -233,3 +136,7 @@
     </script>
 </body>
 </html>
+
+
+
+

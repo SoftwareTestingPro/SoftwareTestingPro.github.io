@@ -1,0 +1,175 @@
+.letter-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
+    margin-top: 10rem;
+}
+
+.letter-box {
+    background: #808080;
+    color: white;
+    padding: 0.625rem;
+    border-radius: var(--radius);
+    font-size: 1.125rem;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 3.125rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-box input {
+    width: 3.125rem;
+    padding: 0.625rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 1.125rem;
+}
+
+.input-box.invalid input {
+    border-color: var(--danger);
+    background-color: #fef2f2;
+}
+
+.input-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
+}
+
+.input-box input {
+    width: 3.125rem;
+    padding: 0.625rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 1.125rem;
+}
+
+.invalid-message {
+    display: none;
+    color: var(--danger);
+    font-size: 0.875rem;
+    margin-top: 0.625rem;
+}
+
+@media (max-width: 1440px) {
+    .letter-boxes {
+        gap: 0.6rem;
+        margin-bottom: 1.125rem;
+        margin-top: 1.8rem;
+    }
+    .letter-box {
+        background: #808080;
+        padding: 0.6rem;
+        font-size: 1.0625rem;
+        width: 3rem;
+    }
+    .input-box input {
+        width: 3rem;
+        padding: 0.6rem;
+        font-size: 1.0625rem;
+    }
+    .invalid-message {
+        font-size: 0.8125rem;
+        margin-top: 0.6rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .letter-boxes {
+        gap: 0.575rem;
+        margin-bottom: 1rem;
+        margin-top: 1.6rem;
+    }
+    .letter-box {
+        background: #808080;
+        padding: 0.575rem;
+        font-size: 1rem;
+        width: 2.875rem;
+    }
+    .input-box input {
+        width: 2.875rem;
+        padding: 0.575rem;
+        font-size: 1rem;
+    }
+    .invalid-message {
+        font-size: 0.75rem;
+        margin-top: 0.575rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .letter-boxes {
+        gap: 0.55rem;
+        margin-bottom: 0.875rem;
+        margin-top: 1.4rem;
+        flex-wrap: wrap;
+    }
+    .letter-box {
+        background: #808080;
+        padding: 0.55rem;
+        font-size: 0.9375rem;
+        width: 2.75rem;
+    }
+    .input-box input {
+        width: 2.75rem;
+        padding: 0.55rem;
+        font-size: 0.9375rem;
+    }
+    .invalid-message {
+        font-size: 0.6875rem;
+        margin-top: 0.55rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .letter-boxes {
+        gap: 0.525rem;
+        margin-bottom: 0.75rem;
+        margin-top: 1.2rem;
+    }
+    .letter-box {
+        background: #808080;
+        padding: 0.525rem;
+        font-size: 0.875rem;
+        width: 2.625rem;
+    }
+    .input-box input {
+        width: 2.625rem;
+        padding: 0.525rem;
+        font-size: 0.875rem;
+    }
+    .invalid-message {
+        font-size: 0.625rem;
+        margin-top: 0.525rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .letter-boxes {
+        gap: 0.5rem;
+        margin-bottom: 0.625rem;
+        margin-top: 1rem;
+    }
+    .letter-box {
+        background: #808080;
+        padding: 0.5rem;
+        font-size: 0.8125rem;
+        width: 2.5rem;
+    }
+    .input-box input {
+        width: 2.5rem;
+        padding: 0.5rem;
+        font-size: 0.8125rem;
+    }
+    .invalid-message {
+        font-size: 0.5625rem;
+        margin-top: 0.5rem;
+    }
+}

@@ -2,75 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Image Comparison</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #f0f0f0;
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn image comparison and visual validation techniques. This intermediate tutorial covers comparing visual elements, validating image properties, and testing visual similarities in automation testing scenarios.">
+  <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+  <title>Compare Images Challenge - Image Comparison Testing Tutorial | Software Testing Pro</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.28.css">
+  <script src="../assets/components/components.js"></script>
+  <!-- Additional SEO Meta Tags -->
+  <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.28-CompareImages.html">
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Compare Images Challenge - Image Comparison Testing Tutorial | Software Testing Pro">
+  <meta property="og:description" content="Learn image comparison and visual validation techniques. This intermediate tutorial covers image matching, visual verification, and testing image equality in automation testing scenarios.">
+  <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.28-CompareImages.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <meta property="og:site_name" content="Software Testing Pro">
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Compare Images Challenge - Image Comparison Testing Tutorial | Software Testing Pro">
+  <meta name="twitter:description" content="Learn image comparison and visual validation techniques. This intermediate tutorial covers image matching.">
+  <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalContent",
+    "headline": "Compare Images Challenge - Image Comparison Testing Tutorial",
+    "description": "Learn image comparison and visual validation techniques. This intermediate tutorial covers image matching, visual verification, and testing image equality in automation testing scenarios.",
+    "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.28-CompareImages.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Software Testing Pro"
     }
-
-    .container {
-      text-align: center;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    }
-
-    h2 {
-      margin-bottom: 20px;
-    }
-
-    .images {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    canvas {
-      width: 100px;
-      height: 100px;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-    }
-
-    .buttons {
-      margin-bottom: 20px;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 0 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .message {
-      font-weight: bold;
-      font-size: 18px;
-    }
-  </style>
+  }
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+  <!-- End Google Tag Manager -->
 </head>
 <body>
-  <div class="container">
-    <h2>Are both Images same</h2>
-    <div class="images">
-      <canvas id="canvas1" width="100" height="100"></canvas>
-      <canvas id="canvas2" width="100" height="100"></canvas>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+  <div id="header-placeholder"></div>
+  <div class="content-wrapper">
+    <div class="card-nav">
+      <a href="I-2.27-YoungestPerson.html" class="nav-btn nav-btn-prev">
+        <span class="nav-icon">←</span>
+        Previous
+      </a>
+      <a href="I-2.29-ColorPicker.html" class="nav-btn nav-btn-next">
+        Next
+        <span class="nav-icon">→</span>
+      </a>
     </div>
-    <div class="buttons">
-      <button onclick="checkAnswer(true)">Yes</button>
-      <button onclick="checkAnswer(false)">No</button>
-    </div>
-    <div class="message" id="message"></div>
+
+    <main class="card">
+      <div class="card-content">
+        <h1>Image Comparison</h1>
+        <p class="lead">Master image comparison! Analyze both images carefully and determine if they are identical to prove your visual inspection skills.</p>
+
+        <div class="images">
+          <canvas id="canvas1" width="100" height="100"></canvas>
+          <canvas id="canvas2" width="100" height="100"></canvas>
+        </div>
+
+        <div class="buttons">
+          <button onclick="checkAnswer(true)">Yes</button>
+          <button onclick="checkAnswer(false)">No</button>
+        </div>
+
+        <div class="message" id="message"></div>
+      </div>
+    </main>
   </div>
+
+  <div id="footer-placeholder"></div>
 
   <script>
     const imagePool = [
@@ -118,11 +133,13 @@
     function checkAnswer(userSaysSame) {
       const message = document.getElementById('message');
       if (userSaysSame === areSame) {
-        message.textContent = '✅ Success! You got it right.';
-        message.style.color = 'green';
+        message.textContent = 'Success! You got it right.';
+        message.classList.add('success');
+        message.classList.remove('failure');
       } else {
-        message.textContent = '❌ Failure! That was incorrect.';
-        message.style.color = 'red';
+        message.textContent = 'Failure! That was incorrect.';
+        message.classList.add('failure');
+        message.classList.remove('success');
       }
     }
 
@@ -130,3 +147,7 @@
   </script>
 </body>
 </html>
+
+
+
+

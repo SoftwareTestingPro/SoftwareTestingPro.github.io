@@ -3,40 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Context Menu Challenge</title>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
-        .container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #target-area {
-            width: 300px;
-            height: 200px;
-            background-color: #e0e0e0;
-            border: 2px dashed #999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px auto 0; /* Center align with auto margins */
-            position: relative;
-        }
-        #context-menu { display: none; position: absolute; z-index: 1000; width: 150px; background-color: #fff; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); }
-        #context-menu ul { list-style: none; padding: 0; margin: 0; }
-        #context-menu li { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
-        #context-menu li:hover { background-color: #f0f0f0; }
-        #context-menu li:last-child { border-bottom: none; }
-        #instruction { font-size: 18px; margin-bottom: 10px; font-weight: bold; }
-        #message-display { font-weight: bold; min-height: 25px; margin-top: 15px; }
-        .success { color: green; }
-        .failure { color: red; }
-    </style>
+    <meta name="description" content="Practice custom context menu implementation and testing. This advanced tutorial covers right-click menus, menu interactions, and testing contextual UI elements in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Context Menu Challenge - Right-Click Menu Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.15.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.15-ContextMenu.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Context Menu Challenge - Right-Click Menu Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn context menu interaction and right-click testing techniques. This advanced tutorial covers contextual menus, right-click events, and testing popup menu functionality in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.15-ContextMenu.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Context Menu Challenge - Right-Click Menu Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn context menu interaction and right-click testing techniques. This advanced tutorial covers contextual menus.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Context Menu Challenge - Right-Click Menu Testing Tutorial",
+      "description": "Learn context menu interaction and right-click testing techniques. This advanced tutorial covers contextual menus, right-click events, and testing popup menu functionality in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.15-ContextMenu.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="container">
-        <h2>Custom Context Menu Challenge</h2>
-        <div id="instruction">Right-click the box and select: </div>
-        <div id="target-area">
-            Right-Click Me
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="A-3.14-ResizeableElement.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="A-3.16-ReadEmailContent.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <div id="message-display"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Context Menu Challenge</h1>
+                <p class="lead">Master context menu interaction! Right-click the box and select the specified menu option to demonstrate your advanced mouse skills.</p>
+
+                <div id="instruction">Right-click the box and select: </div>
+                <div id="target-area">
+                    Right-Click Me
+                </div>
+                <div id="successMessage" class="message success"></div>
+                <div id="failureMessage" class="message failure"></div>
+            </div>
+        </main>
     </div>
 
     <div id="context-menu">
@@ -49,18 +91,30 @@
         </ul>
     </div>
 
+    <div id="footer-placeholder"></div>
+
     <script>
         const targetArea = document.getElementById('target-area');
         const contextMenu = document.getElementById('context-menu');
         const instructionDisplay = document.getElementById('instruction');
-        const messageDisplay = document.getElementById('message-display');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
         const menuOptions = ['Edit', 'Cut', 'Copy', 'Paste', 'Delete'];
         let targetOption = '';
+
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.classList.remove('failure');
 
         function initializeChallenge() {
             targetOption = menuOptions[Math.floor(Math.random() * menuOptions.length)];
             instructionDisplay.textContent = `Right-click the box and select: "${targetOption}"`;
-            messageDisplay.textContent = '';
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.classList.remove('failure');
         }
 
         targetArea.addEventListener('contextmenu', (e) => {
@@ -76,11 +130,17 @@
 
         function menuAction(selectedAction) {
             if (selectedAction === targetOption) {
-                messageDisplay.textContent = 'Success! You selected the correct option.';
-                messageDisplay.className = 'message-display success';
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+                successMessage.textContent = 'Success! You selected the correct option.';
             } else {
-                messageDisplay.textContent = `Failure! You selected "${selectedAction}", but the correct option was "${targetOption}".`;
-                messageDisplay.className = 'message-display failure';
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                failureMessage.textContent = `Failure! You selected "${selectedAction}", but the correct option was "${targetOption}".`;
             }
             contextMenu.style.display = 'none';
         }
@@ -89,3 +149,6 @@
     </script>
 </body>
 </html>
+
+
+

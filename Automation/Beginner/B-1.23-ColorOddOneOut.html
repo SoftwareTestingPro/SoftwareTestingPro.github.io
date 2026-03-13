@@ -1,111 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Color Odd One Out Game</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f9;
-    }
-    .container {
-      width: 90%;
-      max-width: 400px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    button {
-      padding: 40px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    button:hover {
-      transform: scale(1.05);
-    }
-    #message {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    @media (max-width: 600px) {
-      .container {
-        width: 85%;
-      }
-      button {
-        padding: 30px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Challenge your color recognition skills in this odd one out game. This tutorial covers color differentiation, visual testing techniques, and validating color-based UI elements in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Color Odd One Out Challenge - Color Identification Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.23.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.23-ColorOddOneOut.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Color Odd One Out Challenge - Color Identification Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Practice color recognition and identification techniques. This beginner tutorial covers color matching, visual comparison, and UI element differentiation in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.23-ColorOddOneOut.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Color Odd One Out Challenge - Color Identification Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Practice color recognition and identification techniques. This beginner tutorial covers color matching.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Color Odd One Out Challenge - Color Identification Testing Tutorial",
+      "description": "Practice color recognition and identification techniques. This beginner tutorial covers color matching, visual comparison, and UI element differentiation in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.23-ColorOddOneOut.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
       }
     }
-  </style>
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-<div class="container">
-  <h2>Select Odd Colour Tile</h2>
-  <div class="buttons" id="buttonContainer"></div>
-  <div id="message"></div>
-</div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.22-ImagePath.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.24-MathOddOneOut.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
 
-<script>
-  // Function to generate a random color in hex format
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
+        <main class="card">
+            <div class="card-content">
+                <h1>Color Odd One Out Game</h1>
+                <p class="lead">Master visual pattern recognition! Identify and select the uniquely colored tile among identical ones to prove your observation skills.</p>
+                <div class="buttons" id="buttonContainer"></div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You found the odd colored tile.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! That's not the odd one out. Try again.</span></div>
+            </div>
+        </main>
+    </div>
 
-  // Create the color options (3 similar and 1 odd)
-  const normalColor = getRandomColor(); // This will be the common color for 3 buttons
-  const oddColor = getRandomColor();    // This will be the odd one out color
-  while (normalColor === oddColor) {    // Ensure the odd color is actually different
-    oddColor = getRandomColor();
-  }
+    <div id="footer-placeholder"></div>
 
-  // Generate 3 normal color buttons
-  const colorButtons = [normalColor, normalColor, normalColor, oddColor];
-  // Shuffle buttons randomly
-  colorButtons.sort(() => Math.random() - 0.5);
+    <script>
+        // Function to generate a random color in hex format
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
 
-  // Add buttons to the DOM
-  const buttonContainer = document.getElementById('buttonContainer');
-  colorButtons.forEach((color, index) => {
-    const button = document.createElement('button');
-    button.style.backgroundColor = color;
-    button.onclick = () => checkOddOneOut(color === oddColor);
-    buttonContainer.appendChild(button);
-  });
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
-  function checkOddOneOut(isOddOneOut) {
-    const messageDiv = document.getElementById('message');
-    if (isOddOneOut) {
-      messageDiv.innerHTML = '<span style="color: green;">Success! You selected odd colored tile.</span>';
-    } else {
-      messageDiv.innerHTML = '<span style="color: red;">Failure! Try again.</span>';
-    }
-  }
-</script>
+        // Create the color options (3 similar and 1 odd)
+        const normalColor = getRandomColor(); // This will be the common color for 3 buttons
+        const oddColor = getRandomColor();    // This will be the odd one out color
+        while (normalColor === oddColor) {    // Ensure the odd color is actually different
+            oddColor = getRandomColor();
+        }
 
+        // Generate 3 normal color buttons
+        const colorButtons = [normalColor, normalColor, normalColor, oddColor];
+        // Shuffle buttons randomly
+        colorButtons.sort(() => Math.random() - 0.5);
+
+        // Add buttons to the DOM
+        const buttonContainer = document.getElementById('buttonContainer');
+        colorButtons.forEach((color, index) => {
+            const button = document.createElement('button');
+            button.style.backgroundColor = color;
+            button.onclick = () => checkOddOneOut(color === oddColor);
+            buttonContainer.appendChild(button);
+        });
+
+        function checkOddOneOut(isOddOneOut) {
+            if (isOddOneOut) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            } else {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+            }
+        }
+    </script>
 </body>
 </html>
+
+
+
+

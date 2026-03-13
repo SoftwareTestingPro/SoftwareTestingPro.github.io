@@ -3,61 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sortable List Example</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-        .label-bold {
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .list-container {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            min-height: 150px;
-        }
-        .list-item {
-            padding: 10px;
-            margin: 5px 0;
-            background-color: #e0f7fa; /* Light blue background */
-            border-radius: 8px; /* Rounded corners */
-            cursor: move;
-            user-select: none;
-        }
-        .success-message {
-            margin-top: 20px;
-            color: green;
-            font-weight: bold;
-        }
-    </style>
+    <meta name="description" content="Practice item sorting and list organization techniques. This advanced tutorial covers drag-and-drop sorting, list manipulation, and testing ordered collections in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Sortable List Example Challenge - Item Ordering Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.24.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Advanced/A-3.24-SortItems.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Sort Items Challenge - Item Sorting Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn item sorting and drag-and-drop ordering techniques. This advanced tutorial covers list reordering, item positioning, and testing sortable interfaces in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Advanced/A-3.24-SortItems.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sort Items Challenge - Item Sorting Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn item sorting and drag-and-drop ordering techniques. This advanced tutorial covers list reordering.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Sort Items Challenge - Item Sorting Testing Tutorial",
+      "description": "Learn item sorting and drag-and-drop ordering techniques. This advanced tutorial covers list reordering, item positioning, and testing sortable interfaces in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Advanced/A-3.24-SortItems.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<div id="header-placeholder"></div>
 
-    <div class="container">
-        <div class="label-bold">Drag and Drop items to Sort Alphabetically:</div>
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.23-XLSReadData.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.25-DragableItemsXY.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Sortable List Challenge</h1>
+        <p class="lead">Master drag-and-drop sorting! Arrange the items alphabetically by dragging them to demonstrate your advanced organization skills.</p>
+
         <ul id="animalList" class="list-container">
             <!-- List items will be inserted here by JavaScript -->
         </ul>
-        <div id="successMessage" class="success-message" style="display: none;">Success! List is sorted.</div>
+        <div id="successMessage" class="message">Success! List is sorted.</div>
+        <div id="failureMessage" class="message">List is not yet sorted. Keep trying!</div>
     </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
 
     <!-- Load SortableJS from the new CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -77,16 +100,37 @@
                 list.appendChild(li);
             });
 
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+            let hasDragged = false;
+
+            // Hide messages on load
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+
             // Initialize SortableJS
             const sortable = Sortable.create(list, {
                 animation: 150,
                 onEnd: function(evt) {
+                    hasDragged = true;
+                    
                     // Check if list is sorted
                     const items = Array.from(list.children).map(li => li.textContent);
                     const sortedItems = [...items].sort();
                     if (JSON.stringify(items) === JSON.stringify(sortedItems)) {
-                        document.getElementById('successMessage').style.display = 'block';
+                        successMessage.style.display = 'flex';
+                        successMessage.classList.add('success');
+                        failureMessage.style.display = 'none';
                         sortable.option("disabled", true); // Disable dragging and sorting
+                    } else {
+                        // Show failure message only after first drag
+                        if (hasDragged) {
+                            failureMessage.style.display = 'flex';
+                            failureMessage.classList.add('failure');
+                        }
+                        successMessage.style.display = 'none';
                     }
                 }
             });
@@ -95,3 +139,7 @@
 
 </body>
 </html>
+
+
+
+

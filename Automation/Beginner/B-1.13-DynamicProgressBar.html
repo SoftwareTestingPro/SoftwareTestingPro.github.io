@@ -3,76 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Progress Bar Challenge</title>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
-        .container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #progress-bar-container {
-            width: 300px;
-            height: 30px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #e0e0e0;
-            margin: 0 auto 20px; /* Center align horizontally */
-            overflow: hidden;
-        }
-        #progress-bar {
-            width: 0;
-            height: 100%;
-            background-color: #4CAF50;
-            transition: width 0.1s linear;
-        }
-        #status { margin-bottom: 20px; font-size: 18px; }
-        button { padding: 10px 20px; font-size: 16px; border-radius: 5px; border: none; cursor: pointer; background-color: #007BFF; color: #fff; }
-        button:disabled { background-color: #a0a0a0; cursor: not-allowed; }
-        #message-display { margin-top: 15px; font-size: 18px; font-weight: bold; min-height: 22px; }
-        .success { color: green; }
-        .failure { color: red; }
-    </style>
+    <meta name="description" content="Master dynamic progress bar testing techniques. This tutorial covers progress bar animations, timing validation, button interaction after completion, and handling asynchronous UI elements in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Dynamic Progress Bar Challenge - Progress Indicator Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.13.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.13-DynamicProgressBar.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Dynamic Progress Bar Challenge - Progress Indicator Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Explore dynamic progress bar functionality and timing. This beginner tutorial covers progress indicators, timing validation, and asynchronous UI testing in automation scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.13-DynamicProgressBar.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dynamic Progress Bar Challenge - Progress Indicator Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Explore dynamic progress bar functionality and timing. This beginner tutorial covers progress indicators.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Dynamic Progress Bar Challenge - Progress Indicator Testing Tutorial",
+      "description": "Explore dynamic progress bar functionality and timing. This beginner tutorial covers progress indicators, timing validation, and asynchronous UI testing in automation scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.13-DynamicProgressBar.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-<div class="container">
-    <h2>Dynamic Progress Bar Challenge</h2>
-    <div id="status">0%</div>
-    <div id="progress-bar-container">
-        <div id="progress-bar"></div>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.12-FetchURL.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.14-Keystroke.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Dynamic Progress Bar Challenge</h1>
+                <p class="lead">Master timing and synchronization! Wait patiently for the progress bar to hit 100%, then strike the button to prove your automation precision.</p>
+                <div id="status">0%</div>
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <div class="button-enabled">
+                    <button id="action-button">Click Me After 100%!</button>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! Button was clicked after completion..</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you You clicked too early.</span></div>
+            </div>
+        </main>
     </div>
-    <button id="action-button">Click Me After 100%!</button>
-    <div id="message-display"></div>
-</div>
 
-<script>
-    const progressBar = document.getElementById('progress-bar');
-    const statusDisplay = document.getElementById('status');
-    const actionButton = document.getElementById('action-button');
-    const messageDisplay = document.getElementById('message-display');
-    let width = 0;
-    let intervalId;
+    <div id="footer-placeholder"></div>
 
-    function frame() {
-        if (width >= 100) {
-            clearInterval(intervalId);
-            statusDisplay.textContent = "Complete!";
-        } else {
-            width++;
-            progressBar.style.width = width + '%';
-            statusDisplay.textContent = width + '%';
+    <script>
+        const progressBar = document.getElementById('progress-bar');
+        const statusDisplay = document.getElementById('status');
+        const actionButton = document.getElementById('action-button');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        let width = 0;
+        let intervalId;
+
+        function frame() {
+            if (width >= 100) {
+                clearInterval(intervalId);
+                statusDisplay.textContent = "Complete!";
+            } else {
+                width++;
+                progressBar.style.width = width + '%';
+                statusDisplay.textContent = width + '%';
+            }
         }
-    }
 
-    actionButton.addEventListener('click', () => {
-        if (width < 100) {
-            clearInterval(intervalId);
-            messageDisplay.textContent = "You clicked too early";
-            messageDisplay.className = 'message-display failure';
-            actionButton.disabled = true;
-        } else {
-            messageDisplay.textContent = "Success! Button was clicked after completion.";
-            messageDisplay.className = 'message-display success';
-        }
-    });
+        actionButton.addEventListener('click', () => {
+            if (width < 100) {
+                clearInterval(intervalId);
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                actionButton.disabled = true;
+            } else {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            }
+        });
 
-    intervalId = setInterval(frame, 50);
-</script>
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+
+        intervalId = setInterval(frame, 50);
+    </script>
 </body>
 </html>
+
+
+
+

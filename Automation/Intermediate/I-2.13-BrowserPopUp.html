@@ -3,85 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Life Quote</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .box {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-        }
-        .box label {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            display: block;
-            color: #333;
-        }
-        .box input[type="text"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        .box button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .box button:hover {
-            background-color: #0056b3;
-        }
-        .message {
-            margin-top: 20px;
-            font-size: 1em;
-        }
-        .success {
-            color: #28a745;
-        }
-        .failure {
-            color: #dc3545;
-        }
-    </style>
+    <meta name="description" content="Learn browser popup handling and quote generation techniques. This intermediate tutorial covers popup windows, random content generation, and testing modal dialogs in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Random Life Quote Challenge - Browser PopUp Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.13.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.13-BrowserPopUp.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Browser PopUp Challenge - PopUp Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Learn browser popup handling and validation techniques. This intermediate tutorial covers window popups, tab management, and testing multi-window interactions in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Intermediate/I-2.13-BrowserPopUp.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Browser PopUp Challenge - PopUp Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Learn browser popup handling and validation techniques. This intermediate tutorial covers window popups.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Browser PopUp Challenge - PopUp Testing Tutorial",
+      "description": "Learn browser popup handling and validation techniques. This intermediate tutorial covers window popups, tab management, and testing multi-window interactions in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Intermediate/I-2.13-BrowserPopUp.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
-    <div class="box">
-        <label for="userInput">Click below button to fetch a quote and enter the quote in the input field:</label>
-        <div class="container">
-            <button onclick="openQuoteWindow()">Get a Random Life Quote</button>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.12-Frame.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.14-JSInput.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
         </div>
-        <input type="text" id="userInput" name="userInput" disabled>
-        <div class="message" id="result"></div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Random Life Quote</h1>
+                <p class="lead">Master window handling! Click to fetch a random quote from popup window, then input the displayed text to prove your cross-window skills.</p>
+
+                <div class="button-enabled">
+                    <button onclick="openQuoteWindow()">Get a Random Life Quote</button>
+                </div>
+
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="userInput" class="label-left">Enter the quote:</label>
+                    </div>
+
+                    <div class="input-group-right" style="width: 900px;">
+                        <input type="text" id="userInput" placeholder="Enter the quote here" disabled>
+                    </div>
+                </div>
+
+                <div class="message" id="result"></div>
+            </div>
+        </main>
     </div>
+
+    <div id="footer-placeholder"></div>
 
     <script>
         let displayedQuote = "";
 
         function openQuoteWindow() {
     const quotes = [
-        "Life is what happens when you're busy making other plans. – John Lennon",
-        "The purpose of our lives is to be happy. – Dalai Lama",
-        "Get busy living or get busy dying. – Stephen King",
-        "You only live once, but if you do it right, once is enough. – Mae West",
-        "Many of life’s failures are people who did not realize how close they were to success when they gave up. – Thomas A. Edison"
+        "Life is short. – Unknown",
+        "Be happy. – Dalai Lama",
+        "Live simply. – Unknown",
+        "Dream big. – Unknown",
+        "Stay positive. – Unknown"
     ];
 
     displayedQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -148,3 +167,7 @@
     </script>
 </body>
 </html>
+
+
+
+

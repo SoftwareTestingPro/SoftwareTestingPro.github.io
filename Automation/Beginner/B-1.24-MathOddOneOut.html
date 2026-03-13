@@ -1,128 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Odd One Out Game</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f9;
-    }
-    .container {
-      width: 90%;
-      max-width: 500px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    .buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px; /* Distance between buttons */
-      justify-content: center;
-    }
-    .math-button {
-      width: 120px;
-      height: 60px;
-      border: none;
-      background-color: #e0e0e0;
-      cursor: pointer;
-      font-size: 18px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-    #message {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    @media (max-width: 600px) {
-      .container {
-        width: 85%;
-      }
-      .buttons {
-        gap: 20px;
-      }
-      .math-button {
-        width: 100px;
-        height: 50px;
-        font-size: 16px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test your mathematical reasoning with this odd one out game. This tutorial covers number patterns, mathematical validation, and logical thinking exercises in automation testing scenarios.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Math Odd One Out Game Challenge - Mathematical Reasoning Testing Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Beginner/styles-B-1.24.css">
+    <script src="../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Beginner/B-1.24-MathOddOneOut.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Math Odd One Out Challenge - Mathematical Testing Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Practice mathematical reasoning and odd one out identification. This beginner tutorial covers pattern recognition, math validation, and logical thinking in automation testing scenarios.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Beginner/B-1.24-MathOddOneOut.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Math Odd One Out Challenge - Mathematical Testing Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Practice mathematical reasoning and odd one out identification. This beginner tutorial covers pattern recognition.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Math Odd One Out Challenge - Mathematical Testing Tutorial",
+      "description": "Practice mathematical reasoning and odd one out identification. This beginner tutorial covers pattern recognition, math validation, and logical thinking in automation testing scenarios.",
+      "url": "https://softwaretestingpro.github.io/Automation/Beginner/B-1.24-MathOddOneOut.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
       }
     }
-  </style>
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','G-MCHF9RDWT6');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-MCHF9RDWT6"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    <div id="header-placeholder"></div>
 
-<div class="container">
-  <h2>Select Incorrect Equation</h2>
-  <div class="buttons" id="buttonContainer"></div>
-  <div id="message"></div>
-</div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.23-ColorOddOneOut.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.25-HighlightText.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
 
-<script>
-  // Function to generate a correct equation
-  function generateCorrectEquation() {
-    const a = Math.floor(Math.random() * 10) + 1;
-    const b = Math.floor(Math.random() * 10) + 1;
-    return `${a} + ${b} = ${a + b}`;
-  }
+        <main class="card">
+            <div class="card-content">
+                <h1>Math Odd One Out Game</h1>
+                <p class="lead">Master mathematical validation! Analyze the equations and identify the single incorrect calculation to prove your logic testing skills.</p>
+                <div class="math-buttons" id="buttonContainer"></div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You found the incorrect equation.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! That equation is actually correct. Try again.</span></div>
+            </div>
+        </main>
+    </div>
 
-  // Function to generate an incorrect equation
-  function generateIncorrectEquation() {
-    const a = Math.floor(Math.random() * 10) + 1;
-    const b = Math.floor(Math.random() * 10) + 1;
-    const incorrectSum = (a + b) + Math.floor(Math.random() * 10) + 1; // Ensures incorrect result
-    return `${a} + ${b} = ${incorrectSum}`;
-  }
+    <div id="footer-placeholder"></div>
 
-  // Generate 3 correct equations and 1 incorrect equation
-  const correctEquations = [generateCorrectEquation(), generateCorrectEquation(), generateCorrectEquation()];
-  const incorrectEquation = generateIncorrectEquation();
+    <script>
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
-  // Combine and shuffle equations
-  const equations = [...correctEquations, incorrectEquation];
-  function shuffleArray(array) {
-    return array.sort(() => Math.random() - 0.5);
-  }
-  const shuffledEquations = shuffleArray(equations);
+        // Function to generate a correct equation
+        function generateCorrectEquation() {
+            const a = Math.floor(Math.random() * 10) + 1;
+            const b = Math.floor(Math.random() * 10) + 1;
+            return `${a} + ${b} = ${a + b}`;
+        }
 
-  // Add buttons to the DOM
-  const buttonContainer = document.getElementById('buttonContainer');
-  shuffledEquations.forEach(equation => {
-    const button = document.createElement('button');
-    button.classList.add('math-button');
-    button.textContent = equation;
+        // Function to generate an incorrect equation
+        function generateIncorrectEquation() {
+            const a = Math.floor(Math.random() * 10) + 1;
+            const b = Math.floor(Math.random() * 10) + 1;
+            const incorrectSum = (a + b) + Math.floor(Math.random() * 10) + 1; // Ensures incorrect result
+            return `${a} + ${b} = ${incorrectSum}`;
+        }
 
-    // Check if this is the incorrect equation
-    button.onclick = () => {
-      if (equation === incorrectEquation) {
-        document.getElementById('message').innerHTML = '<span style="color: green;">Success! You selected incorrect equation.</span>';
-      } else {
-        document.getElementById('message').innerHTML = '<span style="color: red;">Failure! Try again.</span>';
-      }
-    };
+        // Generate 3 correct equations and 1 incorrect equation
+        const correctEquations = [generateCorrectEquation(), generateCorrectEquation(), generateCorrectEquation()];
+        const incorrectEquation = generateIncorrectEquation();
 
-    buttonContainer.appendChild(button);
-  });
-</script>
+        // Combine and shuffle equations
+        const equations = [...correctEquations, incorrectEquation];
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+        const shuffledEquations = shuffleArray(equations);
 
+        // Add buttons to the DOM
+        const buttonContainer = document.getElementById('buttonContainer');
+        shuffledEquations.forEach(equation => {
+            const button = document.createElement('button');
+            button.classList.add('math-button');
+            button.textContent = equation;
+
+            // Check if this is the incorrect equation
+            button.onclick = () => {
+                if (equation === incorrectEquation) {
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('success');
+                    failureMessage.style.display = 'none';
+                    failureMessage.classList.remove('failure');
+                } else {
+                    successMessage.style.display = 'none';
+                    successMessage.classList.remove('success');
+                    failureMessage.style.display = 'flex';
+                    failureMessage.classList.add('failure');
+                }
+            };
+
+            buttonContainer.appendChild(button);
+        });
+    </script>
 </body>
 </html>
+
+
+
+
