@@ -823,4 +823,48 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+<!-- Blog section -->
+  <url>
+    <loc>https://softwaretestingpro.github.io/blog/</loc>
+    <lastmod>2026-03-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/blog/selenium-tutorial-2026.html</loc>
+    <lastmod>2026-03-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/blog/cypress-vs-playwright-vs-selenium.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/blog/selenium-interview-questions.html</loc>
+    <lastmod>2026-03-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/blog/page-object-model-tutorial.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/blog/postman-api-testing-guide.html</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://softwaretestingpro.github.io/blog/qa-career-guide-2026.html</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>
