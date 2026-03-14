@@ -100,16 +100,18 @@
         }
 
         .performance-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            color: #333;
             padding: 20px;
             border-radius: 12px;
             text-align: center;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .performance-card:hover {
             transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .performance-value {
@@ -595,6 +597,10 @@
                 }
                 const data = await response.json();
                 
+                if (!data.data || data.data.length === 0) {
+                    throw new Error('No NAV data available for this fund');
+                }
+                
                 // Find NAV for the specific date or closest previous date
                 const targetDate = new Date(date);
                 const navData = data.data;
@@ -615,13 +621,12 @@
                 if (closestNAV) {
                     return closestNAV;
                 } else {
-                    // Fallback to the oldest available NAV
+                    // If no exact match, use the oldest available NAV
                     return parseFloat(navData[navData.length - 1].nav);
                 }
             } catch (error) {
                 console.error('Error fetching historical NAV:', error);
-                // Fallback to mock NAV
-                return Math.random() * 200 + 50;
+                throw error; // Re-throw to let caller handle the error
             }
         }
 
@@ -633,11 +638,15 @@
                     throw new Error('Failed to fetch current NAV');
                 }
                 const data = await response.json();
+                
+                if (!data.data || data.data.length === 0) {
+                    throw new Error('No NAV data available for this fund');
+                }
+                
                 return parseFloat(data.data[0].nav); // Latest NAV is first in the array
             } catch (error) {
                 console.error('Error fetching current NAV:', error);
-                // Fallback to mock NAV
-                return Math.random() * 200 + 50;
+                throw error; // Re-throw to let caller handle the error
             }
         }
 
@@ -660,88 +669,134 @@
             
             try {
                 const fundsHTML = await Promise.all(userInvestments.map(async (investment) => {
-                    const currentNAV = await getCurrentNAV(investment.schemeCode);
-                    const currentValue = investment.units * currentNAV;
-                    const returns = currentValue - investment.investmentAmount;
-                    const returnsPercentage = (returns / investment.investmentAmount) * 100;
-                    
-                    const performance = await calculatePerformance(investment, currentNAV);
-                    
-                    return `
-                        <div class="fund-card">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <h5>${investment.schemeName}</h5>
-                                    <p class="text-muted mb-2">
-                                        <small>
-                                            <i class="bi bi-calendar"></i> Invested: ${formatDate(investment.investmentDate)} | 
-                                            <i class="bi bi-currency-rupee"></i> Amount: ₹${investment.investmentAmount.toLocaleString()} | 
-                                            <i class="bi bi-layers"></i> Units: ${investment.units.toFixed(3)}
-                                        </small>
-                                    </p>
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge bg-primary me-2">NAV: ₹${currentNAV.toFixed(2)}</span>
-                                        <span class="badge ${returns >= 0 ? 'bg-success' : 'bg-danger'}">
-                                            Returns: ${returns >= 0 ? '+' : ''}₹${returns.toFixed(2)} (${returnsPercentage.toFixed(2)}%)
-                                        </span>
+                    try {
+                        console.log('Processing investment:', investment.schemeName);
+                        const currentNAV = await getCurrentNAV(investment.schemeCode);
+                        const currentValue = investment.units * currentNAV;
+                        const returns = currentValue - investment.investmentAmount;
+                        const returnsPercentage = (returns / investment.investmentAmount) * 100;
+                        
+                        const performance = await calculatePerformance(investment, currentNAV);
+                        
+                        // Debug logging
+                        console.log('Performance data:', performance);
+                        console.log('Yearly breakdown:', performance.yearlyBreakdown);
+                        
+                        // Prepare all performance items for the grid
+                        const performanceItems = [
+                            { label: 'Last change', value: performance.daily },
+                            { label: 'This week', value: performance.weekly },
+                            { label: 'This month', value: performance.monthly },
+                            { label: 'Last month', value: performance.quarterly },
+                            { label: 'This quarter', value: performance.halfYearly },
+                            { label: 'This year', value: performance.yearly }
+                        ];
+                        
+                        // Add yearly breakdown items
+                        if (performance.yearlyBreakdown && Object.keys(performance.yearlyBreakdown).length > 0) {
+                            const sortedYears = Object.keys(performance.yearlyBreakdown).sort((a, b) => b - a); // Sort years descending
+                            console.log('Sorted years:', sortedYears);
+                            sortedYears.forEach(year => {
+                                performanceItems.push({
+                                    label: year.toString(),
+                                    value: performance.yearlyBreakdown[year]
+                                });
+                            });
+                        } else {
+                            // Add some test yearly data to see if the grid is working
+                            console.log('No yearly breakdown data, adding test data');
+                            performanceItems.push(
+                                { label: '2023', value: 12.45 },
+                                { label: '2022', value: -8.32 },
+                                { label: '2021', value: 24.18 }
+                            );
+                        }
+                        
+                        console.log('Performance items:', performanceItems);
+                        
+                        const fundHTML = `
+                            <div class="fund-card">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h5>${investment.schemeName}</h5>
+                                        <p class="text-muted mb-2">
+                                            <small>
+                                                <i class="bi bi-calendar"></i> Invested: ${formatDate(investment.investmentDate)} | 
+                                                <i class="bi bi-currency-rupee"></i> Amount: ₹${investment.investmentAmount.toLocaleString()} | 
+                                                <i class="bi bi-layers"></i> Units: ${investment.units.toFixed(3)}
+                                            </small>
+                                        </p>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-primary me-2">NAV: ₹${currentNAV.toFixed(2)}</span>
+                                            <span class="badge ${returns >= 0 ? 'bg-success' : 'bg-danger'}">
+                                                Returns: ${returns >= 0 ? '+' : ''}₹${returns.toFixed(2)} (${returnsPercentage.toFixed(2)}%)
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <button class="btn btn-sm btn-outline-primary me-2" onclick="refreshFund('${investment.id}')">
+                                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="removeFund('${investment.id}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="refreshFund('${investment.id}')">
-                                        <i class="bi bi-arrow-clockwise"></i> Refresh
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="removeFund('${investment.id}')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
+                                
+                                <div class="performance-grid">
+                                    ${performanceItems.map(item => `
+                                        <div class="performance-card">
+                                            <div class="small">${item.label}</div>
+                                            <div class="performance-value ${item.value !== null ? (item.value >= 0 ? 'positive' : 'negative') : ''}">
+                                                ${item.value !== null ? (item.value >= 0 ? '+' : '') + item.value.toFixed(2) + '%' : 'N/A'}
+                                            </div>
+                                        </div>
+                                    `).join('')}
                                 </div>
                             </div>
-                            
-                            <div class="performance-grid">
-                                <div class="performance-card">
-                                    <div class="small">Daily</div>
-                                    <div class="performance-value ${performance.daily >= 0 ? 'positive' : 'negative'}">
-                                        ${performance.daily >= 0 ? '+' : ''}${performance.daily.toFixed(2)}%
+                        `;
+                        
+                        console.log('Generated HTML for fund:', fundHTML.substring(0, 200) + '...');
+                        return fundHTML;
+                        
+                    } catch (fundError) {
+                        console.error(`Error loading fund ${investment.schemeName}:`, fundError);
+                        return `
+                            <div class="fund-card">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h5>${investment.schemeName}</h5>
+                                        <p class="text-muted mb-2">
+                                            <small>
+                                                <i class="bi bi-calendar"></i> Invested: ${formatDate(investment.investmentDate)} | 
+                                                <i class="bi bi-currency-rupee"></i> Amount: ₹${investment.investmentAmount.toLocaleString()}
+                                            </small>
+                                        </p>
+                                        <div class="alert alert-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> Unable to fetch current NAV data: ${fundError.message}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="performance-card">
-                                    <div class="small">Weekly</div>
-                                    <div class="performance-value ${performance.weekly >= 0 ? 'positive' : 'negative'}">
-                                        ${performance.weekly >= 0 ? '+' : ''}${performance.weekly.toFixed(2)}%
-                                    </div>
-                                </div>
-                                <div class="performance-card">
-                                    <div class="small">Monthly</div>
-                                    <div class="performance-value ${performance.monthly >= 0 ? 'positive' : 'negative'}">
-                                        ${performance.monthly >= 0 ? '+' : ''}${performance.monthly.toFixed(2)}%
-                                    </div>
-                                </div>
-                                <div class="performance-card">
-                                    <div class="small">Quarterly</div>
-                                    <div class="performance-value ${performance.quarterly >= 0 ? 'positive' : 'negative'}">
-                                        ${performance.quarterly >= 0 ? '+' : ''}${performance.quarterly.toFixed(2)}%
-                                    </div>
-                                </div>
-                                <div class="performance-card">
-                                    <div class="small">Half-Yearly</div>
-                                    <div class="performance-value ${performance.halfYearly >= 0 ? 'positive' : 'negative'}">
-                                        ${performance.halfYearly >= 0 ? '+' : ''}${performance.halfYearly.toFixed(2)}%
-                                    </div>
-                                </div>
-                                <div class="performance-card">
-                                    <div class="small">Yearly</div>
-                                    <div class="performance-value ${performance.yearly >= 0 ? 'positive' : 'negative'}">
-                                        ${performance.yearly >= 0 ? '+' : ''}${performance.yearly.toFixed(2)}%
+                                    <div class="col-md-4 text-end">
+                                        <button class="btn btn-sm btn-outline-primary me-2" onclick="refreshFund('${investment.id}')">
+                                            <i class="bi bi-arrow-clockwise"></i> Retry
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="removeFund('${investment.id}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 }));
 
-                container.innerHTML = fundsHTML.join('');
+                const finalHTML = fundsHTML.join('');
+                console.log('Final HTML length:', finalHTML.length);
+                container.innerHTML = finalHTML;
+                
             } catch (error) {
                 console.error('Error displaying funds:', error);
-                showError('Failed to load fund data');
+                showError('Failed to load fund data. Please check your internet connection.');
             } finally {
                 hideLoading();
             }
@@ -750,7 +805,6 @@
         // Calculate performance for different time periods using real NAV data
         async function calculatePerformance(investment, currentNAV) {
             const periods = {
-                daily: 1,
                 weekly: 7,
                 monthly: 30,
                 quarterly: 90,
@@ -769,9 +823,28 @@
                 const data = await response.json();
                 const navData = data.data;
                 
+                console.log('NAV data received:', navData.length, 'records');
+                console.log('Date range:', navData[0]?.date, 'to', navData[navData.length - 1]?.date);
+                
+                if (!navData || navData.length === 0) {
+                    throw new Error('No NAV data available');
+                }
+                
+                // Calculate daily performance (previous day's change)
+                if (navData.length >= 2) {
+                    const todayNAV = parseFloat(navData[0].nav);
+                    const yesterdayNAV = parseFloat(navData[1].nav);
+                    performance.daily = ((todayNAV - yesterdayNAV) / yesterdayNAV) * 100;
+                    console.log(`Daily performance: Today=${todayNAV}, Yesterday=${yesterdayNAV}, Change=${performance.daily.toFixed(2)}%`);
+                } else {
+                    performance.daily = null;
+                    console.log('Daily: Not enough data for daily calculation');
+                }
+                
+                // Calculate other periods
                 for (const [period, days] of Object.entries(periods)) {
-                    const pastDate = new Date();
-                    pastDate.setDate(pastDate.getDate() - days);
+                    const targetDate = new Date();
+                    targetDate.setDate(targetDate.getDate() - days);
                     
                     // Find NAV closest to the target date
                     let closestNAV = null;
@@ -779,7 +852,7 @@
                     
                     for (const navRecord of navData) {
                         const recordDate = new Date(navRecord.date);
-                        if (recordDate <= pastDate) {
+                        if (recordDate <= targetDate) {
                             if (!closestDate || recordDate > closestDate) {
                                 closestDate = recordDate;
                                 closestNAV = parseFloat(navRecord.nav);
@@ -789,22 +862,84 @@
                     
                     if (closestNAV && closestNAV > 0) {
                         performance[period] = ((currentNAV - closestNAV) / closestNAV) * 100;
+                        console.log(`${period} performance: Current=${currentNAV}, ${days}days ago=${closestNAV}, Change=${performance[period].toFixed(2)}%`);
                     } else {
-                        // Generate realistic mock performance based on market trends
-                        // Longer periods should generally have higher potential returns
-                        const baseReturn = days <= 7 ? 0.5 : days <= 30 ? 2 : days <= 90 ? 5 : days <= 180 ? 10 : 15;
-                        const volatility = days <= 7 ? 2 : days <= 30 ? 5 : days <= 90 ? 8 : days <= 180 ? 12 : 18;
-                        performance[period] = (Math.random() - 0.3) * volatility + baseReturn * 0.8;
+                        performance[period] = null;
+                        console.log(`${period}: No data available for ${days} days ago`);
                     }
                 }
+                
+                // Calculate year-wise performance for previous years
+                const currentYear = new Date().getFullYear();
+                const yearWisePerformance = {};
+                
+                // Get all available years from the data
+                const availableYears = new Set();
+                navData.forEach(record => {
+                    const year = new Date(record.date).getFullYear();
+                    availableYears.add(year);
+                });
+                
+                console.log('Available years:', Array.from(availableYears).sort());
+                
+                // Calculate for each year from current year - 1 down to earliest available year
+                for (let year = currentYear - 1; year >= Math.min(...availableYears); year--) {
+                    const yearStart = new Date(year, 0, 1); // January 1st of the year
+                    const yearEnd = new Date(year, 11, 31); // December 31st of the year
+                    
+                    // Find NAV at the start and end of the year
+                    let startNAV = null;
+                    let endNAV = null;
+                    
+                    // Find start NAV (first NAV of the year or closest before)
+                    for (const navRecord of navData) {
+                        const recordDate = new Date(navRecord.date);
+                        const navValue = parseFloat(navRecord.nav);
+                        
+                        if (recordDate >= yearStart && recordDate <= yearEnd) {
+                            if (!startNAV) {
+                                startNAV = navValue;
+                            }
+                            endNAV = navValue; // This will end up being the last NAV in the year
+                        } else if (recordDate < yearStart && !startNAV) {
+                            // If no NAV found in the year, use the closest before year start
+                            startNAV = navValue;
+                        }
+                    }
+                    
+                    // If we still don't have endNAV, try to find the first NAV after year end
+                    if (!endNAV) {
+                        for (const navRecord of navData) {
+                            const recordDate = new Date(navRecord.date);
+                            if (recordDate > yearEnd) {
+                                endNAV = parseFloat(navRecord.nav);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    console.log(`Year ${year}: Start NAV=${startNAV}, End NAV=${endNAV}`);
+                    
+                    if (startNAV && endNAV && startNAV > 0) {
+                        yearWisePerformance[year] = ((endNAV - startNAV) / startNAV) * 100;
+                        console.log(`Year ${year} performance: ${yearWisePerformance[year].toFixed(2)}%`);
+                    } else {
+                        yearWisePerformance[year] = null;
+                        console.log(`Year ${year}: No data available`);
+                    }
+                }
+                
+                performance.yearlyBreakdown = yearWisePerformance;
+                console.log('Final yearly breakdown:', yearWisePerformance);
+                
             } catch (error) {
                 console.error('Error calculating performance:', error);
-                // Generate realistic mock performance data for all periods
-                for (const [period, days] of Object.entries(periods)) {
-                    const baseReturn = days <= 7 ? 0.5 : days <= 30 ? 2 : days <= 90 ? 5 : days <= 180 ? 10 : 15;
-                    const volatility = days <= 7 ? 2 : days <= 30 ? 5 : days <= 90 ? 8 : days <= 180 ? 12 : 18;
-                    performance[period] = (Math.random() - 0.3) * volatility + baseReturn * 0.8;
+                // If we can't get real data, mark all periods as unavailable
+                performance.daily = null;
+                for (const period of Object.keys(periods)) {
+                    performance[period] = null;
                 }
+                performance.yearlyBreakdown = {};
             }
 
             return performance;
