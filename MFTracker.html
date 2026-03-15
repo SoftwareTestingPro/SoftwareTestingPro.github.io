@@ -678,18 +678,14 @@
                         
                         const performance = await calculatePerformance(investment, currentNAV);
                         
-                        // Debug logging
-                        console.log('Performance data:', performance);
-                        console.log('Yearly breakdown:', performance.yearlyBreakdown);
-                        
                         // Prepare all performance items for the grid
                         const performanceItems = [
-                            { label: 'Last change', value: performance.daily },
-                            { label: 'This week', value: performance.weekly },
-                            { label: 'This month', value: performance.monthly },
-                            { label: 'Last month', value: performance.quarterly },
-                            { label: 'This quarter', value: performance.halfYearly },
-                            { label: 'This year', value: performance.yearly }
+                            { label: 'Last change', value: performance.daily, startNAV: performance.dailyStartNAV, endNAV: currentNAV },
+                            { label: 'This week', value: performance.weekly, startNAV: performance.weeklyStartNAV, endNAV: currentNAV },
+                            { label: 'This month', value: performance.monthly, startNAV: performance.monthlyStartNAV, endNAV: currentNAV },
+                            { label: 'Last month', value: performance.quarterly, startNAV: performance.quarterlyStartNAV, endNAV: currentNAV },
+                            { label: 'This quarter', value: performance.halfYearly, startNAV: performance.halfYearlyStartNAV, endNAV: currentNAV },
+                            { label: 'This year', value: performance.yearly, startNAV: performance.yearlyStartNAV, endNAV: currentNAV }
                         ];
                         
                         // Add yearly breakdown items
@@ -697,19 +693,17 @@
                             const sortedYears = Object.keys(performance.yearlyBreakdown).sort((a, b) => b - a); // Sort years descending
                             console.log('Sorted years:', sortedYears);
                             sortedYears.forEach(year => {
+                                const yearNav = performance.yearlyNAV[year] || { startNAV: null, endNAV: null };
                                 performanceItems.push({
                                     label: year.toString(),
-                                    value: performance.yearlyBreakdown[year]
+                                    value: performance.yearlyBreakdown[year],
+                                    startNAV: yearNav.startNAV,
+                                    endNAV: yearNav.endNAV
                                 });
                             });
                         } else {
-                            // Add some test yearly data to see if the grid is working
-                            console.log('No yearly breakdown data, adding test data');
-                            performanceItems.push(
-                                { label: '2023', value: 12.45 },
-                                { label: '2022', value: -8.32 },
-                                { label: '2021', value: 24.18 }
-                            );
+                            // No yearly breakdown data available
+                            console.log('No yearly breakdown data available');
                         }
                         
                         console.log('Performance items:', performanceItems);
@@ -750,8 +744,17 @@
                                             <div class="performance-value ${item.value !== null ? (item.value >= 0 ? 'positive' : 'negative') : ''}">
                                                 ${item.value !== null ? (item.value >= 0 ? '+' : '') + item.value.toFixed(2) + '%' : 'N/A'}
                                             </div>
+                                            <div class="small text-muted mt-1">
+                                                ${item.startNAV && item.endNAV ? 
+                                                    `Start: ₹${item.startNAV.toFixed(4)}, End: ₹${item.endNAV.toFixed(4)}` : 
+                                                    'NAV: N/A'}
+                                            </div>
                                         </div>
                                     `).join('')}
+                                </div>
+                                
+                                <div class="mt-2 text-center small text-muted" id="nav-display-${investment.id}">
+                                    Current NAV: ₹${currentNAV.toFixed(2)}
                                 </div>
                             </div>
                         `;
@@ -815,13 +818,16 @@
             const performance = {};
             
             try {
-                // Fetch historical NAV data
                 const response = await fetch(`https://api.mfapi.in/mf/${investment.schemeCode}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch historical data');
                 }
                 const data = await response.json();
-                const navData = data.data;
+                const navData = data.data.sort((a, b) => {
+                    const dateA = a.date.split('-').reverse().join('-'); // Convert DD-MM-YYYY to YYYY-MM-DD
+                    const dateB = b.date.split('-').reverse().join('-');
+                    return dateA.localeCompare(dateB);
+                }); // Sort chronologically (oldest first)
                 
                 console.log('NAV data received:', navData.length, 'records');
                 console.log('Date range:', navData[0]?.date, 'to', navData[navData.length - 1]?.date);
@@ -835,9 +841,11 @@
                     const todayNAV = parseFloat(navData[0].nav);
                     const yesterdayNAV = parseFloat(navData[1].nav);
                     performance.daily = ((todayNAV - yesterdayNAV) / yesterdayNAV) * 100;
+                    performance.dailyStartNAV = yesterdayNAV;
                     console.log(`Daily performance: Today=${todayNAV}, Yesterday=${yesterdayNAV}, Change=${performance.daily.toFixed(2)}%`);
                 } else {
                     performance.daily = null;
+                    performance.dailyStartNAV = null;
                     console.log('Daily: Not enough data for daily calculation');
                 }
                 
@@ -862,9 +870,11 @@
                     
                     if (closestNAV && closestNAV > 0) {
                         performance[period] = ((currentNAV - closestNAV) / closestNAV) * 100;
+                        performance[period + 'StartNAV'] = closestNAV;
                         console.log(`${period} performance: Current=${currentNAV}, ${days}days ago=${closestNAV}, Change=${performance[period].toFixed(2)}%`);
                     } else {
                         performance[period] = null;
+                        performance[period + 'StartNAV'] = null;
                         console.log(`${period}: No data available for ${days} days ago`);
                     }
                 }
@@ -872,6 +882,7 @@
                 // Calculate year-wise performance for previous years
                 const currentYear = new Date().getFullYear();
                 const yearWisePerformance = {};
+                const yearWiseNAV = {};
                 
                 // Get all available years from the data
                 const availableYears = new Set();
@@ -882,8 +893,9 @@
                 
                 console.log('Available years:', Array.from(availableYears).sort());
                 
-                // Calculate for each year from current year - 1 down to earliest available year
-                for (let year = currentYear - 1; year >= Math.min(...availableYears); year--) {
+                // Calculate for each year from current year - 1 down to investment year
+                const investmentYear = new Date(investment.investmentDate).getFullYear();
+                for (let year = currentYear - 1; year >= investmentYear; year--) {
                     const yearStart = new Date(year, 0, 1); // January 1st of the year
                     const yearEnd = new Date(year, 11, 31); // December 31st of the year
                     
@@ -891,19 +903,61 @@
                     let startNAV = null;
                     let endNAV = null;
                     
-                    // Find start NAV (first NAV of the year or closest before)
-                    for (const navRecord of navData) {
-                        const recordDate = new Date(navRecord.date);
-                        const navValue = parseFloat(navRecord.nav);
+                    if (year === investmentYear) {
+                        // Use investment date as start NAV
+                        const investmentDate = new Date(investment.investmentDate);
+                        const investmentDateStr = investmentDate.getDate().toString().padStart(2, '0') + '-' + 
+                                                 (investmentDate.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+                                                 investmentDate.getFullYear();
                         
-                        if (recordDate >= yearStart && recordDate <= yearEnd) {
-                            if (!startNAV) {
-                                startNAV = navValue;
+                        console.log(`Investment year ${year}: Investment date = ${investmentDateStr}, Investment object date = ${investment.investmentDate}`);
+                        
+                        // Debug: Show some NAV records around investment date
+                        console.log('NAV data sample around investment date:');
+                        let debugCount = 0;
+                        for (const navRecord of navData) {
+                            if (debugCount < 10) { // Show first 10 records for debugging
+                                console.log(`  ${navRecord.date}: ₹${navRecord.nav}`);
+                                debugCount++;
                             }
-                            endNAV = navValue; // This will end up being the last NAV in the year
-                        } else if (recordDate < yearStart && !startNAV) {
-                            // If no NAV found in the year, use the closest before year start
-                            startNAV = navValue;
+                        }
+                        
+                        let investmentYearNavs = [];
+                        for (const navRecord of navData) {
+                            const recordDateStr = navRecord.date; // Already in DD-MM-YYYY format
+                            
+                            if (recordDateStr >= investmentDateStr && recordDateStr <= `31-12-${year}` && recordDateStr.endsWith(`-${year}`)) {
+                                investmentYearNavs.push({date: recordDateStr, nav: parseFloat(navRecord.nav)});
+                            }
+                        }
+                        
+                        console.log(`Investment year ${year}: Found ${investmentYearNavs.length} NAV records from ${investmentDateStr} to 31-12-${year}`);
+                        console.log('Investment year NAV records:', investmentYearNavs.slice(0, 5)); // Show first 5
+                        
+                        if (investmentYearNavs.length > 0) {
+                            startNAV = investmentYearNavs[0].nav; // First NAV on/after investment date
+                            endNAV = investmentYearNavs[investmentYearNavs.length - 1].nav; // Last NAV of the year
+                            console.log(`Investment year ${year}: Start NAV = ₹${startNAV} (${investmentYearNavs[0].date}), End NAV = ₹${endNAV} (${investmentYearNavs[investmentYearNavs.length - 1].date})`);
+                            
+                            // Store for display
+                            performance.startNAV = startNAV;
+                            performance.endNAV = endNAV;
+                        }
+                    } else {
+                        // For other years, use full year - find first and last NAV of the year
+                        let yearNavs = [];
+                        for (const navRecord of navData) {
+                            const recordDateStr = navRecord.date;
+                            
+                            if (recordDateStr.endsWith(`-${year}`)) {
+                                yearNavs.push(parseFloat(navRecord.nav));
+                            }
+                        }
+                        
+                        if (yearNavs.length > 0) {
+                            startNAV = yearNavs[0]; // First NAV of the year
+                            endNAV = yearNavs[yearNavs.length - 1]; // Last NAV of the year
+                            console.log(`Year ${year}: Found ${yearNavs.length} NAV records, Start: ₹${startNAV}, End: ₹${endNAV}`);
                         }
                     }
                     
@@ -922,15 +976,19 @@
                     
                     if (startNAV && endNAV && startNAV > 0) {
                         yearWisePerformance[year] = ((endNAV - startNAV) / startNAV) * 100;
-                        console.log(`Year ${year} performance: ${yearWisePerformance[year].toFixed(2)}%`);
+                        yearWiseNAV[year] = { startNAV, endNAV };
+                        console.log(`Year ${year} performance: ${yearWisePerformance[year].toFixed(2)}% (Start: ₹${startNAV}, End: ₹${endNAV})`);
                     } else {
                         yearWisePerformance[year] = null;
-                        console.log(`Year ${year}: No data available`);
+                        yearWiseNAV[year] = { startNAV: null, endNAV: null };
+                        console.log(`Year ${year}: No data available (Start: ${startNAV}, End: ${endNAV})`);
                     }
                 }
                 
                 performance.yearlyBreakdown = yearWisePerformance;
+                performance.yearlyNAV = yearWiseNAV;
                 console.log('Final yearly breakdown:', yearWisePerformance);
+                console.log('Final yearly NAV:', yearWiseNAV);
                 
             } catch (error) {
                 console.error('Error calculating performance:', error);
