@@ -261,9 +261,9 @@ p.lead {
     .card {
         padding: 0.5rem 1rem;
         max-width: none;
-        height: 80vh;
+        height: calc(80vh - 20px);
         width: 90%;
-        margin: 0.1rem auto 0;
+        margin: 0.1rem auto 20px;
     }
 
     #footer-placeholder {
@@ -282,8 +282,8 @@ p.lead {
     }
 
     .nav-btn {
-        padding: 0.6rem 1rem;
-        font-size: 0.8rem;
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
         gap: 0.4rem;
     }
 
@@ -307,7 +307,16 @@ p.lead {
 
     .card-nav {
         width: 90%;
-        height: 3rem;
+        height: auto;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: var(--card);
+        padding: 8px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .nav-btn:hover {
@@ -348,9 +357,9 @@ p.lead {
     .card {
         padding: 0.3rem 0.6rem;
         max-width: none;
-        min-height: 40rem;
+        min-height: calc(40rem - 20px);
         width: 90%;
-        margin: 1.5rem auto 0;
+        margin: 1.5rem auto 20px;
     }
 
     #footer-placeholder {
@@ -369,8 +378,8 @@ p.lead {
     }
 
     .nav-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.7rem;
+        padding: 0.7rem 1.1rem;
+        font-size: 0.85rem;
         gap: 0.25rem;
     }
 
@@ -394,7 +403,16 @@ p.lead {
 
     .card-nav {
         width: 90%;
-        height: 3rem;
+        height: auto;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: var(--card);
+        padding: 8px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .nav-btn:hover {
@@ -408,9 +426,9 @@ p.lead {
     .card {
         padding: 0.25rem 0.5rem;
         max-width: none;
-        min-height: 40rem;
+        min-height: calc(40rem - 20px);
         width: 90%;
-        margin: 1.5rem auto 0;
+        margin: 1.5rem auto 20px;
     }
 
     #footer-placeholder {
@@ -429,8 +447,8 @@ p.lead {
     }
 
     .nav-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.65rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
         gap: 0.2rem;
     }
 
@@ -450,7 +468,16 @@ p.lead {
 
     .card-nav {
         width: 90%;
-        height: 3rem;
+        height: auto;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: var(--card);
+        padding: 8px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .nav-btn:hover {

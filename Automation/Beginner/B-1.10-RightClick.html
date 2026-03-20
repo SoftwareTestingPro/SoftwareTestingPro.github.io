@@ -90,22 +90,6 @@
             failureMessage.classList.add('failure');
             successMessage.style.display = 'none'; // Hide success message
             successMessage.classList.remove('success');
-
-            // Add laughing emojis flying across the screen
-            for (let i = 0; i < 30; i++) {
-                const emoji = document.createElement('div');
-                emoji.className = 'emoji';
-                emoji.textContent = '😂';
-                emoji.style.left = `${Math.random() * 100}vw`;
-                emoji.style.top = `${Math.random() * 100}vh`;
-                emoji.style.fontSize = `${Math.random() * 50 + 20}px`; // Random size between 20px and 70px
-                document.body.appendChild(emoji);
-
-                // Remove emoji after animation ends
-                emoji.addEventListener('animationend', () => {
-                    emoji.remove();
-                });
-            }
         });
 
         clickButton.addEventListener('contextmenu', (event) => {

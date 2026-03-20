@@ -37,6 +37,10 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     display: block !important;
     visibility: visible !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
 }
 
 .header-content {
@@ -106,7 +110,7 @@ body {
     height: 90vh;
     display: flex;
     flex-direction: column;
-    margin-top: 0;
+    margin-top: 60px;
 }
 
 .card {
@@ -119,7 +123,8 @@ body {
     max-width: var(--card-max-width, 800px);
     padding: 0.625rem 1.5rem;
     text-align: center;
-    height: 90vh;
+    height: auto;
+    max-height: 90vh;
     overflow-y: auto;
 }
 
@@ -234,14 +239,32 @@ ul {
     box-shadow: 0 4px 12px rgba(91, 35, 173, 0.3);
 }
 
+.links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.level-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .card {
         padding: 0.5rem 1rem;
         max-width: none;
-        height: 80vh;
+        height: calc(80vh - 20px);
         width: 90%;
-        margin: 0.1rem auto 0;
+        margin: 0.1rem auto 20px;
     }
 
     #footer-placeholder {
@@ -250,7 +273,7 @@ ul {
     }
 
     h1 {
-        font-size: 1rem;
+        font-size: 1.2rem;
         margin: 1rem 0 0.4rem;
     }
 
@@ -270,13 +293,19 @@ ul {
     }
 
     .nav-btn {
-        padding: 0.6rem 1rem;
-        font-size: 0.8rem;
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
         gap: 0.4rem;
     }
 
     .nav-icon {
         font-size: 0.9rem;
+    }
+
+    .message {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+        margin-top: 0.6rem;
     }
 
     #header-placeholder {
@@ -289,7 +318,16 @@ ul {
 
     .card-nav {
         width: 90%;
-        height: 3rem;
+        height: auto;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: var(--card);
+        padding: 8px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .nav-btn:hover {
@@ -301,9 +339,9 @@ ul {
     .card {
         padding: 0.3rem 0.6rem;
         max-width: none;
-        min-height: 40rem;
+        min-height: calc(40rem - 20px);
         width: 90%;
-        margin: 1.5rem auto 0;
+        margin: 1.5rem auto 20px;
     }
 
     #footer-placeholder {
@@ -312,7 +350,7 @@ ul {
     }
 
     h1 {
-        font-size: 0.8rem;
+        font-size: 1rem;
         margin: 0.6rem 0 0.25rem;
     }
 
@@ -332,13 +370,19 @@ ul {
     }
 
     .nav-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.7rem;
+        padding: 0.7rem 1.1rem;
+        font-size: 0.85rem;
         gap: 0.25rem;
     }
 
     .nav-icon {
         font-size: 0.75rem;
+    }
+
+    .message {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.7rem;
+        margin-top: 0.4rem;
     }
 
     #header-placeholder {
@@ -351,7 +395,16 @@ ul {
 
     .card-nav {
         width: 90%;
-        height: 3rem;
+        height: auto;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: var(--card);
+        padding: 8px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .nav-btn:hover {
@@ -363,9 +416,9 @@ ul {
     .card {
         padding: 0.25rem 0.5rem;
         max-width: none;
-        min-height: 40rem;
+        min-height: calc(40rem - 20px);
         width: 90%;
-        margin: 1.5rem auto 0;
+        margin: 1.5rem auto 20px;
     }
 
     #footer-placeholder {
@@ -374,7 +427,7 @@ ul {
     }
 
     h1 {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         margin: 0.5rem 0 0.2rem;
     }
 
@@ -394,8 +447,8 @@ ul {
     }
 
     .nav-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.65rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
         gap: 0.2rem;
     }
 
@@ -403,13 +456,32 @@ ul {
         font-size: 0.7rem;
     }
 
+    .message {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+        margin-top: 0.35rem;
+    }
+
     #header-placeholder {
         display: block;
     }
 
+    #footer-placeholder {
+        display: none;
+    }
+
     .card-nav {
         width: 90%;
-        height: 3rem;
+        height: auto;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: var(--card);
+        padding: 8px;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .nav-btn:hover {

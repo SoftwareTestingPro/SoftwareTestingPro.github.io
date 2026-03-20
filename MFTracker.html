@@ -78,6 +78,14 @@
             background-color: #e9ecef;
         }
 
+        .search-dropdown-item .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
         .fund-card {
             background: white;
             border-radius: 15px;
@@ -497,7 +505,7 @@
                 const filtered = allFundsCache.filter(fund => 
                     fund.schemeName.toLowerCase().includes(query.toLowerCase()) ||
                     fund.schemeCode.toString().includes(query)
-                ).slice(0, 10);
+                ).slice(0, 15); // Increased from 10 to 15 to show more options
                 return filtered;
             }
             
@@ -508,7 +516,7 @@
                     throw new Error('Failed to fetch funds');
                 }
                 const data = await response.json();
-                return data.slice(0, 10);
+                return data.slice(0, 15); // Increased from 10 to 15
             } catch (error) {
                 console.error('Error fetching from MF API:', error);
                 return []; // Return empty array
@@ -525,10 +533,24 @@
                 dropdown.innerHTML = funds.map(fund => {
                     const schemeName = fund.schemeName.replace(/'/g, "\\'").replace(/"/g, '\\"');
                     const fundType = fund.fundType || fund.category || 'N/A';
+                    
+                    // Detect plan type
+                    let planType = 'Regular';
+                    let planTypeClass = 'bg-success';
+                    if (schemeName.toLowerCase().includes('direct')) {
+                        planType = 'Direct';
+                        planTypeClass = 'bg-primary';
+                    }
+                    
                     return `
                     <div class="search-dropdown-item" data-scheme-code="${fund.schemeCode}" data-scheme-name="${schemeName}" data-nav="${fund.nav || 0}">
-                        <div><strong>${fund.schemeName}</strong></div>
-                        <small class="text-muted">Code: ${fund.schemeCode} | Category: ${fundType}</small>
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div><strong>${fund.schemeName}</strong></div>
+                                <small class="text-muted">Code: ${fund.schemeCode} | Category: ${fundType}</small>
+                            </div>
+                            <span class="badge ${planTypeClass} ms-2">${planType}</span>
+                        </div>
                     </div>
                 `;
                 }).join('');
@@ -553,7 +575,17 @@
             selectedFund = { schemeCode, schemeName, nav };
             document.getElementById('fundSearch').value = schemeName;
             document.getElementById('searchDropdown').style.display = 'none';
-            showToast(`${schemeName} selected successfully`, 'success', 'Fund Selected');
+            
+            // Check if this is HDFC Flexi Cap Fund and provide helpful info
+            if (schemeName.toLowerCase().includes('hdfc flexi cap')) {
+                if (schemeName.toLowerCase().includes('direct')) {
+                    showToast('Direct Plan selected. Note: Direct plans have data from 2013 onwards. For historical data before 2013, consider the Regular Plan.', 'info', 'Fund Selected');
+                } else {
+                    showToast('Regular Plan selected. This fund has comprehensive historical data available from 2006.', 'success', 'Fund Selected');
+                }
+            } else {
+                showToast(`${schemeName} selected successfully`, 'success', 'Fund Selected');
+            }
         }
 
         // Handle add fund form submission
@@ -1248,7 +1280,7 @@
             const toastElement = document.getElementById(toastId);
             const toast = new bootstrap.Toast(toastElement, {
                 autohide: true,
-                delay: type === 'error' ? 5000 : 3000
+                delay: type === 'error' ? 5000 : type === 'info' ? 10000 : 3000
             });
             
             toast.show();
