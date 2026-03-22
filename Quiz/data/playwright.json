@@ -1,622 +1,617 @@
 [
     {
         "question": "What is the primary purpose of Playwright in test automation?",
-        "options": ["Cross-browser automation", "API testing", "Mobile testing", "All of the above"],
+        "options": ["Cross-browser automation", "API testing", "Mobile testing", "Performance testing"],
         "correctAnswer": "Cross-browser automation"
     },
     {
-        "question": "Which programming languages are supported by Playwright?",
-        "options": ["JavaScript", "Python", "Java", "TypeScript"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following browsers does Playwright support natively?",
+        "options": ["Chrome, Firefox, Safari", "Chrome, Firefox, Edge", "Chrome, Safari, Edge", "All major browsers"],
+        "correctAnswer": "All major browsers"
     },
     {
         "question": "What is a 'Page Object' in Playwright?",
-        "options": ["A class representing a web page", "A test configuration file", "A data structure", "All of the above"],
+        "options": ["A class representing a web page", "A test configuration file", "A data structure", "A utility function"],
         "correctAnswer": "A class representing a web page"
     },
     {
-        "question": "Which of the following is a Playwright locator strategy?",
-        "options": ["CSS selectors", "XPath expressions", "Text-based locators", "All of the above"],
+        "question": "Which locator strategy is recommended for finding elements by their visible text?",
+        "options": ["CSS selectors", "XPath expressions", "Text-based locators", "Role locators"],
+        "correctAnswer": "Text-based locators"
+    },
+    {
+        "question": "What does Playwright's auto-wait feature eliminate the need for?",
+        "options": ["Manual waits", "Explicit timeouts", "Sleep statements", "Retry logic"],
+        "correctAnswer": "Manual waits"
+    },
+    {
+        "question": "Which Playwright feature allows testing on mobile devices?",
+        "options": ["Device emulation", "Mobile app testing", "Native mobile testing", "Hybrid testing"],
+        "correctAnswer": "Device emulation"
+    },
+    {
+        "question": "What command is used to install Playwright?",
+        "options": ["npm install playwright", "npm i playwright", "yarn add playwright", "All of the above"],
         "correctAnswer": "All of the above"
     },
     {
-        "question": "What is the purpose of 'Playwright Test'?",
-        "options": ["To automate browser interactions", "To validate web applications", "To generate test reports", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which method is primarily used to click elements on desktop browsers in Playwright?",
+        "options": ["click()", "tap()", "press()", "touch()"],
+        "correctAnswer": "click()"
     },
     {
-        "question": "Which of the following is NOT a Playwright feature?",
-        "options": ["Mobile testing", "API testing", "Performance testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the default test runner provided by Playwright?",
+        "options": ["Playwright Test", "Jest", "Mocha", "Vitest"],
+        "correctAnswer": "Playwright Test"
     },
     {
-        "question": "What is 'Playwright Inspector'?",
-        "options": ["A tool for debugging tests", "A browser extension", "A reporting tool", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary input method for Playwright's code generation?",
+        "options": ["User interaction recording", "Manual code writing", "AI assistance", "Template generation"],
+        "correctAnswer": "User interaction recording"
     },
     {
-        "question": "What is the purpose of 'Playwright Trace Viewer'?",
-        "options": ["To analyze test execution", "To debug failed tests", "To monitor performance", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of Playwright selectors?",
+        "options": ["To locate elements", "To filter results", "To validate data", "To manage state"],
+        "correctAnswer": "To locate elements"
     },
     {
-        "question": "Which of the following is a Playwright test runner?",
-        "options": ["Playwright Test", "Jest", "Mocha", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which assertion method is used in Playwright Test?",
+        "options": ["expect()", "assert()", "should()", "chai()"],
+        "correctAnswer": "expect()"
     },
     {
-        "question": "What is 'Playwright Code Generation'?",
-        "options": ["Auto-generating test code", "Recording user interactions", "Creating test data", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does Playwright's auto-wait feature automatically handle?",
+        "options": ["Element visibility", "Network requests", "Page navigation", "Error handling"],
+        "correctAnswer": "Element visibility"
     },
     {
-        "question": "What is the purpose of 'Playwright Selectors'?",
-        "options": ["To locate elements on pages", "To filter test results", "To manage test data", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main use case for Playwright network interception?",
+        "options": ["Mocking API responses", "Monitoring traffic", "Testing offline scenarios", "Authentication testing"],
+        "correctAnswer": "Mocking API responses"
     },
     {
-        "question": "Which of the following is a Playwright assertion?",
-        "options": ["expect().toContainText()", "assert().equals()", "console.log()", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which Playwright fixture represents the browser page?",
+        "options": ["page", "browser", "context", "test"],
+        "correctAnswer": "page"
     },
     {
-        "question": "What is 'Playwright Auto-wait'?",
-        "options": ["Waiting for elements to appear", "Automatic page navigation", "Error handling", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What Playwright feature helps identify test failures visually?",
+        "options": ["Screenshots", "Videos", "Traces", "Logs"],
+        "correctAnswer": "Screenshots"
     },
     {
-        "question": "What is the purpose of 'Playwright Network Interception'?",
-        "options": ["Mock network requests", "Monitor API calls", "Debug network issues", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which mobile device browser can Playwright emulate?",
+        "options": ["Safari on iPhone", "Chrome on Android", "Both iPhone and Android", "Only desktop browsers"],
+        "correctAnswer": "Both iPhone and Android"
     },
     {
-        "question": "Which of the following is a Playwright fixture?",
-        "options": ["Test data setup", "Page configuration", "Environment setup", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the default reporting format in Playwright?",
+        "options": ["HTML", "JSON", "XML", "Console"],
+        "correctAnswer": "HTML"
     },
     {
-        "question": "What is 'Playwright Screenshot' capability?",
-        "options": ["Capture page images", "Record video", "Generate reports", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What hook runs before each test in Playwright?",
+        "options": ["beforeEach", "beforeAll", "setup", "init"],
+        "correctAnswer": "beforeEach"
     },
     {
-        "question": "What is the purpose of 'Playwright Emulation'?",
-        "options": ["Simulate different devices", "Test mobile layouts", "Browser compatibility", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What file is used to configure Playwright tests?",
+        "options": ["playwright.config.js", "package.json", "test.config.js", "setup.js"],
+        "correctAnswer": "playwright.config.js"
     },
     {
-        "question": "Which of the following is a Playwright reporting tool?",
-        "options": ["HTML Reporter", "Allure Report", "JUnit Report", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most important Playwright best practice?",
+        "options": ["Test isolation", "Page Object Model", "Explicit waits", "Parallel execution"],
+        "correctAnswer": "Test isolation"
     },
     {
-        "question": "What is 'Playwright Test Hooks'?",
-        "options": ["Setup and teardown", "Before/After hooks", "Event listeners", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "How does Playwright achieve parallel execution?",
+        "options": ["Worker processes", "Thread pooling", "Async/await", "Promise chaining"],
+        "correctAnswer": "Worker processes"
     },
     {
-        "question": "What is the purpose of 'Playwright Configuration'?",
-        "options": ["Test environment setup", "Browser configuration", "Project settings", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary goal of Playwright debugging?",
+        "options": ["Find test failures", "Improve performance", "Reduce flakiness", "Increase coverage"],
+        "correctAnswer": "Find test failures"
     },
     {
-        "question": "Which of the following is a Playwright best practice?",
-        "options": ["Page Object Model", "Explicit waits", "Test isolation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which CI/CD platform has native Playwright support?",
+        "options": ["GitHub Actions", "GitLab CI", "Jenkins", "Azure DevOps"],
+        "correctAnswer": "GitHub Actions"
     },
     {
-        "question": "What is 'Playwright Parallel Execution'?",
-        "options": ["Running tests simultaneously", "Cross-browser testing", "Distributed testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary output of Playwright's code generation?",
+        "options": ["Test scripts", "Test data", "Test reports", "Test configurations"],
+        "correctAnswer": "Test scripts"
     },
     {
-        "question": "What is the purpose of 'Playwright Debugging'?",
-        "options": ["Identify test failures", "Analyze performance", "Fix broken tests", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What type of testing can Playwright perform on APIs?",
+        "options": ["Request validation", "Response testing", "Mocking", "Authentication testing"],
+        "correctAnswer": "Request validation"
     },
     {
-        "question": "Which of the following is a Playwright integration?",
-        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "All of the above"],
-        "correctAnswer": "All of the above"
-    },
-    {
-        "question": "What is 'Playwright Test Generator'?",
-        "options": ["Auto-generating test code", "Creating test data", "Recording user actions", "All of the above"],
-        "correctAnswer": "All of the above"
-    },
-    {
-        "question": "What is the purpose of 'Playwright API Testing'?",
-        "options": ["Backend testing", "Frontend testing", "Full stack testing", "All of the above"],
-        "correctAnswer": "All of the above"
-    },
-    {
-        "question": "Which of the following is a Playwright locator?",
+        "question": "Which Playwright locator is based on user interface roles?",
         "options": ["CSS Selector", "XPath", "Text Locator", "Role Locator"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Role Locator"
     },
     {
-        "question": "What is 'Playwright Element Handle'?",
-        "options": ["Reference to page elements", "Test data structure", "Configuration object", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does a Playwright Element Handle represent?",
+        "options": ["Reference to page elements", "Test data structure", "Configuration object", "Browser instance"],
+        "correctAnswer": "Reference to page elements"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Runner'?",
-        "options": ["Execute test files", "Manage test suites", "Generate reports", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary function of Playwright's test runner?",
+        "options": ["Execute test files", "Manage test suites", "Generate reports", "Debug tests"],
+        "correctAnswer": "Execute test files"
     },
     {
-        "question": "Which of the following is a Playwright feature?",
-        "options": ["Cross-browser support", "Mobile emulation", "API testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is Playwright's key advantage over other testing tools?",
+        "options": ["Cross-browser support", "Mobile emulation", "API testing", "Faster execution"],
+        "correctAnswer": "Cross-browser support"
     },
     {
-        "question": "What is 'Playwright Timeout'?",
-        "options": ["Test execution limit", "Page load timeout", "Network timeout", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What type of timeout does Playwright set by default for actions?",
+        "options": ["Test execution limit", "Page load timeout", "Network timeout", "Element action timeout"],
+        "correctAnswer": "Element action timeout"
     },
     {
-        "question": "What is the purpose of 'Playwright Reporting'?",
-        "options": ["Document test results", "Track test coverage", "Analyze performance", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary output of Playwright's reporting feature?",
+        "options": ["Test execution results", "Code coverage reports", "Performance metrics", "Error logs"],
+        "correctAnswer": "Test execution results"
     },
     {
-        "question": "Which of the following is a Playwright assertion library?",
-        "options": ["Chai", "Expect", "Jest", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which assertion method is built into Playwright Test?",
+        "options": ["expect", "assert", "should", "chai"],
+        "correctAnswer": "expect"
     },
     {
-        "question": "What is 'Playwright Browser Context'?",
-        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does a Playwright Browser Context provide?",
+        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "Incognito mode"],
+        "correctAnswer": "Incognito mode"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Isolation'?",
-        "options": ["Independent test execution", "Resource cleanup", "State management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main benefit of Playwright's test isolation?",
+        "options": ["Independent test execution", "Resource cleanup", "State management", "Parallel execution"],
+        "correctAnswer": "Independent test execution"
     },
     {
-        "question": "Which of the following is a Playwright deployment?",
-        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Where are Playwright tests typically deployed?",
+        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "Local development"],
+        "correctAnswer": "CI/CD integration"
     },
     {
-        "question": "What is 'Playwright Accessibility Testing'?",
-        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What accessibility feature can Playwright test?",
+        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "Color contrast"],
+        "correctAnswer": "Keyboard navigation"
     },
     {
-        "question": "What is the purpose of 'Playwright Performance Testing'?",
-        "options": ["Measure page load times", "Analyze resource usage", "Monitor test execution", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What performance metric can Playwright measure?",
+        "options": ["Page load times", "Resource usage", "Test execution", "Network latency"],
+        "correctAnswer": "Page load times"
     },
     {
-        "question": "Which of the following is a Playwright tool?",
-        "options": ["VS Code extension", "Command line tool", "Browser extension", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most popular Playwright development tool?",
+        "options": ["VS Code extension", "Command line tool", "Browser extension", "IDE plugin"],
+        "correctAnswer": "VS Code extension"
     },
     {
-        "question": "What is 'Playwright Test Organization'?",
-        "options": ["Page Object pattern", "Test data management", "Fixture organization", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary approach for organizing Playwright tests?",
+        "options": ["Page Object pattern", "Test data management", "Fixture organization", "Modular structure"],
+        "correctAnswer": "Page Object pattern"
     },
     {
-        "question": "What is the purpose of 'Playwright Configuration'?",
-        "options": ["Test environment setup", "Browser configuration", "Project settings", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main purpose of Playwright configuration files?",
+        "options": ["Test environment setup", "Browser configuration", "Project settings", "Test execution settings"],
+        "correctAnswer": "Test execution settings"
     },
     {
-        "question": "Which of the following is a Playwright best practice?",
-        "options": ["Explicit waits", "Page Object Model", "Test isolation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most critical Playwright best practice for test reliability?",
+        "options": ["Explicit waits", "Page Object Model", "Test isolation", "Code reuse"],
+        "correctAnswer": "Test isolation"
     },
     {
-        "question": "What is 'Playwright Error Handling'?",
-        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary error handling mechanism in Playwright?",
+        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "Auto-retry"],
+        "correctAnswer": "Auto-retry"
     },
     {
-        "question": "What is the purpose of 'Playwright Documentation'?",
-        "options": ["API reference", "Test guides", "Best practices", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most important section of Playwright documentation?",
+        "options": ["API reference", "Test guides", "Best practices", "Getting started"],
+        "correctAnswer": "API reference"
     },
     {
-        "question": "Which of the following is a Playwright integration?",
-        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most common Playwright integration for testing?",
+        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "Database systems"],
+        "correctAnswer": "CI/CD pipelines"
     },
     {
-        "question": "What is 'Playwright Test Data Management'?",
-        "options": ["Fixture management", "Test data generation", "Environment configuration", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary method for managing test data in Playwright?",
+        "options": ["Fixture management", "Test data generation", "Environment configuration", "Data factories"],
+        "correctAnswer": "Fixture management"
     },
     {
-        "question": "What is the purpose of 'Playwright Monitoring'?",
-        "options": ["Test execution tracking", "Performance monitoring", "Error analysis", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main purpose of Playwright monitoring?",
+        "options": ["Test execution tracking", "Performance monitoring", "Error analysis", "Debugging support"],
+        "correctAnswer": "Test execution tracking"
     },
     {
-        "question": "Which of the following is a Playwright feature?",
-        "options": ["Cross-browser support", "Mobile emulation", "API testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is Playwright's most distinctive feature?",
+        "options": ["Cross-browser support", "Mobile emulation", "API testing", "Auto-wait"],
+        "correctAnswer": "Auto-wait"
     },
     {
-        "question": "What is 'Playwright Test Generator'?",
-        "options": ["Auto-generating test code", "Creating test data", "Recording user actions", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What type of API requests can Playwright make?",
+        "options": ["GET requests", "POST requests", "PUT requests", "All HTTP methods"],
+        "correctAnswer": "All HTTP methods"
     },
     {
-        "question": "What is the purpose of 'Playwright API Testing'?",
-        "options": ["Backend testing", "Frontend testing", "Full stack testing", "All of the above"],
-        "correctAnswer": "All of the above"
-    },
-    {
-        "question": "Which of the following is a Playwright locator?",
+        "question": "Which Playwright locator finds elements by their visible text?",
         "options": ["CSS Selector", "XPath", "Text Locator", "Role Locator"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Text Locator"
     },
     {
-        "question": "What is 'Playwright Element Handle'?",
-        "options": ["Reference to page elements", "Test data structure", "Configuration object", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What type of object does Playwright return when finding an element?",
+        "options": ["Reference to page elements", "Test data structure", "Configuration object", "Browser instance"],
+        "correctAnswer": "Reference to page elements"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Runner'?",
-        "options": ["Execute test files", "Manage test suites", "Generate reports", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main responsibility of Playwright's test runner?",
+        "options": ["Execute test files", "Manage test suites", "Generate reports", "Debug failures"],
+        "correctAnswer": "Execute test files"
     },
     {
-        "question": "What is 'Playwright Browser Context'?",
-        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does Playwright's Browser Context provide for test isolation?",
+        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "Incognito browsing"],
+        "correctAnswer": "Incognito browsing"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Isolation'?",
-        "options": ["Independent test execution", "Resource cleanup", "State management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the key benefit of Playwright's test isolation feature?",
+        "options": ["Independent test execution", "Resource cleanup", "State management", "Parallel execution"],
+        "correctAnswer": "Independent test execution"
     },
     {
-        "question": "Which of the following is a Playwright deployment?",
-        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most common deployment method for Playwright tests?",
+        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "Local execution"],
+        "correctAnswer": "CI/CD integration"
     },
     {
-        "question": "What is 'Playwright Accessibility Testing'?",
-        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What accessibility aspect can Playwright test automatically?",
+        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "Color contrast"],
+        "correctAnswer": "Keyboard navigation"
     },
     {
-        "question": "What is the purpose of 'Playwright Performance Testing'?",
-        "options": ["Measure page load times", "Analyze resource usage", "Monitor test execution", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What performance aspect can Playwright measure directly?",
+        "options": ["Page load times", "Resource usage", "Test execution", "Network latency"],
+        "correctAnswer": "Page load times"
     },
     {
-        "question": "Which of the following is a Playwright tool?",
-        "options": ["VS Code extension", "Command line tool", "Browser extension", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most widely used Playwright development tool?",
+        "options": ["VS Code extension", "Command line tool", "Browser extension", "IDE plugin"],
+        "correctAnswer": "VS Code extension"
     },
     {
-        "question": "What is 'Playwright Test Organization'?",
-        "options": ["Page Object pattern", "Test data management", "Fixture organization", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the recommended approach for organizing Playwright test code?",
+        "options": ["Page Object pattern", "Test data management", "Fixture organization", "Modular design"],
+        "correctAnswer": "Page Object pattern"
     },
     {
-        "question": "What is the purpose of 'Playwright Configuration'?",
-        "options": ["Test environment setup", "Browser configuration", "Project settings", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main purpose of Playwright's configuration file?",
+        "options": ["Test environment setup", "Browser configuration", "Project settings", "Test execution control"],
+        "correctAnswer": "Test execution control"
     },
     {
-        "question": "Which of the following is a Playwright best practice?",
-        "options": ["Explicit waits", "Page Object Model", "Test isolation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most important Playwright best practice for reliable tests?",
+        "options": ["Explicit waits", "Page Object Model", "Test isolation", "Code reuse"],
+        "correctAnswer": "Test isolation"
     },
     {
-        "question": "What is 'Playwright Error Handling'?",
-        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary error handling feature in Playwright?",
+        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "Auto-retry on failure"],
+        "correctAnswer": "Auto-retry on failure"
     },
     {
-        "question": "What is the purpose of 'Playwright Documentation'?",
-        "options": ["API reference", "Test guides", "Best practices", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most valuable section of Playwright's documentation?",
+        "options": ["API reference", "Test guides", "Best practices", "Getting started"],
+        "correctAnswer": "API reference"
     },
     {
-        "question": "Which of the following is a Playwright integration?",
-        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most popular Playwright integration for CI/CD?",
+        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "Database systems"],
+        "correctAnswer": "CI/CD pipelines"
     },
     {
-        "question": "What is 'Playwright Test Data Management'?",
-        "options": ["Fixture management", "Test data generation", "Environment configuration", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary approach for managing test data in Playwright?",
+        "options": ["Fixture management", "Test data generation", "Environment configuration", "Data factories"],
+        "correctAnswer": "Fixture management"
     },
     {
-        "question": "What is the purpose of 'Playwright Monitoring'?",
-        "options": ["Test execution tracking", "Performance monitoring", "Error analysis", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main purpose of Playwright monitoring capabilities?",
+        "options": ["Test execution tracking", "Performance monitoring", "Error analysis", "Debugging support"],
+        "correctAnswer": "Test execution tracking"
     },
     {
-        "question": "Which of the following is a Playwright feature?",
-        "options": ["Cross-browser support", "Mobile emulation", "API testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is Playwright's most unique feature compared to other tools?",
+        "options": ["Cross-browser support", "Mobile emulation", "API testing", "Auto-wait mechanism"],
+        "correctAnswer": "Auto-wait mechanism"
     },
     {
-        "question": "What is 'Playwright Test Generator'?",
-        "options": ["Auto-generating test code", "Creating test data", "Recording user actions", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary input method for Playwright's test generator?",
+        "options": ["Auto-generating test code", "Creating test data", "Recording user actions", "Manual coding"],
+        "correctAnswer": "Recording user actions"
     },
     {
-        "question": "What is the purpose of 'Playwright API Testing'?",
-        "options": ["Backend testing", "Frontend testing", "Full stack testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What type of testing can Playwright perform on REST APIs?",
+        "options": ["Backend testing", "Frontend testing", "Full stack testing", "Integration testing"],
+        "correctAnswer": "Backend testing"
     },
     {
-        "question": "Which of the following is a Playwright locator?",
+        "question": "Which Playwright locator is best for finding elements by their role?",
         "options": ["CSS Selector", "XPath", "Text Locator", "Role Locator"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Role Locator"
     },
     {
-        "question": "What is 'Playwright Element Handle'?",
-        "options": ["Reference to page elements", "Test data structure", "Configuration object", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does Playwright return when you locate an element?",
+        "options": ["Reference to page elements", "Test data structure", "Configuration object", "Browser instance"],
+        "correctAnswer": "Reference to page elements"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Runner'?",
-        "options": ["Execute test files", "Manage test suites", "Generate reports", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary function of Playwright's test runner?",
+        "options": ["Execute test files", "Manage test suites", "Generate reports", "Debug failures"],
+        "correctAnswer": "Execute test files"
     },
     {
-        "question": "What is 'Playwright Browser Context'?",
-        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does Playwright's Browser Context create for each test?",
+        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "Isolated browser session"],
+        "correctAnswer": "Isolated browser session"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Isolation'?",
-        "options": ["Independent test execution", "Resource cleanup", "State management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main advantage of Playwright's test isolation?",
+        "options": ["Independent test execution", "Resource cleanup", "State management", "Parallel execution"],
+        "correctAnswer": "Independent test execution"
     },
     {
-        "question": "Which of the following is a Playwright deployment?",
-        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Where are Playwright tests most commonly executed?",
+        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "Local development"],
+        "correctAnswer": "CI/CD integration"
     },
     {
-        "question": "What is 'Playwright Accessibility Testing'?",
-        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What accessibility feature can Playwright test for automatically?",
+        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "Color contrast"],
+        "correctAnswer": "Keyboard navigation"
     },
     {
-        "question": "What is the purpose of 'Playwright Performance Testing'?",
-        "options": ["Measure page load times", "Analyze resource usage", "Monitor test execution", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What performance metric can Playwright measure natively?",
+        "options": ["Page load times", "Resource usage", "Test execution", "Network latency"],
+        "correctAnswer": "Page load times"
     },
     {
-        "question": "Which of the following is a Playwright tool?",
-        "options": ["VS Code extension", "Command line tool", "Browser extension", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most popular Playwright development extension?",
+        "options": ["VS Code extension", "Command line tool", "Browser extension", "IDE plugin"],
+        "correctAnswer": "VS Code extension"
     },
     {
-        "question": "What is 'Playwright Test Organization'?",
-        "options": ["Page Object pattern", "Test data management", "Fixture organization", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the recommended pattern for organizing Playwright tests?",
+        "options": ["Page Object pattern", "Test data management", "Fixture organization", "Modular design"],
+        "correctAnswer": "Page Object pattern"
     },
     {
-        "question": "What is the purpose of 'Playwright Configuration'?",
-        "options": ["Test environment setup", "Browser configuration", "Project settings", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main purpose of Playwright's configuration file?",
+        "options": ["Test environment setup", "Browser configuration", "Project settings", "Test execution settings"],
+        "correctAnswer": "Test execution settings"
     },
     {
-        "question": "Which of the following is a Playwright best practice?",
-        "options": ["Explicit waits", "Page Object Model", "Test isolation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most critical Playwright best practice for test reliability?",
+        "options": ["Explicit waits", "Page Object Model", "Test isolation", "Code reuse"],
+        "correctAnswer": "Test isolation"
     },
     {
-        "question": "What is 'Playwright Error Handling'?",
-        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary error handling mechanism in Playwright?",
+        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "Auto-retry on failure"],
+        "correctAnswer": "Auto-retry on failure"
     },
     {
-        "question": "What is the purpose of 'Playwright Documentation'?",
-        "options": ["API reference", "Test guides", "Best practices", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most important part of Playwright's documentation?",
+        "options": ["API reference", "Test guides", "Best practices", "Getting started"],
+        "correctAnswer": "API reference"
     },
     {
-        "question": "Which of the following is a Playwright integration?",
-        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most common Playwright integration with CI/CD platforms?",
+        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "Database systems"],
+        "correctAnswer": "CI/CD pipelines"
     },
     {
-        "question": "What is 'Playwright Test Data Management'?",
-        "options": ["Fixture management", "Test data generation", "Environment configuration", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary method for managing test data in Playwright?",
+        "options": ["Fixture management", "Test data generation", "Environment configuration", "Data factories"],
+        "correctAnswer": "Fixture management"
     },
     {
-        "question": "What is the purpose of 'Playwright Monitoring'?",
-        "options": ["Test execution tracking", "Performance monitoring", "Error analysis", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main purpose of Playwright's monitoring features?",
+        "options": ["Test execution tracking", "Performance monitoring", "Error analysis", "Debugging support"],
+        "correctAnswer": "Test execution tracking"
     },
     {
-        "question": "Which of the following is a Playwright feature?",
-        "options": ["Cross-browser support", "Mobile emulation", "API testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is Playwright's most distinguishing feature?",
+        "options": ["Cross-browser support", "Mobile emulation", "API testing", "Auto-wait mechanism"],
+        "correctAnswer": "Auto-wait mechanism"
     },
     {
-        "question": "What is 'Playwright Test Generator'?",
-        "options": ["Auto-generating test code", "Creating test data", "Recording user actions", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main input method for Playwright's test generator?",
+        "options": ["Auto-generating test code", "Creating test data", "Recording user actions", "Manual coding"],
+        "correctAnswer": "Recording user actions"
     },
     {
-        "question": "What is the purpose of 'Playwright API Testing'?",
-        "options": ["Backend testing", "Frontend testing", "Full stack testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What type of API testing does Playwright support primarily?",
+        "options": ["Backend testing", "Frontend testing", "Full stack testing", "Integration testing"],
+        "correctAnswer": "Backend testing"
     },
     {
-        "question": "Which of the following is a Playwright locator?",
+        "question": "Which Playwright locator is most reliable for finding elements?",
         "options": ["CSS Selector", "XPath", "Text Locator", "Role Locator"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Role Locator"
     },
     {
-        "question": "What is 'Playwright Element Handle'?",
-        "options": ["Reference to page elements", "Test data structure", "Configuration object", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What object type does Playwright use to reference DOM elements?",
+        "options": ["Reference to page elements", "Test data structure", "Configuration object", "Browser instance"],
+        "correctAnswer": "Reference to page elements"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Runner'?",
-        "options": ["Execute test files", "Manage test suites", "Generate reports", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main responsibility of Playwright's test runner?",
+        "options": ["Execute test files", "Manage test suites", "Generate reports", "Debug failures"],
+        "correctAnswer": "Execute test files"
     },
     {
-        "question": "What is 'Playwright Browser Context'?",
-        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does Playwright's Browser Context provide for test isolation?",
+        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "Isolated browser environment"],
+        "correctAnswer": "Isolated browser environment"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Isolation'?",
-        "options": ["Independent test execution", "Resource cleanup", "State management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the key benefit of Playwright's test isolation feature?",
+        "options": ["Independent test execution", "Resource cleanup", "State management", "Parallel execution"],
+        "correctAnswer": "Independent test execution"
     },
     {
-        "question": "Which of the following is a Playwright deployment?",
-        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most popular deployment method for Playwright tests?",
+        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "Local development"],
+        "correctAnswer": "CI/CD integration"
     },
     {
-        "question": "What is 'Playwright Accessibility Testing'?",
-        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What accessibility testing capability does Playwright provide?",
+        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "Color contrast"],
+        "correctAnswer": "Keyboard navigation"
     },
     {
-        "question": "What is the purpose of 'Playwright Performance Testing'?",
-        "options": ["Measure page load times", "Analyze resource usage", "Monitor test execution", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What performance measurement can Playwright perform directly?",
+        "options": ["Page load times", "Resource usage", "Test execution", "Network latency"],
+        "correctAnswer": "Page load times"
     },
     {
-        "question": "Which of the following is a Playwright tool?",
-        "options": ["VS Code extension", "Command line tool", "Browser extension", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most widely used Playwright development tool?",
+        "options": ["VS Code extension", "Command line tool", "Browser extension", "IDE plugin"],
+        "correctAnswer": "VS Code extension"
     },
     {
-        "question": "What is 'Playwright Test Organization'?",
-        "options": ["Page Object pattern", "Test data management", "Fixture organization", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the best practice for organizing Playwright test code?",
+        "options": ["Page Object pattern", "Test data management", "Fixture organization", "Modular design"],
+        "correctAnswer": "Page Object pattern"
     },
     {
-        "question": "What is the purpose of 'Playwright Configuration'?",
-        "options": ["Test environment setup", "Browser configuration", "Project settings", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary function of Playwright's configuration file?",
+        "options": ["Test environment setup", "Browser configuration", "Project settings", "Test execution control"],
+        "correctAnswer": "Test execution control"
     },
     {
-        "question": "Which of the following is a Playwright best practice?",
-        "options": ["Explicit waits", "Page Object Model", "Test isolation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most important Playwright best practice for test stability?",
+        "options": ["Explicit waits", "Page Object Model", "Test isolation", "Code reuse"],
+        "correctAnswer": "Test isolation"
     },
     {
-        "question": "What is 'Playwright Error Handling'?",
-        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary error recovery mechanism in Playwright?",
+        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "Auto-retry on failure"],
+        "correctAnswer": "Auto-retry on failure"
     },
     {
-        "question": "What is the purpose of 'Playwright Documentation'?",
-        "options": ["API reference", "Test guides", "Best practices", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most essential part of Playwright's documentation?",
+        "options": ["API reference", "Test guides", "Best practices", "Getting started"],
+        "correctAnswer": "API reference"
     },
     {
-        "question": "Which of the following is a Playwright integration?",
-        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most common Playwright integration with development workflows?",
+        "options": ["CI/CD pipelines", "Test frameworks", "Reporting tools", "Database systems"],
+        "correctAnswer": "CI/CD pipelines"
     },
     {
-        "question": "What is 'Playwright Test Data Management'?",
-        "options": ["Fixture management", "Test data generation", "Environment configuration", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the recommended approach for test data in Playwright?",
+        "options": ["Fixture management", "Test data generation", "Environment configuration", "Data factories"],
+        "correctAnswer": "Fixture management"
     },
     {
-        "question": "What is the purpose of 'Playwright Monitoring'?",
-        "options": ["Test execution tracking", "Performance monitoring", "Error analysis", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of Playwright's monitoring capabilities?",
+        "options": ["Test execution tracking", "Performance monitoring", "Error analysis", "Debugging support"],
+        "correctAnswer": "Test execution tracking"
     },
     {
-        "question": "Which of the following is a Playwright feature?",
-        "options": ["Cross-browser support", "Mobile emulation", "API testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is Playwright's most innovative feature?",
+        "options": ["Cross-browser support", "Mobile emulation", "API testing", "Auto-wait mechanism"],
+        "correctAnswer": "Auto-wait mechanism"
     },
     {
-        "question": "What is 'Playwright Test Generator'?",
-        "options": ["Auto-generating test code", "Creating test data", "Recording user actions", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main mechanism behind Playwright's test generator?",
+        "options": ["Auto-generating test code", "Creating test data", "Recording user actions", "Manual coding"],
+        "correctAnswer": "Recording user actions"
     },
     {
-        "question": "What is the purpose of 'Playwright API Testing'?",
-        "options": ["Backend testing", "Frontend testing", "Full stack testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What type of API testing is Playwright best suited for?",
+        "options": ["Backend testing", "Frontend testing", "Full stack testing", "Integration testing"],
+        "correctAnswer": "Backend testing"
     },
     {
-        "question": "Which of the following is a Playwright locator?",
+        "question": "Which Playwright locator is recommended for accessibility testing?",
         "options": ["CSS Selector", "XPath", "Text Locator", "Role Locator"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Role Locator"
     },
     {
-        "question": "What is 'Playwright Element Handle'?",
-        "options": ["Reference to page elements", "Test data structure", "Configuration object", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does Playwright return when you find a DOM element?",
+        "options": ["Reference to page elements", "Test data structure", "Configuration object", "Browser instance"],
+        "correctAnswer": "Reference to page elements"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Runner'?",
-        "options": ["Execute test files", "Manage test suites", "Generate reports", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary function of Playwright's test runner?",
+        "options": ["Execute test files", "Manage test suites", "Generate reports", "Debug failures"],
+        "correctAnswer": "Execute test files"
     },
     {
-        "question": "What is 'Playwright Browser Context'?",
-        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does Playwright's Browser Context enable for test isolation?",
+        "options": ["Browser session management", "Cookie handling", "LocalStorage management", "Isolated browser instance"],
+        "correctAnswer": "Isolated browser instance"
     },
     {
-        "question": "What is the purpose of 'Playwright Test Isolation'?",
-        "options": ["Independent test execution", "Resource cleanup", "State management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the main advantage of Playwright's test isolation?",
+        "options": ["Independent test execution", "Resource cleanup", "State management", "Parallel execution"],
+        "correctAnswer": "Independent test execution"
     },
     {
-        "question": "Which of the following is a Playwright deployment?",
-        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the preferred deployment environment for Playwright tests?",
+        "options": ["Test environment setup", "CI/CD integration", "Production deployment", "Local development"],
+        "correctAnswer": "CI/CD integration"
     },
     {
-        "question": "What is 'Playwright Accessibility Testing'?",
-        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What accessibility testing feature does Playwright support natively?",
+        "options": ["WCAG compliance", "Screen reader testing", "Keyboard navigation", "Color contrast"],
+        "correctAnswer": "Keyboard navigation"
     },
     {
-        "question": "What is the purpose of 'Playwright Performance Testing'?",
-        "options": ["Measure page load times", "Analyze resource usage", "Monitor test execution", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What performance aspect can Playwright measure accurately?",
+        "options": ["Page load times", "Resource usage", "Test execution", "Network latency"],
+        "correctAnswer": "Page load times"
     },
     {
-        "question": "Which of the following is a Playwright tool?",
-        "options": ["VS Code extension", "Command line tool", "Browser extension", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most popular Playwright development extension?",
+        "options": ["VS Code extension", "Command line tool", "Browser extension", "IDE plugin"],
+        "correctAnswer": "VS Code extension"
     },
     {
-        "question": "What is 'Playwright Test Organization'?",
-        "options": ["Page Object pattern", "Test data management", "Fixture organization", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the recommended pattern for structuring Playwright tests?",
+        "options": ["Page Object pattern", "Test data management", "Fixture organization", "Modular design"],
+        "correctAnswer": "Page Object pattern"
     },
     {
-        "question": "What is the purpose of 'Playwright Configuration'?",
-        "options": ["Test environment setup", "Browser configuration", "Project settings", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary role of Playwright's configuration file?",
+        "options": ["Test environment setup", "Browser configuration", "Project settings", "Test execution control"],
+        "correctAnswer": "Test execution control"
     },
     {
-        "question": "Which of the following is a Playwright best practice?",
-        "options": ["Explicit waits", "Page Object Model", "Test isolation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most critical Playwright best practice for reliable tests?",
+        "options": ["Explicit waits", "Page Object Model", "Test isolation", "Code reuse"],
+        "correctAnswer": "Test isolation"
     },
     {
-        "question": "What is 'Playwright Error Handling'?",
-        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary error recovery feature in Playwright?",
+        "options": ["Try-catch blocks", "Custom error messages", "Retry mechanisms", "Auto-retry on failure"],
+        "correctAnswer": "Auto-retry on failure"
     },
     {
-        "question": "What is the purpose of 'Playwright Documentation'?",
-        "options": ["API reference", "Test guides", "Best practices", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the most important section of Playwright's documentation?",
+        "options": ["API reference", "Test guides", "Best practices", "Getting started"],
+        "correctAnswer": "API reference"
     }
 ]
