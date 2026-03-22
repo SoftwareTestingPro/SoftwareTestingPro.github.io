@@ -1,13 +1,13 @@
 [
     {
         "question": "What is the primary goal of performance testing?",
-        "options": ["To validate functionality", "To test performance", "To check security", "All of the above"],
-        "correctAnswer": "All of the above"
+        "options": ["To validate functionality", "To test performance", "To check security", "System validation"],
+        "correctAnswer": "To test performance"
     },
     {
-        "question": "Which of the following is a key metric in performance testing?",
-        "options": ["Response time", "Throughput", "Error rate", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most important metric in performance testing?",
+        "options": ["Response time", "Throughput", "Error rate", "System metrics"],
+        "correctAnswer": "Response time"
     },
     {
         "question": "What does 'Throughput' refer to in performance testing?",
@@ -85,14 +85,14 @@
         "correctAnswer": "Performing load tests in a cloud environment"
     },
     {
-        "question": "Which of the following is a performance testing challenge?",
-        "options": ["Identifying realistic user scenarios", "Automating test scripts", "Managing test data", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the biggest performance testing challenge?",
+        "options": ["Identifying realistic user scenarios", "Automating test scripts", "Managing test data", "Scenario design"],
+        "correctAnswer": "Identifying realistic user scenarios"
     },
     {
         "question": "What does the 'Authorization' header in an API request typically contain?",
-        "options": ["User ID", "Token", "API key", "All of the above"],
-        "correctAnswer": "All of the above"
+        "options": ["User ID", "Token", "API key", "Authentication credentials"],
+        "correctAnswer": "Token"
     },
     {
         "question": "What does JSON stand for?",
@@ -110,9 +110,9 @@
         "correctAnswer": "The resource does not exist"
     },
     {
-        "question": "Which of the following is an HTTP header used for content negotiation?",
-        "options": ["Accept", "Content-Type", "Authorization", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the main HTTP header used for content negotiation?",
+        "options": ["Accept", "Content-Type", "Authorization", "Content negotiation"],
+        "correctAnswer": "Accept"
     },
     {
         "question": "What does the 'OPTIONS' HTTP method do?",
@@ -175,9 +175,9 @@
         "correctAnswer": "To indicate the media type of resource"
     },
     {
-        "question": "Which of the following is a way to optimize API performance?",
-        "options": ["Caching", "Rate limiting", "Batching requests", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most effective way to optimize API performance?",
+        "options": ["Caching", "Rate limiting", "Batching requests", "Performance optimization"],
+        "correctAnswer": "Caching"
     },
     {
         "question": "What does the term 'schema' refer to in API development?",
@@ -185,9 +185,9 @@
         "correctAnswer": "A structure that defines data format"
     },
     {
-        "question": "Which of the following is a common use case for APIs?",
-        "options": ["Data sharing between applications", "Authentication", "Integrating third-party services", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most common use case for APIs?",
+        "options": ["Data sharing between applications", "Authentication", "Integrating third-party services", "Data integration"],
+        "correctAnswer": "Data sharing between applications"
     },
     {
         "question": "What is a 'service mesh'?",
@@ -195,19 +195,19 @@
         "correctAnswer": "A dedicated infrastructure layer for managing service-to-service communication"
     },
     {
-        "question": "What is the role of an API developer?",
-        "options": ["To create and maintain APIs", "To consume APIs", "To document APIs", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary role of an API developer?",
+        "options": ["To create and maintain APIs", "To consume APIs", "To document APIs", "API creation"],
+        "correctAnswer": "To create and maintain APIs"
     },
     {
-        "question": "Which of the following is a common pattern for designing APIs?",
-        "options": ["Microservices architecture", "Monolithic architecture", "Event-driven architecture", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most common pattern for designing APIs?",
+        "options": ["Microservices architecture", "Monolithic architecture", "Event-driven architecture", "Architecture pattern"],
+        "correctAnswer": "Microservices architecture"
     },
     {
-        "question": "Which of the following is a best practice for API design?",
-        "options": ["Consistent naming conventions", "Error handling", "Versioning", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most important best practice for API design?",
+        "options": ["Consistent naming conventions", "Error handling", "Versioning", "Design consistency"],
+        "correctAnswer": "Consistent naming conventions"
     },
     {
         "question": "What does the 'DELETE' method do in RESTful APIs?",
@@ -215,9 +215,9 @@
         "correctAnswer": "Deletes a resource"
     },
     {
-        "question": "Which of the following is a security risk associated with APIs?",
-        "options": ["Data exposure", "Injection attacks", "Denial of Service", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the biggest security risk associated with APIs?",
+        "options": ["Data exposure", "Injection attacks", "Denial of Service", "Security vulnerability"],
+        "correctAnswer": "Data exposure"
     },
     {
         "question": "What is an API endpoint?",
@@ -225,9 +225,9 @@
         "correctAnswer": "A specific URL where an API can be accessed"
     },
     {
-        "question": "What is the purpose of API logging?",
-        "options": ["To track usage", "To monitor performance", "To debug issues", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of API logging?",
+        "options": ["To track usage", "To monitor performance", "To debug issues", "Usage tracking"],
+        "correctAnswer": "To track usage"
     },
     {
         "question": "What does the term 'payload' refer to in an API request?",

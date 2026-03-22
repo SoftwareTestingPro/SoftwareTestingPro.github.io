@@ -5,9 +5,9 @@
         "correctAnswer": "Automate build processes"
     },
     {
-        "question": "Which of the following is a Jenkins feature?",
-        "options": ["Pipeline automation", "Distributed builds", "Plugin ecosystem", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is a key Jenkins feature?",
+        "options": ["Pipeline automation", "Distributed builds", "Plugin ecosystem", "Manual testing"],
+        "correctAnswer": "Pipeline automation"
     },
     {
         "question": "What is a 'Jenkinsfile'?",
@@ -15,8 +15,8 @@
         "correctAnswer": "A configuration file for builds"
     },
     {
-        "question": "What does 'Jenkins Pipeline' do?",
-        "options": ["Automates the build process", "Manages dependencies", "Deploys applications", "All of the above"],
+        "question": "What is the primary purpose of 'Jenkins Pipeline'?",
+        "options": ["Automates the build process", "Manages dependencies", "Deploys applications", "Monitors performance"],
         "correctAnswer": "Automates the build process"
     },
     {
@@ -25,8 +25,8 @@
         "correctAnswer": "SCM changes"
     },
     {
-        "question": "What is the purpose of 'Jenkins Master'?",
-        "options": ["To coordinate build nodes", "Store build artifacts", "Manage user permissions", "All of the above"],
+        "question": "What is the primary purpose of 'Jenkins Master'?",
+        "options": ["To coordinate build nodes", "Store build artifacts", "Manage user permissions", "Execute builds"],
         "correctAnswer": "To coordinate build nodes"
     },
     {
@@ -36,8 +36,8 @@
     },
     {
         "question": "Which of the following is NOT a Jenkins job type?",
-        "options": ["Freestyle", "Pipeline", "Multibranch", "Matrix"],
-        "correctAnswer": "Freestyle"
+        "options": ["Freestyle", "Pipeline", "Multibranch", "Workflow"],
+        "correctAnswer": "Workflow"
     },
     {
         "question": "What is the purpose of 'Jenkins Artifacts'?",
@@ -50,14 +50,14 @@
         "correctAnswer": "Pipeline definition"
     },
     {
-        "question": "Which of the following is a Jenkins plugin?",
-        "options": ["Git integration", "Docker support", "Test reporting", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is a popular Jenkins plugin?",
+        "options": ["Git integration", "Docker support", "Test reporting", "Database connector"],
+        "correctAnswer": "Git integration"
     },
     {
-        "question": "What is the purpose of 'Jenkins Credentials'?",
-        "options": ["Secure access to resources", "Manage user permissions", "Store API keys", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Credentials'?",
+        "options": ["Secure access to resources", "Manage user permissions", "Store API keys", "Encrypt passwords"],
+        "correctAnswer": "Secure access to resources"
     },
     {
         "question": "What is 'Jenkins Workspace'?",
@@ -65,14 +65,14 @@
         "correctAnswer": "Build environment"
     },
     {
-        "question": "Which of the following is a Jenkins best practice?",
-        "options": ["Use version control", "Implement pipelines", "Secure credentials", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is a key Jenkins best practice?",
+        "options": ["Use version control", "Implement pipelines", "Secure credentials", "Manual deployments"],
+        "correctAnswer": "Use version control"
     },
     {
-        "question": "What is the purpose of 'Jenkins Notifications'?",
-        "options": ["Alert on build status", "Manage team communication", "Deploy notifications", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Notifications'?",
+        "options": ["Alert on build status", "Manage team communication", "Deploy notifications", "Email notifications"],
+        "correctAnswer": "Alert on build status"
     },
     {
         "question": "What does 'Jenkins Script Console' do?",
@@ -80,234 +80,234 @@
         "correctAnswer": "Execute Groovy scripts"
     },
     {
-        "question": "Which of the following is a Jenkins integration tool?",
-        "options": ["Git", "Docker", "Kubernetes", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is a popular Jenkins integration tool?",
+        "options": ["Git", "Docker", "Kubernetes", "Ansible"],
+        "correctAnswer": "Git"
     },
     {
-        "question": "What is the purpose of 'Jenkins Backup'?",
-        "options": ["Protect build data", "Recover from failures", "Archive build history", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Backup'?",
+        "options": ["Protect build data", "Recover from failures", "Archive build history", "System recovery"],
+        "correctAnswer": "Protect build data"
     },
     {
-        "question": "What is 'Jenkins Security' focused on?",
-        "options": ["Access control", "Plugin security", "Build integrity", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Jenkins Security' primarily focused on?",
+        "options": ["Access control", "Plugin security", "Build integrity", "Network security"],
+        "correctAnswer": "Access control"
     },
     {
         "question": "Which of the following is NOT a Jenkins concept?",
-        "options": ["Pipeline", "Job", "Plugin", "Agent"],
-        "correctAnswer": "Agent"
+        "options": ["Pipeline", "Job", "Plugin", "Workflow"],
+        "correctAnswer": "Workflow"
     },
     {
-        "question": "What is the purpose of 'Jenkins Monitoring'?",
-        "options": ["Track build performance", "Monitor system health", "Analyze logs", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Monitoring'?",
+        "options": ["Track build performance", "Monitor system health", "Analyze logs", "Resource usage"],
+        "correctAnswer": "Track build performance"
     },
     {
-        "question": "What does 'Jenkins REST API' provide?",
-        "options": ["Remote management", "Build triggering", "Plugin installation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins REST API' primarily provide?",
+        "options": ["Remote management", "Build triggering", "Plugin installation", "Configuration access"],
+        "correctAnswer": "Remote management"
     },
     {
-        "question": "Which of the following is a Jenkins deployment strategy?",
-        "options": ["Blue-Green deployments", "Rolling updates", "Canary releases", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is a popular Jenkins deployment strategy?",
+        "options": ["Blue-Green deployments", "Rolling updates", "Canary releases", "Recreate strategy"],
+        "correctAnswer": "Blue-Green deployments"
     },
     {
-        "question": "What is the purpose of 'Jenkins Configuration as Code'?",
-        "options": ["Version control build setup", "Automated configuration", "Template-based builds", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Configuration as Code'?",
+        "options": ["Version control build setup", "Automated configuration", "Template-based builds", "Declarative configuration"],
+        "correctAnswer": "Version control build setup"
     },
     {
-        "question": "What does 'Jenkins Shared Library' provide?",
-        "options": ["Common build utilities", "Plugin dependencies", "Code templates", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Shared Library' primarily provide?",
+        "options": ["Common build utilities", "Plugin dependencies", "Code templates", "Build functions"],
+        "correctAnswer": "Common build utilities"
     },
     {
-        "question": "Which of the following is a Jenkins build tool?",
+        "question": "Which of the following is the most commonly used Jenkins build tool?",
         "options": ["Maven", "Gradle", "Ant", "Make"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Maven"
     },
     {
-        "question": "What is the purpose of 'Jenkins Pipeline as Code'?",
-        "options": ["Version control pipeline definition", "Automated pipeline creation", "Template-based pipelines", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Pipeline as Code'?",
+        "options": ["Version control pipeline definition", "Automated pipeline creation", "Template-based pipelines", "Declarative pipelines"],
+        "correctAnswer": "Version control pipeline definition"
     },
     {
-        "question": "What does 'Jenkins Docker' integration enable?",
-        "options": ["Containerized builds", "Cross-platform deployment", "Automated testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Docker' integration primarily enable?",
+        "options": ["Containerized builds", "Cross-platform deployment", "Automated testing", "Image management"],
+        "correctAnswer": "Containerized builds"
     },
     {
-        "question": "Which of the following is a Jenkins environment variable?",
-        "options": ["Build configuration", "System settings", "Plugin configuration", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is a common Jenkins environment variable?",
+        "options": ["Build configuration", "System settings", "Plugin configuration", "Workspace path"],
+        "correctAnswer": "Workspace path"
     },
     {
-        "question": "What is the purpose of 'Jenkins Log Rotation'?",
-        "options": ["Manage disk space", "Archive old logs", "Monitor system performance", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Log Rotation'?",
+        "options": ["Manage disk space", "Archive old logs", "Monitor system performance", "Log cleanup"],
+        "correctAnswer": "Manage disk space"
     },
     {
-        "question": "What does 'Jenkins Kubernetes' integration provide?",
-        "options": ["Container orchestration", "Auto-scaling", "Rolling deployments", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Kubernetes' integration primarily provide?",
+        "options": ["Container orchestration", "Auto-scaling", "Rolling deployments", "Pod management"],
+        "correctAnswer": "Container orchestration"
     },
     {
-        "question": "Which of the following is a Jenkins plugin category?",
+        "question": "Which of the following is the most popular Jenkins plugin category?",
         "options": ["Source control", "Build tools", "Testing", "Deployment"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Source control"
     },
     {
-        "question": "What is the purpose of 'Jenkins Backup Plugin'?",
-        "options": ["Automated backup creation", "Disaster recovery", "Data archiving", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Backup Plugin'?",
+        "options": ["Automated backup creation", "Disaster recovery", "Data archiving", "System restore"],
+        "correctAnswer": "Automated backup creation"
     },
     {
-        "question": "What does 'Jenkins Multibranch Pipeline' do?",
-        "options": ["Builds multiple branches", "Parallel execution", "Cross-platform deployment", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Multibranch Pipeline' primarily do?",
+        "options": ["Builds multiple branches", "Parallel execution", "Cross-platform deployment", "Branch management"],
+        "correctAnswer": "Builds multiple branches"
     },
     {
-        "question": "Which of the following is a Jenkins security best practice?",
-        "options": ["Use RBAC", "Secure credentials", "Regular updates", "Plugin validation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is a key Jenkins security best practice?",
+        "options": ["Use RBAC", "Secure credentials", "Regular updates", "Plugin validation"],
+        "correctAnswer": "Use RBAC"
     },
     {
-        "question": "What is the purpose of 'Jenkins Artifact Repository'?",
-        "options": ["Store build outputs", "Manage dependencies", "Version artifacts", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Artifact Repository'?",
+        "options": ["Store build outputs", "Manage dependencies", "Version artifacts", "Build storage"],
+        "correctAnswer": "Store build outputs"
     },
     {
-        "question": "What does 'Jenkins Cloud' integration enable?",
-        "options": ["Scalable builds", "Distributed execution", "Auto-scaling", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Cloud' integration primarily enable?",
+        "options": ["Scalable builds", "Distributed execution", "Auto-scaling", "Resource management"],
+        "correctAnswer": "Scalable builds"
     },
     {
-        "question": "Which of the following is a Jenkins trigger type?",
+        "question": "Which of the following is the most common Jenkins trigger type?",
         "options": ["Webhook", "Timer", "Poll SCM", "Manual"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Webhook"
     },
     {
-        "question": "What is the purpose of 'Jenkins Clean Workspace'?",
-        "options": ["Remove old artifacts", "Reset build environment", "Archive build data", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Clean Workspace'?",
+        "options": ["Remove old artifacts", "Reset build environment", "Archive build data", "Workspace cleanup"],
+        "correctAnswer": "Reset build environment"
     },
     {
-        "question": "What does 'Jenkins Matrix Authorization' provide?",
-        "options": ["Role-based access", "Token-based auth", "Plugin permissions", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Matrix Authorization' primarily provide?",
+        "options": ["Role-based access", "Token-based auth", "Plugin permissions", "Matrix permissions"],
+        "correctAnswer": "Role-based access"
     },
     {
-        "question": "Which of the following is a Jenkins build step?",
+        "question": "Which of the following is the most common Jenkins build step?",
         "options": ["Compile", "Test", "Package", "Deploy"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Compile"
     },
     {
-        "question": "What is the purpose of 'Jenkins Plugin Manager'?",
-        "options": ["Install plugins", "Manage dependencies", "Configure tools", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Plugin Manager'?",
+        "options": ["Install plugins", "Manage dependencies", "Configure tools", "Plugin administration"],
+        "correctAnswer": "Install plugins"
     },
     {
-        "question": "What does 'Jenkins Pipeline Library' provide?",
-        "options": ["Reusable pipeline steps", "Shared functions", "Code templates", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Pipeline Library' primarily provide?",
+        "options": ["Reusable pipeline steps", "Shared functions", "Code templates", "Pipeline functions"],
+        "correctAnswer": "Reusable pipeline steps"
     },
     {
-        "question": "Which of the following is a Jenkins deployment method?",
-        "options": ["SSH", "Docker", "Kubernetes", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most common Jenkins deployment method?",
+        "options": ["SSH", "Docker", "Kubernetes", "FTP"],
+        "correctAnswer": "SSH"
     },
     {
-        "question": "What is the purpose of 'Jenkins System Log'?",
-        "options": ["System-level events", "Build history", "Error tracking", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins System Log'?",
+        "options": ["System-level events", "Build history", "Error tracking", "Debug information"],
+        "correctAnswer": "System-level events"
     },
     {
-        "question": "What does 'Jenkins Configuration as Code' enable?",
-        "options": ["Version control", "Automated setup", "Template management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Configuration as Code' primarily enable?",
+        "options": ["Version control", "Automated setup", "Template management", "Declarative configuration"],
+        "correctAnswer": "Version control"
     },
     {
-        "question": "Which of the following is a Jenkins node type?",
+        "question": "Which of the following is the primary Jenkins node type?",
         "options": ["Master", "Agent", "Slave", "Controller"],
-        "correctAnswer": "All of the above"
+        "correctAnswer": "Master"
     },
     {
-        "question": "What is the purpose of 'Jenkins Credentials Binding'?",
-        "options": ["Secure credential storage", "Environment-specific access", "Role-based permissions", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Credentials Binding'?",
+        "options": ["Secure credential storage", "Environment-specific access", "Role-based permissions", "Credential management"],
+        "correctAnswer": "Secure credential storage"
     },
     {
-        "question": "What does 'Jenkins Distributed Builds' enable?",
-        "options": ["Parallel execution", "Load balancing", "Cross-platform builds", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Distributed Builds' primarily enable?",
+        "options": ["Parallel execution", "Load balancing", "Cross-platform builds", "Resource distribution"],
+        "correctAnswer": "Parallel execution"
     },
     {
-        "question": "Which of the following is a Jenkins backup strategy?",
-        "options": ["Incremental backups", "Full backups", "Cloud storage", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most common Jenkins backup strategy?",
+        "options": ["Incremental backups", "Full backups", "Cloud storage", "Local storage"],
+        "correctAnswer": "Full backups"
     },
     {
-        "question": "What is the purpose of 'Jenkins Monitoring'?",
-        "options": ["Performance tracking", "Error detection", "Resource usage", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Monitoring'?",
+        "options": ["Performance tracking", "Error detection", "Resource usage", "System health"],
+        "correctAnswer": "Performance tracking"
     },
     {
-        "question": "What does 'Jenkins REST API' provide?",
-        "options": ["Remote management", "Build triggering", "Plugin installation", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins REST API' primarily provide?",
+        "options": ["Remote management", "Build triggering", "Plugin installation", "API access"],
+        "correctAnswer": "Remote management"
     },
     {
-        "question": "Which of the following is a Jenkins integration pattern?",
-        "options": ["Microservices", "Monolith", "Serverless", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most common Jenkins integration pattern?",
+        "options": ["Microservices", "Monolith", "Serverless", "Container-based"],
+        "correctAnswer": "Microservices"
     },
     {
-        "question": "What is the purpose of 'Jenkins Artifact Promotion'?",
-        "options": ["Move artifacts between environments", "Version control", "Quality gates", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Artifact Promotion'?",
+        "options": ["Move artifacts between environments", "Version control", "Quality gates", "Artifact management"],
+        "correctAnswer": "Move artifacts between environments"
     },
     {
-        "question": "What does 'Jenkins Kubernetes Operator' provide?",
-        "options": ["Automated deployment", "Scaling management", "Resource monitoring", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Kubernetes Operator' primarily provide?",
+        "options": ["Automated deployment", "Scaling management", "Resource monitoring", "Kubernetes integration"],
+        "correctAnswer": "Automated deployment"
     },
     {
-        "question": "Which of the following is a Jenkins security feature?",
-        "options": ["CSRF protection", "XSS prevention", "SQL injection prevention", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is a key Jenkins security feature?",
+        "options": ["CSRF protection", "XSS prevention", "SQL injection prevention", "Input validation"],
+        "correctAnswer": "CSRF protection"
     },
     {
-        "question": "What is the purpose of 'Jenkins Pipeline'?",
-        "options": ["Automate build processes", "Manage deployments", "Coordinate teams", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Pipeline'?",
+        "options": ["Automate build processes", "Manage deployments", "Coordinate teams", "Process automation"],
+        "correctAnswer": "Automate build processes"
     },
     {
-        "question": "What does 'Jenkins Configuration as Code' provide?",
-        "options": ["Version control", "Automated setup", "Template management", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Configuration as Code' primarily provide?",
+        "options": ["Version control", "Automated setup", "Template management", "Declarative setup"],
+        "correctAnswer": "Version control"
     },
     {
-        "question": "Which of the following is a Jenkins plugin type?",
-        "options": ["Build", "Test", "Deployment", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most common Jenkins plugin type?",
+        "options": ["Build", "Test", "Deployment", "Source control"],
+        "correctAnswer": "Build"
     },
     {
-        "question": "What is the purpose of 'Jenkins Backup'?",
-        "options": ["Protect build data", "Recover from failures", "Archive build history", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Jenkins Backup'?",
+        "options": ["Protect build data", "Recover from failures", "Archive build history", "Data protection"],
+        "correctAnswer": "Protect build data"
     },
     {
-        "question": "What does 'Jenkins Monitoring' provide?",
-        "options": ["Performance metrics", "Error tracking", "Resource usage", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What does 'Jenkins Monitoring' primarily provide?",
+        "options": ["Performance metrics", "Error tracking", "Resource usage", "System monitoring"],
+        "correctAnswer": "Performance metrics"
     },
     {
-        "question": "Which of the following is a Jenkins best practice?",
-        "options": ["Use version control", "Implement pipelines", "Secure credentials", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most important Jenkins best practice?",
+        "options": ["Use version control", "Implement pipelines", "Secure credentials", "Regular updates"],
+        "correctAnswer": "Use version control"
     },
     {
         "question": "What is the purpose of 'Jenkins Artifact Repository'?",

@@ -1,13 +1,13 @@
 [
     {
         "question": "What is the primary focus of mobile application testing?",
-        "options": ["Functionality on mobile devices", "Performance on mobile", "User experience on mobile", "All of the above"],
-        "correctAnswer": "All of the above"
+        "options": ["Functionality on mobile devices", "Performance on mobile", "User experience on mobile", "Mobile functionality"],
+        "correctAnswer": "Functionality on mobile devices"
     },
     {
-        "question": "Which of the following is a popular mobile testing tool?",
-        "options": ["Appium", "Espresso", "XCUITest", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most popular mobile testing tool?",
+        "options": ["Appium", "Espresso", "XCUITest", "Testing framework"],
+        "correctAnswer": "Appium"
     },
     {
         "question": "What is the difference between native and hybrid mobile apps?",
@@ -35,24 +35,24 @@
         "correctAnswer": "To simulate mobile devices"
     },
     {
-        "question": "Which of the following is a mobile operating system?",
-        "options": ["iOS", "Android", "Windows Mobile", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most popular mobile operating system?",
+        "options": ["iOS", "Android", "Windows Mobile", "Mobile OS"],
+        "correctAnswer": "Android"
     },
     {
-        "question": "What is 'Gesture Testing' in mobile apps?",
-        "options": ["Testing touch interactions", "Testing swipe actions", "Testing multi-touch gestures", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Gesture Testing' in mobile apps primarily?",
+        "options": ["Testing touch interactions", "Testing swipe actions", "Testing multi-touch gestures", "Touch testing"],
+        "correctAnswer": "Testing touch interactions"
     },
     {
-        "question": "What is 'Network Simulation' in mobile testing?",
-        "options": ["Testing with poor network conditions", "Testing offline functionality", "Testing with different network speeds", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Network Simulation' in mobile testing primarily?",
+        "options": ["Testing with poor network conditions", "Testing offline functionality", "Testing with different network speeds", "Network testing"],
+        "correctAnswer": "Testing with poor network conditions"
     },
     {
-        "question": "Which of the following is a challenge in mobile testing?",
-        "options": ["Device fragmentation", "OS version compatibility", "Screen size variations", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the biggest challenge in mobile testing?",
+        "options": ["Device fragmentation", "OS version compatibility", "Screen size variations", "Testing complexity"],
+        "correctAnswer": "Device fragmentation"
     },
     {
         "question": "What is 'Mobile Test Automation'?",
@@ -75,34 +75,34 @@
         "correctAnswer": "Testing app speed and responsiveness"
     },
     {
-        "question": "What is 'Mobile Security Testing'?",
-        "options": ["Testing app security vulnerabilities", "Data encryption testing", "Authentication testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Security Testing' primarily?",
+        "options": ["Testing app security vulnerabilities", "Data encryption testing", "Authentication testing", "Security validation"],
+        "correctAnswer": "Testing app security vulnerabilities"
     },
     {
-        "question": "What is 'Compatibility Testing' in mobile?",
-        "options": ["Testing across different devices", "Testing with different OS versions", "Testing app updates", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Compatibility Testing' in mobile primarily?",
+        "options": ["Testing across different devices", "Testing with different OS versions", "Testing app updates", "Device compatibility"],
+        "correctAnswer": "Testing across different devices"
     },
     {
-        "question": "Which of the following is a mobile testing metric?",
-        "options": ["Crash rate", "Response time", "Memory usage", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most important mobile testing metric?",
+        "options": ["Crash rate", "Response time", "Memory usage", "Performance metrics"],
+        "correctAnswer": "Crash rate"
     },
     {
-        "question": "What is 'Usability Testing' for mobile apps?",
-        "options": ["Testing user interface ease of use", "Testing navigation flows", "Testing accessibility", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Usability Testing' for mobile apps primarily?",
+        "options": ["Testing user interface ease of use", "Testing navigation flows", "Testing accessibility", "User experience"],
+        "correctAnswer": "Testing user interface ease of use"
     },
     {
-        "question": "What is 'Mobile Test Reporting'?",
-        "options": ["Documenting test results", "Tracking bugs", "Performance metrics", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Test Reporting' primarily?",
+        "options": ["Documenting test results", "Tracking bugs", "Performance metrics", "Test documentation"],
+        "correctAnswer": "Documenting test results"
     },
     {
-        "question": "What is the purpose of 'Mobile Test Strategy'?",
-        "options": ["Planning approach for mobile testing", "Tool selection", "Test case design", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Mobile Test Strategy'?",
+        "options": ["Planning approach for mobile testing", "Tool selection", "Test case design", "Strategic planning"],
+        "correctAnswer": "Planning approach for mobile testing"
     },
     {
         "question": "Which of the following is NOT a mobile testing tool?",
@@ -115,68 +115,68 @@
         "correctAnswer": "Testing on multiple mobile platforms"
     },
     {
-        "question": "What is 'Mobile Test Environment Setup'?",
-        "options": ["Configuring test devices", "Installing test apps", "Setting up test data", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Test Environment Setup' primarily?",
+        "options": ["Configuring test devices", "Installing test apps", "Setting up test data", "Environment configuration"],
+        "correctAnswer": "Configuring test devices"
     },
     {
-        "question": "What is 'Mobile Test Data Management'?",
-        "options": ["Managing test data for mobile apps", "Generating mobile test data", "Storing mobile test results", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Test Data Management' primarily?",
+        "options": ["Managing test data for mobile apps", "Generating mobile test data", "Storing mobile test results", "Data management"],
+        "correctAnswer": "Managing test data for mobile apps"
     },
     {
-        "question": "What is the role of 'Mobile Test Automation Framework'?",
-        "options": ["Providing structure for mobile automation", "Executing mobile test cases", "Managing mobile test data", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary role of 'Mobile Test Automation Framework'?",
+        "options": ["Providing structure for mobile automation", "Executing mobile test cases", "Managing mobile test data", "Automation structure"],
+        "correctAnswer": "Providing structure for mobile automation"
     },
     {
-        "question": "Which of the following is a mobile testing best practice?",
-        "options": ["Test on real devices", "Use emulators and real devices", "Test on multiple network conditions", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most important mobile testing best practice?",
+        "options": ["Test on real devices", "Use emulators and real devices", "Test on multiple network conditions", "Testing approach"],
+        "correctAnswer": "Test on real devices"
     },
     {
-        "question": "What is 'Mobile Performance Monitoring'?",
-        "options": ["Tracking app performance in production", "Monitoring battery usage", "Analyzing crash reports", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Performance Monitoring' primarily?",
+        "options": ["Tracking app performance in production", "Monitoring battery usage", "Analyzing crash reports", "Performance tracking"],
+        "correctAnswer": "Tracking app performance in production"
     },
     {
-        "question": "What is 'Mobile Accessibility Testing'?",
-        "options": ["Testing for users with disabilities", "Testing screen reader compatibility", "Testing voice control features", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Accessibility Testing' primarily?",
+        "options": ["Testing for users with disabilities", "Testing screen reader compatibility", "Testing voice control features", "Accessibility validation"],
+        "correctAnswer": "Testing for users with disabilities"
     },
     {
-        "question": "What is 'Mobile Test Maintenance'?",
-        "options": ["Updating mobile test scripts", "Fixing broken mobile tests", "Adding new mobile test cases", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Test Maintenance' primarily?",
+        "options": ["Updating mobile test scripts", "Fixing broken mobile tests", "Adding new mobile test cases", "Test updates"],
+        "correctAnswer": "Updating mobile test scripts"
     },
     {
-        "question": "What is the purpose of 'Mobile Test Documentation'?",
-        "options": ["Documenting mobile test procedures", "Explaining mobile test results", "Maintaining mobile test cases", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the primary purpose of 'Mobile Test Documentation'?",
+        "options": ["Documenting mobile test procedures", "Explaining mobile test results", "Maintaining mobile test cases", "Test documentation"],
+        "correctAnswer": "Documenting mobile test procedures"
     },
     {
         "question": "Which of the following is NOT a mobile testing challenge?",
-        "options": ["Device availability", "App store policies", "Network stability", "All of the above"],
-        "correctAnswer": "All of the above"
+        "options": ["Device availability", "App store policies", "Network stability", "Testing limitations"],
+        "correctAnswer": "Network stability"
     },
     {
-        "question": "What is 'Mobile Test Analytics'?",
-        "options": ["Analyzing mobile test results", "Tracking mobile test trends", "Measuring mobile test coverage", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Test Analytics' primarily?",
+        "options": ["Analyzing mobile test results", "Tracking mobile test trends", "Measuring mobile test coverage", "Test analysis"],
+        "correctAnswer": "Analyzing mobile test results"
     },
     {
-        "question": "What is the future of mobile testing?",
-        "options": ["AI-powered testing", "5G network testing", "IoT device testing", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is the future of mobile testing primarily?",
+        "options": ["AI-powered testing", "5G network testing", "IoT device testing", "Future trends"],
+        "correctAnswer": "AI-powered testing"
     },
     {
-        "question": "What is 'Mobile Test Optimization'?",
-        "options": ["Improving test execution speed", "Reducing test maintenance", "Optimizing test data", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "What is 'Mobile Test Optimization' primarily?",
+        "options": ["Improving test execution speed", "Reducing test maintenance", "Optimizing test data", "Test improvement"],
+        "correctAnswer": "Improving test execution speed"
     },
     {
-        "question": "Which of the following is a mobile testing consideration?",
-        "options": ["App permissions", "Data privacy", "User consent", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "Which of the following is the most important mobile testing consideration?",
+        "options": ["App permissions", "Data privacy", "User consent", "Testing requirements"],
+        "correctAnswer": "Data privacy"
     }
 ]

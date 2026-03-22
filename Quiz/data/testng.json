@@ -20,9 +20,9 @@
         "correctAnswer": "@DataProvider"
     },
     {
-        "question": "How do you run TestNG tests from command line?",
-        "options": ["Using java command with testng.xml", "Using testng run command", "Using maven test command", "All of the above"],
-        "correctAnswer": "All of the above"
+        "question": "How do you typically run TestNG tests from command line?",
+        "options": ["Using java command with testng.xml", "Using testng run command", "Using maven test command", "Using gradle test command"],
+        "correctAnswer": "Using java command with testng.xml"
     },
     {
         "question": "What is the purpose of testng.xml file?",

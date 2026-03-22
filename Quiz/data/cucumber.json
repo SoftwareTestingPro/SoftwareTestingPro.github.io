@@ -5,7 +5,7 @@
         "correctAnswer": "To write test scenarios in plain English"
     },
     {
-        "question": "Which programming language is primarily used with Cucumber?",
+        "question": "Which programming language is most commonly used with Cucumber in enterprise environments?",
         "options": ["Java", "Python", "JavaScript", "Ruby"],
         "correctAnswer": "Java"
     },
@@ -20,14 +20,14 @@
         "correctAnswer": "To define test implementation"
     },
     {
-        "question": "Which annotation is used to define a step in Cucumber?",
+        "question": "Which annotation is used to define the initial condition in Cucumber?",
         "options": ["@Given", "@When", "@Then", "@And"],
         "correctAnswer": "@Given"
     },
     {
         "question": "What is 'Gherkin' in Cucumber?",
-        "options": ["A programming language for test scenarios", "A test framework", "A reporting tool", "A data format"],
-        "correctAnswer": "A programming language for test scenarios"
+        "options": ["A DSL for writing test scenarios", "A test framework", "A reporting tool", "A data format"],
+        "correctAnswer": "A DSL for writing test scenarios"
     },
     {
         "question": "What is the purpose of 'Background' keyword in Cucumber?",
@@ -50,7 +50,7 @@
         "correctAnswer": "To provide test data"
     },
     {
-        "question": "Which of the following is a Cucumber runner?",
+        "question": "Which of the following is commonly used as a Cucumber test runner?",
         "options": ["JUnit", "TestNG", "Maven", "Gradle"],
         "correctAnswer": "JUnit"
     },

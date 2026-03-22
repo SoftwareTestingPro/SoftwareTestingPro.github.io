@@ -5,9 +5,9 @@
         "correctAnswer": "To automate web browsers"
     },
     {
-        "question": "Which of the following is a valid way to interact with Shadow DOM elements?",
-        "options": ["Using traditional locators", "Using the shadowRoot property", "Using JavaScriptExecutor", "Using XPath only"],
-        "correctAnswer": "Using the shadowRoot property"
+        "question": "Which of the following is the recommended way to interact with Shadow DOM elements?",
+        "options": ["Using traditional locators", "Using the shadowRoot property", "Using JavaScriptExecutor", "Using CSS selectors"],
+        "correctAnswer": "Using JavaScriptExecutor"
     },
     {
         "question": "Which of the following is a feature of Selenium Grid?",
@@ -40,14 +40,14 @@
         "correctAnswer": "Relative Locators"
     },
     {
-        "question": "What is the purpose of the 'switchTo()' method in Selenium?",
+        "question": "What is the primary purpose of the 'switchTo()' method in Selenium?",
         "options": ["To switch to a different browser window", "To switch between frames or windows", "To handle alerts", "To change browser settings"],
-        "correctAnswer": "To switch between frames or windows"
+        "correctAnswer": "To handle alerts"
     },
     {
-        "question": "Which of the following browsers is NOT natively supported by Selenium WebDriver?",
-        "options": ["Chrome", "Firefox", "Safari", "Opera"],
-        "correctAnswer": "Opera"
+        "question": "Which browser is developed by Microsoft and uses the Chromium engine?",
+        "options": ["Chrome", "Firefox", "Safari", "Edge"],
+        "correctAnswer": "Edge"
     },
     {
         "question": "What method would you use to maximize the browser window in Selenium?",
@@ -90,9 +90,9 @@
         "correctAnswer": "By.tagName()"
     },
     {
-        "question": "In Selenium 4, how do you handle alerts?",
+        "question": "In Selenium 4, which method is used to handle alerts?",
         "options": ["Using the Alert interface", "Using the Alert class", "Using the driver.alert()", "Using the driver.switchTo().alert()"],
-        "correctAnswer": "Using the driver.switchTo().alert()"
+        "correctAnswer": "Using the Alert interface"
     },
     {
         "question": "What is the default behavior of 'implicitlyWait()'?",
@@ -115,12 +115,12 @@
         "correctAnswer": "driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);"
     },
     {
-        "question": "In Selenium, which of the following can you use to perform keyboard actions?",
+        "question": "In Selenium, which class is specifically designed for performing complex keyboard and mouse actions?",
         "options": ["Keys class", "Keyboard class", "Actions class", "Robot class"],
         "correctAnswer": "Actions class"
     },
     {
-        "question": "Which of the following is an interface in Selenium?",
+        "question": "Which of the following is the main interface in Selenium WebDriver?",
         "options": ["WebDriver", "Browser", "WebElement", "None of the above"],
         "correctAnswer": "WebDriver"
     },
