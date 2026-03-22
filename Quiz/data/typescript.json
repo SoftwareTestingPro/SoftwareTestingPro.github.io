@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is TypeScript?",
+        "options": ["A typed superset of JavaScript", "A completely different language", "A JavaScript framework", "A JavaScript library"],
+        "correctAnswer": "A typed superset of JavaScript"
+    },
+    {
+        "question": "Which keyword is used to define a type in TypeScript?",
+        "options": ["type", "interface", "class", "typedef"],
+        "correctAnswer": "type"
+    },
+    {
+        "question": "What is the purpose of TypeScript's type system?",
+        "options": ["To catch errors at compile time", "To improve runtime performance", "To reduce code size", "To add new features to JavaScript"],
+        "correctAnswer": "To catch errors at compile time"
+    },
+    {
+        "question": "How do you declare a variable with a specific type?",
+        "options": ["let name: string;", "string name;", "let name = string;", "name: string;"],
+        "correctAnswer": "let name: string;"
+    },
+    {
+        "question": "What is an interface in TypeScript?",
+        "options": ["A way to define the shape of an object", "A class implementation", "A function type", "A variable type"],
+        "correctAnswer": "A way to define the shape of an object"
+    },
+    {
+        "question": "Which symbol is used for optional properties in interfaces?",
+        "options": ["?", "!", "*", "&"],
+        "correctAnswer": "?"
+    },
+    {
+        "question": "What is the difference between interface and type?",
+        "options": ["Interface can be extended, type cannot", "Type can be extended, interface cannot", "They are identical", "Interface is for objects, type is for primitives"],
+        "correctAnswer": "Interface can be extended, type cannot"
+    },
+    {
+        "question": "What is a generic in TypeScript?",
+        "options": ["A way to create reusable components", "A specific data type", "A function type", "A class type"],
+        "correctAnswer": "A way to create reusable components"
+    },
+    {
+        "question": "How do you define a generic function?",
+        "options": ["function name<T>(arg: T): T {}", "function name<T>(arg): T {}", "function name(arg: T): T {}", "function name<T>(arg: T) {}"],
+        "correctAnswer": "function name<T>(arg: T): T {}"
+    },
+    {
+        "question": "What is the purpose of tsconfig.json?",
+        "options": ["To configure TypeScript compiler options", "To store TypeScript code", "To define TypeScript types", "To run TypeScript tests"],
+        "correctAnswer": "To configure TypeScript compiler options"
+    }
+]

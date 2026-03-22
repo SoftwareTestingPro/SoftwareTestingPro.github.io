@@ -1,0 +1,237 @@
+[
+    {
+        "question": "What is the primary goal of performance testing?",
+        "options": ["To validate functionality", "To test performance", "To check security", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a key metric in performance testing?",
+        "options": ["Response time", "Throughput", "Error rate", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What does 'Throughput' refer to in performance testing?",
+        "options": ["The number of requests processed per time unit", "Response time", "Error rate", "None of the above"],
+        "correctAnswer": "The number of requests processed per time unit"
+    },
+    {
+        "question": "What is 'Response Time'?",
+        "options": ["The time taken for the system to respond to a request", "Total processing time", "Network latency", "None of the above"],
+        "correctAnswer": "The time taken for the system to respond to a request"
+    },
+    {
+        "question": "What is 'Benchmark Testing'?",
+        "options": ["Comparing application performance against standard criteria", "Security testing", "Load testing", "None of the above"],
+        "correctAnswer": "Comparing application performance against standard criteria"
+    },
+    {
+        "question": "What does 'Latency' measure?",
+        "options": ["The time delay before data transfer begins", "Total processing time", "Application throughput", "None of the above"],
+        "correctAnswer": "The time delay before data transfer begins"
+    },
+    {
+        "question": "What is 'Performance Profiling'?",
+        "options": ["Analyzing application performance characteristics", "Testing security", "Validating functionality", "None of the above"],
+        "correctAnswer": "Analyzing application performance characteristics"
+    },
+    {
+        "question": "Which of the following is a type of performance testing focused on network?",
+        "options": ["Network Performance Testing", "Load Testing", "Security Testing", "None of the above"],
+        "correctAnswer": "Network Performance Testing"
+    },
+    {
+        "question": "What does 'Bottleneck Analysis' involve?",
+        "options": ["Identifying performance limitations in the system", "Validating functionality", "Testing security", "None of the above"],
+        "correctAnswer": "Identifying performance limitations in the system"
+    },
+    {
+        "question": "What is the goal of 'Capacity Testing'?",
+        "options": ["To determine the maximum load the system can handle", "To assess security", "To validate functionalities", "None of the above"],
+        "correctAnswer": "To determine the maximum load the system can handle"
+    },
+    {
+        "question": "Which performance testing type is designed to test how the application performs under extreme conditions?",
+        "options": ["Stress Testing", "Load Testing", "Soak Testing", "None of the above"],
+        "correctAnswer": "Stress Testing"
+    },
+    {
+        "question": "What does 'Endurance Testing' assess?",
+        "options": ["The application's performance under sustained use", "Response time", "Error rate", "None of the above"],
+        "correctAnswer": "The application's performance under sustained use"
+    },
+    {
+        "question": "Which of the following is NOT a performance testing tool?",
+        "options": ["LoadRunner", "QTP", "Gatling", "JMeter"],
+        "correctAnswer": "QTP"
+    },
+    {
+        "question": "What is 'Volume Testing'?",
+        "options": ["Testing how the system behaves under a large volume of data", "Load testing", "Security testing", "None of the above"],
+        "correctAnswer": "Testing how the system behaves under a large volume of data"
+    },
+    {
+        "question": "What does 'Infrastructure Testing' focus on?",
+        "options": ["Testing the underlying architecture of the system", "Testing the UI", "Testing the security", "None of the above"],
+        "correctAnswer": "Testing the underlying architecture of the system"
+    },
+    {
+        "question": "What is the role of 'Test Environment' in performance testing?",
+        "options": ["To replicate production conditions for testing", "To validate functionality", "To test security", "None of the above"],
+        "correctAnswer": "To replicate production conditions for testing"
+    },
+    {
+        "question": "What is 'Cloud Load Testing'?",
+        "options": ["Performing load tests in a cloud environment", "Testing on local servers", "Testing in a lab environment", "None of the above"],
+        "correctAnswer": "Performing load tests in a cloud environment"
+    },
+    {
+        "question": "Which of the following is a performance testing challenge?",
+        "options": ["Identifying realistic user scenarios", "Automating test scripts", "Managing test data", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What does the 'Authorization' header in an API request typically contain?",
+        "options": ["User ID", "Token", "API key", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What does JSON stand for?",
+        "options": ["JavaScript Object Notation", "JavaScript Online Notation", "Java Syntax Object Notation", "Java Object Notation"],
+        "correctAnswer": "JavaScript Object Notation"
+    },
+    {
+        "question": "Which of the following is true about GraphQL?",
+        "options": ["It allows clients to request specific data", "It is a type of REST API", "It does not require a schema", "All of the above"],
+        "correctAnswer": "It allows clients to request specific data"
+    },
+    {
+        "question": "What does a '404 Not Found' status code indicate?",
+        "options": ["The request was successful", "The resource does not exist", "There is a server error", "None of the above"],
+        "correctAnswer": "The resource does not exist"
+    },
+    {
+        "question": "Which of the following is an HTTP header used for content negotiation?",
+        "options": ["Accept", "Content-Type", "Authorization", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What does the 'OPTIONS' HTTP method do?",
+        "options": ["Retrieves allowed HTTP methods for a resource", "Creates a new resource", "Deletes a resource", "None of the above"],
+        "correctAnswer": "Retrieves allowed HTTP methods for a resource"
+    },
+    {
+        "question": "What is an API client?",
+        "options": ["A software that consumes an API", "A server that provides an API", "A user interface for APIs", "None of the above"],
+        "correctAnswer": "A software that consumes an API"
+    },
+    {
+        "question": "What is the main advantage of using JSON over XML?",
+        "options": ["JSON is more verbose", "JSON is less human-readable", "JSON is easier to parse", "None of the above"],
+        "correctAnswer": "JSON is easier to parse"
+    },
+    {
+        "question": "What does the term 'callback' mean in API context?",
+        "options": ["A request sent by a server to a client", "A method invoked after a certain task completes", "A method for error handling", "None of the above"],
+        "correctAnswer": "A method invoked after a certain task completes"
+    },
+    {
+        "question": "Which of the following describes an asynchronous API?",
+        "options": ["Client must wait for a response", "Client can proceed without waiting for a response", "Always uses callbacks", "None of the above"],
+        "correctAnswer": "Client can proceed without waiting for a response"
+    },
+    {
+        "question": "What is the role of a Proxy in API communication?",
+        "options": ["To provide an interface for APIs", "To facilitate communication and security", "To store data", "None of the above"],
+        "correctAnswer": "To facilitate communication and security"
+    },
+    {
+        "question": "What does a '500 Internal Server Error' status code indicate?",
+        "options": ["Request was successful", "The server encountered an error", "Resource not found", "None of the above"],
+        "correctAnswer": "The server encountered an error"
+    },
+    {
+        "question": "Which of the following is not a benefit of using APIs?",
+        "options": ["Enhanced functionality", "Reusability", "Improved security", "Complex development"],
+        "correctAnswer": "Complex development"
+    },
+    {
+        "question": "What is a 'web service' in the context of APIs?",
+        "options": ["A service available over web that uses standardized protocols", "A specific type of API", "A programming interface for web applications", "None of the above"],
+        "correctAnswer": "A service available over web that uses standardized protocols"
+    },
+    {
+        "question": "What does 'CORS' stand for?",
+        "options": ["Cross-Origin Resource Sharing", "Cross-Origin Resource Security", "Cross-Origin Remote Sharing", "Cross-Origin Remote Security"],
+        "correctAnswer": "Cross-Origin Resource Sharing"
+    },
+    {
+        "question": "Which of the following describes a synchronous API?",
+        "options": ["Client must wait for a response", "Client can proceed without waiting for a response", "Always uses callbacks", "None of the above"],
+        "correctAnswer": "Client must wait for a response"
+    },
+    {
+        "question": "What is the purpose of the 'Content-Type' header?",
+        "options": ["To indicate the media type of resource", "To authorize the request", "To specify the URL", "None of the above"],
+        "correctAnswer": "To indicate the media type of resource"
+    },
+    {
+        "question": "Which of the following is a way to optimize API performance?",
+        "options": ["Caching", "Rate limiting", "Batching requests", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What does the term 'schema' refer to in API development?",
+        "options": ["A structure that defines data format", "A type of authentication", "A programming language", "None of the above"],
+        "correctAnswer": "A structure that defines data format"
+    },
+    {
+        "question": "Which of the following is a common use case for APIs?",
+        "options": ["Data sharing between applications", "Authentication", "Integrating third-party services", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'service mesh'?",
+        "options": ["A dedicated infrastructure layer for managing service-to-service communication", "A type of API", "A programming model", "None of the above"],
+        "correctAnswer": "A dedicated infrastructure layer for managing service-to-service communication"
+    },
+    {
+        "question": "What is the role of an API developer?",
+        "options": ["To create and maintain APIs", "To consume APIs", "To document APIs", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a common pattern for designing APIs?",
+        "options": ["Microservices architecture", "Monolithic architecture", "Event-driven architecture", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a best practice for API design?",
+        "options": ["Consistent naming conventions", "Error handling", "Versioning", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What does the 'DELETE' method do in RESTful APIs?",
+        "options": ["Retrieves a resource", "Creates a new resource", "Deletes a resource", "Updates an existing resource"],
+        "correctAnswer": "Deletes a resource"
+    },
+    {
+        "question": "Which of the following is a security risk associated with APIs?",
+        "options": ["Data exposure", "Injection attacks", "Denial of Service", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is an API endpoint?",
+        "options": ["A specific URL where an API can be accessed", "A type of HTTP request", "A response from an API", "None of the above"],
+        "correctAnswer": "A specific URL where an API can be accessed"
+    },
+    {
+        "question": "What is the purpose of API logging?",
+        "options": ["To track usage", "To monitor performance", "To debug issues", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What does the term 'payload' refer to in an API request?",
+        "options": ["The data sent in the request", "The metadata of the request", "The URL of the request", "None of the above"],
+        "correctAnswer": "The data sent in the request"
+    }
+]

@@ -1,0 +1,292 @@
+[
+    {
+        "question": "What is the primary purpose of Maven in build management?",
+        "options": ["Dependency management", "Project building", "Documentation generation", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven build lifecycle phase?",
+        "options": ["Compile", "Test", "Package", "Install"],
+        "correctAnswer": "Compile"
+    },
+    {
+        "question": "What is a Maven 'pom.xml' file?",
+        "options": ["Project configuration", "Build script", "Dependency list", "All of the above"],
+        "correctAnswer": "Project configuration"
+    },
+    {
+        "question": "Which Maven command is used to compile a project?",
+        "options": ["mvn compile", "mvn test", "mvn package", "mvn install"],
+        "correctAnswer": "mvn compile"
+    },
+    {
+        "question": "What is the purpose of Maven 'dependencies'?",
+        "options": ["To manage project libraries", "To configure build settings", "To generate documentation", "All of the above"],
+        "correctAnswer": "To manage project libraries"
+    },
+    {
+        "question": "Which of the following is a Maven repository type?",
+        "options": ["Local", "Central", "Remote", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'scope' used for?",
+        "options": ["To define dependency visibility", "To configure build plugins", "To manage project versions", "All of the above"],
+        "correctAnswer": "To define dependency visibility"
+    },
+    {
+        "question": "What is the purpose of Maven 'plugins'?",
+        "options": ["To extend build functionality", "To manage dependencies", "To generate reports", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which Maven command is used to package a project?",
+        "options": ["mvn package", "mvn install", "mvn deploy", "mvn clean"],
+        "correctAnswer": "mvn package"
+    },
+    {
+        "question": "What is a Maven 'artifact'?",
+        "options": ["A deployable unit of code", "A dependency library", "A configuration file", "All of the above"],
+        "correctAnswer": "A deployable unit of code"
+    },
+    {
+        "question": "What is the purpose of Maven 'repositories'?",
+        "options": ["To locate dependencies", "To store build artifacts", "To manage plugins", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven dependency scope?",
+        "options": ["Compile", "Runtime", "Test", "Provided"],
+        "correctAnswer": "Compile"
+    },
+    {
+        "question": "What is Maven 'transitive dependency'?",
+        "options": ["Indirect dependency", "Direct dependency", "Optional dependency", "All of the above"],
+        "correctAnswer": "Indirect dependency"
+    },
+    {
+        "question": "What is the purpose of Maven 'profiles'?",
+        "options": ["Environment-specific configuration", "Build customization", "Dependency management", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which Maven command is used to install dependencies?",
+        "options": ["mvn install", "mvn compile", "mvn test", "mvn package"],
+        "correctAnswer": "mvn install"
+    },
+    {
+        "question": "What is a Maven 'snapshot' version?",
+        "options": ["Development version", "Release version", "Test version", "All of the above"],
+        "correctAnswer": "Development version"
+    },
+    {
+        "question": "What is the purpose of Maven 'properties' files?",
+        "options": ["Configuration management", "Build customization", "Dependency configuration", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven build goal?",
+        "options": ["compile", "test", "package", "install"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'dependency management'?",
+        "options": ["Automatic dependency resolution", "Manual dependency specification", "Version conflict resolution", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'site' generation?",
+        "options": ["To create project documentation", "To generate reports", "To deploy website", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven packaging type?",
+        "options": ["jar", "war", "ear", "pom"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'inheritance' in POM?",
+        "options": ["Parent POM configuration", "Dependency inheritance", "Plugin configuration", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'archetype'?",
+        "options": ["Project template generation", "Dependency management", "Build configuration", "All of the above"],
+        "correctAnswer": "Project template generation"
+    },
+    {
+        "question": "Which Maven command is used to run tests?",
+        "options": ["mvn test", "mvn compile", "mvn package", "mvn install"],
+        "correctAnswer": "mvn test"
+    },
+    {
+        "question": "What is Maven 'dependency mediation'?",
+        "options": ["Conflict resolution", "Version management", "Exclusion management", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'clean' lifecycle?",
+        "options": ["Remove build artifacts", "Reset build state", "Generate reports", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven repository manager?",
+        "options": ["Nexus", "Artifactory", "GitHub", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'multi-module' project?",
+        "options": ["Multiple POM files", "Single project with multiple modules", "Project with dependencies", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'assembly' plugin?",
+        "options": ["Create custom distributions", "Package customization", "Dependency management", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which Maven command is used to validate a project?",
+        "options": ["mvn validate", "mvn compile", "mvn test", "mvn package"],
+        "correctAnswer": "mvn validate"
+    },
+    {
+        "question": "What is Maven 'version range'?",
+        "options": ["To specify compatible versions", "To manage dependencies", "To configure builds", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'resource filtering'?",
+        "options": ["Include/exclude resources", "Environment-specific configuration", "Build customization", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven build plugin?",
+        "options": ["Compiler plugin", "Surefire plugin", "Jar plugin", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'dependency exclusions'?",
+        "options": ["To exclude specific dependencies", "To manage versions", "To configure builds", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'enforcer' plugin?",
+        "options": ["Enforce build rules", "Manage dependencies", "Validate configuration", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which Maven command is used to deploy a project?",
+        "options": ["mvn deploy", "mvn install", "mvn package", "mvn clean"],
+        "correctAnswer": "mvn deploy"
+    },
+    {
+        "question": "What is Maven 'build number'?",
+        "options": ["Timestamp identifier", "Version number", "Build identifier", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'settings.xml'?",
+        "options": ["Global configuration", "Local configuration", "Server settings", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven goal prefix?",
+        "options": ["build", "test", "package", "install"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'dependency graph'?",
+        "options": ["Visual dependency representation", "Build dependency tree", "Version conflict analysis", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'release management'?",
+        "options": ["Version control", "Automated releases", "Change management", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven repository layout?",
+        "options": ["Standard layout", "Flat layout", "Hybrid layout", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'CI Friendly' version?",
+        "options": ["Development version", "Release version", "Test version", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'build aggregation'?",
+        "options": ["Combine multiple projects", "Generate reports", "Manage dependencies", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven packaging type?",
+        "options": ["jar", "war", "ear", "pom"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'dependency management'?",
+        "options": ["Automatic dependency resolution", "Manual dependency specification", "Version conflict resolution", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'site generation'?",
+        "options": ["Create project documentation", "To generate reports", "To deploy website", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven repository manager?",
+        "options": ["Nexus", "Artifactory", "GitHub", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'multi-module' project?",
+        "options": ["Multiple POM files", "Single project with multiple modules", "Project with dependencies", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'assembly' plugin?",
+        "options": ["Create custom distributions", "Package customization", "Dependency management", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which Maven command is used to validate a project?",
+        "options": ["mvn validate", "mvn compile", "mvn test", "mvn package"],
+        "correctAnswer": "mvn validate"
+    },
+    {
+        "question": "What is Maven 'version range'?",
+        "options": ["To specify compatible versions", "To manage dependencies", "To configure builds", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'resource filtering'?",
+        "options": ["Include/exclude resources", "Environment-specific configuration", "Build customization", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Maven build plugin?",
+        "options": ["Compiler plugin", "Surefire plugin", "Jar plugin", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is Maven 'dependency exclusions'?",
+        "options": ["To exclude specific dependencies", "To manage versions", "To configure builds", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of Maven 'enforcer' plugin?",
+        "options": ["Enforce build rules", "Manage dependencies", "Validate configuration", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which Maven command is used to deploy a project?",
+        "options": ["mvn deploy", "mvn install", "mvn package", "mvn clean"],
+        "correctAnswer": "mvn deploy"
+    },
+    {
+        "question": "What is Maven 'build number'?",
+        "options": ["Timestamp identifier", "Version number", "Build identifier", "All of the above"],
+        "correctAnswer": "All of the above"
+    }
+]

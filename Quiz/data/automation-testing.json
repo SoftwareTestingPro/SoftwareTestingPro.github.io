@@ -1,0 +1,167 @@
+[
+    {
+        "question": "What is the primary benefit of test automation?",
+        "options": ["Faster test execution", "Reduced human error", "Cost savings", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a popular test automation framework?",
+        "options": ["Selenium", "Cypress", "Playwright", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of a Page Object Model in automation?",
+        "options": ["To separate test logic from page structure", "To improve test performance", "To handle dynamic elements", "All of the above"],
+        "correctAnswer": "To separate test logic from page structure"
+    },
+    {
+        "question": "Which programming language is commonly used for test automation?",
+        "options": ["Java", "Python", "JavaScript", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Data-Driven Testing' in automation?",
+        "options": ["Testing with external data sources", "Testing with hardcoded data", "Testing with random data", "All of the above"],
+        "correctAnswer": "Testing with external data sources"
+    },
+    {
+        "question": "What is the purpose of 'TestNG' framework?",
+        "options": ["Test management", "Reporting", "Parallel execution", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is NOT a type of automation testing?",
+        "options": ["UI testing", "API testing", "Performance testing", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Headless Testing'?",
+        "options": ["Testing without graphical user interface", "Testing on virtual machines", "Testing with real browsers", "All of the above"],
+        "correctAnswer": "Testing without graphical user interface"
+    },
+    {
+        "question": "What is the role of 'Test Annotations' in automation?",
+        "options": ["To mark test methods", "To configure test execution", "To manage test data", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a benefit of using 'Behavior-Driven Development'?",
+        "options": ["Improved collaboration", "Faster development", "Better code quality", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Cross-Browser Testing'?",
+        "options": ["Testing on multiple browsers", "Testing on mobile devices", "Testing on different operating systems", "All of the above"],
+        "correctAnswer": "Testing on multiple browsers"
+    },
+    {
+        "question": "What is the purpose of 'Test Reports' in automation?",
+        "options": ["To document test results", "To track test history", "To analyze test coverage", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a test automation best practice?",
+        "options": ["Use version control", "Implement proper waits", "Write maintainable tests", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Continuous Integration' in test automation?",
+        "options": ["Automated build and test process", "Manual testing process", "Code deployment process", "All of the above"],
+        "correctAnswer": "Automated build and test process"
+    },
+    {
+        "question": "Which of the following is NOT a test automation tool?",
+        "options": ["Selenium", "Cypress", "QTP", "Playwright"],
+        "correctAnswer": "QTP"
+    },
+    {
+        "question": "What is the purpose of 'Test Hooks' in automation frameworks?",
+        "options": ["Setup and teardown operations", "Test configuration", "Data management", "All of the above"],
+        "correctAnswer": "Setup and teardown operations"
+    },
+    {
+        "question": "What is 'Parallel Testing' in automation?",
+        "options": ["Running tests simultaneously", "Running tests sequentially", "Running tests on different machines", "All of the above"],
+        "correctAnswer": "Running tests simultaneously"
+    },
+    {
+        "question": "What is the role of 'Test Data Management'?",
+        "options": ["Managing test input data", "Generating test data", "Storing test results", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a challenge in test automation?",
+        "options": ["Flaky tests", "Slow test execution", "Maintenance overhead", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Test Environment Management'?",
+        "options": ["Managing test configurations", "Setting up test data", "Controlling test execution", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is NOT a type of test automation?",
+        "options": ["Unit testing", "Integration testing", "System testing", "Regression testing"],
+        "correctAnswer": "System testing"
+    },
+    {
+        "question": "What is the purpose of 'Assertions' in test automation?",
+        "options": ["To validate test results", "To verify expected outcomes", "To handle test exceptions", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Test Maintenance' in automation?",
+        "options": ["Updating test scripts", "Fixing broken tests", "Adding new test cases", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a test automation metric?",
+        "options": ["Test coverage", "Pass rate", "Execution time", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Test Automation Framework'?",
+        "options": ["To provide structure for automation", "To execute test cases", "To generate reports", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is NOT a benefit of test automation?",
+        "options": ["Improved quality", "Faster execution", "Increased complexity", "All of the above"],
+        "correctAnswer": "Increased complexity"
+    },
+    {
+        "question": "What is 'Keyword-Driven Testing'?",
+        "options": ["Testing using predefined keywords", "Testing with custom scripts", "Testing with record and playback", "All of the above"],
+        "correctAnswer": "Testing using predefined keywords"
+    },
+    {
+        "question": "What is the role of 'Version Control' in test automation?",
+        "options": ["Managing test script versions", "Collaboration", "Backup and recovery", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a test automation challenge?",
+        "options": ["Dynamic content handling", "Cross-browser compatibility", "Mobile automation", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Test Automation ROI'?",
+        "options": ["Return on investment", "Cost savings", "Quality improvement", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Test Documentation' in automation?",
+        "options": ["To explain test design", "To guide test execution", "To maintain test scripts", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is NOT a test automation best practice?",
+        "options": ["Hard-coded test data", "Proper error handling", "Test independence", "All of the above"],
+        "correctAnswer": "Test independence"
+    },
+    {
+        "question": "What is 'Test Automation Strategy'?",
+        "options": ["Planning approach for automation", "Tool selection", "Framework design", "All of the above"],
+        "correctAnswer": "All of the above"
+    }
+]

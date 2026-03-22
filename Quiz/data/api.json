@@ -1,0 +1,2502 @@
+[
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  },
+  {
+    "question": "A client sends a GET request but receives 304. What does it mean?",
+    "options": [
+      "Resource modified",
+      "Resource not modified",
+      "Server error",
+      "Unauthorized"
+    ],
+    "correctAnswer": "Resource not modified"
+  },
+  {
+    "question": "Which header is crucial for content negotiation in APIs?",
+    "options": [
+      "Accept",
+      "Authorization",
+      "Host",
+      "Cookie"
+    ],
+    "correctAnswer": "Accept"
+  },
+  {
+    "question": "You want to ensure idempotency in payment API. Which method is safest?",
+    "options": [
+      "PUT",
+      "POST",
+      "PATCH",
+      "CONNECT"
+    ],
+    "correctAnswer": "PUT"
+  },
+  {
+    "question": "A token is expired. Which status code should API return?",
+    "options": [
+      "401",
+      "403",
+      "200",
+      "500"
+    ],
+    "correctAnswer": "401"
+  },
+  {
+    "question": "Which design principle suggests stateless communication?",
+    "options": [
+      "REST",
+      "SOAP",
+      "GraphQL",
+      "RPC"
+    ],
+    "correctAnswer": "REST"
+  },
+  {
+    "question": "Which header prevents caching of API response?",
+    "options": [
+      "Cache-Control",
+      "Accept",
+      "Host",
+      "Referer"
+    ],
+    "correctAnswer": "Cache-Control"
+  },
+  {
+    "question": "A POST request creates duplicate resources accidentally. What is missing?",
+    "options": [
+      "Idempotency key",
+      "Authorization",
+      "Content-Type",
+      "Accept"
+    ],
+    "correctAnswer": "Idempotency key"
+  },
+  {
+    "question": "Which status code indicates rate limiting?",
+    "options": [
+      "429",
+      "403",
+      "401",
+      "500"
+    ],
+    "correctAnswer": "429"
+  },
+  {
+    "question": "In REST, resources should be identified by?",
+    "options": [
+      "URI",
+      "Headers",
+      "Body",
+      "Token"
+    ],
+    "correctAnswer": "URI"
+  },
+  {
+    "question": "Which authentication method sends credentials encoded in header?",
+    "options": [
+      "Basic Auth",
+      "OAuth",
+      "JWT",
+      "API Key"
+    ],
+    "correctAnswer": "Basic Auth"
+  }
+]

@@ -1,0 +1,102 @@
+[
+    {
+        "question": "Which of the following is NOT a type of software testing?",
+        "options": [
+            "Unit Testing",
+            "Integration Testing",
+            "Coffee Testing",
+            "Acceptance Testing"
+        ],
+        "correctAnswer": "Coffee Testing"
+    },
+    {
+        "question": "What is the primary purpose of regression testing?",
+        "options": [
+            "To find new features",
+            "To ensure existing functionality still works after changes",
+            "To test the user interface",
+            "To improve performance"
+        ],
+        "correctAnswer": "To ensure existing functionality still works after changes"
+    },
+    {
+        "question": "Which testing approach is most suitable for finding defects early in the development process?",
+        "options": [
+            "Static testing",
+            "Dynamic testing",
+            "Performance testing",
+            "Security testing"
+        ],
+        "correctAnswer": "Static testing"
+    },
+    {
+        "question": "What does the term 'test coverage' refer to?",
+        "options": [
+            "The number of tests written",
+            "The degree to which the source code is tested",
+            "The time taken to run tests",
+            "The cost of testing"
+        ],
+        "correctAnswer": "The degree to which the source code is tested"
+    },
+    {
+        "question": "Which of the following is a characteristic of a good test case?",
+        "options": [
+            "It is complex and difficult to understand",
+            "It has ambiguous expected results",
+            "It is independent of other test cases",
+            "It tests multiple requirements at once"
+        ],
+        "correctAnswer": "It is independent of other test cases"
+    },
+    {
+        "question": "What is the purpose of a test plan?",
+        "options": [
+            "To write test cases",
+            "To document the overall approach to testing",
+            "To execute tests",
+            "To report bugs"
+        ],
+        "correctAnswer": "To document the overall approach to testing"
+    },
+    {
+        "question": "Which testing level typically involves testing individual components or modules in isolation?",
+        "options": [
+            "System testing",
+            "Integration testing",
+            "Unit testing",
+            "Acceptance testing"
+        ],
+        "correctAnswer": "Unit testing"
+    },
+    {
+        "question": "What is a test oracle?",
+        "options": [
+            "A database of test results",
+            "A mechanism for determining whether a test passed or failed",
+            "A tool for writing test cases",
+            "A type of test automation framework"
+        ],
+        "correctAnswer": "A mechanism for determining whether a test passed or failed"
+    },
+    {
+        "question": "Which of the following is NOT a principle of software testing?",
+        "options": [
+            "Testing shows the presence of defects",
+            "Exhaustive testing is possible",
+            "Early testing saves time and money",
+            "Defects cluster together"
+        ],
+        "correctAnswer": "Exhaustive testing is possible"
+    },
+    {
+        "question": "What is the main difference between verification and validation?",
+        "options": [
+            "Verification is manual, validation is automated",
+            "Verification checks if we built the product right, validation checks if we built the right product",
+            "Verification is done by developers, validation is done by testers",
+            "There is no difference between them"
+        ],
+        "correctAnswer": "Verification checks if we built the product right, validation checks if we built the right product"
+    }
+]

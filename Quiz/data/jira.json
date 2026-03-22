@@ -1,0 +1,277 @@
+[
+    {
+        "question": "What is the primary purpose of JIRA in project management?",
+        "options": ["Issue tracking", "Code repository management", "Team collaboration", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a JIRA issue type?",
+        "options": ["Bug", "Task", "Story", "Epic"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Sprint' in JIRA?",
+        "options": ["A time-boxed period for work", "A type of issue", "A project milestone", "A team meeting"],
+        "correctAnswer": "A time-boxed period for work"
+    },
+    {
+        "question": "What is the purpose of 'Backlog' in JIRA?",
+        "options": ["To prioritize work", "To track completed tasks", "To manage team resources", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA field is used to track work progress?",
+        "options": ["Status", "Priority", "Assignee", "Reporter"],
+        "correctAnswer": "Status"
+    },
+    {
+        "question": "What is a 'Workflow' in JIRA?",
+        "options": ["A sequence of steps to complete work", "A type of project", "A team collaboration tool", "All of the above"],
+        "correctAnswer": "A sequence of steps to complete work"
+    },
+    {
+        "question": "What is the purpose of 'Components' in JIRA?",
+        "options": ["To organize project structure", "To track issues", "To manage team members", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a JIRA priority level?",
+        "options": ["Highest", "High", "Medium", "Low"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Board' in JIRA?",
+        "options": ["A visual representation of work", "A project planning tool", "A team meeting space", "All of the above"],
+        "correctAnswer": "A visual representation of work"
+    },
+    {
+        "question": "What is the purpose of 'Filters' in JIRA?",
+        "options": ["To refine search results", "To organize issues", "To manage permissions", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA field is used to specify who should work on an issue?",
+        "options": ["Assignee", "Reporter", "Reviewer", "Watcher"],
+        "correctAnswer": "Assignee"
+    },
+    {
+        "question": "What is a 'Version' in JIRA?",
+        "options": ["A release of the software", "A project milestone", "A specific iteration", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Roadmap' in JIRA?",
+        "options": ["To plan future releases", "To track current progress", "To manage team resources", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a JIRA issue status?",
+        "options": ["To Do", "In Progress", "Done", "Blocked"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Dashboard' in JIRA?",
+        "options": ["A main overview screen", "A reporting tool", "A configuration panel", "All of the above"],
+        "correctAnswer": "A main overview screen"
+    },
+    {
+        "question": "What is the purpose of 'Labels' in JIRA?",
+        "options": ["To categorize issues", "To prioritize work", "To track progress", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for time tracking?",
+        "options": ["Time tracking", "Work logging", "Calendar integration", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Project' in JIRA?",
+        "options": ["A collection of related work", "A team workspace", "A product release", "All of the above"],
+        "correctAnswer": "A collection of related work"
+    },
+    {
+        "question": "What is the purpose of 'Reports' in JIRA?",
+        "options": ["To analyze project data", "To track team performance", "To generate documentation", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a JIRA permission level?",
+        "options": ["Administrator", "Developer", "User", "Guest"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Custom Field' in JIRA?",
+        "options": ["A user-defined field", "A system field", "A default field", "A required field"],
+        "correctAnswer": "A user-defined field"
+    },
+    {
+        "question": "What is the purpose of 'Integrations' in JIRA?",
+        "options": ["To connect with other tools", "To extend functionality", "To manage data", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for team collaboration?",
+        "options": ["Comments", "Mentions", "Sharing", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Sprint' in JIRA?",
+        "options": ["A short development cycle", "A type of issue", "A project phase", "A team meeting"],
+        "correctAnswer": "A short development cycle"
+    },
+    {
+        "question": "What is the purpose of 'Notifications' in JIRA?",
+        "options": ["To alert users about updates", "To manage team communication", "To track issue changes", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a JIRA issue type?",
+        "options": ["Bug", "Task", "Story", "Epic"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Kanban Board' in JIRA?",
+        "options": ["A visual workflow management tool", "A project planning method", "A team collaboration space", "All of the above"],
+        "correctAnswer": "A visual workflow management tool"
+    },
+    {
+        "question": "What is the purpose of 'Search' in JIRA?",
+        "options": ["To find specific issues", "To generate reports", "To manage projects", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for reporting?",
+        "options": ["Dashboards", "Reports", "Charts", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Workflow' in JIRA?",
+        "options": ["A sequence of steps to complete work", "A type of project", "A team collaboration tool", "All of the above"],
+        "correctAnswer": "A sequence of steps to complete work"
+    },
+    {
+        "question": "What is the purpose of 'Security' in JIRA?",
+        "options": ["To control access to projects", "To manage user permissions", "To track changes", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for customization?",
+        "options": ["Custom fields", "Workflows", "Dashboards", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Quick Filter' in JIRA?",
+        "options": ["A saved search query", "A type of issue", "A project template", "All of the above"],
+        "correctAnswer": "A saved search query"
+    },
+    {
+        "question": "What is the purpose of 'Archives' in JIRA?",
+        "options": ["To store completed work", "To backup project data", "To manage releases", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for mobile access?",
+        "options": ["Mobile app", "Email notifications", "API access", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Portfolio' in JIRA?",
+        "options": ["A collection of projects", "A team workspace", "A product catalog", "All of the above"],
+        "correctAnswer": "A collection of projects"
+    },
+    {
+        "question": "What is the purpose of 'Activity Stream' in JIRA?",
+        "options": ["To track recent changes", "To manage team updates", "To monitor project progress", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for automation?",
+        "options": ["Automation rules", "Workflows", "Integrations", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Calendar' in JIRA?",
+        "options": ["To schedule work", "To track deadlines", "To manage team availability", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Permissions' in JIRA?",
+        "options": ["To control user access", "To manage project security", "To define roles", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for documentation?",
+        "options": ["Confluence integration", "Wiki pages", "Attachments", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Gadget' in JIRA?",
+        "options": ["A mini-application", "A reporting tool", "A dashboard widget", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Marketplace' in JIRA?",
+        "options": ["To install apps and integrations", "To manage licenses", "To customize JIRA", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for team management?",
+        "options": ["User groups", "Roles", "Permissions", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Service Desk' in JIRA?",
+        "options": ["A customer support portal", "A ticketing system", "A knowledge base", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Audit Log' in JIRA?",
+        "options": ["To track system changes", "To monitor user activity", "To maintain security", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for project planning?",
+        "options": ["Roadmaps", "Timelines", "Milestones", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Scheme' in JIRA?",
+        "options": ["A project configuration", "A color-coding system", "A workflow template", "All of the above"],
+        "correctAnswer": "A project configuration"
+    },
+    {
+        "question": "What is the purpose of 'Backup' in JIRA?",
+        "options": ["To prevent data loss", "To maintain system availability", "To recover from disasters", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for reporting?",
+        "options": ["Custom reports", "Analytics", "Dashboards", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Template' in JIRA?",
+        "options": ["A predefined project structure", "A workflow pattern", "A reporting format", "All of the above"],
+        "correctAnswer": "A predefined project structure"
+    },
+    {
+        "question": "What is the purpose of 'Releases' in JIRA?",
+        "options": ["To manage software versions", "To track deployment", "To coordinate launches", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which JIRA feature is used for integration?",
+        "options": ["API access", "Webhooks", "Plugins", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is a 'Quick Search' in JIRA?",
+        "options": ["A saved search query", "A type of issue", "A project template", "All of the above"],
+        "correctAnswer": "A saved search query"
+    },
+    {
+        "question": "What is the purpose of 'History' in JIRA?",
+        "options": ["To track past activities", "To maintain audit trail", "To analyze trends", "All of the above"],
+        "correctAnswer": "All of the above"
+    }
+]

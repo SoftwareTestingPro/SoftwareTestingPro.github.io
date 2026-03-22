@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is Postman?",
+        "options": ["An API platform for building and using APIs", "A database management tool", "A code editor", "A version control system"],
+        "correctAnswer": "An API platform for building and using APIs"
+    },
+    {
+        "question": "What is a Postman Collection?",
+        "options": ["A group of saved API requests", "A database of responses", "A set of test cases", "A configuration file"],
+        "correctAnswer": "A group of saved API requests"
+    },
+    {
+        "question": "Which HTTP methods can be tested in Postman?",
+        "options": ["GET, POST, PUT, DELETE, etc.", "Only GET and POST", "Only POST and PUT", "Only GET"],
+        "correctAnswer": "GET, POST, PUT, DELETE, etc."
+    },
+    {
+        "question": "What is the purpose of Postman Environment?",
+        "options": ["To store variables for different environments", "To create test environments", "To manage databases", "To configure authentication"],
+        "correctAnswer": "To store variables for different environments"
+    },
+    {
+        "question": "How do you add tests in Postman?",
+        "options": ["Using the Tests tab", "Using the Body tab", "Using the Headers tab", "Using the Params tab"],
+        "correctAnswer": "Using the Tests tab"
+    },
+    {
+        "question": "What is Postman Monitor?",
+        "options": ["To run collections automatically", "To monitor API performance", "To track user activity", "To log errors"],
+        "correctAnswer": "To run collections automatically"
+    },
+    {
+        "question": "Which authentication methods are supported in Postman?",
+        "options": ["OAuth 2.0, API Key, Basic Auth, etc.", "Only Basic Auth", "Only OAuth 2.0", "Only API Key"],
+        "correctAnswer": "OAuth 2.0, API Key, Basic Auth, etc."
+    },
+    {
+        "question": "What is the purpose of Postman Mock Servers?",
+        "options": ["To simulate API responses", "To test performance", "To monitor APIs", "To document APIs"],
+        "correctAnswer": "To simulate API responses"
+    },
+    {
+        "question": "How do you export a collection in Postman?",
+        "options": ["Using the Export button", "Using the Save button", "Using the Share button", "Using the Import button"],
+        "correctAnswer": "Using the Export button"
+    },
+    {
+        "question": "What is Postman Console?",
+        "options": ["To debug API requests", "To view collection history", "To manage environments", "To run tests"],
+        "correctAnswer": "To debug API requests"
+    }
+]

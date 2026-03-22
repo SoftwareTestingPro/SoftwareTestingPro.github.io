@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is TestNG?",
+        "options": ["A testing framework inspired by JUnit", "A build automation tool", "A version control system", "A performance testing tool"],
+        "correctAnswer": "A testing framework inspired by JUnit"
+    },
+    {
+        "question": "Which annotation is used to mark a test method in TestNG?",
+        "options": ["@Test", "@TestMethod", "@TestCase", "@RunTest"],
+        "correctAnswer": "@Test"
+    },
+    {
+        "question": "What is the purpose of @BeforeMethod annotation?",
+        "options": ["Executed before each test method", "Executed before the test suite", "Executed after each test method", "Executed once before all tests"],
+        "correctAnswer": "Executed before each test method"
+    },
+    {
+        "question": "Which annotation is used to set up test data?",
+        "options": ["@DataProvider", "@TestData", "@DataSource", "@Parameters"],
+        "correctAnswer": "@DataProvider"
+    },
+    {
+        "question": "How do you run TestNG tests from command line?",
+        "options": ["Using java command with testng.xml", "Using testng run command", "Using maven test command", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of testng.xml file?",
+        "options": ["To configure test execution", "To store test results", "To define test data", "To create test reports"],
+        "correctAnswer": "To configure test execution"
+    },
+    {
+        "question": "Which annotation is used for dependency testing?",
+        "options": ["@DependsOnMethods", "@ DependsOn", "@Requires", "@AfterMethod"],
+        "correctAnswer": "@DependsOnMethods"
+    },
+    {
+        "question": "What is the purpose of @Parameters annotation?",
+        "options": ["To pass parameters to test methods", "To define test parameters", "To set environment variables", "To configure test data"],
+        "correctAnswer": "To pass parameters to test methods"
+    },
+    {
+        "question": "Which assertion method is used to check equality?",
+        "options": ["assertEquals()", "assertEqual()", "checkEquals()", "verifyEquals()"],
+        "correctAnswer": "assertEquals()"
+    },
+    {
+        "question": "What is the purpose of @Listeners annotation?",
+        "options": ["To configure test listeners", "To listen to test events", "To create test reports", "To log test results"],
+        "correctAnswer": "To configure test listeners"
+    }
+]

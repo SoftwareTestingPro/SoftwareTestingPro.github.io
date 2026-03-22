@@ -1,0 +1,242 @@
+[
+    {
+        "question": "What is the primary purpose of Cucumber in BDD?",
+        "options": ["To write test scenarios in plain English", "To automate web applications", "To manage test data", "To generate reports"],
+        "correctAnswer": "To write test scenarios in plain English"
+    },
+    {
+        "question": "Which programming language is primarily used with Cucumber?",
+        "options": ["Java", "Python", "JavaScript", "Ruby"],
+        "correctAnswer": "Java"
+    },
+    {
+        "question": "What is a 'Feature File' in Cucumber?",
+        "options": ["A file containing test scenarios", "A configuration file", "A test data file", "A report file"],
+        "correctAnswer": "A file containing test scenarios"
+    },
+    {
+        "question": "What is the purpose of 'Step Definitions' in Cucumber?",
+        "options": ["To define test implementation", "To write test scenarios", "To manage test data", "To generate reports"],
+        "correctAnswer": "To define test implementation"
+    },
+    {
+        "question": "Which annotation is used to define a step in Cucumber?",
+        "options": ["@Given", "@When", "@Then", "@And"],
+        "correctAnswer": "@Given"
+    },
+    {
+        "question": "What is 'Gherkin' in Cucumber?",
+        "options": ["A programming language for test scenarios", "A test framework", "A reporting tool", "A data format"],
+        "correctAnswer": "A programming language for test scenarios"
+    },
+    {
+        "question": "What is the purpose of 'Background' keyword in Cucumber?",
+        "options": ["To set up preconditions", "To clean up after tests", "To define test data", "To mark test completion"],
+        "correctAnswer": "To set up preconditions"
+    },
+    {
+        "question": "Which of the following is NOT a Cucumber keyword?",
+        "options": ["Scenario", "Feature", "Given", "While"],
+        "correctAnswer": "While"
+    },
+    {
+        "question": "What is 'Scenario Outline' used for in Cucumber?",
+        "options": ["Running same scenario with different data", "Defining multiple scenarios", "Creating test reports", "Managing test execution"],
+        "correctAnswer": "Running same scenario with different data"
+    },
+    {
+        "question": "What is the purpose of 'Data Tables' in Cucumber?",
+        "options": ["To provide test data", "To define test steps", "To generate reports", "To manage test environment"],
+        "correctAnswer": "To provide test data"
+    },
+    {
+        "question": "Which of the following is a Cucumber runner?",
+        "options": ["JUnit", "TestNG", "Maven", "Gradle"],
+        "correctAnswer": "JUnit"
+    },
+    {
+        "question": "What is 'Hooks' in Cucumber?",
+        "options": ["Methods to run before/after scenarios", "Test configuration", "Data management", "Reporting tools"],
+        "correctAnswer": "Methods to run before/after scenarios"
+    },
+    {
+        "question": "What is the purpose of 'Tags' in Cucumber?",
+        "options": ["To categorize and filter scenarios", "To define test data", "To manage test execution", "To generate reports"],
+        "correctAnswer": "To categorize and filter scenarios"
+    },
+    {
+        "question": "Which of the following is a benefit of BDD?",
+        "options": ["Better collaboration", "Improved test coverage", "Faster execution", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Examples' keyword used for in Cucumber?",
+        "options": ["To provide sample test data", "To define test scenarios", "To create test reports", "To manage test environment"],
+        "correctAnswer": "To provide sample test data"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber Reports'?",
+        "options": ["To document test results", "To track test execution", "To analyze test coverage", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is NOT a BDD framework?",
+        "options": ["Cucumber", "SpecFlow", "JBehave", "Selenium"],
+        "correctAnswer": "Selenium"
+    },
+    {
+        "question": "What is 'Dependency Injection' in Cucumber?",
+        "options": ["Injecting test data", "Managing test dependencies", "Providing test configuration", "All of the above"],
+        "correctAnswer": "Managing test dependencies"
+    },
+    {
+        "question": "What is the purpose of 'Dry Run' in Cucumber?",
+        "options": ["To validate syntax without execution", "To run tests without data", "To generate test reports", "All of the above"],
+        "correctAnswer": "To validate syntax without execution"
+    },
+    {
+        "question": "Which of the following is a Cucumber best practice?",
+        "options": ["Writing maintainable scenarios", "Using meaningful step names", "Creating complex scenarios", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Scenario' in Cucumber?",
+        "options": ["A single test case", "A test suite", "A test configuration", "A test environment"],
+        "correctAnswer": "A single test case"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber Expressions'?",
+        "options": ["To transform data in steps", "To define test scenarios", "To validate test results", "To generate test data"],
+        "correctAnswer": "To transform data in steps"
+    },
+    {
+        "question": "Which of the following is used for parameterization in Cucumber?",
+        "options": ["Data Tables", "Scenario Outline", "Examples", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Test Runner' in Cucumber?",
+        "options": ["A tool to execute Cucumber features", "A test reporting tool", "A build tool", "A deployment tool"],
+        "correctAnswer": "A tool to execute Cucumber features"
+    },
+    {
+        "question": "What is the purpose of 'Glue Code' in Cucumber?",
+        "options": ["To connect steps to implementation", "To define test data", "To generate reports", "To manage test environment"],
+        "correctAnswer": "To connect steps to implementation"
+    },
+    {
+        "question": "Which of the following is a Cucumber integration tool?",
+        "options": ["Serenity", "Jenkins", "Maven", "Gradle"],
+        "correctAnswer": "Serenity"
+    },
+    {
+        "question": "What is 'Parallel Execution' in Cucumber?",
+        "options": ["Running multiple scenarios simultaneously", "Running scenarios sequentially", "Running scenarios on different machines", "All of the above"],
+        "correctAnswer": "Running multiple scenarios simultaneously"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber Configuration'?",
+        "options": ["To define test settings", "To manage test data", "To control test execution", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is NOT a Gherkin keyword?",
+        "options": ["Feature", "Scenario", "Background", "Given"],
+        "correctAnswer": "Background"
+    },
+    {
+        "question": "What is 'Test Context' in Cucumber?",
+        "options": ["To share data between steps", "To define test environment", "To manage test state", "All of the above"],
+        "correctAnswer": "To share data between steps"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber DSL'?",
+        "options": ["To write readable test scenarios", "To define test data", "To generate test code", "To manage test execution"],
+        "correctAnswer": "To write readable test scenarios"
+    },
+    {
+        "question": "Which of the following is a Cucumber reporting format?",
+        "options": ["HTML", "JSON", "XML", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Step Definition Class' in Cucumber?",
+        "options": ["A class containing step implementations", "A test configuration", "A data provider", "A reporting tool"],
+        "correctAnswer": "A class containing step implementations"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber Tags Filtering'?",
+        "options": ["To run specific scenarios", "To organize test suites", "To manage test data", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Cucumber best practice for large projects?",
+        "options": ["Modular feature files", "Complex scenarios", "Minimal documentation", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Cucumber JVM Options'?",
+        "options": ["Command line arguments", "Test configuration", "Build settings", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber Profiles'?",
+        "options": ["To define different test environments", "To manage test data", "To control test execution", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is NOT a Cucumber concept?",
+        "options": ["Features", "Scenarios", "Step Definitions", "Test Cases"],
+        "correctAnswer": "Test Cases"
+    },
+    {
+        "question": "What is 'Cucumber Ecosystem'?",
+        "options": ["The collection of Cucumber tools and integrations", "The Cucumber programming language", "The test framework", "All of the above"],
+        "correctAnswer": "The collection of Cucumber tools and integrations"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber Documentation'?",
+        "options": ["To explain how to use Cucumber", "To generate test reports", "To define test scenarios", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is a Cucumber plugin?",
+        "options": ["Maven Surefire", "Gradle Test", "JUnit Runner", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Cucumber Integration'?",
+        "options": ["Connecting with test frameworks", "Integrating with build tools", "Setting up test environments", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber Formatters'?",
+        "options": ["To format test output", "To define test scenarios", "To generate test data", "To manage test execution"],
+        "correctAnswer": "To format test output"
+    },
+    {
+        "question": "Which of the following is a Cucumber best practice for team collaboration?",
+        "options": ["Shared feature files", "Version control", "Code reviews", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is 'Cucumber Test Data Management'?",
+        "options": ["Managing test input data", "Generating test data", "Storing test results", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "What is the purpose of 'Cucumber Debugging'?",
+        "options": ["To troubleshoot test failures", "To validate step definitions", "To analyze test execution", "All of the above"],
+        "correctAnswer": "All of the above"
+    },
+    {
+        "question": "Which of the following is NOT a Cucumber file type?",
+        "options": [".feature", ".scenario", ".step", ".test"],
+        "correctAnswer": ".test"
+    },
+    {
+        "question": "What is 'Cucumber Lifecycle'?",
+        "options": ["The process from feature writing to test execution", "The test execution process", "The development process", "All of the above"],
+        "correctAnswer": "The process from feature writing to test execution"
+    }
+]

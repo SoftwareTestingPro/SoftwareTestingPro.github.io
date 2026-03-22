@@ -1,0 +1,672 @@
+[
+    {
+        "question": "What is the primary purpose of GIT in version control?",
+        "options": ["To track changes in code", "To manage project dependencies", "To automate builds", "To deploy applications"],
+        "correctAnswer": "To track changes in code"
+    },
+    {
+        "question": "Which GIT command is used to create a new repository?",
+        "options": ["git init", "git clone", "git add", "git commit"],
+        "correctAnswer": "git init"
+    },
+    {
+        "question": "What does 'git clone' do?",
+        "options": ["Creates a new repository", "Copies an existing repository", "Creates a new branch", "Merges branches"],
+        "correctAnswer": "Copies an existing repository"
+    },
+    {
+        "question": "What is the purpose of 'git add' command?",
+        "options": ["To stage changes for commit", "To create a new branch", "To merge changes", "To push changes"],
+        "correctAnswer": "To stage changes for commit"
+    },
+    {
+        "question": "Which GIT command saves changes to the repository?",
+        "options": ["git save", "git commit", "git push", "git store"],
+        "correctAnswer": "git commit"
+    },
+    {
+        "question": "What does 'git push' do?",
+        "options": ["Uploads changes to remote repository", "Downloads changes from remote", "Creates a new branch", "Merges changes locally"],
+        "correctAnswer": "Uploads changes to remote repository"
+    },
+    {
+        "question": "What is the purpose of 'git pull' command?",
+        "options": ["To download changes from remote repository", "To upload changes to remote", "To create a new branch", "To merge branches"],
+        "correctAnswer": "To download changes from remote repository"
+    },
+    {
+        "question": "Which GIT command shows the commit history?",
+        "options": ["git log", "git history", "git status", "git diff"],
+        "correctAnswer": "git log"
+    },
+    {
+        "question": "What is a 'branch' in GIT?",
+        "options": ["A parallel version of the repository", "A temporary copy of the repository", "A backup of the repository", "A deleted version of the repository"],
+        "correctAnswer": "A parallel version of the repository"
+    },
+    {
+        "question": "What does 'git merge' do?",
+        "options": ["Combines changes from different branches", "Creates a new branch", "Deletes a branch", "Copies a repository"],
+        "correctAnswer": "Combines changes from different branches"
+    },
+    {
+        "question": "Which GIT command shows the current status of files?",
+        "options": ["git status", "git log", "git diff", "git show"],
+        "correctAnswer": "git status"
+    },
+    {
+        "question": "What is the purpose of 'git checkout' command?",
+        "options": ["To switch between branches", "To create a new branch", "To merge changes", "To commit changes"],
+        "correctAnswer": "To switch between branches"
+    },
+    {
+        "question": "What does 'git remote' do?",
+        "options": ["Manages remote repository connections", "Creates a new repository", "Shows commit history", "Manages local branches"],
+        "correctAnswer": "Manages remote repository connections"
+    },
+    {
+        "question": "Which GIT command is used to resolve conflicts?",
+        "options": ["git resolve", "git merge", "git rebase", "git stash"],
+        "correctAnswer": "git merge"
+    },
+    {
+        "question": "What is the purpose of 'git stash' command?",
+        "options": ["To temporarily save changes", "To permanently delete changes", "To create a new branch", "To merge changes"],
+        "correctAnswer": "To temporarily save changes"
+    },
+    {
+        "question": "What does 'git reset' do?",
+        "options": ["Resets the repository to a previous state", "Creates a new commit", "Deletes all changes", "Merges branches"],
+        "correctAnswer": "Resets the repository to a previous state"
+    },
+    {
+        "question": "Which GIT command shows differences between commits?",
+        "options": ["git diff", "git log", "git status", "git show"],
+        "correctAnswer": "git diff"
+    },
+    {
+        "question": "What is a 'commit' in GIT?",
+        "options": ["A snapshot of the repository at a point in time", "A branch of the repository", "A merge operation", "A remote repository"],
+        "correctAnswer": "A snapshot of the repository at a point in time"
+    },
+    {
+        "question": "What does 'git tag' do?",
+        "options": ["Creates a labeled point in history", "Deletes a branch", "Merges changes", "Creates a new repository"],
+        "correctAnswer": "Creates a labeled point in history"
+    },
+    {
+        "question": "Which GIT command is used to remove files?",
+        "options": ["git rm", "git delete", "git remove", "git clean"],
+        "correctAnswer": "git rm"
+    },
+    {
+        "question": "What is the purpose of 'git rebase'?",
+        "options": ["To reapply commits on top of current branch", "To merge branches", "To create new commits", "To switch branches"],
+        "correctAnswer": "To reapply commits on top of current branch"
+    },
+    {
+        "question": "What does 'git cherry-pick' do?",
+        "options": ["Applies specific commits to current branch", "Creates new branches", "Merges all changes", "Deletes commits"],
+        "correctAnswer": "Applies specific commits to current branch"
+    },
+    {
+        "question": "Which GIT command shows the repository configuration?",
+        "options": ["git config", "git status", "git log", "git diff"],
+        "correctAnswer": "git config"
+    },
+    {
+        "question": "What is the purpose of 'git fetch'?",
+        "options": ["To download changes from remote without merging", "To upload changes to remote", "To create a new branch", "To merge changes locally"],
+        "correctAnswer": "To download changes from remote without merging"
+    },
+    {
+        "question": "What does 'git revert' do?",
+        "options": ["Undoes the last commit", "Creates a new branch", "Merges changes", "Deletes all changes"],
+        "correctAnswer": "Undoes the last commit"
+    },
+    {
+        "question": "Which GIT command is used to clean up the repository?",
+        "options": ["git clean", "git prune", "git gc", "git reset"],
+        "correctAnswer": "git clean"
+    },
+    {
+        "question": "What is a 'remote' in GIT?",
+        "options": ["A reference to a remote repository", "A local branch", "A backup copy", "A temporary storage area"],
+        "correctAnswer": "A reference to a remote repository"
+    },
+    {
+        "question": "What does 'git bisect' do?",
+        "options": ["Finds the commit that introduced a bug", "Creates new branches", "Merges changes", "Deletes commits"],
+        "correctAnswer": "Finds the commit that introduced a bug"
+    },
+    {
+        "question": "Which GIT command shows the commit details?",
+        "options": ["git show", "git log", "git status", "git diff"],
+        "correctAnswer": "git show"
+    },
+    {
+        "question": "What is the purpose of 'git ignore' file?",
+        "options": ["To specify files to ignore", "To configure repository settings", "To manage branches", "To store credentials"],
+        "correctAnswer": "To specify files to ignore"
+    },
+    {
+        "question": "What does 'git blame' do?",
+        "options": ["Shows who modified each line of a file", "Creates new commits", "Merges branches", "Deletes files"],
+        "correctAnswer": "Shows who modified each line of a file"
+    },
+    {
+        "question": "Which GIT command is used to manage branches?",
+        "options": ["git branch", "git checkout", "git merge", "git tag"],
+        "correctAnswer": "git branch"
+    },
+    {
+        "question": "What is the purpose of 'git submodule'?",
+        "options": ["To include nested repositories", "To manage dependencies", "To backup repositories", "To create new repositories"],
+        "correctAnswer": "To include nested repositories"
+    },
+    {
+        "question": "What does 'git archive' do?",
+        "options": ["Creates an archive of the repository", "Deletes the repository", "Creates new branches", "Merges changes"],
+        "correctAnswer": "Creates an archive of the repository"
+    },
+    {
+        "question": "Which GIT command is used to view staged changes?",
+        "options": ["git diff --cached", "git status", "git log", "git show"],
+        "correctAnswer": "git diff --cached"
+    },
+    {
+        "question": "What is the purpose of 'git worktree'?",
+        "options": ["To manage multiple working directories", "To create branches", "To merge changes", "To store backups"],
+        "correctAnswer": "To manage multiple working directories"
+    },
+    {
+        "question": "What does 'git prune' do?",
+        "options": ["Removes obsolete remote references", "Deletes local branches", "Creates new commits", "Merges changes"],
+        "correctAnswer": "Removes obsolete remote references"
+    },
+    {
+        "question": "Which GIT command is used to apply patches?",
+        "options": ["git apply", "git am", "git cherry-pick", "git rebase"],
+        "correctAnswer": "git apply"
+    },
+    {
+        "question": "What is the purpose of 'git reflog'?",
+        "options": ["To show a log of all reference updates", "To create new branches", "To merge changes", "To delete commits"],
+        "correctAnswer": "To show a log of all reference updates"
+    },
+    {
+        "question": "What does 'git fsck' do?",
+        "options": ["Verifies the integrity of the repository", "Creates new commits", "Deletes files", "Merges branches"],
+        "correctAnswer": "Verifies the integrity of the repository"
+    },
+    {
+        "question": "Which GIT command is used to manage remote branches?",
+        "options": ["git remote", "git push", "git fetch", "git pull"],
+        "correctAnswer": "git remote"
+    },
+    {
+        "question": "What is the purpose of 'git describe'?",
+        "options": ["To show a human-readable name for a commit", "To create new branches", "To merge changes", "To delete commits"],
+        "correctAnswer": "To show a human-readable name for a commit"
+    },
+    {
+        "question": "What does 'git shortlog' do?",
+        "options": ["Shows a condensed commit history", "Creates new branches", "Deletes commits", "Merges changes"],
+        "correctAnswer": "Shows a condensed commit history"
+    },
+    {
+        "question": "Which GIT command is used to manage commit hooks?",
+        "options": ["git config", "git hook", "git init", "git commit"],
+        "correctAnswer": "git hook"
+    },
+    {
+        "question": "What is the purpose of 'git notes'?",
+        "options": ["To add additional information to commits", "To create new branches", "To merge changes", "To delete commits"],
+        "correctAnswer": "To add additional information to commits"
+    },
+    {
+        "question": "What does 'git whatchanged' do?",
+        "options": ["Shows commits that modified each file", "Creates new commits", "Deletes files", "Merges branches"],
+        "correctAnswer": "Shows commits that modified each file"
+    },
+    {
+        "question": "Which GIT command is used to manage the staging area?",
+        "options": ["git add", "git reset", "git commit", "git status"],
+        "correctAnswer": "git add"
+    },
+    {
+        "question": "What is the purpose of 'git filter-branch'?",
+        "options": ["To rewrite repository history", "To create new branches", "To merge changes", "To delete commits"],
+        "correctAnswer": "To rewrite repository history"
+    },
+    {
+        "question": "What does 'git ls-files' do?",
+        "options": ["Shows files in the working directory", "Creates new files", "Deletes files", "Merges branches"],
+        "correctAnswer": "Shows files in the working directory"
+    },
+    {
+        "question": "Which GIT command is used to manage the index?",
+        "options": ["git add", "git reset", "git status", "git commit"],
+        "correctAnswer": "git add"
+    },
+    {
+        "question": "What is the purpose of 'git rev-parse'?",
+        "options": ["To parse revision information", "To create new branches", "To merge changes", "To delete commits"],
+        "correctAnswer": "To parse revision information"
+    },
+    {
+        "question": "What does 'git count-objects' do?",
+        "options": ["Counts objects in the repository", "Creates new objects", "Deletes objects", "Merges objects"],
+        "correctAnswer": "Counts objects in the repository"
+    },
+    {
+        "question": "Which GIT command is used to manage the working tree?",
+        "options": ["git checkout", "git reset", "git add", "git status"],
+        "correctAnswer": "git checkout"
+    },
+    {
+        "question": "What is the purpose of 'git pack-refs'?",
+        "options": ["To pack references for transport", "To create new references", "To delete references", "To merge references"],
+        "correctAnswer": "To pack references for transport"
+    },
+    {
+        "question": "What does 'git unpack-objects' do?",
+        "options": ["Unpacks objects from a pack file", "Creates new objects", "Deletes objects", "Merges objects"],
+        "correctAnswer": "Unpacks objects from a pack file"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository database?",
+        "options": ["git gc", "git prune", "git fsck", "git repack"],
+        "correctAnswer": "git gc"
+    },
+    {
+        "question": "What is the purpose of 'git verify-pack'?",
+        "options": ["To verify the integrity of a pack file", "To create new packs", "To delete packs", "To merge packs"],
+        "correctAnswer": "To verify the integrity of a pack file"
+    },
+    {
+        "question": "What does 'git send-pack' do?",
+        "options": ["Sends objects to a pack file", "Creates new objects", "Deletes objects", "Merges objects"],
+        "correctAnswer": "Sends objects to a pack file"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository configuration?",
+        "options": ["git config", "git init", "git status", "git log"],
+        "correctAnswer": "git config"
+    },
+    {
+        "question": "What is the purpose of 'git index'?",
+        "options": ["To stage changes for commit", "To store commit information", "To manage branches", "To create new commits"],
+        "correctAnswer": "To stage changes for commit"
+    },
+    {
+        "question": "What does 'git update-ref' do?",
+        "options": ["Updates reference information", "Creates new references", "Deletes references", "Merges references"],
+        "correctAnswer": "Updates reference information"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository history?",
+        "options": ["git log", "git reflog", "git show", "git diff"],
+        "correctAnswer": "git log"
+    },
+    {
+        "question": "What is the purpose of 'git symbolic-ref'?",
+        "options": ["To create symbolic references", "To delete references", "To merge references", "To update references"],
+        "correctAnswer": "To create symbolic references"
+    },
+    {
+        "question": "What does 'git update-server-info' do?",
+        "options": ["Updates server information", "Creates new servers", "Deletes servers", "Merges servers"],
+        "correctAnswer": "Updates server information"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository size?",
+        "options": ["git count-objects", "git du", "git gc", "git prune"],
+        "correctAnswer": "git count-objects"
+    },
+    {
+        "question": "What is the purpose of 'git show-ref'?",
+        "options": ["To show reference information", "To create new references", "To delete references", "To merge references"],
+        "correctAnswer": "To show reference information"
+    },
+    {
+        "question": "What does 'git for-each-ref' do?",
+        "options": ["Runs a command on each reference", "Creates new references", "Deletes references", "Merges references"],
+        "correctAnswer": "Runs a command on each reference"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository state?",
+        "options": ["git status", "git log", "git diff", "git show"],
+        "correctAnswer": "git status"
+    },
+    {
+        "question": "What is the purpose of 'git replace'?",
+        "options": ["To replace existing objects", "To create new objects", "To delete objects", "To merge objects"],
+        "correctAnswer": "To replace existing objects"
+    },
+    {
+        "question": "What does 'git cat-file' do?",
+        "options": ["Displays file contents", "Creates new files", "Deletes files", "Merges files"],
+        "correctAnswer": "Displays file contents"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository logs?",
+        "options": ["git log", "git reflog", "git show", "git blame"],
+        "correctAnswer": "git log"
+    },
+    {
+        "question": "What is the purpose of 'git hash-object'?",
+        "options": ["To compute object hashes", "To create new objects", "To delete objects", "To merge objects"],
+        "correctAnswer": "To compute object hashes"
+    },
+    {
+        "question": "What does 'git ls-tree' do?",
+        "options": ["Shows tree object contents", "Creates new trees", "Deletes trees", "Merges trees"],
+        "correctAnswer": "Shows tree object contents"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository backup?",
+        "options": ["git bundle", "git clone", "git fetch", "git push"],
+        "correctAnswer": "git bundle"
+    },
+    {
+        "question": "What is the purpose of 'git unpack-file'?",
+        "options": ["Unpacks files from a pack", "Creates new files", "Deletes files", "Merges files"],
+        "correctAnswer": "Unpacks files from a pack"
+    },
+    {
+        "question": "What does 'git verify-commit' do?",
+        "options": ["Verifies commit signatures", "Creates new commits", "Deletes commits", "Merges commits"],
+        "correctAnswer": "Verifies commit signatures"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository maintenance?",
+        "options": ["git gc", "git prune", "git fsck", "git repack"],
+        "correctAnswer": "git gc"
+    },
+    {
+        "question": "What is the purpose of 'git write-tree'?",
+        "options": ["To create tree objects", "To delete trees", "To merge trees", "To verify trees"],
+        "correctAnswer": "To create tree objects"
+    },
+    {
+        "question": "What does 'git commit-tree' do?",
+        "options": ["Creates commit objects", "Deletes commits", "Merges commits", "Creates trees"],
+        "correctAnswer": "Creates commit objects"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository backup?",
+        "options": ["git bundle", "git clone", "git fetch", "git push"],
+        "correctAnswer": "git bundle"
+    },
+    {
+        "question": "What is the purpose of 'git multi-pack-index'?",
+        "options": ["To create multiple pack files", "To delete pack files", "To merge pack files", "To verify pack files"],
+        "correctAnswer": "To create multiple pack files"
+    },
+    {
+        "question": "What does 'git index-pack' do?",
+        "options": ["Creates index pack files", "Deletes index packs", "Merges index packs", "To verify index packs"],
+        "correctAnswer": "Creates index pack files"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository synchronization?",
+        "options": ["git fetch", "git pull", "git push", "git clone"],
+        "correctAnswer": "git fetch"
+    },
+    {
+        "question": "What is the purpose of 'git unpack-objects'?",
+        "options": ["Unpacks objects from pack files", "Creates new objects", "Deletes objects", "Merges objects"],
+        "correctAnswer": "Unpacks objects from pack files"
+    },
+    {
+        "question": "What does 'git rev-list' do?",
+        "options": ["Lists commit objects", "Creates new commits", "Deletes commits", "Merges commits"],
+        "correctAnswer": "Lists commit objects"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository verification?",
+        "options": ["git fsck", "git verify-pack", "git gc", "git prune"],
+        "correctAnswer": "git fsck"
+    },
+    {
+        "question": "What is the purpose of 'git show-index'?",
+        "options": ["Shows index contents", "Creates new indexes", "Deletes indexes", "Merges indexes"],
+        "correctAnswer": "Shows index contents"
+    },
+    {
+        "question": "What does 'git update-index' do?",
+        "options": ["Updates index information", "Creates new indexes", "Deletes indexes", "Merges indexes"],
+        "correctAnswer": "Updates index information"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository cleanup?",
+        "options": ["git clean", "git prune", "git gc", "git reset"],
+        "correctAnswer": "git clean"
+    },
+    {
+        "question": "What is the purpose of 'git read-tree'?",
+        "options": ["Reads tree object contents", "Creates new trees", "Deletes trees", "Merges trees"],
+        "correctAnswer": "Reads tree object contents"
+    },
+    {
+        "question": "What does 'git ls-remote' do?",
+        "options": ["Lists remote repositories", "Creates new remotes", "Deletes remotes", "Merges remotes"],
+        "correctAnswer": "Lists remote repositories"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository configuration?",
+        "options": ["git config", "git init", "git status", "git log"],
+        "correctAnswer": "git config"
+    },
+    {
+        "question": "What is the purpose of 'git remote-set-url'?",
+        "options": ["Sets remote repository URL", "Creates new remotes", "Deletes remotes", "Merges remotes"],
+        "correctAnswer": "Sets remote repository URL"
+    },
+    {
+        "question": "What does 'git remote-v' do?",
+        "options": ["Shows remote repository information", "Creates new remotes", "Deletes remotes", "Merges remotes"],
+        "correctAnswer": "Shows remote repository information"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository backup?",
+        "options": ["git bundle", "git clone", "git fetch", "git push"],
+        "correctAnswer": "git bundle"
+    },
+    {
+        "question": "What is the purpose of 'git unpack-file'?",
+        "options": ["Unpacks files from a bundle", "Creates new files", "Deletes files", "Merges files"],
+        "correctAnswer": "Unpacks files from a bundle"
+    },
+    {
+        "question": "What does 'git verify-pack' do?",
+        "options": ["Verifies pack file integrity", "Creates new packs", "Deletes packs", "Merges packs"],
+        "correctAnswer": "Verifies pack file integrity"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository maintenance?",
+        "options": ["git gc", "git prune", "git fsck", "git repack"],
+        "correctAnswer": "git gc"
+    },
+    {
+        "question": "What is the purpose of 'git hash-object'?",
+        "options": ["Computes object hashes", "Creates new objects", "Deletes objects", "Merges objects"],
+        "correctAnswer": "Computes object hashes"
+    },
+    {
+        "question": "What does 'git ls-tree' do?",
+        "options": ["Shows tree object contents", "Creates new trees", "Deletes trees", "Merges trees"],
+        "correctAnswer": "Shows tree object contents"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository backup?",
+        "options": ["git bundle", "git clone", "git fetch", "git push"],
+        "correctAnswer": "git bundle"
+    },
+    {
+        "question": "What is the purpose of 'git unpack-file'?",
+        "options": ["Unpacks files from a pack", "Creates new files", "Deletes files", "Merges files"],
+        "correctAnswer": "Unpacks files from a pack"
+    },
+    {
+        "question": "What does 'git verify-commit' do?",
+        "options": ["Verifies commit signatures", "Creates new commits", "Deletes commits", "Merges commits"],
+        "correctAnswer": "Verifies commit signatures"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository maintenance?",
+        "options": ["git gc", "git prune", "git fsck", "git repack"],
+        "correctAnswer": "git gc"
+    },
+    {
+        "question": "What is the purpose of 'git write-tree'?",
+        "options": ["To create tree objects", "To delete trees", "To merge trees", "To verify trees"],
+        "correctAnswer": "To create tree objects"
+    },
+    {
+        "question": "What does 'git commit-tree' do?",
+        "options": ["Creates commit objects", "Deletes commits", "Merges commits", "Creates trees"],
+        "correctAnswer": "Creates commit objects"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository backup?",
+        "options": ["git bundle", "git clone", "git fetch", "git push"],
+        "correctAnswer": "git bundle"
+    },
+    {
+        "question": "What is the purpose of 'git multi-pack-index'?",
+        "options": ["To create multiple pack files", "To delete pack files", "To merge pack files", "To verify pack files"],
+        "correctAnswer": "To create multiple pack files"
+    },
+    {
+        "question": "What does 'git index-pack' do?",
+        "options": ["Creates index pack files", "Deletes index packs", "Merges index packs", "To verify index packs"],
+        "correctAnswer": "Creates index pack files"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository synchronization?",
+        "options": ["git fetch", "git pull", "git push", "git clone"],
+        "correctAnswer": "git fetch"
+    },
+    {
+        "question": "What is the purpose of 'git unpack-objects'?",
+        "options": ["Unpacks objects from pack files", "Creates new objects", "Deletes objects", "Merges objects"],
+        "correctAnswer": "Unpacks objects from pack files"
+    },
+    {
+        "question": "What does 'git rev-list' do?",
+        "options": ["Lists commit objects", "Creates new commits", "Deletes commits", "Merges commits"],
+        "correctAnswer": "Lists commit objects"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository verification?",
+        "options": ["git fsck", "git verify-pack", "git gc", "git prune"],
+        "correctAnswer": "git fsck"
+    },
+    {
+        "question": "What is the purpose of 'git show-index'?",
+        "options": ["Shows index contents", "Creates new indexes", "Deletes indexes", "Merges indexes"],
+        "correctAnswer": "Shows index contents"
+    },
+    {
+        "question": "What does 'git update-index' do?",
+        "options": ["Updates index information", "Creates new indexes", "Deletes indexes", "Merges indexes"],
+        "correctAnswer": "Updates index information"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository cleanup?",
+        "options": ["git clean", "git prune", "git gc", "git reset"],
+        "correctAnswer": "git clean"
+    },
+    {
+        "question": "What is the purpose of 'git read-tree'?",
+        "options": ["Reads tree object contents", "Creates new trees", "Deletes trees", "Merges trees"],
+        "correctAnswer": "Reads tree object contents"
+    },
+    {
+        "question": "What does 'git ls-remote' do?",
+        "options": ["Lists remote repositories", "Creates new remotes", "Deletes remotes", "Merges remotes"],
+        "correctAnswer": "Lists remote repositories"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository configuration?",
+        "options": ["git config", "git init", "git status", "git log"],
+        "correctAnswer": "git config"
+    },
+    {
+        "question": "What is the purpose of 'git remote-set-url'?",
+        "options": ["Sets remote repository URL", "Creates new remotes", "Deletes remotes", "Merges remotes"],
+        "correctAnswer": "Sets remote repository URL"
+    },
+    {
+        "question": "What does 'git remote-v' do?",
+        "options": ["Shows remote repository information", "Creates new remotes", "Deletes remotes", "Merges remotes"],
+        "correctAnswer": "Shows remote repository information"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository backup?",
+        "options": ["git bundle", "git clone", "git fetch", "git push"],
+        "correctAnswer": "git bundle"
+    },
+    {
+        "question": "What is the purpose of 'git unpack-file'?",
+        "options": ["Unpacks files from a bundle", "Creates new files", "Deletes files", "Merges files"],
+        "correctAnswer": "Unpacks files from a bundle"
+    },
+    {
+        "question": "What does 'git verify-pack' do?",
+        "options": ["Verifies pack file integrity", "Creates new packs", "Deletes packs", "Merges packs"],
+        "correctAnswer": "Verifies pack file integrity"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository maintenance?",
+        "options": ["git gc", "git prune", "git fsck", "git repack"],
+        "correctAnswer": "git gc"
+    },
+    {
+        "question": "What is the purpose of 'git hash-object'?",
+        "options": ["Computes object hashes", "Creates new objects", "Deletes objects", "Merges objects"],
+        "correctAnswer": "Computes object hashes"
+    },
+    {
+        "question": "What does 'git ls-tree' do?",
+        "options": ["Shows tree object contents", "Creates new trees", "Deletes trees", "Merges trees"],
+        "correctAnswer": "Shows tree object contents"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository backup?",
+        "options": ["git bundle", "git clone", "git fetch", "git push"],
+        "correctAnswer": "git bundle"
+    },
+    {
+        "question": "What is the purpose of 'git unpack-file'?",
+        "options": ["Unpacks files from a pack", "Creates new files", "Deletes files", "Merges files"],
+        "correctAnswer": "Unpacks files from a pack"
+    },
+    {
+        "question": "What does 'git verify-commit' do?",
+        "options": ["Verifies commit signatures", "Creates new commits", "Deletes commits", "Merges commits"],
+        "correctAnswer": "Verifies commit signatures"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository maintenance?",
+        "options": ["git gc", "git prune", "git fsck", "git repack"],
+        "correctAnswer": "git gc"
+    },
+    {
+        "question": "What is the purpose of 'git write-tree'?",
+        "options": ["To create tree objects", "To delete trees", "To merge trees", "To verify trees"],
+        "correctAnswer": "To create tree objects"
+    },
+    {
+        "question": "What does 'git commit-tree' do?",
+        "options": ["Creates commit objects", "Deletes commits", "Merges commits", "Creates trees"],
+        "correctAnswer": "Creates commit objects"
+    },
+    {
+        "question": "Which GIT command is used to manage the repository backup?",
+        "options": ["git bundle", "git clone", "git fetch", "git push"],
+        "correctAnswer": "git bundle"
+    }
+]

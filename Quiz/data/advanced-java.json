@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is polymorphism in Java?",
+        "options": ["Ability of an object to take many forms", "Ability to inherit from multiple classes", "Ability to hide implementation details", "Ability to create objects"],
+        "correctAnswer": "Ability of an object to take many forms"
+    },
+    {
+        "question": "What is method overriding?",
+        "options": ["Redefining a method in subclass", "Creating multiple methods with same name", "Hiding a method in superclass", "Creating abstract methods"],
+        "correctAnswer": "Redefining a method in subclass"
+    },
+    {
+        "question": "Which keyword is used for inheritance in Java?",
+        "options": ["extends", "implements", "inherits", "super"],
+        "correctAnswer": "extends"
+    },
+    {
+        "question": "What is an abstract class?",
+        "options": ["A class that cannot be instantiated", "A class with only static methods", "A class with only private methods", "A class that implements interfaces"],
+        "correctAnswer": "A class that cannot be instantiated"
+    },
+    {
+        "question": "What is the purpose of the 'super' keyword?",
+        "options": ["To refer to parent class members", "To refer to current class members", "To create objects", "To call static methods"],
+        "correctAnswer": "To refer to parent class members"
+    },
+    {
+        "question": "What is a constructor in Java?",
+        "options": ["A special method to initialize objects", "A method to destroy objects", "A method to copy objects", "A method to compare objects"],
+        "correctAnswer": "A special method to initialize objects"
+    },
+    {
+        "question": "Which interface is used to compare objects for sorting?",
+        "options": ["Comparable", "Comparator", "Runnable", "Serializable"],
+        "correctAnswer": "Comparable"
+    },
+    {
+        "question": "What is the purpose of the 'final' keyword for a class?",
+        "options": ["To prevent inheritance", "To create abstract class", "To create interface", "To create static class"],
+        "correctAnswer": "To prevent inheritance"
+    },
+    {
+        "question": "What is exception handling in Java?",
+        "options": ["Mechanism to handle runtime errors", "Way to prevent all errors", "Method to debug code", "Technique to improve performance"],
+        "correctAnswer": "Mechanism to handle runtime errors"
+    },
+    {
+        "question": "Which block is always executed in try-catch?",
+        "options": ["finally", "catch", "try", "throw"],
+        "correctAnswer": "finally"
+    }
+]

@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is Rest Assured?",
+        "options": ["A Java library for testing REST services", "A web browser", "A database tool", "A version control system"],
+        "correctAnswer": "A Java library for testing REST services"
+    },
+    {
+        "question": "Which method is used to make GET requests in Rest Assured?",
+        "options": ["get()", "retrieve()", "fetch()", "request()"],
+        "correctAnswer": "get()"
+    },
+    {
+        "question": "What is the purpose of given() method in Rest Assured?",
+        "options": ["To specify request details", "To validate response", "To extract data", "To handle exceptions"],
+        "correctAnswer": "To specify request details"
+    },
+    {
+        "question": "Which method is used to validate response in Rest Assured?",
+        "options": ["then()", "validate()", "check()", "verify()"],
+        "correctAnswer": "then()"
+    },
+    {
+        "question": "What is the purpose of extract() method?",
+        "options": ["To extract data from response", "To extract request data", "To extract headers", "To extract cookies"],
+        "correctAnswer": "To extract data from response"
+    },
+    {
+        "question": "Which method is used to set request headers?",
+        "options": ["header()", "setHeader()", "addHeader()", "putHeader()"],
+        "correctAnswer": "header()"
+    },
+    {
+        "question": "How do you validate JSON response body in Rest Assured?",
+        "options": ["Using body() method", "Using json() method", "Using validate() method", "Using check() method"],
+        "correctAnswer": "Using body() method"
+    },
+    {
+        "question": "Which method is used for POST requests?",
+        "options": ["post()", "create()", "insert()", "add()"],
+        "correctAnswer": "post()"
+    },
+    {
+        "question": "What is the purpose of contentType() method?",
+        "options": ["To specify request content type", "To validate response content type", "To format JSON data", "To set encoding"],
+        "correctAnswer": "To specify request content type"
+    },
+    {
+        "question": "Which method is used to assert status code?",
+        "options": ["statusCode()", "status()", "code()", "responseCode()"],
+        "correctAnswer": "statusCode()"
+    }
+]

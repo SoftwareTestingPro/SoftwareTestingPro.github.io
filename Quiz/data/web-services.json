@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is a REST API?",
+        "options": ["An architectural style for designing networked applications", "A database management system", "A programming language", "A web browser"],
+        "correctAnswer": "An architectural style for designing networked applications"
+    },
+    {
+        "question": "Which HTTP method is used to retrieve data?",
+        "options": ["GET", "POST", "PUT", "DELETE"],
+        "correctAnswer": "GET"
+    },
+    {
+        "question": "What is the purpose of HTTP status codes?",
+        "options": ["To indicate the result of HTTP requests", "To encrypt data", "To authenticate users", "To format responses"],
+        "correctAnswer": "To indicate the result of HTTP requests"
+    },
+    {
+        "question": "Which status code indicates successful request?",
+        "options": ["200 OK", "404 Not Found", "500 Internal Server Error", "301 Moved Permanently"],
+        "correctAnswer": "200 OK"
+    },
+    {
+        "question": "What is JSON?",
+        "options": ["JavaScript Object Notation", "Java Script Object Network", "JavaScript Online Notation", "Java Source Object Notation"],
+        "correctAnswer": "JavaScript Object Notation"
+    },
+    {
+        "question": "Which HTTP method is used to create new resources?",
+        "options": ["POST", "GET", "PUT", "DELETE"],
+        "correctAnswer": "POST"
+    },
+    {
+        "question": "What is an API endpoint?",
+        "options": ["A specific URL where API requests are sent", "A database connection", "A user interface", "A security token"],
+        "correctAnswer": "A specific URL where API requests are sent"
+    },
+    {
+        "question": "Which HTTP method is used to update existing resources?",
+        "options": ["PUT", "POST", "GET", "DELETE"],
+        "correctAnswer": "PUT"
+    },
+    {
+        "question": "What is API authentication?",
+        "options": ["Process of verifying API requests", "Process of creating APIs", "Process of testing APIs", "Process of documenting APIs"],
+        "correctAnswer": "Process of verifying API requests"
+    },
+    {
+        "question": "Which status code indicates resource not found?",
+        "options": ["404 Not Found", "200 OK", "500 Internal Server Error", "201 Created"],
+        "correctAnswer": "404 Not Found"
+    }
+]

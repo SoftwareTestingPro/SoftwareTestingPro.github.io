@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is JavaScript?",
+        "options": ["A programming language for web development", "A database system", "A markup language", "A styling language"],
+        "correctAnswer": "A programming language for web development"
+    },
+    {
+        "question": "Which keyword is used to declare a variable in modern JavaScript?",
+        "options": ["let and const", "var only", "int", "string"],
+        "correctAnswer": "let and const"
+    },
+    {
+        "question": "What is the difference between let and const?",
+        "options": ["let can be reassigned, const cannot", "const can be reassigned, let cannot", "They are the same", "let is for numbers, const is for strings"],
+        "correctAnswer": "let can be reassigned, const cannot"
+    },
+    {
+        "question": "What is a JavaScript function?",
+        "options": ["A block of reusable code", "A variable type", "A loop structure", "A conditional statement"],
+        "correctAnswer": "A block of reusable code"
+    },
+    {
+        "question": "How do you declare a function in JavaScript?",
+        "options": ["function name() {}", "def name() {}", "func name() {}", "method name() {}"],
+        "correctAnswer": "function name() {}"
+    },
+    {
+        "question": "What is the result of typeof null in JavaScript?",
+        "options": ["object", "null", "undefined", "number"],
+        "correctAnswer": "object"
+    },
+    {
+        "question": "What is an array in JavaScript?",
+        "options": ["An ordered list of values", "A key-value pair collection", "A single value", "A function"],
+        "correctAnswer": "An ordered list of values"
+    },
+    {
+        "question": "Which method is used to add elements to an array?",
+        "options": ["push()", "add()", "insert()", "append()"],
+        "correctAnswer": "push()"
+    },
+    {
+        "question": "What is the purpose of the 'this' keyword?",
+        "options": ["To refer to the current object", "To refer to the parent object", "To refer to the global object", "To refer to a function"],
+        "correctAnswer": "To refer to the current object"
+    },
+    {
+        "question": "What is a callback function?",
+        "options": ["A function passed as an argument to another function", "A function that returns another function", "A function that calls itself", "A function that is called automatically"],
+        "correctAnswer": "A function passed as an argument to another function"
+    }
+]

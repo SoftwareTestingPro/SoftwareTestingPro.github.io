@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is Load Testing?",
+        "options": ["Testing performance under expected load", "Testing functionality", "Testing security", "Testing usability"],
+        "correctAnswer": "Testing performance under expected load"
+    },
+    {
+        "question": "What is the purpose of load testing?",
+        "options": ["To determine system capacity", "To find bugs", "To test user interface", "To validate business logic"],
+        "correctAnswer": "To determine system capacity"
+    },
+    {
+        "question": "Which metric is commonly measured in load testing?",
+        "options": ["Response time", "Code coverage", "Bug count", "User satisfaction"],
+        "correctAnswer": "Response time"
+    },
+    {
+        "question": "What is concurrent user load?",
+        "options": ["Number of simultaneous users", "Total users over time", "Unique visitors", "Registered users"],
+        "correctAnswer": "Number of simultaneous users"
+    },
+    {
+        "question": "What is throughput in load testing?",
+        "options": ["Number of transactions per time unit", "Total response time", "Error rate", "CPU usage"],
+        "correctAnswer": "Number of transactions per time unit"
+    },
+    {
+        "question": "Which tool is commonly used for load testing?",
+        "options": ["JMeter", "Selenium", "JUnit", "Postman"],
+        "correctAnswer": "JMeter"
+    },
+    {
+        "question": "What is stress testing?",
+        "options": ["Testing beyond normal capacity", "Testing normal load", "Testing functionality", "Testing security"],
+        "correctAnswer": "Testing beyond normal capacity"
+    },
+    {
+        "question": "What is the difference between load and stress testing?",
+        "options": ["Load tests normal capacity, stress tests beyond capacity", "They are the same", "Stress tests normal capacity, load tests beyond", "Load tests security, stress tests performance"],
+        "correctAnswer": "Load tests normal capacity, stress tests beyond capacity"
+    },
+    {
+        "question": "What is ramp-up period in load testing?",
+        "options": ["Time to gradually increase load", "Time to maintain load", "Time to decrease load", "Total test duration"],
+        "correctAnswer": "Time to gradually increase load"
+    },
+    {
+        "question": "What is the purpose of baseline testing?",
+        "options": ["To establish performance benchmarks", "To test maximum capacity", "To test failure points", "To test recovery"],
+        "correctAnswer": "To establish performance benchmarks"
+    }
+]

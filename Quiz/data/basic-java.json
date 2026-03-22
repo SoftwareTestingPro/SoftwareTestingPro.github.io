@@ -1,0 +1,52 @@
+[
+    {
+        "question": "What is the main method in Java?",
+        "options": ["public static void main(String[] args)", "public void main()", "static void main()", "public static main()"],
+        "correctAnswer": "public static void main(String[] args)"
+    },
+    {
+        "question": "Which data type is used to store whole numbers in Java?",
+        "options": ["int", "float", "String", "boolean"],
+        "correctAnswer": "int"
+    },
+    {
+        "question": "What is the size of int data type in Java?",
+        "options": ["32 bits", "16 bits", "64 bits", "8 bits"],
+        "correctAnswer": "32 bits"
+    },
+    {
+        "question": "Which keyword is used to create a constant in Java?",
+        "options": ["final", "static", "const", "immutable"],
+        "correctAnswer": "final"
+    },
+    {
+        "question": "What is the purpose of the 'static' keyword?",
+        "options": ["To create class-level members", "To create instance variables", "To create local variables", "To create constants"],
+        "correctAnswer": "To create class-level members"
+    },
+    {
+        "question": "Which loop is used when the number of iterations is known?",
+        "options": ["for loop", "while loop", "do-while loop", "foreach loop"],
+        "correctAnswer": "for loop"
+    },
+    {
+        "question": "What is the default value of a boolean variable?",
+        "options": ["false", "true", "null", "0"],
+        "correctAnswer": "false"
+    },
+    {
+        "question": "Which operator is used for equality comparison?",
+        "options": ["==", "=", "===", "equals"],
+        "correctAnswer": "=="
+    },
+    {
+        "question": "What is method overloading?",
+        "options": ["Multiple methods with same name but different parameters", "Multiple methods with same name and parameters", "Inheriting methods from parent class", "Creating methods in interface"],
+        "correctAnswer": "Multiple methods with same name but different parameters"
+    },
+    {
+        "question": "Which access modifier provides the most restriction?",
+        "options": ["private", "protected", "default", "public"],
+        "correctAnswer": "private"
+    }
+]

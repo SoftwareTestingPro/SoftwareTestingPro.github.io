@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Testing Quiz | Software Testing Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Welcome Content -->
+        <div class="welcome-content">
+            <h2>Software Testing Quiz Platform</h2>
+            <p>Test your knowledge and improve your skills in software testing with our comprehensive quiz platform.</p>
+            
+            <div class="quiz-features">
+                <div class="feature-item">
+                    <div class="feature-icon">📚</div>
+                    <h3>20+ Topics</h3>
+                    <p>Cover Selenium, API Testing, Performance Testing, Java, and more</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h3>Detailed Analytics</h3>
+                    <p>Get comprehensive feedback with pie charts and skill assessment</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Skill Levels</h3>
+                    <p>From Novice to Expert - track your progress and improve</p>
+                </div>
+            </div>
+        </div>
+        <div class="topic-selector">
+            <label for="topicSelect">Select Topic:</label>
+            <select id="topicSelect" class="topic-dropdown">
+            </select>
+            <button id="startQuiz" class="btn btn-submit" disabled>Start Quiz</button>
+        </div>
+        <div id="quizContent" style="display: none;">
+            <div class="quiz-header-compact">
+                <div class="topic-info">
+                    <span id="topicTitle">Topic: </span>
+                    <button id="changeTopicBtn" class="btn-change-topic">Change</button>
+                </div>
+                <div class="quiz-stats">
+                    <span id="correctStats">Correct: 0/0</span>
+                </div>
+                <div class="question-counter">
+                    <span id="questionNumber">Question 1 of 10</span>
+                </div>
+            </div>
+            
+                        
+            <div class="topic-selector-compact" id="topicSelectorCompact" style="display: none;">
+                <label for="topicSwitch">Select Topic:</label>
+                <select id="topicSwitch" class="topic-dropdown-small">
+                </select>
+                <button id="confirmTopicBtn" class="btn btn-submit-small">Confirm</button>
+                <button id="cancelTopicBtn" class="btn btn-cancel-small">Cancel</button>
+            </div>
+            
+            <div class="question" id="questionText">
+                Loading question...
+            </div>
+            
+            <div class="options" id="optionsContainer">
+                <!-- Options will be dynamically loaded -->
+            </div>
+            
+            <div class="buttons">
+                <button id="submitBtn" class="btn btn-submit" onclick="submitAnswer()">Submit</button>
+                <button id="nextBtn" class="btn btn-next" onclick="nextQuestion()" disabled>Next</button>
+            </div>
+        </div>
+
+        <div class="quiz-results" id="quizResults" style="display: none;">
+            <h2>Quiz Complete!</h2>
+            
+            <!-- Score Summary -->
+            <div class="score-summary">
+                <div class="score-display">
+                    <span>Your Score: </span>
+                    <span id="finalScore">0/0</span>
+                </div>
+                <div class="percentage" id="scorePercentage">0%</div>
+                <div class="skill-level" id="skillLevel">Beginner</div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="statistics">
+                <h3>Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Questions:</span>
+                        <span class="stat-value" id="totalQuestions">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Correct:</span>
+                        <span class="stat-value correct" id="correctCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Incorrect:</span>
+                        <span class="stat-value incorrect" id="incorrectCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Accuracy:</span>
+                        <span class="stat-value" id="accuracy">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie Chart -->
+            <div class="chart-container">
+                <h3>Performance Overview</h3>
+                <canvas id="performanceChart" width="200" height="200"></canvas>
+            </div>
+
+            <!-- Question Details -->
+            <div class="question-details">
+                <h3>Question Review</h3>
+                <div id="questionReview" class="question-review">
+                    <!-- Questions will be dynamically added here -->
+                </div>
+            </div>
+
+            <button class="btn btn-submit" onclick="restartQuiz()">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz topics data
+        const quizTopics = [
+            { value: "advanced-java", label: "Advanced Java" },
+            { value: "api", label: "API" },
+            { value: "basic-java", label: "Basic Java" },
+            { value: "cucumber", label: "Cucumber" },
+            { value: "functional-testing", label: "Functional Testing" },
+            { value: "git", label: "GIT" },
+            { value: "jenkins", label: "Jenkins" },
+            { value: "jira", label: "JIRA" },
+            { value: "javascript", label: "JavaScript" },
+            { value: "load-testing", label: "Load Testing" },
+            { value: "maven", label: "Maven" },
+            { value: "mobile-testing", label: "Mobile Testing" },
+            { value: "performance-testing", label: "Performance Testing" },
+            { value: "playwright", label: "Playwright" },
+            { value: "postman", label: "Postman" },
+            { value: "rest-assured", label: "Rest Assured" },
+            { value: "selenium", label: "Selenium" },
+            { value: "testng", label: "TestNG" },
+            { value: "typescript", label: "TypeScript" },
+            { value: "web-services", label: "Web Services" }
+        ];
+
+        // Populate dropdowns dynamically
+        function populateDropdowns() {
+            const topicSelect = document.getElementById('topicSelect');
+            const topicSwitch = document.getElementById('topicSwitch');
+            
+            // Clear existing options
+            topicSelect.innerHTML = '';
+            topicSwitch.innerHTML = '';
+            
+            // Add default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Choose a topic...';
+            topicSelect.appendChild(defaultOption);
+            topicSwitch.appendChild(defaultOption.cloneNode(true));
+            
+            // Add topic options
+            quizTopics.forEach(topic => {
+                const option1 = document.createElement('option');
+                option1.value = topic.value;
+                option1.textContent = topic.label;
+                topicSelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = topic.value;
+                option2.textContent = topic.label;
+                topicSwitch.appendChild(option2.cloneNode(true));
+            });
+        }
+
+        let currentTopic = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let isSubmitted = false;
+        let questionResults = []; // Track results for each question
+
+        // Initialize dropdowns on page load
+        document.addEventListener('DOMContentLoaded', populateDropdowns);
+
+        // Topic dropdown change handler
+        document.getElementById('topicSelect').addEventListener('change', function() {
+            const startBtn = document.getElementById('startQuiz');
+            startBtn.disabled = this.value === '';
+        });
+
+        // Start quiz button handler
+        document.getElementById('startQuiz').addEventListener('click', function() {
+            currentTopic = document.getElementById('topicSelect').value;
+            if (currentTopic) {
+                loadQuestions();
+            }
+        });
+
+        // Topic switcher handlers
+        document.getElementById('changeTopicBtn').addEventListener('click', function() {
+            // Show the compact topic selector
+            document.getElementById('topicSelectorCompact').style.display = 'flex';
+            // Set current topic in switcher
+            const currentTopicLabel = quizTopics.find(t => t.value === currentTopic)?.label || 'Choose a topic...';
+            document.getElementById('topicSwitch').value = currentTopic;
+        });
+
+        document.getElementById('confirmTopicBtn').addEventListener('click', function() {
+            const newTopic = document.getElementById('topicSwitch').value;
+            if (newTopic && newTopic !== currentTopic) {
+                // Confirm before switching
+                if (confirm('Are you sure you want to switch topics? Your current progress will be lost.')) {
+                    currentTopic = newTopic;
+                    loadQuestions();
+                }
+            }
+            // Hide the selector regardless
+            document.getElementById('topicSelectorCompact').style.display = 'none';
+        });
+
+        document.getElementById('cancelTopicBtn').addEventListener('click', function() {
+            // Hide the selector without changing topic
+            document.getElementById('topicSelectorCompact').style.display = 'none';
+        });
+
+        
+        // Load questions from JSON file
+        async function loadQuestions() {
+            try {
+                const response = await fetch(`data/${currentTopic}.json`);
+                if (!response.ok) {
+                    throw new Error('Failed to load questions');
+                }
+                currentQuestions = await response.json();
+                
+                // Shuffle questions
+                currentQuestions = currentQuestions.sort(() => Math.random() - 0.5);
+                
+                // Start quiz
+                currentQuestionIndex = 0;
+                score = 0;
+                showQuizContent();
+                loadQuestion();
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                alert('Failed to load questions. Please try again.');
+            }
+        }
+
+        // Show quiz content
+        function showQuizContent() {
+            document.querySelector('.topic-selector').style.display = 'none';
+            document.querySelector('.welcome-content').style.display = 'none';
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('quizResults').style.display = 'none';
+            
+            // Update topic title using currentTopic variable
+            const topicLabel = quizTopics.find(t => t.value === currentTopic)?.label || 'Choose a topic...';
+            document.getElementById('topicTitle').textContent = `Topic: ${topicLabel}`;
+            
+            // Initialize stats display
+            updateStats();
+            
+            // Hide topic selector compact
+            document.getElementById('topicSelectorCompact').style.display = 'none';
+        }
+
+        // Load current question
+        function loadQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const question = currentQuestions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = `${currentQuestionIndex + 1}. ${question.question}`;
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuestions.length}`;
+            
+            // Update stats display
+            updateStats();
+            
+            // Load options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            // Shuffle options
+            const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
+            
+            shuffledOptions.forEach((option, index) => {
+                const optionElement = document.createElement('label');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <input type="radio" name="answer" value="${option}">
+                    ${option}
+                `;
+                
+                optionElement.addEventListener('click', function() {
+                    if (!isSubmitted) {
+                        // Remove previous selection
+                        document.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        // Add selection to clicked option
+                        this.classList.add('selected');
+                        
+                        // Get the radio button and check it
+                        const radio = this.querySelector('input[type="radio"]');
+                        radio.checked = true;
+                        selectedAnswer = radio.value;
+                    }
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Reset state
+            selectedAnswer = null;
+            isSubmitted = false;
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('nextBtn').disabled = true;
+            
+            // Update button text for last question
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentQuestionIndex === currentQuestions.length - 1) {
+                nextBtn.textContent = 'Finish';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function updateStats() {
+            const answeredQuestions = Math.min(currentQuestionIndex, currentQuestions.length);
+            document.getElementById('correctStats').textContent = `Correct: ${score}/${answeredQuestions}`;
+        }
+
+        function submitAnswer() {
+            if (!selectedAnswer) {
+                alert('Please select an answer');
+                return;
+            }
+
+            isSubmitted = true;
+            const submitBtn = document.getElementById('submitBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            // Get current question
+            const question = currentQuestions[currentQuestionIndex];
+            
+            // Highlight correct answer (green)
+            document.querySelectorAll('.option').forEach(option => {
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio.value === question.correctAnswer) {
+                    option.classList.add('correct');
+                }
+                
+                // Highlight selected answer if incorrect (red)
+                if (radio.value === selectedAnswer && selectedAnswer !== question.correctAnswer) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            // Check if answer is correct
+            const isCorrect = selectedAnswer === question.correctAnswer;
+            if (isCorrect) {
+                score++;
+            }
+            
+            // Store question result
+            questionResults.push({
+                question: question.question,
+                userAnswer: selectedAnswer,
+                correctAnswer: question.correctAnswer,
+                isCorrect: isCorrect
+            });
+
+            // Update stats after answering (current question is now answered)
+            const answeredQuestions = Math.min(currentQuestionIndex + 1, currentQuestions.length);
+            document.getElementById('correctStats').textContent = `Correct: ${score}/${answeredQuestions}`;
+
+            // Disable submit button and enable next button
+            submitBtn.disabled = true;
+            nextBtn.disabled = false;
+
+            // Disable all options
+            document.querySelectorAll('.option').forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+        }
+
+        function nextQuestion() {
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentQuestionIndex === currentQuestions.length - 1) {
+                // Last question - show results
+                showResults();
+            } else {
+                // Move to next question
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'block';
+            
+            const totalQuestions = currentQuestions.length;
+            const correctAnswers = score;
+            const incorrectAnswers = totalQuestions - correctAnswers;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            // Update basic score display
+            document.getElementById('finalScore').textContent = `${correctAnswers}/${totalQuestions}`;
+            document.getElementById('scorePercentage').textContent = `${percentage}%`;
+            
+            // Update statistics
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('incorrectCount').textContent = incorrectAnswers;
+            document.getElementById('accuracy').textContent = `${percentage}%`;
+            
+            // Determine skill level
+            let skillLevel = '';
+            let skillColor = '';
+            if (percentage >= 90) {
+                skillLevel = 'Expert';
+                skillColor = '#28a745';
+            } else if (percentage >= 75) {
+                skillLevel = 'Advanced';
+                skillColor = '#20c997';
+            } else if (percentage >= 60) {
+                skillLevel = 'Intermediate';
+                skillColor = '#ffc107';
+            } else if (percentage >= 40) {
+                skillLevel = 'Beginner';
+                skillColor = '#fd7e14';
+            } else {
+                skillLevel = 'Novice';
+                skillColor = '#dc3545';
+            }
+            
+            const skillElement = document.getElementById('skillLevel');
+            skillElement.textContent = skillLevel;
+            skillElement.style.color = skillColor;
+            
+            // Add color coding based on performance
+            const percentageElement = document.getElementById('scorePercentage');
+            percentageElement.style.color = skillColor;
+            
+            // Draw pie chart
+            drawPieChart(correctAnswers, incorrectAnswers);
+            
+            // Display question review
+            displayQuestionReview();
+        }
+
+        function drawPieChart(correct, incorrect) {
+            const canvas = document.getElementById('performanceChart');
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 80;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const total = correct + incorrect;
+            const correctAngle = (correct / total) * 2 * Math.PI;
+            const incorrectAngle = (incorrect / total) * 2 * Math.PI;
+            
+            // Draw correct answers slice (green)
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, -Math.PI/2, -Math.PI/2 + correctAngle);
+            ctx.closePath();
+            ctx.fillStyle = '#28a745';
+            ctx.fill();
+            
+            // Draw incorrect answers slice (red)
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, -Math.PI/2 + correctAngle, -Math.PI/2 + correctAngle + incorrectAngle);
+            ctx.closePath();
+            ctx.fillStyle = '#dc3545';
+            ctx.fill();
+            
+            // Draw legend
+            ctx.fillStyle = '#28a745';
+            ctx.fillRect(10, canvas.height - 30, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.fillText(`Correct: ${correct}`, 30, canvas.height - 18);
+            
+            ctx.fillStyle = '#dc3545';
+            ctx.fillRect(100, canvas.height - 30, 15, 15);
+            ctx.fillStyle = '#333';
+            ctx.fillText(`Incorrect: ${incorrect}`, 120, canvas.height - 18);
+        }
+
+        function displayQuestionReview() {
+            const reviewContainer = document.getElementById('questionReview');
+            reviewContainer.innerHTML = '';
+            
+            questionResults.forEach((result, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = `question-review-item ${result.isCorrect ? 'correct' : 'incorrect'}`;
+                
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${index + 1}</div>
+                    <div class="question-text">${result.question}</div>
+                    <div class="answer-section">
+                        <div class="user-answer">
+                            <strong>Your Answer:</strong> ${result.userAnswer}
+                        </div>
+                        <div class="correct-answer">
+                            <strong>Correct Answer:</strong> ${result.correctAnswer}
+                        </div>
+                        <div class="result-status">
+                            ${result.isCorrect ? '✓ Correct' : '✗ Incorrect'}
+                        </div>
+                    </div>
+                `;
+                
+                reviewContainer.appendChild(questionDiv);
+            });
+        }
+
+        function restartQuiz() {
+            // Reset everything
+            currentTopic = null;
+            currentQuestions = [];
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswer = null;
+            isSubmitted = false;
+            questionResults = []; // Reset question results
+            
+            // Reset UI
+            document.getElementById('topicSelect').value = '';
+            document.getElementById('startQuiz').disabled = true;
+            document.querySelector('.topic-selector').style.display = 'block';
+            document.querySelector('.welcome-content').style.display = 'block';
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'none';
+            
+            // Reset topic switcher
+            document.getElementById('topicSelectorCompact').style.display = 'none';
+            
+            // Reset stats display
+            document.getElementById('correctStats').textContent = 'Correct: 0/0';
+        }
+    </script>
+</body>
+</html>
