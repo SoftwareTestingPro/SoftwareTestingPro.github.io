@@ -93,14 +93,17 @@
 
         .hero-content {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             flex: 1;
+            gap: 1.5rem;
         }
 
         .hero-actions {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .hero-title {
@@ -425,19 +428,19 @@
                         <h1>Sushil Kumar Singh</h1>
                         <p class="subtitle">Senior Software Development Engineer in Test | INDIA</p>
                     </div>
+                    <div class="hero-actions">
+                        <a href="mailto:sushilsingh7688@gmail.com" class="btn btn-primary" onclick="window.location.href='mailto:sushilsingh7688@gmail.com'; return false;">
+                            <i class="fas fa-envelope"></i> Contact Me
+                        </a>
+                        <a href="https://linkedin.com/in/ssingh7688/" target="_blank" class="btn btn-secondary">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        <a href="https://github.com/SoftwareTestingPro" target="_blank" class="btn btn-secondary">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
                 </div>
                 <img src="img/dev.jpg" alt="Sushil Singh" class="hero-image">
-                <div class="hero-actions">
-                    <a href="mailto:sushilsingh7688@gmail.com" class="btn btn-primary" onclick="window.location.href='mailto:sushilsingh7688@gmail.com'; return false;">
-                        <i class="fas fa-envelope"></i> Contact Me
-                    </a>
-                    <a href="https://linkedin.com/in/ssingh7688/" target="_blank" class="btn btn-secondary">
-                        <i class="fab fa-linkedin"></i> LinkedIn
-                    </a>
-                    <a href="https://github.com/SoftwareTestingPro" target="_blank" class="btn btn-secondary">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                </div>
             </div>
         </section>
 
@@ -467,12 +470,12 @@
                 <div class="section-icon">
                     <i class="fas fa-file-alt"></i>
                 </div>
-                <h2 class="section-title">Professional Resume</h2>
+                <h2 class="section-title">About Me</h2>
             </div>
             <div class="resume-content">
-                <p><strong>CAREER SUMMARY</strong><br>Experienced Software Development Engineer in Test (SDET) with 15+ years in software quality assurance, skilled in designing and executing automated test frameworks to ensure application performance across platforms. Proficient in creating scalable test solutions that drive product reliability with modern test automation frameworks like Selenium, Serenity, Playwright, Cucumber BDD, Rest Assured API and Appium.</p>
-                <p><strong>WORK SUMMARY</strong><br>•Strong Experience in designing frameworks and automation of test cases in Selenium, Cucumber BDD, Serenity, Playwright, Rest Assured API, TestNG and other test automation tools.<br>•Developed and managed CI/CD pipelines integrated with automation suites using Jenkins/AWS CodeBuild, ensuring smooth and reliable deployment processes.<br>•Contributed to quality strategies by UI Automation, integrating API and Web Services testing using REST Assured and Postman, enhancing the overall test coverage of complex systems.<br>•Expertise in Understanding and Analyzing Test Requirements, Tracking changes and maintenance of Test Requirements.<br>•Proficient in automation on various browsers, electron based apps on Windows and MAC along with mobile devices.<br>•Experience in working in SDLC, STLC, agile model, and involved in daily scrum with clients.<br>•Involved in root cause analysis, employing problem-solving acumen to quickly identify and resolve defects, thereby reducing the time to resolution.</p>
-                <p><strong>SKILLS</strong><br><strong>Frameworks (Primary)</strong> Selenium, Cucumber BDD, Serenity, Playwright, Rest Assured API, TestNG<br><strong>Frameworks (Secondary)</strong> JUnit, SilkTest, Postman, BrowserStack, Cypress<br><strong>Programming Languages</strong> Java, JavaScript, TypeScript<br><strong>Version Control</strong> Git Bash, GitHub Desktop, SVN, BitBucket, TFS<br><strong>Test Management Tools</strong> JIRA, TestRail, Zephyr, TestLink, XRay<br><strong>Build and Other Tools</strong> Maven, Jenkins, Silk4J, POM Methods, Appium</p>
+                <p><strong>ABOUT ME</strong><br>I'm a passionate Software Development Engineer in Test (SDET) with over 15 years of experience in software quality assurance and test automation. I specialize in designing and implementing robust automated test frameworks that ensure application reliability and performance across multiple platforms.</p>
+                <p><strong>MY EXPERTISE</strong><br>•I excel in creating scalable test automation solutions using modern frameworks like Selenium, Playwright, Cypress, and Cucumber BDD<br>•I have extensive experience in API testing and integration using REST Assured and Postman<br>•I'm proficient in setting up and managing CI/CD pipelines with Jenkins and AWS CodeBuild<br>•I love working with cross-functional teams in agile environments to deliver high-quality software<br>•I'm passionate about mentoring junior engineers and sharing knowledge about best practices in test automation</p>
+                <p><strong>MY APPROACH</strong><br>I believe in a holistic approach to quality assurance that combines technical expertise with strategic thinking. My focus is on building maintainable, scalable test automation frameworks that not only catch bugs but also prevent them. I stay updated with the latest tools and technologies to ensure our testing strategies are always cutting-edge and effective.</p>
             </div>
         </section>
 
@@ -606,17 +609,6 @@
             observer.observe(el);
         });
 
-        // Add download resume button dynamically
-        document.addEventListener('DOMContentLoaded', function() {
-            const heroActions = document.querySelector('.hero-actions');
-            const downloadBtn = document.createElement('a');
-            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Resume';
-            downloadBtn.className = 'btn btn-secondary';
-            downloadBtn.href = 'Sushil_Singh_Automation_Resume.pdf';
-            downloadBtn.download = 'Sushil_Singh_Automation_Resume.pdf';
-            downloadBtn.target = '_blank';
-            heroActions.appendChild(downloadBtn);
-        });
     </script>
 </body>
 </html>
