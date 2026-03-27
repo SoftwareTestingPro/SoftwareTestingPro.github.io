@@ -8,6 +8,9 @@
   <title>Spinner Challenge - Random Selection Tutorial | Software Testing Pro</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.19.css">
+  <!-- Header and Footer CSS -->
+  <link rel="stylesheet" href="/header.css">
+  <link rel="stylesheet" href="/footer.css">
   <script src="../assets/components/components.js"></script>
   <!-- Additional SEO Meta Tags -->
   <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
@@ -84,6 +87,14 @@
               <input type="text" id="nameInput" class="form-control" placeholder="Type name here">
           </div>
       </div>
+
+      <div class="message success" id="successMessage" style="display: none;">
+        Success! You entered the correct name.
+      </div>
+
+      <div class="message failure" id="failureMessage" style="display: none;">
+        Please spin the wheel first!
+      </div>
       </div>
     </main>
   </div>
@@ -94,7 +105,7 @@
         const ctx = canvas.getContext('2d');
         const spinButton = document.getElementById('spinButton');
         const nameInput = document.getElementById('nameInput');
-        const selectedNameMessage = document.getElementById('selectedNameMessage');
+        const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
 
         const names = ['Sushil', 'Deepika', 'Kavya', 'Jyoti', 'Avinash', 'Riddhima', 'Saroj', 'Rivansh'];
@@ -158,8 +169,10 @@
               const selectedSegment = Math.floor(pointerAngle / anglePerSegment) % numberOfSegments;
               selectedName = shuffledNames[selectedSegment];
 
-              selectedNameMessage.textContent = '';
-              successMessage.style.display = 'none'; failureMessage.style.display = 'none';
+              successMessage.style.display = 'none';
+              failureMessage.style.display = 'none';
+              failureMessage.textContent = 'Please spin the wheel first!';
+              failureMessage.style.color = 'orange';
               nameInput.value = '';
             }
           }, 10);
@@ -170,22 +183,26 @@
           const selectedValue = selectedName.toLowerCase();
 
           if (inputValue === '') {
-            successMessage.style.display = 'none'; failureMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
             return;
           }
 
           if (!selectedName) {
-            failureMessage.textContent = "⏳ Please spin the wheel first!";
+            failureMessage.textContent = "Please spin the wheel first!";
             failureMessage.style.color = "orange";
+            failureMessage.style.display = 'block';
             return;
           }
 
           if (inputValue === selectedValue) {
-            failureMessage.textContent = "✅ Success! You entered the correct name.";
-            successMessage.style.color = "green";
+            successMessage.style.display = 'block';
+            failureMessage.style.display = 'none';
           } else {
-            failureMessage.textContent = "❌ Try again. That's not the selected name.";
+            failureMessage.textContent = "Try again. That's not the selected name.";
             failureMessage.style.color = "red";
+            failureMessage.style.display = 'block';
+            successMessage.style.display = 'none';
           }
         });
     </script>

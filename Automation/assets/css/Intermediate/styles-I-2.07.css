@@ -1,74 +1,51 @@
 #rubiks-cube {
     display: grid;
-    grid-template-columns: repeat(3, 6.25rem);
-    grid-template-rows: repeat(3, 6.25rem);
-    gap: 0.3125rem;
-    margin: 3rem auto;
+    grid-template-columns: repeat(3, clamp(3rem, 15vw, 5rem));
+    grid-template-rows: repeat(3, clamp(3rem, 15vw, 5rem));
+    gap: clamp(0.125rem, 1.5vw, 0.25rem);
+    margin: clamp(1rem, 4vw, 2rem) auto;
     width: fit-content;
+    max-width: min(90vw, 20rem);
+    justify-content: center;
 }
 
 .block {
-    width: 6.25rem;
-    height: 6.25rem;
+    width: clamp(3rem, 15vw, 5rem);
+    height: clamp(3rem, 15vw, 5rem);
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-@media (max-width: 1440px) {
-    #rubiks-cube {
-        grid-template-columns: repeat(3, 6rem);
-        grid-template-rows: repeat(3, 6rem);
-        gap: 0.3rem;
-    }
-    .block {
-        width: 6rem;
-        height: 6rem;
-    }
+.block:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-@media (max-width: 1024px) {
-    #rubiks-cube {
-        grid-template-columns: repeat(3, 5.75rem);
-        grid-template-rows: repeat(3, 5.75rem);
-        gap: 0.2875rem;
-    }
-    .block {
-        width: 5.75rem;
-        height: 5.75rem;
-    }
-}
-
-@media (max-width: 768px) {
-    #rubiks-cube {
-        grid-template-columns: repeat(3, 5.5rem);
-        grid-template-rows: repeat(3, 5.5rem);
-        gap: 0.275rem;
-    }
-    .block {
-        width: 5.5rem;
-        height: 5.5rem;
-    }
-}
-
+/* Responsive adjustments for very small screens */
 @media (max-width: 480px) {
     #rubiks-cube {
-        grid-template-columns: repeat(3, 5rem);
-        grid-template-rows: repeat(3, 5rem);
-        gap: 0.25rem;
+        grid-template-columns: repeat(3, clamp(2.5rem, 18vw, 4rem));
+        grid-template-rows: repeat(3, clamp(2.5rem, 18vw, 4rem));
+        gap: clamp(0.1rem, 2vw, 0.2rem);
+        margin: clamp(0.75rem, 5vw, 1.5rem) auto;
     }
+    
     .block {
-        width: 5rem;
-        height: 5rem;
+        width: clamp(2.5rem, 18vw, 4rem);
+        height: clamp(2.5rem, 18vw, 4rem);
     }
 }
 
 @media (max-width: 375px) {
     #rubiks-cube {
-        grid-template-columns: repeat(3, 4.5rem);
-        grid-template-rows: repeat(3, 4.5rem);
-        gap: 0.225rem;
+        grid-template-columns: repeat(3, clamp(2rem, 20vw, 3.5rem));
+        grid-template-rows: repeat(3, clamp(2rem, 20vw, 3.5rem));
+        gap: clamp(0.075rem, 2.5vw, 0.15rem);
+        margin: clamp(0.5rem, 6vw, 1rem) auto;
     }
+    
     .block {
-        width: 4.5rem;
-        height: 4.5rem;
+        width: clamp(2rem, 20vw, 3.5rem);
+        height: clamp(2rem, 20vw, 3.5rem);
     }
 }

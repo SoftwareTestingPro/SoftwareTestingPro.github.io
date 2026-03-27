@@ -8,6 +8,9 @@
     <title>Scrollable List Challenge - Content Scrolling Tutorial | Software Testing Pro</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.21.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="/header.css">
+    <link rel="stylesheet" href="/footer.css">
     <script src="../assets/components/components.js"></script>
 	<!-- Additional SEO Meta Tags -->
 	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
@@ -126,7 +129,8 @@
         failureMessage.style.display = 'none';
 
         terms.addEventListener('scroll', () => {
-            if (terms.scrollTop + terms.clientHeight >= terms.scrollHeight) {
+            // Add 5px tolerance to account for browser rendering differences
+            if (terms.scrollTop + terms.clientHeight >= terms.scrollHeight - 5) {
                 acceptButton.classList.add('enabled');
                 acceptButton.disabled = false;
             }

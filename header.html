@@ -1,5 +1,5 @@
 <header class="site-header">
-    <div class="header-content">
+        <div class="header-content">
         <a href="../index.html" class="home-link" title="Home">
             <svg class="home-icon" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
@@ -15,14 +15,3 @@
         </button>
     </div>
 </header>
-
-<script>
-// Update home link to project root index.html
-document.addEventListener('DOMContentLoaded', function() {
-    const homeLink = document.querySelector('.home-link');
-    const pathSegments = window.location.pathname.split('/').filter(segment => segment);
-    const upLevels = pathSegments.length;
-    homeLink.href = '../'.repeat(upLevels) + 'index.html';
-});
-</script>
-

@@ -8,6 +8,9 @@
     <title>Signature Pad Challenge - Canvas Drawing Tutorial | Software Testing Pro</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.03.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="/header.css">
+    <link rel="stylesheet" href="/footer.css">
     <script src="../assets/components/components.js"></script>
 	<!-- Additional SEO Meta Tags -->
 	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
@@ -67,8 +70,8 @@
             <div class="card-content">
                 <h1>Signature Pad</h1>
                 <p class="lead">Master canvas automation! Create a signature on the digital pad to demonstrate your drawing and canvas interaction skills.</p>
-                <canvas id="signature-pad" width="800" height="400" style="width: 800px; height: 400px; border: 2px solid #000;"></canvas>
-                <div id="message" style="margin-top: 10px; color: green; font-weight: bold; min-height: 20px;"></div>
+                <canvas id="signature-pad"></canvas>
+                <div id="message"></div>
             </div>
         </main>
     </div>
@@ -82,13 +85,31 @@
         let isDrawing = false;
         let hasDrawn = false;
 
+        // Set canvas resolution based on display size
+        function setCanvasSize() {
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            
+            // Set actual resolution
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            
+            // Scale the context to match device pixel ratio
+            ctx.scale(dpr, dpr);
+            
+            // Set drawing styles
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+        }
+
         function getPos(canvas, evt) {
             const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
+            const dpr = window.devicePixelRatio || 1;
             return {
-                x: (evt.clientX - rect.left) * scaleX,
-                y: (evt.clientY - rect.top) * scaleY
+                x: (evt.clientX - rect.left),
+                y: (evt.clientY - rect.top)
             };
         }
 
@@ -116,10 +137,63 @@
             isDrawing = false;
         }
 
+        // Touch events for mobile
+        function getTouchPos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.touches[0].clientX - rect.left,
+                y: evt.touches[0].clientY - rect.top
+            };
+        }
+
+        function startTouchDrawing(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const pos = getTouchPos(canvas, e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        function touchDraw(e) {
+            e.preventDefault();
+            if (isDrawing) {
+                const pos = getTouchPos(canvas, e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+
+                if (!hasDrawn) {
+                    hasDrawn = true;
+                    message.textContent = "Success! Signature captured.";
+                }
+            }
+        }
+
+        // Initialize canvas size
+        setCanvasSize();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            tempCtx.drawImage(canvas, 0, 0);
+            
+            setCanvasSize();
+            ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+        });
+
+        // Mouse events
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mousemove', draw);
         canvas.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mouseout', stopDrawing);
+
+        // Touch events for mobile
+        canvas.addEventListener('touchstart', startTouchDrawing);
+        canvas.addEventListener('touchmove', touchDraw);
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchcancel', stopDrawing);
     </script>
 </body>
 </html>

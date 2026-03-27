@@ -1,0 +1,722 @@
+/* Header CSS Styles */
+header.site-header {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #16213e 100%);
+    padding: 0.5rem 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    margin: 0;
+    width: 100%;
+    display: block;
+    visibility: visible;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid;
+    border-image: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff0000, #00ffff) 1;
+    position: relative;
+    overflow: hidden;
+    animation: borderRotate 6s linear infinite;
+}
+
+@keyframes borderRotate {
+    0% {
+        border-image: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff0000, #00ffff) 1;
+    }
+    20% {
+        border-image: linear-gradient(90deg, #ff00ff, #ffff00, #00ff00, #ff0000, #00ffff, #ff00ff) 1;
+    }
+    40% {
+        border-image: linear-gradient(90deg, #ffff00, #00ff00, #ff0000, #00ffff, #ff00ff, #ffff00) 1;
+    }
+    60% {
+        border-image: linear-gradient(90deg, #00ff00, #ff0000, #00ffff, #ff00ff, #ffff00, #00ff00) 1;
+    }
+    80% {
+        border-image: linear-gradient(90deg, #ff0000, #00ffff, #ff00ff, #ffff00, #00ff00, #ff0000) 1;
+    }
+    100% {
+        border-image: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ff00, #ff0000, #00ffff) 1;
+    }
+}
+
+header.site-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 255, 255, 0.1) 2px,
+            rgba(0, 255, 255, 0.1) 4px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 0, 255, 0.1) 2px,
+            rgba(255, 0, 255, 0.1) 4px
+        );
+    animation: gridMove 20s linear infinite;
+}
+
+header.site-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    pointer-events: none;
+}
+
+@keyframes gridMove {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(4px, 4px);
+    }
+}
+
+/* Particle effects */
+header.site-header .particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+header.site-header .particles::before,
+header.site-header .particles::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #00ffff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ffff;
+    animation: particleFloat 10s infinite;
+}
+
+header.site-header .particles::before {
+    left: 10%;
+    animation-delay: 0s;
+}
+
+header.site-header .particles::after {
+    left: 90%;
+    background: #ff00ff;
+    box-shadow: 0 0 10px #ff00ff;
+    animation-delay: 5s;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(50px);
+        opacity: 0;
+    }
+}
+
+@keyframes cityLights {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translate(5px, -3px) scale(1.1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-3px, 5px) scale(0.9);
+        opacity: 0.7;
+    }
+    75% {
+        transform: translate(3px, 3px) scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+/* GTA 5 enhanced particles - cars, people, money, explosions */
+header.site-header .particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* Regular Cars - Realistic Car Shapes */
+header.site-header .particles::before,
+header.site-header .particles::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 25px;
+    border-radius: 8px;
+    background: #ff6b35;
+    box-shadow: 
+        /* Car body */
+        0 0 0 8px #ff6b35,
+        0 0 0 10px #cc5522,
+        /* Windows */
+        8px 5px 0 -4px rgba(135, 206, 235, 0.8),
+        8px 5px 0 -2px #87CEEB,
+        25px 5px 0 -4px rgba(135, 206, 235, 0.8),
+        25px 5px 0 -2px #87CEEB,
+        /* Wheels */
+        10px 22px 0 -3px #333,
+        10px 22px 0 -1px #000,
+        35px 22px 0 -3px #333,
+        35px 22px 0 -1px #000;
+    animation: regularCarDrive 12s linear infinite;
+}
+
+header.site-header .particles::before {
+    left: -60px;
+    top: 20%;
+    animation-delay: 2s;
+}
+
+header.site-header .particles::after {
+    left: -60px;
+    top: 45%;
+    animation-delay: 7s;
+}
+
+@keyframes regularCarDrive {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0;
+    }
+    10% {
+        transform: translateX(80px) translateY(0);
+        opacity: 1;
+    }
+    90% {
+        transform: translateX(calc(100vw + 80px)) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(calc(100vw + 150px)) translateY(0);
+        opacity: 0;
+    }
+}
+
+/* Real Police Cars with Visible Sirens */
+header.site-header .particles-two::before,
+header.site-header .particles-two::after {
+    content: '';
+    position: absolute;
+    width: 55px;
+    height: 28px;
+    border-radius: 10px;
+    background: #000;
+    box-shadow: 
+        /* Car body */
+        0 0 0 10px #000,
+        0 0 0 12px #333,
+        /* Windows */
+        10px 6px 0 -4px rgba(135, 206, 235, 0.8),
+        10px 6px 0 -2px #87CEEB,
+        30px 6px 0 -4px rgba(135, 206, 235, 0.8),
+        30px 6px 0 -2px #87CEEB,
+        /* Sirens - flashing red and blue */
+        5px 8px 0 2px #ff0000,
+        5px 8px 0 4px #ff0000,
+        45px 8px 0 2px #0000ff,
+        45px 8px 0 4px #0000ff,
+        /* Wheels */
+        12px 25px 0 -3px #333,
+        12px 25px 0 -1px #000,
+        38px 25px 0 -3px #333,
+        38px 25px 0 -1px #000;
+    animation: policeCarDrive 8s linear infinite;
+}
+
+header.site-header .particles-two::before {
+    left: -70px;
+    top: 30%;
+    animation-delay: 0s;
+}
+
+header.site-header .particles-two::after {
+    left: -70px;
+    top: 60%;
+    animation-delay: 4s;
+}
+
+/* Real People Walking - More Detailed */
+header.site-header .particles-three::before,
+header.site-header .particles-three::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 20px;
+    background: transparent;
+    box-shadow: 
+        /* Head */
+        3px 2px 0 3px #fff,
+        3px 2px 0 4px #f0f0f0,
+        /* Body */
+        4px 7px 0 2px #333,
+        4px 7px 0 3px #000,
+        /* Arms */
+        1px 8px 0 1px #333,
+        7px 8px 0 1px #333,
+        /* Legs */
+        3px 13px 0 1px #333,
+        6px 13px 0 1px #333;
+    animation: personWalk 10s linear infinite;
+}
+
+header.site-header .particles-three::before {
+    left: -30px;
+    top: 75%;
+    animation-delay: 1s;
+}
+
+header.site-header .particles-three::after {
+    left: -30px;
+    top: 78%;
+    animation-delay: 6s;
+}
+
+@keyframes policeCarDrive {
+    0% {
+        transform: translateX(0) translateY(0) scale(0.8);
+        opacity: 0;
+        filter: brightness(1);
+    }
+    10% {
+        transform: translateX(100px) translateY(0) scale(1);
+        opacity: 1;
+        filter: brightness(1.2);
+    }
+    25% {
+        filter: brightness(1.5);
+    }
+    50% {
+        filter: brightness(1.2);
+    }
+    75% {
+        filter: brightness(1.5);
+    }
+    90% {
+        transform: translateX(calc(100vw + 100px)) translateY(0) scale(1);
+        opacity: 1;
+        filter: brightness(1.2);
+    }
+    100% {
+        transform: translateX(calc(100vw + 200px)) translateY(0) scale(0.8);
+        opacity: 0;
+        filter: brightness(1);
+    }
+}
+
+@keyframes personWalk {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0;
+    }
+    10% {
+        transform: translateX(50px) translateY(0);
+        opacity: 1;
+    }
+    90% {
+        transform: translateX(calc(100vw + 50px)) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(calc(100vw + 100px)) translateY(0);
+        opacity: 0;
+    }
+}
+
+@keyframes gtaLife {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(0);
+        opacity: 0;
+    }
+    10% {
+        transform: translateY(-15px) translateX(8px) rotate(90deg) scale(1);
+        opacity: 1;
+    }
+    30% {
+        transform: translateY(-30px) translateX(15px) rotate(180deg) scale(1.2);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-45px) translateX(20px) rotate(270deg) scale(1.5);
+        opacity: 0.8;
+    }
+    70% {
+        transform: translateY(-60px) translateX(25px) rotate(360deg) scale(1.8);
+        opacity: 0.6;
+    }
+    90% {
+        transform: translateY(-75px) translateX(30px) rotate(450deg) scale(2);
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(-90px) translateX(35px) rotate(540deg) scale(0.5);
+        opacity: 0;
+    }
+}
+
+@keyframes policeChase {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(0);
+        opacity: 0;
+    }
+    5% {
+        transform: translateY(-10px) translateX(-5px) rotate(-45deg) scale(1);
+        opacity: 1;
+    }
+    15% {
+        transform: translateY(-25px) translateX(-15px) rotate(-90deg) scale(1.2);
+        opacity: 1;
+    }
+    30% {
+        transform: translateY(-40px) translateX(-25px) rotate(-135deg) scale(1.4);
+        opacity: 1;
+    }
+    45% {
+        transform: translateY(-55px) translateX(-35px) rotate(-180deg) scale(1.6);
+        opacity: 0.8;
+    }
+    60% {
+        transform: translateY(-70px) translateX(-45px) rotate(-225deg) scale(1.8);
+        opacity: 0.6;
+    }
+    75% {
+        transform: translateY(-85px) translateX(-55px) rotate(-270deg) scale(2);
+        opacity: 0.4;
+    }
+    90% {
+        transform: translateY(-100px) translateX(-65px) rotate(-315deg) scale(2.2);
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(-115px) translateX(-75px) rotate(-360deg) scale(0.5);
+        opacity: 0;
+    }
+}
+
+@keyframes explosions {
+    0% {
+        transform: translateY(0) translateX(0) scale(0);
+        opacity: 0;
+    }
+    5% {
+        transform: translateY(-5px) translateX(0) scale(0.5);
+        opacity: 0.5;
+    }
+    10% {
+        transform: translateY(-10px) translateX(0) scale(1);
+        opacity: 1;
+    }
+    20% {
+        transform: translateY(-15px) translateX(0) scale(1.5);
+        opacity: 1;
+    }
+    30% {
+        transform: translateY(-20px) translateX(0) scale(2);
+        opacity: 0.8;
+    }
+    40% {
+        transform: translateY(-25px) translateX(0) scale(2.5);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateY(-30px) translateX(0) scale(3);
+        opacity: 0.4;
+    }
+    60% {
+        transform: translateY(-35px) translateX(0) scale(3.5);
+        opacity: 0.2;
+    }
+    70% {
+        transform: translateY(-40px) translateX(0) scale(4);
+        opacity: 0.1;
+    }
+    100% {
+        transform: translateY(-50px) translateX(0) scale(0.5);
+        opacity: 0;
+    }
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.home-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #00ffff;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    background: rgba(0, 255, 255, 0.1);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    font-family: 'Courier New', monospace;
+}
+
+.home-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.4), transparent);
+    transition: left 0.5s ease;
+}
+
+.home-link:hover::before {
+    left: 100%;
+}
+
+.home-link:hover {
+    color: #ffffff;
+    background: rgba(0, 255, 255, 0.2);
+    border-color: #00ffff;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4), 0 0 30px rgba(0, 255, 255, 0.6);
+    text-shadow: 0 0 15px rgba(0, 255, 255, 1);
+    animation: neonGlow 2s ease-in-out infinite;
+}
+
+@keyframes neonGlow {
+    0%, 100% {
+        box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4), 0 0 30px rgba(0, 255, 255, 0.6);
+        border-color: #00ffff;
+    }
+    50% {
+        box-shadow: 0 8px 25px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.8);
+        border-color: #ffffff;
+    }
+}
+
+.home-icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.8));
+    transition: transform 0.3s ease;
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.8));
+    }
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 10px rgba(0, 255, 255, 1));
+    }
+}
+
+.home-link:hover .home-icon {
+    transform: rotate(360deg) scale(1.2);
+    animation: none;
+    filter: drop-shadow(0 0 15px rgba(0, 255, 255, 1));
+}
+
+.home-text {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    font-family: 'Courier New', monospace;
+}
+
+.home-text::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ffff, transparent);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+.home-link:hover .home-text::after {
+    width: 100%;
+}
+
+.hamburger {
+    background: rgba(255, 0, 255, 0.1);
+    border: 1px solid rgba(255, 0, 255, 0.3);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    color: #ff00ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 255, 0.4), transparent);
+    transition: left 0.5s ease;
+}
+
+.hamburger:hover::before {
+    left: 100%;
+}
+
+.hamburger:hover {
+    color: #ffffff;
+    background: rgba(255, 0, 255, 0.2);
+    border-color: #ff00ff;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 0, 255, 0.4), 0 0 25px rgba(255, 0, 255, 0.6);
+    animation: hamburgerNeon 2s ease-in-out infinite;
+}
+
+@keyframes hamburgerNeon {
+    0%, 100% {
+        box-shadow: 0 6px 20px rgba(255, 0, 255, 0.4), 0 0 25px rgba(255, 0, 255, 0.6);
+        border-color: #ff00ff;
+    }
+    50% {
+        box-shadow: 0 6px 20px rgba(255, 0, 255, 0.6), 0 0 35px rgba(255, 0, 255, 0.8);
+        border-color: #ffffff;
+    }
+}
+
+.hamburger-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+    animation: hamburgerPulse 2s ease-in-out infinite;
+}
+
+@keyframes hamburgerPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 3px rgba(255, 0, 255, 0.8));
+    }
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 6px rgba(255, 0, 255, 1));
+    }
+}
+
+.hamburger:hover .hamburger-icon {
+    transform: scale(1.3);
+    animation: none;
+    filter: drop-shadow(0 0 8px rgba(255, 0, 255, 1));
+}
+
+.hamburger-icon span {
+    display: block;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+}
+
+.hamburger:hover .hamburger-icon span {
+    height: 3px;
+    box-shadow: 0 0 5px currentColor;
+}
+
+.hamburger:active {
+    transform: scale(0.95);
+}
+
+/* Add glitch effect occasionally */
+@keyframes glitch {
+    0%, 100% {
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+    }
+    20% {
+        transform: translate(-2px, 2px);
+        filter: hue-rotate(90deg);
+    }
+    40% {
+        transform: translate(-2px, -2px);
+        filter: hue-rotate(180deg);
+    }
+    60% {
+        transform: translate(2px, 2px);
+        filter: hue-rotate(270deg);
+    }
+    80% {
+        transform: translate(2px, -2px);
+        filter: hue-rotate(360deg);
+    }
+}
+
+header.site-header.glitch {
+    animation: glitch 0.3s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header.site-header {
+        padding: 0.2rem 0.75rem;
+    }
+
+    .header-content {
+        max-width: 100%;
+    }
+
+    .home-text {
+        display: none;
+    }
+
+    .home-link {
+        padding: 0.25rem;
+    }
+}

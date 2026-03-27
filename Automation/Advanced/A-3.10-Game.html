@@ -8,6 +8,9 @@
   <title>Platformer Game Challenge - Interactive Mechanics Tutorial | Software Testing Pro</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="stylesheet" href="../assets/css/Advanced/styles-A-3.10.css">
+  <!-- Header and Footer CSS -->
+  <link rel="stylesheet" href="/header.css">
+  <link rel="stylesheet" href="/footer.css">
   <script src="../assets/components/components.js"></script>
   <!-- Additional SEO Meta Tags -->
   <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
@@ -69,7 +72,12 @@
       <h1>Platformer Game Challenge</h1>
       <p class="lead">Master game automation! Use keyboard controls to navigate the platformer game and reach the top to demonstrate your gaming interaction skills.</p>
 
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
+      <div class="game-instructions">
+        <strong>Controls:</strong> Use <span class="key">←</span> <span class="key">→</span> to move, <span class="key">SPACE</span> to jump. 
+        <strong>Goal:</strong> Reach the <span class="highlight">YELLOW platform</span> at the top!
+      </div>
+
+    <canvas id="gameCanvas"></canvas>
     <div class="message success" id="successMessage">Congratulations! You reached the top platform!</div>
   </div>
     </main>
@@ -85,6 +93,34 @@
     // Hide message on load
     successMessage.style.display = 'none';
     successMessage.classList.remove('success');
+
+    // Set canvas resolution based on display size
+    function setCanvasSize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        
+        // Set actual resolution
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        
+        // Scale the context to match device pixel ratio
+        ctx.scale(dpr, dpr);
+        
+        // Reset player position relative to new canvas size
+        if (player) {
+            player.y = rect.height - 70;
+            // Update platform positions based on new canvas size
+            updatePlatformPositions(rect.width, rect.height);
+        }
+    }
+
+    // Update platform positions based on canvas size
+    function updatePlatformPositions(canvasWidth, canvasHeight) {
+        platforms[0] = { x: 0, y: canvasHeight - 10, width: canvasWidth, height: 10, color: 'green' };
+        platforms[1] = { x: canvasWidth * 0.25, y: canvasHeight - canvasHeight * 0.25, width: 150, height: 10, color: 'purple' };
+        platforms[2] = { x: canvasWidth * 0.50, y: canvasHeight - canvasHeight * 0.50, width: 150, height: 10, color: 'red' };
+        platforms[3] = { x: canvasWidth * 0.80, y: canvasHeight - canvasHeight * 0.80, width: 150, height: 10, color: 'yellow', isTopPlatform: true };
+    }
 
     const gravity = 0.5;
     const friction = 0.9;
@@ -102,13 +138,9 @@
       grounded: false
     };
 
-    // Platform positions
-    const platforms = [
-      { x: 0, y: canvas.height - 10, width: canvas.width, height: 10, color: 'green' }, // Ground
-      { x: canvas.width * 0.25, y: canvas.height - canvas.height * 0.25, width: 150, height: 10, color: 'purple' },
-      { x: canvas.width * 0.50, y: canvas.height - canvas.height * 0.50, width: 150, height: 10, color: 'red' },
-      { x: canvas.width * 0.80, y: canvas.height - canvas.height * 0.80, width: 150, height: 10, color: 'yellow', isTopPlatform: true }
-    ];
+    // Initialize platform positions
+    let platforms = [];
+    updatePlatformPositions(canvas.width, canvas.height);
 
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space') e.preventDefault();
@@ -120,7 +152,8 @@
     let previousPlayerY = player.y;
 
     function gameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
 
       if (keys['ArrowLeft']) {
         player.speedX = -5;
@@ -162,12 +195,16 @@
         }
       });
 
-      if (player.y > canvas.height - player.height) {
-        player.y = canvas.height - player.height;
+      if (player.y > rect.height - player.height) {
+        player.y = rect.height - player.height;
         player.speedY = 0;
         player.jumping = false;
         player.grounded = true;
       }
+
+      // Keep player within canvas bounds
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > rect.width) player.x = rect.width - player.width;
 
       ctx.fillStyle = player.color;
       ctx.fillRect(player.x, player.y, player.width, player.height);
@@ -186,6 +223,14 @@
 
       requestAnimationFrame(gameLoop);
     }
+
+    // Initialize canvas size
+    setCanvasSize();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      setCanvasSize();
+    });
 
     gameLoop();
   </script>

@@ -10,8 +10,16 @@ function getBasePath() {
     const currentPath = window.location.pathname;
     console.log('Current path:', currentPath);
     
+    // Count the number of directory levels
+    const pathSegments = currentPath.split('/').filter(segment => segment);
+    console.log('Path segments:', pathSegments);
+    
+    // If we're in Automation/Beginner/, go up three levels to root
+    if (currentPath.includes('/Automation/Beginner/')) {
+        return '../../../';
+    }
     // If we're in Automation/, go up two levels to root
-    if (currentPath.includes('/Automation/')) {
+    else if (currentPath.includes('/Automation/')) {
         return '../../';
     }
     // Default to root level
@@ -25,37 +33,31 @@ function loadHeader() {
     if (headerPlaceholder) {
         console.log('Header placeholder found');
         
-        // Direct inline header to ensure visibility
+        // Set minimal header immediately to prevent empty state
+        const basePath = getBasePath();
         headerPlaceholder.innerHTML = `
-            <header style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 0; margin: 0; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: block !important; visibility: visible !important;">
-                <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between;">
-                    <a href="../../index.html" class="home-link" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 6px; transition: opacity 0.3s ease;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <header class="site-header">
+                <div class="header-content">
+                    <a href="${basePath}index.html" class="home-link" title="Home">
+                        <svg class="home-icon" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                         </svg>
-                        <span style="font-size: 14px; font-weight: 500;">Home</span>
+                        <span class="home-text">Home</span>
                     </a>
-                    <button class="hamburger" onclick="toggleMenu()" style="background: none; border: none; color: white; cursor: pointer; padding: 6px;">
-                        <span style="display: block; width: 20px; height: 2px; background: white; margin: 3px 0; transition: 0.3s;"></span>
-                        <span style="display: block; width: 20px; height: 2px; background: white; margin: 3px 0; transition: 0.3s;"></span>
-                        <span style="display: block; width: 20px; height: 2px; background: white; margin: 3px 0; transition: 0.3s;"></span>
+                    <button class="hamburger" onclick="toggleMenu()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
                     </button>
                 </div>
             </header>
         `;
         
-        console.log('Header set with inline content');
+        console.log('Minimal header set immediately');
         
-        // Update home link dynamically
-        const homeLink = headerPlaceholder.querySelector('.home-link');
-        if (homeLink) {
-            const pathSegments = window.location.pathname.split('/').filter(segment => segment);
-            const upLevels = pathSegments.length; // Go up to root
-            homeLink.href = '../'.repeat(upLevels) + 'index.html';
-        }
-        
-        // Try to load external header (but fallback to inline is already set)
-        const basePath = getBasePath();
+        // Try to load external header
         console.log('Attempting to load external header from:', basePath + 'header.html');
         
         fetch(basePath + 'header.html')
@@ -66,14 +68,26 @@ function loadHeader() {
                 return response.text();
             })
             .then(html => {
-                console.log('External header loaded, replacing inline');
-                headerPlaceholder.innerHTML = html;
+                console.log('External header loaded successfully');
+                // Only replace if external header is valid and has content
+                if (html && html.includes('site-header')) {
+                    console.log('Replacing with external header');
+                    headerPlaceholder.innerHTML = html;
+                    
+                    // Update home link dynamically for external header
+                    const homeLink = headerPlaceholder.querySelector('.home-link');
+                    if (homeLink) {
+                        homeLink.href = basePath + 'index.html';
+                    }
+                } else {
+                    console.log('External header invalid, keeping minimal header');
+                }
                 
                 // Add mobile menu after header is loaded
                 document.body.insertAdjacentHTML('afterbegin', '<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="../Beginner/B-Intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="../Intermediate/I-Intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="../Advanced/A-Intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>');
             })
             .catch(error => {
-                console.log('External header failed, keeping inline header:', error.message);
+                console.log('External header failed, keeping minimal header:', error.message);
                 
                 // Add mobile menu after header is loaded (fallback)
                 document.body.insertAdjacentHTML('afterbegin', '<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="../Beginner/B-Intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="../Intermediate/I-Intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="../Advanced/A-Intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>');
@@ -157,3 +171,61 @@ function closeMenuOnOutsideClick(event) {
         toggleMenu();
     }
 }
+
+// Back to Top functionality
+function createBackToTopButton() {
+    // Check if button already exists
+    if (document.getElementById('backToTop')) {
+        return;
+    }
+
+    // Create back to top button
+    const backToTopButton = document.createElement('button');
+    backToTopButton.id = 'backToTop';
+    backToTopButton.className = 'back-to-top';
+    backToTopButton.title = 'Back to top';
+    backToTopButton.innerHTML = '<span class="back-to-top-icon">↑</span>';
+    backToTopButton.onclick = scrollToTop;
+
+    // Add to body
+    document.body.appendChild(backToTopButton);
+
+    // Initialize state
+    backToTopButton.style.display = 'none';
+    backToTopButton.style.opacity = '0';
+}
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Show/hide back to top button based on scroll position
+function handleBackToTopScroll() {
+    const backToTopButton = document.getElementById('backToTop');
+    if (backToTopButton) {
+        if (window.pageYOffset > 300) {
+            backToTopButton.style.display = 'block';
+            setTimeout(() => {
+                backToTopButton.style.opacity = '1';
+            }, 10);
+        } else {
+            backToTopButton.style.opacity = '0';
+            setTimeout(() => {
+                if (window.pageYOffset <= 300) {
+                    backToTopButton.style.display = 'none';
+                }
+            }, 300);
+        }
+    }
+}
+
+// Initialize back to top when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    createBackToTopButton();
+    
+    // Add scroll listener
+    window.addEventListener('scroll', handleBackToTopScroll);
+});

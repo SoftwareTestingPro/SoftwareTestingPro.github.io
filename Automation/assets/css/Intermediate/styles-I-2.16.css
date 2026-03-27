@@ -1,85 +1,68 @@
 .input-group {
     text-align: center;
-    margin-bottom: 0.3125rem;
+    margin-bottom: clamp(0.1875rem, 1.5vw, 0.3125rem);
 }
 
 .item-list {
     list-style: none;
     padding: 0;
-    margin: 1.25rem 0;
+    margin: clamp(0.5rem, 3vw, 1.25rem) 0;
+    max-width: min(90vw, 40rem);
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(6rem, 35vw, 12rem), 1fr));
+    gap: clamp(0.25rem, 2vw, 0.5rem);
 }
 
 .item {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 0.625rem;
-    margin-bottom: 0.625rem;
+    padding: clamp(0.375rem, 2vw, 0.625rem);
+    margin-bottom: clamp(0.25rem, 2vw, 0.5rem);
     text-align: center;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: clamp(2rem, 8vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 
-@media (max-width: 1440px) {
-    .input-group {
-        margin-bottom: 0.3rem;
-    }
-    .item-list {
-        margin: 1.125rem 0;
-    }
-    .item {
-        padding: 0.6rem;
-        margin-bottom: 0.6rem;
-    }
-}
-
-@media (max-width: 1024px) {
-    .input-group {
-        margin-bottom: 0.2875rem;
-    }
-    .item-list {
-        margin: 1rem 0;
-    }
-    .item {
-        padding: 0.575rem;
-        margin-bottom: 0.575rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .input-group {
-        margin-bottom: 0.275rem;
-    }
-    .item-list {
-        margin: 0.875rem 0;
-    }
-    .item {
-        padding: 0.55rem;
-        margin-bottom: 0.55rem;
-    }
-}
-
+/* Responsive adjustments for very small screens */
 @media (max-width: 480px) {
-    .input-group {
-        margin-bottom: 0.2625rem;
-    }
     .item-list {
-        margin: 0.75rem 0;
+        grid-template-columns: repeat(auto-fit, minmax(clamp(5rem, 40vw, 10rem), 1fr));
+        gap: clamp(0.1875rem, 2.5vw, 0.375rem);
+        margin: clamp(0.375rem, 4vw, 0.75rem) 0;
     }
+    
     .item {
-        padding: 0.525rem;
-        margin-bottom: 0.525rem;
+        padding: clamp(0.3125rem, 2.5vw, 0.525rem);
+        margin-bottom: clamp(0.1875rem, 2.5vw, 0.375rem);
+        font-size: clamp(0.75rem, 2vw, 0.875rem);
+        min-height: clamp(1.75rem, 7vw, 2.5rem);
     }
 }
 
 @media (max-width: 375px) {
-    .input-group {
-        margin-bottom: 0.25rem;
-    }
     .item-list {
-        margin: 0.625rem 0;
+        grid-template-columns: repeat(auto-fit, minmax(clamp(4.5rem, 45vw, 9rem), 1fr));
+        gap: clamp(0.125rem, 3vw, 0.25rem);
+        margin: clamp(0.25rem, 5vw, 0.625rem) 0;
     }
+    
     .item {
-        padding: 0.5rem;
-        margin-bottom: 0.5rem;
+        padding: clamp(0.25rem, 3vw, 0.5rem);
+        margin-bottom: clamp(0.125rem, 3vw, 0.25rem);
+        font-size: clamp(0.6875rem, 2.5vw, 0.75rem);
+        min-height: clamp(1.5rem, 6vw, 2rem);
     }
 }

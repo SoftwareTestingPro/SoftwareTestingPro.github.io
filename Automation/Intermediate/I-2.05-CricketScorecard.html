@@ -8,6 +8,9 @@
   <title>Cricket Scorecard Challenge - Table Data Tutorial | Software Testing Pro</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
   <link rel="stylesheet" href="../assets/css/Intermediate/styles-I-2.05.css">
+  <!-- Header and Footer CSS -->
+  <link rel="stylesheet" href="/header.css">
+  <link rel="stylesheet" href="/footer.css">
   <script src="../assets/components/components.js"></script>
   <!-- Additional SEO Meta Tags -->
   <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
@@ -91,24 +94,7 @@
                 <span id="topScorerError">Incorrect! Please try again.</span>
             </div>
 
-            <div class="input-group-parent">
-                <div class="input-group-left">
-                    <label for="inputField2" class="label-left">Runs Scored by Sachin Tendulkar:</label>
-                </div>
-
-                <div class="input-group-right">
-                    <input type="text" id="inputField2" name="user-input-name" placeholder="Type your name...">
-                </div>
             </div>
-
-            <div class="message" id="successMessage2" role="status" aria-live="polite">
-                <span id="sachinSuccess">Correct! Sachin Tendulkar scored the right amount.</span>
-            </div>
-
-            <div class="message" id="failureMessage2" role="status" aria-live="polite">
-                <span id="sachinError">Incorrect! Please try again.</span>
-            </div>
-        </div>
     </main>
 </div>
 
@@ -126,27 +112,17 @@
 
       const batsmenList = document.getElementById('batsmenList');
         const inputField1 = document.getElementById('inputField1');
-        const inputField2 = document.getElementById('inputField2');
         const successMessage1 = document.getElementById('successMessage1');
         const failureMessage1 = document.getElementById('failureMessage1');
-        const successMessage2 = document.getElementById('successMessage2');
-        const failureMessage2 = document.getElementById('failureMessage2');
         const topScorerError = document.getElementById('topScorerError');
-        const sachinSuccess = document.getElementById('sachinSuccess');
-        const sachinError = document.getElementById('sachinError');
 
         // Hide messages initially
         successMessage1.style.display = 'none';
         successMessage1.classList.remove('success');
         failureMessage1.style.display = 'none';
         failureMessage1.classList.remove('failure');
-        successMessage2.style.display = 'none';
-        successMessage2.classList.remove('success');
-        failureMessage2.style.display = 'none';
-        failureMessage2.classList.remove('failure');
 
       let scores = {};
-      let sachinScore = 0;
 
       batsmen.forEach((batsman, index) => {
         const randomScore = Math.floor(Math.random() * 200) + 1;
@@ -161,16 +137,11 @@
             `;
 
             batsmenList.appendChild(listItem);
-
-        if (batsman === 'Sachin Tendulkar') {
-          sachinScore = randomScore;
-        }
       });
 
       function validateInputs() {
             const topScorer = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
             const enteredTopScorer = inputField1.value.trim();
-            const enteredSachinScore = inputField2.value.trim();
 
             // Validate top scorer
             if (enteredTopScorer === topScorer) {
@@ -185,25 +156,9 @@
                 failureMessage1.style.display = 'flex';
                 failureMessage1.classList.add('failure');
             }
-
-            // Validate Sachin's score
-            if (enteredSachinScore == sachinScore) {
-                sachinSuccess.textContent = `Correct! Sachin Tendulkar scored ${sachinScore}.`;
-                successMessage2.style.display = 'flex';
-                successMessage2.classList.add('success');
-                failureMessage2.style.display = 'none';
-                failureMessage2.classList.remove('failure');
-            } else if (enteredSachinScore) {
-                sachinError.textContent = `Incorrect! Sachin Tendulkar scored ${sachinScore}.`;
-                successMessage2.style.display = 'none';
-                successMessage2.classList.remove('success');
-                failureMessage2.style.display = 'flex';
-                failureMessage2.classList.add('failure');
-            }
         }
 
       inputField1.addEventListener('input', validateInputs);
-      inputField2.addEventListener('input', validateInputs);
     });
   </script>
 </body>

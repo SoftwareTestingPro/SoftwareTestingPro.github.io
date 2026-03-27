@@ -1,13 +1,13 @@
 .input-group-parent {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: clamp(0.5rem, 2vw, 0.625rem);
     align-self: flex-start;
     width: 100%;
 }
 
 .input-group-left {
-    width: 150px;
+    width: clamp(8rem, 30vw, 9.375rem);
 }
 
 .input-group-right {
@@ -15,25 +15,25 @@
 }
 
 .label-left {
-    font-size: 14px !important;
+    font-size: clamp(0.875rem, 1.5vw, 0.875rem) !important;
     color: #333;
     font-weight: normal !important;
     white-space: nowrap;
     width: 100%;
     text-align: left;
-    margin-top: 30px !important;
+    margin-top: clamp(1rem, 3vw, 1.875rem) !important;
 }
 
 input[type="text"] {
-    padding: 10px 12px;
-    font-size: 15px;
+    padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.625rem, 2vw, 0.75rem);
+    font-size: clamp(0.875rem, 1.5vw, 0.9375rem);
     border: 1px solid var(--border);
     border-radius: 8px;
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     text-align: right;
-    width: 200px;
+    width: clamp(10rem, 40vw, 12.5rem);
     margin-left: auto !important;
 }
 
@@ -43,7 +43,11 @@ input[type="text"]:focus {
 }
 
 canvas {
-    height: 340px !important;
+    height: clamp(12rem, 40vh, 30rem) !important;
+    max-height: min(60vh, 35rem);
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 @media (max-width: 1440px) {
@@ -63,7 +67,7 @@ canvas {
         margin-top: 0.875rem;
     }
     canvas {
-        height: 140px !important;
+        height: 280px !important;
     }
 }
 
@@ -72,7 +76,7 @@ canvas {
         margin-top: 0.75rem;
     }
     canvas {
-        height: 120px !important;
+        height: 200px !important;
     }
 }
 
@@ -81,6 +85,6 @@ canvas {
         margin-top: 0.625rem;
     }
     canvas {
-        height: 100px !important;
+        height: 180px !important;
     }
 }

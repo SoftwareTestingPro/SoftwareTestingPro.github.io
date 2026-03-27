@@ -21,6 +21,11 @@
 
 .validation-section {
     margin-top: 1.25rem;
+    display: none; /* Initially hidden */
+}
+
+.validation-section.active {
+    display: block; /* Show when active */
 }
 
 .country-display {
@@ -34,11 +39,15 @@
 }
 
 .radio-group {
-    display: flex;
+    display: none; /* Initially hidden */
     flex-direction: column;
     gap: 0.625rem;
     align-items: center;
     margin-top: 5rem;
+}
+
+.validation-section.active .radio-group {
+    display: flex; /* Show when validation section is active */
 }
 
 .radio-option {
