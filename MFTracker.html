@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mutual Fund Tracker</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
+        <style>
         :root {
             --primary-color: #4361ee;
             --secondary-color: #3f37c9;
@@ -413,99 +411,7 @@
             color: #06ffa5;
         }
 
-        /* Google Login Modal Styles */
-        #googleLoginModal .modal-dialog {
-            max-width: 400px;
-        }
-
-        #googleLoginModal .modal-content {
-            border-radius: 20px;
-            border: none;
-            box-shadow: 0 10px 30px rgba(66, 133, 244, 0.2);
-        }
-
-        #googleLoginModal .modal-header {
-            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
-            color: white;
-            border-radius: 20px 20px 0 0;
-            padding: 20px;
-        }
-
-        #googleLoginModal .modal-title {
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-
-        #googleLoginModal .btn-close {
-            filter: brightness(0) invert(1);
-        }
-
-        #googleLoginModal .modal-body {
-            padding: 30px 20px;
-            background: #f8f9fa;
-        }
-
-        #googleLoginModal h6 {
-            color: #4285f4;
-            font-weight: 600;
-        }
-
-        #googleLoginModal .text-muted {
-            color: #5f6368 !important;
-        }
-
-        #googleLoginModal .modal-footer {
-            background: #f8f9fa;
-            border-radius: 0 0 20px 20px;
-            padding: 15px 20px;
-        }
-
-        /* Google Sign-In Button Styles */
-        .g-signin2 {
-            display: inline-flex;
-            align-items: center;
-            background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
-            color: white;
-            border-radius: 8px;
-            border: none;
-            padding: 12px 20px;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
-            text-decoration: none;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .g-signin2:hover {
-            background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
-            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
-            transform: translateY(-1px);
-        }
-
-        .g-signin2:active {
-            transform: translateY(0);
-        }
-
-        .g-signin2-icon {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-        }
-
-        .g-signin2-text {
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        /* Google brand colors for text */
-        .google-blue { color: #4285f4; }
-        .google-red { color: #ea4335; }
-        .google-yellow { color: #fbbc04; }
-        .google-green { color: #34a853; }
-
+        
         .btn-secondary {
             background-color: #f1f3f4;
             color: #5f6368;
@@ -677,17 +583,31 @@
 
         /* Login Page Styles */
         .login-content {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100vh !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            z-index: 1000 !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        .login-content[style*="display: none"] {
+            display: none !important;
         }
 
         .login-container {
             width: 100%;
             max-width: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .login-card {
@@ -695,6 +615,14 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            width: 100%;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
 
         .login-header {
@@ -740,6 +668,266 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
+
+        /* Essential Bootstrap replacements */
+        .container-fluid {
+            width: 100%;
+            padding: 0 15px;
+            margin: 0 auto;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: #6c757d;
+        }
+
+        .mb-0 { margin-bottom: 0; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-3 { margin-bottom: 16px; }
+        .mb-4 { margin-bottom: 24px; }
+
+        .mt-2 { margin-top: 8px; }
+        .mt-3 { margin-top: 16px; }
+
+        .ms-2 { margin-left: 8px; }
+
+        .gap-2 { gap: 8px; }
+        .gap-3 { gap: 16px; }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.875rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-text {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-dialog {
+            background: white;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .d-grid {
+            display: grid;
+        }
+
+        .fade {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .fade.show {
+            opacity: 1;
+        }
+
+        /* Hide elements by default */
+        .hide {
+            display: none;
+        }
+
+        /* Toast Container Styles */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            max-width: 350px;
+        }
+
+        .toast {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+            display: block;
+        }
+
+        .toast-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #dee2e6;
+            background: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .toast-body {
+            padding: 16px;
+        }
+
+        .toast.success {
+            border-left: 4px solid #28a745;
+        }
+
+        .toast.success .toast-header {
+            background: #d4edda;
+            border-bottom-color: #c3e6cb;
+        }
+
+        .toast.error {
+            border-left: 4px solid #dc3545;
+        }
+
+        .toast.error .toast-header {
+            background: #f8d7da;
+            border-bottom-color: #f5c6cb;
+        }
+
+        .toast.info {
+            border-left: 4px solid #17a2b8;
+        }
+
+        .toast.info .toast-header {
+            background: #d1ecf1;
+            border-bottom-color: #bee5eb;
+        }
+
+        .toast.warning {
+            border-left: 4px solid #ffc107;
+        }
+
+        .toast.warning .toast-header {
+            background: #fff3cd;
+            border-bottom-color: #ffeaa7;
+        }
     </style>
 </head>
 <body>
@@ -764,9 +952,18 @@
                             <i class="bi bi-shield-lock"></i>
                         </div>
                     </div>
-                    <div class="d-grid gap-2 mb-3">
-                        <div id="googleSignInBtn"></div>
-                    </div>
+                    <form id="emailLoginForm" onsubmit="handleEmailSignIn(event)">
+                        <div class="mb-3">
+                            <label for="emailInput" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="emailInput" placeholder="Enter your email address" required>
+                            <div class="form-text">We'll use this to sync your investments securely</div>
+                        </div>
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary-custom">
+                                <i class="bi bi-envelope"></i> Sign In with Email
+                            </button>
+                        </div>
+                    </form>
                     <div class="text-center">
                         <small class="text-muted">
                             <i class="bi bi-lock"></i> Your data is securely synced using GitHub Gist
@@ -776,6 +973,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <!-- Main Content -->
     <div class="container-fluid main-content" id="mainContent">
@@ -796,7 +996,7 @@
                             </button>
                         </div>
                         <div id="loginSection" class="login-section">
-                            <div id="googleSignInBtn"></div>
+                            <div id="mainEmailSignInBtn"></div>
                         </div>
                         <div id="syncStatus" class="sync-status"></div>
                     </div>
@@ -897,9 +1097,6 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
     <!-- Hidden file input for import -->
     <input type="file" id="importFile" accept=".json,.csv" style="display: none;">
 
@@ -977,45 +1174,31 @@
         </div>
     </div>
 
-    <!-- Google Login Popup Modal -->
-    <div class="modal fade" id="googleLoginModal" tabindex="-1" aria-labelledby="googleLoginModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="googleLoginModalLabel">
-                        <i class="bi bi-google"></i> Sign in with Google
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <div class="mb-3">
-                        <div style="font-size: 2.5rem;">
-                            <span class="google-blue">G</span><span class="google-red">o</span><span class="google-yellow">o</span><span class="google-blue">g</span><span class="google-green">l</span><span class="google-red">e</span>
-                        </div>
-                    </div>
-                    <h6 class="mb-2">Sync Your Investments</h6>
-                    <p class="text-muted mb-3">
-                        Access your portfolio from any device with Google sync
-                    </p>
-                    <div class="d-grid gap-2 mb-3">
-                        <div id="googleSignInBtnModal"></div>
-                    </div>
-                    <div class="mt-2">
-                        <small class="text-muted">
-                            <i class="bi bi-shield-check google-green"></i> Secure & private sync
-                        </small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Maybe Later</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+        <script>
+// Simple modal implementation to replace Bootstrap modal
+        class SimpleModal {
+            constructor(elementId) {
+                this.element = document.getElementById(elementId);
+                this.isOpen = false;
+            }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-// Google Sign-In scripts removed - using email authentication only
+            show() {
+                if (this.element) {
+                    this.element.classList.add('show');
+                    this.isOpen = true;
+                }
+            }
+
+            hide() {
+                if (this.element) {
+                    this.element.classList.remove('show');
+                    this.isOpen = false;
+                }
+            }
+        }
+
+        // Google Sign-In scripts removed - using email authentication only
         // Global variables
         let allFunds = [];
         let userInvestments = [];
@@ -1023,6 +1206,8 @@
         let allFundsCache = null; // Cache for all funds
         let isFundsLoading = false;
         let editingInvestmentId = null; // Track if we're editing an investment
+        
+        // Note: userInvestments now represents cloud data - no local storage concept
         
         // Fund Groups functionality
         let fundGroups = []; // Array to store fund groups
@@ -1032,19 +1217,11 @@
         let currentUser = null;
         let isSignedIn = false;
 
-        // Check for existing authentication
+        // Check for existing authentication (cloud-only)
         function checkAuthState() {
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    isSignedIn = true;
-                    updateAuthUI();
-                } catch (error) {
-                    console.error('Error loading saved user:', error);
-                    localStorage.removeItem('currentUser');
-                }
-            }
+            // No localStorage concept - user must always sign in
+            currentUser = null;
+            isSignedIn = false;
         }
 
         // Initialize the app
@@ -1052,8 +1229,8 @@
             // Check for existing authentication
             checkAuthState();
             
-            // Initialize Google Sign-In
-            setTimeout(initializeGoogleSignIn, 500);
+            // Initialize Email Sign-In
+            setTimeout(initializeEmailSignIn, 500);
 
             // Setup basic UI elements
             setupEventListeners();
@@ -1069,7 +1246,6 @@
                 loadUserInvestments();
                 setTimeout(() => {
                     showMainContent();
-                    showLoginPopupIfNeeded();
                 }, 500);
             }, 8000); // Maximum 8 seconds total loading time
             
@@ -1083,7 +1259,6 @@
                 // Show main content
                 setTimeout(() => {
                     showMainContent();
-                    showLoginPopupIfNeeded();
                 }, 500);
             }).catch(() => {
                 clearTimeout(maxLoadingTime);
@@ -1094,7 +1269,6 @@
                 // Show main content anyway
                 setTimeout(() => {
                     showMainContent();
-                    showLoginPopupIfNeeded();
                 }, 500);
             });
         });
@@ -1161,11 +1335,52 @@
 
         // Show main content and hide loading screen
         function showMainContent() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            const mainContent = document.getElementById('mainContent');
-            
-            loadingScreen.classList.add('hidden');
-            mainContent.classList.add('loaded');
+            try {
+                const loadingScreen = document.getElementById('loadingScreen');
+                const mainContent = document.getElementById('mainContent');
+                const loginContent = document.getElementById('loginContent');
+                
+                console.log('showMainContent called, isSignedIn:', isSignedIn, 'currentUser:', currentUser);
+                
+                // Hide loading screen
+                if (loadingScreen) {
+                    loadingScreen.style.display = 'none';
+                }
+                
+                // Show appropriate content based on authentication state
+                if (isSignedIn && currentUser) {
+                    // Show main content if user is signed in
+                    if (mainContent) {
+                        mainContent.style.display = 'block';
+                        console.log('Main content displayed');
+                    }
+                    if (loginContent) {
+                        loginContent.style.display = 'none';
+                        console.log('Login content hidden');
+                    }
+                    console.log('Showing main content for signed-in user');
+                } else {
+                    // Show login content if user is not signed in
+                    if (mainContent) {
+                        mainContent.style.display = 'none';
+                    }
+                    if (loginContent) {
+                        loginContent.style.display = 'flex';
+                    }
+                    console.log('Showing login content for unsigned-in user');
+                }
+            } catch (error) {
+                console.error('Error in showMainContent:', error);
+                // Fallback: try to hide login and show main content
+                try {
+                    const loginContent = document.getElementById('loginContent');
+                    const mainContent = document.getElementById('mainContent');
+                    if (loginContent) loginContent.style.display = 'none';
+                    if (mainContent) mainContent.style.display = 'block';
+                } catch (fallbackError) {
+                    console.error('Fallback also failed:', fallbackError);
+                }
+            }
         }
 
         // Set max date to today
@@ -1400,10 +1615,8 @@
                     showSuccess('Fund added successfully!');
                 }
 
-                saveUserInvestments();
-                
-                // Sync to cloud
-                saveToCloud(userInvestments);
+                // Sync to cloud since we're cloud-only
+                await saveUserInvestments();
                 
                 // Reset button text
                 const submitBtn = document.getElementById('submitBtn');
@@ -2094,10 +2307,11 @@
         }
 
         // Remove a fund
-        function removeFund(investmentId) {
+        async function removeFund(investmentId) {
             if (confirm('Are you sure you want to remove this fund?')) {
                 userInvestments = userInvestments.filter(inv => inv.id != investmentId);
-                saveUserInvestments();
+                // Save to cloud since we're cloud-only
+                await saveUserInvestments();
                 displayFunds();
                 updateSummary();
                 showSuccess('Fund removed successfully!');
@@ -2129,48 +2343,65 @@
             document.getElementById('searchDropdown').style.display = 'none';
         }
 
-        // Save user investments to localStorage
-        function saveUserInvestments() {
-            localStorage.setItem('mfInvestments', JSON.stringify(userInvestments));
+        // Save user investments to Gist only
+        async function saveUserInvestments() {
+            if (!isSignedIn || !currentUser) {
+                console.warn('Cannot save investments: User not signed in');
+                return;
+            }
+            await saveToCloud(userInvestments);
         }
 
-        // Load user investments from localStorage
-        function loadUserInvestments() {
-            const saved = localStorage.getItem('mfInvestments');
-            if (saved) {
-                try {
-                    userInvestments = JSON.parse(saved);
-                    // Defer display to prevent blocking
-                    setTimeout(() => {
-                        if (currentView === 'individual') {
-                            displayFunds();
-                        } else {
-                            displayGroups();
-                        }
-                        updateSummary();
-                    }, 100);
-                } catch (error) {
-                    console.error('Error loading investments:', error);
-                    userInvestments = [];
-                }
+        // Load user investments from Gist only
+        async function loadUserInvestments() {
+            if (!isSignedIn || !currentUser) {
+                console.warn('Cannot load investments: User not signed in');
+                userInvestments = [];
+                return;
+            }
+            
+            try {
+                userInvestments = await getCloudInvestments();
+                console.log('Loaded investments from Gist:', userInvestments.length);
+                
+                // Defer display to prevent blocking
+                setTimeout(() => {
+                    if (currentView === 'individual') {
+                        displayFunds();
+                    } else {
+                        displayGroups();
+                    }
+                    updateSummary();
+                }, 100);
+            } catch (error) {
+                console.error('Error loading investments from Gist:', error);
+                userInvestments = [];
             }
         }
 
         // Fund Groups Management Functions
-        function loadFundGroups() {
-            const saved = localStorage.getItem('mfGroups');
-            if (saved) {
-                try {
-                    fundGroups = JSON.parse(saved);
-                } catch (error) {
-                    console.error('Error loading fund groups:', error);
-                    fundGroups = [];
-                }
+        async function loadFundGroups() {
+            if (!isSignedIn || !currentUser) {
+                console.warn('Cannot load fund groups: User not signed in');
+                fundGroups = [];
+                return;
+            }
+            
+            try {
+                fundGroups = await getCloudFundGroups();
+                console.log('Loaded fund groups from Gist:', fundGroups.length);
+            } catch (error) {
+                console.error('Error loading fund groups from Gist:', error);
+                fundGroups = [];
             }
         }
 
-        function saveFundGroups() {
-            localStorage.setItem('mfGroups', JSON.stringify(fundGroups));
+        async function saveFundGroups() {
+            if (!isSignedIn || !currentUser) {
+                console.warn('Cannot save fund groups: User not signed in');
+                return;
+            }
+            await saveToCloudFundGroups(fundGroups);
         }
 
         function switchView(view) {
@@ -2195,12 +2426,12 @@
         }
 
         function showCreateGroupModal() {
-            const modal = new bootstrap.Modal(document.getElementById('createGroupModal'));
+            const modal = new SimpleModal('createGroupModal');
             document.getElementById('createGroupForm').reset();
             modal.show();
         }
 
-        function createGroup() {
+        async function createGroup() {
             const groupName = document.getElementById('groupName').value.trim();
             const groupDescription = document.getElementById('groupDescription').value.trim();
             
@@ -2226,10 +2457,10 @@
             console.log('Creating new group:', newGroup);
             
             fundGroups.push(newGroup);
-            saveFundGroups();
+            await saveFundGroups();
             
             // Close modal and refresh display
-            const modal = bootstrap.Modal.getInstance(document.getElementById('createGroupModal'));
+            const modal = new SimpleModal('createGroupModal');
             modal.hide();
             
             displayGroups();
@@ -2279,7 +2510,7 @@
             }, 200);
             
             // Show modal
-            const modal = new bootstrap.Modal(document.getElementById('editGroupModal'));
+            const modal = new SimpleModal('editGroupModal');
             modal.show();
         }
 
@@ -2320,7 +2551,7 @@
             assignmentList.innerHTML = fundItemsHTML;
         }
 
-        function updateGroup() {
+        async function updateGroup() {
             const groupId = window.currentEditingGroupId;
             const group = fundGroups.find(g => g.id === groupId);
             if (!group) return;
@@ -2353,17 +2584,17 @@
             group.description = groupDescription;
             group.fundIds = selectedFundIds;
             
-            saveFundGroups();
+            await saveFundGroups();
             
             // Close modal and refresh display
-            const modal = bootstrap.Modal.getInstance(document.getElementById('editGroupModal'));
+            const modal = new SimpleModal('editGroupModal');
             modal.hide();
             
             displayGroups();
             showSuccess(`Group "${groupName}" updated successfully!`);
         }
 
-        function deleteGroup() {
+        async function deleteGroup() {
             const groupId = window.currentEditingGroupId;
             const group = fundGroups.find(g => g.id === groupId);
             if (!group) return;
@@ -2373,10 +2604,10 @@
             }
             
             fundGroups = fundGroups.filter(g => g.id !== groupId);
-            saveFundGroups();
+            await saveFundGroups();
             
             // Close modal and refresh display
-            const modal = bootstrap.Modal.getInstance(document.getElementById('editGroupModal'));
+            const modal = new SimpleModal('editGroupModal');
             modal.hide();
             
             displayGroups();
@@ -2592,17 +2823,19 @@
             toastContainer.insertAdjacentHTML('beforeend', toastHTML);
             
             const toastElement = document.getElementById(toastId);
-            const toast = new bootstrap.Toast(toastElement, {
-                autohide: true,
-                delay: type === 'error' ? 5000 : type === 'info' ? 10000 : 3000
-            });
             
-            toast.show();
+            // Show toast with custom implementation
+            toastElement.style.display = 'block';
+            toastElement.classList.add('show');
             
-            // Remove toast element after it's hidden
-            toastElement.addEventListener('hidden.bs.toast', () => {
-                toastElement.remove();
-            });
+            // Auto-hide toast after delay
+            const delay = type === 'error' ? 5000 : type === 'info' ? 10000 : 3000;
+            setTimeout(() => {
+                toastElement.classList.remove('show');
+                setTimeout(() => {
+                    toastElement.remove();
+                }, 300); // Wait for fade out animation
+            }, delay);
         }
 
         function showError(message) {
@@ -2698,16 +2931,16 @@
         }
 
         // Import data from file
-        function importData() {
+        async function importData() {
             const fileInput = document.getElementById('importFile');
             fileInput.click();
             
-            fileInput.onchange = function(e) {
+            fileInput.onchange = async function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
 
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = async function(event) {
                     try {
                         const content = event.target.result;
                         let importedData;
@@ -2717,7 +2950,8 @@
                             
                             if (importedData.investments && Array.isArray(importedData.investments)) {
                                 userInvestments = importedData.investments;
-                                saveUserInvestments();
+                                // Save to cloud since we're cloud-only
+                                await saveUserInvestments();
                                 displayFunds();
                                 updateSummary();
                                 showSuccess(`Imported ${userInvestments.length} investments successfully`);
@@ -2750,7 +2984,7 @@
                             
                             if (investments.length > 0) {
                                 userInvestments = investments;
-                                saveUserInvestments();
+                                await saveUserInvestments();
                                 displayFunds();
                                 updateSummary();
                                 showSuccess(`Imported ${investments.length} investments successfully`);
@@ -2787,26 +3021,19 @@
         }, 5 * 60 * 1000); // Refresh every 5 minutes
 
         // Authentication initialization - email only
-        function initializeGoogleSignIn() {
+        function initializeEmailSignIn() {
             // Directly show email sign-in
             showFallbackSignIn();
         }
 
         // Email sign-in method
         function showFallbackSignIn() {
-            const googleBtn = document.getElementById('googleSignInBtn');
-            const modalBtn = document.getElementById('googleSignInBtnModal');
+            // Login form is now static in HTML, no need to dynamically create buttons
+            // Only update the main content email button if it exists
+            const mainEmailBtn = document.getElementById('mainEmailSignInBtn');
             
-            if (googleBtn) {
-                googleBtn.innerHTML = `
-                    <button class="btn btn-primary-custom w-100" onclick="showEmailSignIn()">
-                        <i class="bi bi-envelope"></i> Sign In with Email
-                    </button>
-                `;
-            }
-            
-            if (modalBtn) {
-                modalBtn.innerHTML = `
+            if (mainEmailBtn) {
+                mainEmailBtn.innerHTML = `
                     <button class="btn btn-primary-custom w-100" onclick="showEmailSignIn()">
                         <i class="bi bi-envelope"></i> Sign In with Email
                     </button>
@@ -2814,8 +3041,50 @@
             }
         }
 
-        // Email-based sign-in fallback
-        function showEmailSignIn() {
+        // Handle email sign-in form submission
+        async function handleEmailSignIn(event) {
+            event.preventDefault();
+            
+            const emailInput = document.getElementById('emailInput');
+            const email = emailInput.value.trim();
+            
+            console.log('Email sign-in attempt:', email);
+            
+            if (email && email.includes('@')) {
+                currentUser = {
+                    name: email.split('@')[0],
+                    email: email,
+                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=random`
+                };
+                isSignedIn = true;
+                
+                console.log('User signed in:', currentUser);
+                console.log('isSignedIn:', isSignedIn);
+                
+                updateAuthUI();
+                
+                // Show main content first
+                console.log('Calling showMainContent()...');
+                showMainContent();
+                
+                // Sync data from Gist on new device login
+                setTimeout(async () => {
+                    try {
+                        await syncFromGistOnLogin();
+                    } catch (error) {
+                        console.error('Sync from Gist error:', error);
+                        // Don't block sign-in if sync fails
+                    }
+                }, 1000);
+                
+                showToast('Successfully signed in with email!', 'success', 'Sign In');
+            } else {
+                showToast('Please enter a valid email address', 'error', 'Sign In Error');
+            }
+        }
+
+        // Email-based sign-in fallback (for main content button)
+        async function showEmailSignIn() {
             const email = prompt('Enter your email address for sync:');
             if (email && email.includes('@')) {
                 currentUser = {
@@ -2824,20 +3093,19 @@
                     avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=random`
                 };
                 isSignedIn = true;
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 updateAuthUI();
                 
-                // Close login modal if it's open
-                const loginModal = bootstrap.Modal.getInstance(document.getElementById('googleLoginModal'));
-                if (loginModal) {
-                    loginModal.hide();
-                }
-                
-                // Auto-sync local investments
-                autoSyncLocalInvestments();
-                
-                // Show main content
+                // Show main content first
                 showMainContent();
+                
+                // Sync data from Gist
+                setTimeout(async () => {
+                    try {
+                        await syncFromGistOnLogin();
+                    } catch (error) {
+                        console.error('Sync from Gist error:', error);
+                    }
+                }, 500);
                 
                 showToast('Successfully signed in with email!', 'success', 'Sign In');
             }
@@ -2855,68 +3123,54 @@
         function signOut() {
             currentUser = null;
             isSignedIn = false;
-            localStorage.removeItem('currentUser');
             updateAuthUI();
+            showLoginContent();
             showToast('Successfully signed out', 'info', 'Sign Out');
         }
 
         function updateAuthUI() {
-            const loginSection = document.getElementById('loginSection');
-            const userInfo = document.getElementById('userInfo');
-            const logoutBtn = document.getElementById('logoutBtn');
-            
-            if (isSignedIn && currentUser) {
-                loginSection.style.display = 'none';
-                userInfo.style.display = 'flex';
-                logoutBtn.style.display = 'inline-block';
+            try {
+                const loginSection = document.getElementById('loginSection');
+                const userInfo = document.getElementById('userInfo');
+                const logoutBtn = document.getElementById('logoutBtn');
                 
-                document.getElementById('userName').textContent = currentUser.name;
-                document.getElementById('userAvatar').src = currentUser.avatar;
-            } else {
-                loginSection.style.display = 'flex';
-                userInfo.style.display = 'none';
-                logoutBtn.style.display = 'none';
+                if (isSignedIn && currentUser) {
+                    if (loginSection) loginSection.style.display = 'none';
+                    if (userInfo) userInfo.style.display = 'flex';
+                    if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                    
+                    const userNameElement = document.getElementById('userName');
+                    const userAvatarElement = document.getElementById('userAvatar');
+                    if (userNameElement) userNameElement.textContent = currentUser.name;
+                    if (userAvatarElement) userAvatarElement.src = currentUser.avatar;
+                } else {
+                    if (loginSection) loginSection.style.display = 'flex';
+                    if (userInfo) userInfo.style.display = 'none';
+                    if (logoutBtn) logoutBtn.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error updating auth UI:', error);
+                // Don't block sign-in if UI update fails
             }
         }
 
-        // Show login popup if user is not signed in
-        function showLoginPopupIfNeeded() {
-            if (!isSignedIn && userInvestments.length > 0) {
-                // Show login popup after a short delay
-                setTimeout(() => {
-                    const loginModal = new bootstrap.Modal(document.getElementById('googleLoginModal'));
-                    loginModal.show();
-                }, 2000);
-            }
-        }
-
-        // Auto-sync local investments when user signs in
-        async function autoSyncLocalInvestments() {
+        
+        // Sync data from Gist when user signs in (new device login)
+        async function syncFromGistOnLogin() {
             if (!isSignedIn || !currentUser) return;
             
             const syncStatus = document.getElementById('syncStatus');
-            syncStatus.textContent = 'Auto-syncing...';
-            syncStatus.className = 'sync-status syncing';
+            if (syncStatus) {
+                syncStatus.textContent = 'Syncing from cloud...';
+                syncStatus.className = 'sync-status syncing';
+            }
             
             try {
-                // Get existing cloud investments
-                const cloudInvestments = await getCloudInvestments();
-                const localInvestments = [...userInvestments];
+                // Load investments from cloud
+                await loadUserInvestments();
                 
-                // If local is empty and cloud has data, use cloud data
-                if (localInvestments.length === 0 && cloudInvestments.length > 0) {
-                    userInvestments = cloudInvestments;
-                    saveUserInvestments();
-                    showToast(`Loaded ${cloudInvestments.length} investments from cloud`, 'success', 'Sync Complete');
-                } else {
-                    // Merge local and cloud investments
-                    const mergedInvestments = mergeInvestments(localInvestments, cloudInvestments);
-                    userInvestments = mergedInvestments;
-                    saveUserInvestments();
-                }
-                
-                // Save to cloud
-                await saveToCloud(userInvestments);
+                // Load fund groups from cloud
+                await loadFundGroups();
                 
                 // Refresh display based on current view
                 if (currentView === 'individual') {
@@ -2926,15 +3180,23 @@
                 }
                 await updateSummary();
                 
-                setTimeout(() => {
-                    syncStatus.textContent = 'Auto-synced';
-                    syncStatus.className = 'sync-status success';
-                }, 1000);
+                if (syncStatus) {
+                    setTimeout(() => {
+                        syncStatus.textContent = 'Synced from cloud';
+                        syncStatus.className = 'sync-status success';
+                    }, 1000);
+                }
+                
+                const totalItems = userInvestments.length + fundGroups.length;
+                showToast(`Loaded ${userInvestments.length} investments and ${fundGroups.length} groups from cloud`, 'success', 'Sync Complete');
                 
             } catch (error) {
-                syncStatus.textContent = 'Sync failed';
-                syncStatus.className = 'sync-status error';
-                showToast('Failed to auto-sync investments', 'error', 'Auto-Sync Error');
+                console.error('Failed to sync from Gist:', error);
+                if (syncStatus) {
+                    syncStatus.textContent = 'Sync failed';
+                    syncStatus.className = 'sync-status error';
+                }
+                showToast('Failed to sync data from cloud', 'error', 'Sync Error');
             }
         }
 
@@ -2944,17 +3206,26 @@
             
             try {
                 const cloudInvestments = await getCloudInvestments();
+                const cloudFundGroups = await getCloudFundGroups();
                 const currentLocalCount = userInvestments.length;
+                const currentGroupsCount = fundGroups.length;
                 
-                // Check if cloud has more or different investments
+                // Check if cloud has different data
+                let needsUpdate = false;
+                
                 if (cloudInvestments && cloudInvestments.length !== currentLocalCount) {
-                    console.log('Detected sync difference, updating local data');
-                    
-                    // Merge with cloud data
-                    const mergedInvestments = mergeInvestments(userInvestments, cloudInvestments);
-                    userInvestments = mergedInvestments;
-                    saveUserInvestments();
-                    
+                    console.log('Detected investments sync difference, updating local data');
+                    userInvestments = cloudInvestments;
+                    needsUpdate = true;
+                }
+                
+                if (cloudFundGroups && cloudFundGroups.length !== currentGroupsCount) {
+                    console.log('Detected fund groups sync difference, updating local data');
+                    fundGroups = cloudFundGroups;
+                    needsUpdate = true;
+                }
+                
+                if (needsUpdate) {
                     // Refresh display
                     if (currentView === 'individual') {
                         await displayFunds();
@@ -2979,69 +3250,105 @@
             console.log('Email key:', emailKey);
             console.log('Gist ID:', gistId);
             
-                        
-                                                        console.log('Searching GitHub gists...');
+            // Get GitHub token (using default for now)
+            let githubToken = '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';
+            
+            console.log('Searching GitHub gists...');
             const response = await fetch(`https://api.github.com/gists`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'token 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'
-                    }
-                });
-                
-                console.log('GitHub API response status:', response.status);
-                console.log('GitHub API response ok:', response.ok);
-                
-                if (response.ok) {
-                    const searchData = await response.json();
-                    console.log('GitHub API response data:', searchData);
-                    const fileName = `${gistId}.json`;
-                    if (searchData.files && searchData.files[fileName]) {
-                        const content = JSON.parse(searchData.files[fileName].content);
-                        console.log('Successfully loaded from GitHub Gist');
-                        console.log('Investments loaded:', content.investments);
-                        return content.investments || [];
-                    } else {
-                        console.log('Gist file not found in response');
-                    }
-                } else {
-                    const errorText = await response.text();
-                    console.error('Failed to load from GitHub Gist');
-                    console.error('Status:', response.status);
-                    console.error('Response:', errorText);
+                method: 'GET',
+                headers: {
+                    'Authorization': `token ${githubToken}`
                 }
-                            
-                // Search for gists by description to find the correct one
-                const searchResponse = await fetch(`https://api.github.com/gists`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'token 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'
-                    }
-                });
+            });
+            
+            console.log('GitHub API response status:', response.status);
+            console.log('GitHub API response ok:', response.ok);
+            
+            if (response.status === 401) {
+                console.error('GitHub token authentication failed in getCloudInvestments');
+                return [];
+            }
+            
+            if (response.ok) {
+                const searchData = await response.json();
+                console.log('Found gists:', searchData.length);
+                console.log('GitHub API response data sample:', searchData.slice(0, 2));
                 
-                if (searchResponse.ok) {
-                    const searchData = await searchResponse.json();
-                    console.log('Found gists:', searchData.length);
+                // Find gist with matching description
+                const targetDescription = `Mutual Fund Investments for ${currentUser.email}`;
+                const targetGist = searchData.find(gist => gist.description === targetDescription);
+                
+                if (targetGist) {
+                    console.log('Found matching gist:', targetGist.id);
+                    console.log('Gist files from list:', Object.keys(targetGist.files));
                     
-                    // Find gist with matching description
-                    const targetDescription = `Mutual Fund Investments for ${currentUser.email}`;
-                    const targetGist = searchData.find(gist => gist.description === targetDescription);
+                    // Make a direct API call to get the full Gist content
+                    console.log('Fetching full Gist content for ID:', targetGist.id);
+                    const gistResponse = await fetch(`https://api.github.com/gists/${targetGist.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `token ${githubToken}`
+                        }
+                    });
                     
-                    if (targetGist) {
-                        console.log('Found matching gist:', targetGist.id);
+                    if (gistResponse.ok) {
+                        const fullGist = await gistResponse.json();
+                        console.log('Full Gist files:', Object.keys(fullGist.files));
+                        
                         const fileName = `${gistId}.json`;
-                        if (targetGist.files && targetGist.files[fileName]) {
-                            const content = JSON.parse(targetGist.files[fileName].content);
-                            console.log('Successfully loaded from searched GitHub Gist');
-                            console.log('Investments loaded:', content.investments);
-                            // Store the gist ID for future use
-                                                        return content.investments || [];
+                        if (fullGist.files && fullGist.files[fileName]) {
+                            const fileContent = fullGist.files[fileName].content;
+                            console.log('File content found:', fileContent ? 'Yes' : 'No');
+                            console.log('File content length:', fileContent ? fileContent.length : 0);
+                            
+                            if (fileContent && fileContent.trim()) {
+                                try {
+                                    const content = JSON.parse(fileContent);
+                                    console.log('Successfully loaded from GitHub Gist');
+                                    console.log('Investments loaded:', content.investments);
+                                    return content.investments || [];
+                                } catch (parseError) {
+                                    console.error('JSON parsing error:', parseError);
+                                    console.log('Invalid JSON content:', fileContent);
+                                    return [];
+                                }
+                            } else {
+                                console.log('Gist file content is empty or undefined');
+                                console.log('Available files:', Object.keys(fullGist.files));
+                                // Try to read any file that might contain our data
+                                for (const [fileName, fileData] of Object.entries(fullGist.files)) {
+                                    if (fileData.content && fileData.content.trim()) {
+                                        console.log('Trying alternative file:', fileName);
+                                        try {
+                                            const content = JSON.parse(fileData.content);
+                                            if (content.investments) {
+                                                console.log('Found investments in alternative file:', fileName);
+                                                return content.investments || [];
+                                            }
+                                        } catch (e) {
+                                            console.log('Failed to parse alternative file:', fileName);
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            console.log('Gist file not found. Available files:', Object.keys(fullGist.files || {}));
                         }
                     } else {
-                        console.log('No matching gist found for email:', currentUser.email);
+                        console.error('Failed to fetch full Gist content:', gistResponse.status);
+                        const errorText = await gistResponse.text();
+                        console.error('Gist fetch error:', errorText);
                     }
                 } else {
-                    console.error('Failed to search gists');
+                    console.log('No matching gist found for email:', currentUser.email);
+                    console.log('Available gist descriptions:', searchData.map(g => g.description).filter(d => d && d.includes('Mutual Fund')));
                 }
+            } else {
+                const errorText = await response.text();
+                console.error('Failed to load from GitHub Gist');
+                console.error('Status:', response.status);
+                console.error('Response:', errorText);
+            }
             
             console.log('Returning empty array');
             return [];
@@ -3057,14 +3364,23 @@
             console.log('Gist ID:', gistId);
             console.log('Investments count:', investments.length);
             
+            // Get GitHub token (using default for now)
+            let githubToken = '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';
+            
             // First search for existing gist with matching description
             console.log('Searching for existing gist...');
             const searchResponse = await fetch(`https://api.github.com/gists`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'token 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'
+                    'Authorization': `token ${githubToken}`
                 }
             });
+            
+            if (searchResponse.status === 401) {
+                console.error('GitHub token authentication failed');
+                showToast('GitHub token is invalid. Cloud sync disabled until token is updated.', 'error', 'Authentication Error');
+                return;
+            }
             
             if (searchResponse.ok) {
                 const searchData = await searchResponse.json();
@@ -3078,7 +3394,7 @@
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'token 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'
+                            'Authorization': `token ${githubToken}`
                         },
                         body: JSON.stringify({
                             description: `Mutual Fund Investments for ${currentUser.email}`,
@@ -3114,7 +3430,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'token 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'
+                    'Authorization': `token ${githubToken}`
                 },
                 body: JSON.stringify({
                     description: `Mutual Fund Investments for ${currentUser.email}`,
@@ -3145,7 +3461,209 @@
                 console.error('Status:', response.status);
                 console.error('Status Text:', response.statusText);
                 console.error('Response:', errorText);
-                console.error('GitHub Token used: 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');
+                console.error('GitHub Token used: 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');
+            }
+        }
+
+        // Get cloud fund groups from GitHub Gist only
+        async function getCloudFundGroups() {
+            const emailKey = currentUser.email.replace(/[^a-zA-Z0-9]/g, '_');
+            const gistId = `mf_groups_${emailKey}`;
+            
+            console.log('=== GETTING CLOUD FUND GROUPS ===');
+            console.log('Email key:', emailKey);
+            console.log('Gist ID:', gistId);
+            
+            // Get GitHub token (using default for now)
+            let githubToken = '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';
+            
+            console.log('Searching GitHub gists for fund groups...');
+            const response = await fetch(`https://api.github.com/gists`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `token ${githubToken}`
+                }
+            });
+            
+            if (response.status === 401) {
+                console.error('GitHub token authentication failed in getCloudFundGroups');
+                return [];
+            }
+            
+            if (response.ok) {
+                const searchData = await response.json();
+                console.log('Found gists:', searchData.length);
+                
+                // Find gist with matching description
+                const targetDescription = `Mutual Fund Groups for ${currentUser.email}`;
+                const targetGist = searchData.find(gist => gist.description === targetDescription);
+                
+                if (targetGist) {
+                    console.log('Found matching fund groups gist:', targetGist.id);
+                    console.log('Gist files from list:', Object.keys(targetGist.files));
+                    
+                    // Make a direct API call to get the full Gist content
+                    console.log('Fetching full fund groups Gist content for ID:', targetGist.id);
+                    const gistResponse = await fetch(`https://api.github.com/gists/${targetGist.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `token ${githubToken}`
+                        }
+                    });
+                    
+                    if (gistResponse.ok) {
+                        const fullGist = await gistResponse.json();
+                        console.log('Full fund groups Gist files:', Object.keys(fullGist.files));
+                        
+                        const fileName = `${gistId}.json`;
+                        if (fullGist.files && fullGist.files[fileName]) {
+                            const fileContent = fullGist.files[fileName].content;
+                            console.log('File content found:', fileContent ? 'Yes' : 'No');
+                            console.log('File content length:', fileContent ? fileContent.length : 0);
+                            
+                            if (fileContent && fileContent.trim()) {
+                                try {
+                                    const content = JSON.parse(fileContent);
+                                    console.log('Successfully loaded fund groups from GitHub Gist');
+                                    console.log('Fund groups loaded:', content.fundGroups);
+                                    return content.fundGroups || [];
+                                } catch (parseError) {
+                                    console.error('JSON parsing error in fund groups:', parseError);
+                                    console.log('Invalid JSON content:', fileContent);
+                                    return [];
+                                }
+                            } else {
+                                console.log('Fund groups gist file content is empty or undefined');
+                                console.log('Available files:', Object.keys(fullGist.files));
+                                // Try to read any file that might contain our data
+                                for (const [fileName, fileData] of Object.entries(fullGist.files)) {
+                                    if (fileData.content && fileData.content.trim()) {
+                                        console.log('Trying alternative file for groups:', fileName);
+                                        try {
+                                            const content = JSON.parse(fileData.content);
+                                            if (content.fundGroups) {
+                                                console.log('Found fund groups in alternative file:', fileName);
+                                                return content.fundGroups || [];
+                                            }
+                                        } catch (e) {
+                                            console.log('Failed to parse alternative groups file:', fileName);
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            console.log('Fund groups gist file not found. Available files:', Object.keys(fullGist.files || {}));
+                        }
+                    } else {
+                        console.error('Failed to fetch full fund groups Gist content:', gistResponse.status);
+                        const errorText = await gistResponse.text();
+                        console.error('Fund groups Gist fetch error:', errorText);
+                    }
+                } else {
+                    console.log('No matching fund groups gist found for email:', currentUser.email);
+                    console.log('Available gist descriptions:', searchData.map(g => g.description).filter(d => d && d.includes('Mutual Fund')));
+                }
+            } else {
+                console.error('Failed to search for fund groups gists');
+            }
+            
+            console.log('Returning empty fund groups array');
+            return [];
+        }
+
+        // Save fund groups to cloud using GitHub Gist only
+        async function saveToCloudFundGroups(fundGroups) {
+            const emailKey = currentUser.email.replace(/[^a-zA-Z0-9]/g, '_');
+            const gistId = `mf_groups_${emailKey}`;
+            
+            console.log('Attempting to save fund groups to GitHub Gist...');
+            console.log('Email key:', emailKey);
+            console.log('Gist ID:', gistId);
+            console.log('Fund groups count:', fundGroups.length);
+            
+            // Get GitHub token (using default for now)
+            let githubToken = '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';
+            
+            // First search for existing gist with matching description
+            console.log('Searching for existing fund groups gist...');
+            const searchResponse = await fetch(`https://api.github.com/gists`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `token ${githubToken}`
+                }
+            });
+            
+            if (searchResponse.status === 401) {
+                console.error('GitHub token authentication failed for fund groups');
+                return;
+            }
+            
+            if (searchResponse.ok) {
+                const searchData = await searchResponse.json();
+                const targetDescription = `Mutual Fund Groups for ${currentUser.email}`;
+                const existingGist = searchData.find(gist => gist.description === targetDescription);
+                
+                if (existingGist) {
+                    console.log('Found existing fund groups gist, updating:', existingGist.id);
+                    // Update existing gist
+                    const updateResponse = await fetch(`https://api.github.com/gists/${existingGist.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `token ${githubToken}`
+                        },
+                        body: JSON.stringify({
+                            description: `Mutual Fund Groups for ${currentUser.email}`,
+                            files: {
+                                [`${gistId}.json`]: {
+                                    content: JSON.stringify({
+                                        fundGroups: fundGroups,
+                                        lastSyncTime: new Date().toISOString(),
+                                        userEmail: currentUser.email
+                                    }, null, 2)
+                                }
+                            }
+                        })
+                    });
+                    
+                    if (updateResponse.ok) {
+                        console.log('Successfully updated fund groups GitHub Gist');
+                        return;
+                    } else {
+                        console.error('Failed to update fund groups GitHub Gist');
+                        return;
+                    }
+                }
+            }
+            
+            // Create new gist if none exists
+            console.log('Creating new fund groups gist...');
+            const response = await fetch(`https://api.github.com/gists`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `token ${githubToken}`
+                },
+                body: JSON.stringify({
+                    description: `Mutual Fund Groups for ${currentUser.email}`,
+                    public: false,
+                    files: {
+                        [`${gistId}.json`]: {
+                            content: JSON.stringify({
+                                fundGroups: fundGroups,
+                                lastSyncTime: new Date().toISOString(),
+                                userEmail: currentUser.email
+                            }, null, 2)
+                        }
+                    }
+                })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Successfully saved fund groups to GitHub Gist:', data.id);
+            } else {
+                console.error('Failed to save fund groups to GitHub Gist');
             }
         }
 
@@ -3192,25 +3710,32 @@
             }
         }, 30 * 1000); // Sync every 30 seconds
 
+        // Modal close button event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners for modal close buttons
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    if (modal) {
+                        modal.classList.remove('show');
+                    }
+                });
+            });
+
+            // Close modal when clicking outside
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('show');
+                    }
+                });
+            });
+        });
+
         // Page initialization - show login page by default
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is already logged in
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    isSignedIn = true;
-                    updateAuthUI();
-                    autoSyncLocalInvestments();
-                    showMainContent();
-                } catch (error) {
-                    console.error('Error parsing saved user:', error);
-                    localStorage.removeItem('currentUser');
-                }
-            } else {
-                // Show login page
-                showLoginContent();
-            }
+            // Always show login page - no localStorage concept
+            showLoginContent();
         });
 
         function showLoginContent() {
@@ -3220,20 +3745,10 @@
                 mainContent.style.display = 'none';
             }
             if (loginContent) {
-                loginContent.style.display = 'block';
+                loginContent.style.display = 'flex';
             }
         }
 
-        function showMainContent() {
-            const mainContent = document.getElementById('mainContent');
-            const loginContent = document.getElementById('loginContent');
-            if (mainContent) {
-                mainContent.style.display = 'block';
-            }
-            if (loginContent) {
-                loginContent.style.display = 'none';
-            }
-        }
-    </script>
+            </script>
 </body>
 </html>
