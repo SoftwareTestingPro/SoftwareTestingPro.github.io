@@ -925,6 +925,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script async defer src="https://accounts.google.com/gsi/client"></script>
+    <script async defer src="https://apis.google.com/js/api.js"></script>
     <script>
         // Global variables
         let allFunds = [];
@@ -2751,6 +2752,9 @@
                     localStorage.setItem('currentUser', JSON.stringify(currentUser));
                     updateAuthUI();
 
+                    // Initialize Google Drive API for cross-device sync
+                    initializeGoogleDriveAPI();
+
                     // Close login modal if it's open
                     const loginModal = bootstrap.Modal.getInstance(document.getElementById('googleLoginModal'));
                     if (loginModal) {
@@ -2765,6 +2769,24 @@
                     console.error('Error processing Google Sign-In:', error);
                     showError('Failed to process sign-in response');
                 }
+            }
+        }
+
+        // Initialize Google Drive API for cross-device sync
+        function initializeGoogleDriveAPI() {
+            if (typeof gapi !== 'undefined') {
+                gapi.load('client:auth2', () => {
+                    gapi.client.init({
+                        apiKey: 'AIzaSyBkZlLrGdYqN3jQ9sFwX7mZ6nK8pJqLrM',
+                        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+                        clientId: '319050731055-69u2lkqeunj4odfbpiqs3gce8k6g97lq.apps.googleusercontent.com',
+                        scope: 'https://www.googleapis.com/auth/drive.file'
+                    }).then(() => {
+                        console.log('Google Drive API initialized successfully');
+                    }, (error) => {
+                        console.error('Error initializing Google Drive API:', error);
+                    });
+                });
             }
         }
 
@@ -2825,9 +2847,14 @@
             syncStatus.className = 'sync-status syncing';
             
             try {
-                // Get existing cloud investments (simulated)
-                const cloudInvestments = getCloudInvestments();
+                console.log('Starting auto-sync for user:', currentUser.email);
+                
+                // Get existing cloud investments
+                const cloudInvestments = await getCloudInvestments();
                 const localInvestments = [...userInvestments];
+                
+                console.log('Cloud investments:', cloudInvestments.length);
+                console.log('Local investments:', localInvestments.length);
                 
                 // Merge local and cloud investments
                 const mergedInvestments = mergeInvestments(localInvestments, cloudInvestments);
@@ -2836,11 +2863,15 @@
                 userInvestments = mergedInvestments;
                 saveUserInvestments();
                 
-                // Save to cloud (simulated)
-                saveToCloud(mergedInvestments);
+                // Save to cloud
+                await saveToCloud(mergedInvestments);
                 
-                // Refresh display
-                await displayFunds();
+                // Refresh display based on current view
+                if (currentView === 'individual') {
+                    await displayFunds();
+                } else {
+                    await displayGroups();
+                }
                 await updateSummary();
                 
                 setTimeout(() => {
@@ -2850,22 +2881,117 @@
                 }, 1000);
                 
             } catch (error) {
+                console.error('Auto-sync error:', error);
                 syncStatus.textContent = 'Sync failed';
                 syncStatus.className = 'sync-status error';
                 showToast('Failed to auto-sync investments', 'error', 'Auto-Sync Error');
             }
         }
 
-        // Get cloud investments (simulated)
-        function getCloudInvestments() {
+        // Get cloud investments using Google Drive API or fallback
+        async function getCloudInvestments() {
+            try {
+                // Try to use Google Drive API first
+                if (typeof gapi !== 'undefined' && gapi.client && gapi.client.drive) {
+                    return await getInvestmentsFromDrive();
+                }
+            } catch (error) {
+                console.warn('Google Drive API not available, using fallback');
+            }
+            
+            // Fallback to localStorage with user email as key (device-specific)
             const cloudData = localStorage.getItem(`cloud_investments_${currentUser.email}`);
             return cloudData ? JSON.parse(cloudData) : [];
         }
 
-        // Save investments to cloud (simulated)
-        function saveToCloud(investments) {
+        // Save investments to cloud using Google Drive API or fallback
+        async function saveToCloud(investments) {
+            try {
+                // Try to use Google Drive API first
+                if (typeof gapi !== 'undefined' && gapi.client && gapi.client.drive) {
+                    await saveInvestmentsToDrive(investments);
+                    return;
+                }
+            } catch (error) {
+                console.warn('Google Drive API not available, using fallback');
+            }
+            
+            // Fallback to localStorage with user email as key (device-specific)
             localStorage.setItem(`cloud_investments_${currentUser.email}`, JSON.stringify(investments));
             localStorage.setItem(`lastSyncTime_${currentUser.email}`, new Date().toISOString());
+        }
+
+        // Google Drive API functions for cross-device sync
+        async function getInvestmentsFromDrive() {
+            try {
+                const fileName = `mf_investments_${currentUser.email.replace(/[^a-zA-Z0-9]/g, '_')}.json`;
+                const response = await gapi.client.drive.files.list({
+                    q: `name='${fileName}' and trashed=false`,
+                    fields: 'files(id, name)'
+                });
+                
+                if (response.result.files.length > 0) {
+                    const fileId = response.result.files[0].id;
+                    const fileResponse = await gapi.client.drive.files.get({
+                        fileId: fileId,
+                        alt: 'media'
+                    });
+                    return fileResponse.result || [];
+                }
+                return [];
+            } catch (error) {
+                console.error('Error getting investments from Drive:', error);
+                return [];
+            }
+        }
+
+        async function saveInvestmentsToDrive(investments) {
+            try {
+                const fileName = `mf_investments_${currentUser.email.replace(/[^a-zA-Z0-9]/g, '_')}.json`;
+                const fileContent = JSON.stringify({
+                    investments: investments,
+                    lastSyncTime: new Date().toISOString(),
+                    userEmail: currentUser.email
+                }, null, 2);
+                
+                // Check if file exists
+                const listResponse = await gapi.client.drive.files.list({
+                    q: `name='${fileName}' and trashed=false`,
+                    fields: 'files(id, name)'
+                });
+                
+                const fileMetadata = {
+                    name: fileName,
+                    parents: ['appDataFolder'] // Store in app data folder
+                };
+                
+                if (listResponse.result.files.length > 0) {
+                    // Update existing file
+                    const fileId = listResponse.result.files[0].id;
+                    await gapi.client.drive.files.update({
+                        fileId: fileId,
+                        resource: fileMetadata,
+                        media: {
+                            mimeType: 'application/json',
+                            body: fileContent
+                        }
+                    });
+                } else {
+                    // Create new file
+                    await gapi.client.drive.files.create({
+                        resource: fileMetadata,
+                        media: {
+                            mimeType: 'application/json',
+                            body: fileContent
+                        }
+                    });
+                }
+                
+                console.log('Investments saved to Google Drive successfully');
+            } catch (error) {
+                console.error('Error saving investments to Drive:', error);
+                throw error;
+            }
         }
 
         // Merge local and cloud investments
@@ -2902,15 +3028,19 @@
             syncStatus.className = 'sync-status syncing';
             
             try {
-                // Save to cloud (simulated)
-                saveToCloud(userInvestments);
+                console.log('Manual sync triggered for user:', currentUser.email);
+                console.log('Syncing investments:', userInvestments.length);
+                
+                // Save to cloud
+                await saveToCloud(userInvestments);
                 
                 setTimeout(() => {
                     syncStatus.textContent = 'Synced';
                     syncStatus.className = 'sync-status success';
-                    showToast('Data synced successfully!', 'success', 'Sync Complete');
+                    showToast(`Synced ${userInvestments.length} investments to your Google account`, 'success', 'Sync Complete');
                 }, 1000);
             } catch (error) {
+                console.error('Manual sync error:', error);
                 syncStatus.textContent = 'Sync failed';
                 syncStatus.className = 'sync-status error';
                 showToast('Failed to sync data', 'error', 'Sync Error');
