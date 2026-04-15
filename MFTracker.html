@@ -1305,6 +1305,8 @@
                         addedDate: new Date().toISOString()
                     };
                     userInvestments.push(investment);
+                    console.log('New investment added:', investment);
+                    console.log('Total investments after adding:', userInvestments.length);
                     showSuccess('Fund added successfully!');
                 }
 
@@ -1315,7 +1317,14 @@
                 submitBtn.innerHTML = '<i class="bi bi-plus-lg"></i> Add Fund';
                 
                 clearForm();
-                displayFunds();
+                
+                // Display based on current view
+                if (currentView === 'individual') {
+                    displayFunds();
+                } else {
+                    displayGroups();
+                }
+                
                 updateSummary();
             } catch (error) {
                 console.error('Error adding fund:', error);
@@ -2117,9 +2126,11 @@
                 id: Date.now(),
                 name: groupName,
                 description: groupDescription,
-                fundIds: [],
+                fundIds: [], // Start with empty array - funds can be added later via edit
                 createdDate: new Date().toISOString()
             };
+            
+            console.log('Creating new group:', newGroup);
             
             fundGroups.push(newGroup);
             saveFundGroups();
@@ -2129,12 +2140,38 @@
             modal.hide();
             
             displayGroups();
-            showSuccess(`Group "${groupName}" created successfully!`);
+            showSuccess(`Group "${groupName}" created successfully! Click "Edit" to add funds to this group.`);
+        }
+
+        // Debug function to check current state
+        function debugGroupState() {
+            console.log('=== GROUP DEBUG INFO ===');
+            console.log('Fund Groups:', fundGroups);
+            console.log('User Investments:', userInvestments);
+            console.log('Current View:', currentView);
+            
+            // Check for any orphaned fund IDs
+            fundGroups.forEach(group => {
+                const orphanedIds = group.fundIds.filter(fundId => 
+                    !userInvestments.some(inv => parseInt(inv.id) === parseInt(fundId))
+                );
+                if (orphanedIds.length > 0) {
+                    console.warn(`Group "${group.name}" has orphaned fund IDs:`, orphanedIds);
+                }
+            });
         }
 
         function showEditGroupModal(groupId) {
             const group = fundGroups.find(g => g.id === groupId);
             if (!group) return;
+            
+            // Force refresh userInvestments from localStorage to catch recently added funds
+            loadUserInvestments();
+            
+            // Debug: Log group details
+            console.log('Editing group:', group);
+            console.log('Group fund IDs:', group.fundIds);
+            console.log('All investments:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
             
             // Set current editing group
             window.currentEditingGroupId = groupId;
@@ -2143,8 +2180,10 @@
             document.getElementById('editGroupName').value = group.name;
             document.getElementById('editGroupDescription').value = group.description || '';
             
-            // Populate fund assignment list
-            populateFundAssignmentList(group.fundIds);
+            // Populate fund assignment list after a small delay to ensure data is loaded
+            setTimeout(() => {
+                populateFundAssignmentList(group.fundIds);
+            }, 200);
             
             // Show modal
             const modal = new bootstrap.Modal(document.getElementById('editGroupModal'));
@@ -2159,8 +2198,17 @@
                 return;
             }
             
+            // Debug: Log the selected fund IDs and investment IDs
+            console.log('Selected fund IDs:', selectedFundIds);
+            console.log('Available investment IDs:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
+            
             const fundItemsHTML = userInvestments.map(investment => {
-                const isSelected = selectedFundIds.includes(investment.id);
+                // Ensure both are numbers for proper comparison
+                const investmentId = parseInt(investment.id);
+                const isSelected = selectedFundIds.some(id => parseInt(id) === investmentId);
+                
+                console.log(`Checking fund "${investment.schemeName}" (ID: ${investmentId}): Selected = ${isSelected}`);
+                
                 return `
                     <div class="fund-assignment-item">
                         <div class="d-flex align-items-center">
@@ -2203,6 +2251,9 @@
             document.querySelectorAll('#fundAssignmentList input[type="checkbox"]:checked').forEach(checkbox => {
                 selectedFundIds.push(parseInt(checkbox.value));
             });
+            
+            // Debug: Log the selected IDs
+            console.log('Updating group with selected fund IDs:', selectedFundIds);
             
             // Update group
             group.name = groupName;
@@ -2279,8 +2330,12 @@
                     }
                     
                     const groupFundsHTML = await Promise.all(group.fundIds.map(async (fundId) => {
-                        const investment = userInvestments.find(inv => inv.id === fundId);
-                        if (!investment) return '';
+                        // Use parseInt for proper type comparison
+                        const investment = userInvestments.find(inv => parseInt(inv.id) === parseInt(fundId));
+                        if (!investment) {
+                            console.warn(`Investment not found for fund ID in display: ${fundId}`);
+                            return '';
+                        }
                         
                         try {
                             const currentNAV = await getCurrentNAV(investment.schemeCode);
@@ -2364,10 +2419,19 @@
             let totalCurrentValue = 0;
             let investmentDetails = [];
             
+            console.log('=== CALCULATING GROUP STATS ===');
+            console.log('Fund IDs to process:', fundIds);
+            console.log('Available investments:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
+            
             for (const fundId of fundIds) {
-                const investment = userInvestments.find(inv => inv.id === fundId);
-                if (!investment) continue;
+                // Use parseInt for proper type comparison
+                const investment = userInvestments.find(inv => parseInt(inv.id) === parseInt(fundId));
+                if (!investment) {
+                    console.warn(`Investment not found for fund ID: ${fundId}`);
+                    continue;
+                }
                 
+                console.log(`Found investment: ${investment.schemeName} (ID: ${investment.id})`);
                 totalInvestment += investment.investmentAmount;
                 
                 try {
