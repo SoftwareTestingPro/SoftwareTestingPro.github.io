@@ -2808,13 +2808,11 @@
         function updateAuthUI() {
             const loginSection = document.getElementById('loginSection');
             const userInfo = document.getElementById('userInfo');
-            const syncBtn = document.getElementById('syncBtn');
             const logoutBtn = document.getElementById('logoutBtn');
             
             if (isSignedIn && currentUser) {
                 loginSection.style.display = 'none';
                 userInfo.style.display = 'flex';
-                syncBtn.style.display = 'inline-block';
                 logoutBtn.style.display = 'inline-block';
                 
                 document.getElementById('userName').textContent = currentUser.name;
@@ -2822,7 +2820,6 @@
             } else {
                 loginSection.style.display = 'flex';
                 userInfo.style.display = 'none';
-                syncBtn.style.display = 'none';
                 logoutBtn.style.display = 'none';
             }
         }
@@ -2856,15 +2853,20 @@
                 console.log('Cloud investments:', cloudInvestments.length);
                 console.log('Local investments:', localInvestments.length);
                 
-                // Merge local and cloud investments
-                const mergedInvestments = mergeInvestments(localInvestments, cloudInvestments);
-                
-                // Update user investments with merged data
-                userInvestments = mergedInvestments;
-                saveUserInvestments();
+                // If local is empty and cloud has data, use cloud data
+                if (localInvestments.length === 0 && cloudInvestments.length > 0) {
+                    userInvestments = cloudInvestments;
+                    saveUserInvestments();
+                    console.log('Using cloud investments as local is empty');
+                } else {
+                    // Merge local and cloud investments
+                    const mergedInvestments = mergeInvestments(localInvestments, cloudInvestments);
+                    userInvestments = mergedInvestments;
+                    saveUserInvestments();
+                }
                 
                 // Save to cloud
-                await saveToCloud(mergedInvestments);
+                await saveToCloud(userInvestments);
                 
                 // Refresh display based on current view
                 if (currentView === 'individual') {
@@ -2877,7 +2879,7 @@
                 setTimeout(() => {
                     syncStatus.textContent = 'Auto-synced';
                     syncStatus.className = 'sync-status success';
-                    showToast(`Auto-synced ${mergedInvestments.length} investments to your Google account`, 'success', 'Auto-Sync Complete');
+                    showToast(`Auto-synced ${userInvestments.length} investments to your Google account`, 'success', 'Auto-Sync Complete');
                 }, 1000);
                 
             } catch (error) {
@@ -2885,6 +2887,38 @@
                 syncStatus.textContent = 'Sync failed';
                 syncStatus.className = 'sync-status error';
                 showToast('Failed to auto-sync investments', 'error', 'Auto-Sync Error');
+            }
+        }
+
+        // Periodic sync to check for updates from other devices
+        async function periodicSync() {
+            if (!isSignedIn || !currentUser) return;
+            
+            try {
+                const cloudInvestments = await getCloudInvestments();
+                const currentLocalCount = userInvestments.length;
+                
+                // Check if cloud has more or different investments
+                if (cloudInvestments.length !== currentLocalCount) {
+                    console.log('Detected sync difference, updating local data');
+                    
+                    // Merge with cloud data
+                    const mergedInvestments = mergeInvestments(userInvestments, cloudInvestments);
+                    userInvestments = mergedInvestments;
+                    saveUserInvestments();
+                    
+                    // Refresh display
+                    if (currentView === 'individual') {
+                        await displayFunds();
+                    } else {
+                        await displayGroups();
+                    }
+                    await updateSummary();
+                    
+                    showToast('Data updated from cloud', 'info', 'Auto-Sync');
+                }
+            } catch (error) {
+                console.error('Periodic sync error:', error);
             }
         }
 
@@ -3017,35 +3051,23 @@
             return merged;
         }
 
-        async function syncData() {
-            if (!isSignedIn) {
-                showToast('Please sign in to sync data', 'warning', 'Sync Required');
-                return;
+        // Manual sync function removed - auto-sync handles everything
+        // If needed, can be called manually: await periodicSync();
+        
+        // Periodic sync every 30 seconds to check for cross-device updates
+        let periodicSyncInProgress = false;
+        setInterval(async () => {
+            if (isSignedIn && !periodicSyncInProgress) {
+                periodicSyncInProgress = true;
+                try {
+                    await periodicSync();
+                } catch (error) {
+                    console.error('Error in periodic sync:', error);
+                } finally {
+                    periodicSyncInProgress = false;
+                }
             }
-            
-            const syncStatus = document.getElementById('syncStatus');
-            syncStatus.textContent = 'Syncing...';
-            syncStatus.className = 'sync-status syncing';
-            
-            try {
-                console.log('Manual sync triggered for user:', currentUser.email);
-                console.log('Syncing investments:', userInvestments.length);
-                
-                // Save to cloud
-                await saveToCloud(userInvestments);
-                
-                setTimeout(() => {
-                    syncStatus.textContent = 'Synced';
-                    syncStatus.className = 'sync-status success';
-                    showToast(`Synced ${userInvestments.length} investments to your Google account`, 'success', 'Sync Complete');
-                }, 1000);
-            } catch (error) {
-                console.error('Manual sync error:', error);
-                syncStatus.textContent = 'Sync failed';
-                syncStatus.className = 'sync-status error';
-                showToast('Failed to sync data', 'error', 'Sync Error');
-            }
-        }
+        }, 30 * 1000); // Sync every 30 seconds
     </script>
 </body>
 </html>
