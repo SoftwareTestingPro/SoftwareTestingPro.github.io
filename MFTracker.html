@@ -2921,18 +2921,31 @@
 
         // Get cloud investments using Google Drive API or fallback
         async function getCloudInvestments() {
+            console.log('=== GETTING CLOUD INVESTMENTS ===');
+            console.log('gapi available:', typeof gapi !== 'undefined');
+            console.log('gapi.client available:', typeof gapi !== 'undefined' && gapi.client);
+            console.log('gapi.client.drive available:', typeof gapi !== 'undefined' && gapi.client && gapi.client.drive);
+            
             try {
                 // Try to use Google Drive API first
                 if (typeof gapi !== 'undefined' && gapi.client && gapi.client.drive) {
-                    return await getInvestmentsFromDrive();
+                    console.log('Using Google Drive API to get investments');
+                    const driveData = await getInvestmentsFromDrive();
+                    console.log('Drive data retrieved:', driveData);
+                    return driveData;
+                } else {
+                    console.warn('Google Drive API not fully available');
                 }
             } catch (error) {
-                console.warn('Google Drive API not available, using fallback');
+                console.warn('Google Drive API error, using fallback:', error);
             }
             
             // Fallback to localStorage with user email as key (device-specific)
+            console.log('Using localStorage fallback');
             const cloudData = localStorage.getItem(`cloud_investments_${currentUser.email}`);
-            return cloudData ? JSON.parse(cloudData) : [];
+            const fallbackData = cloudData ? JSON.parse(cloudData) : [];
+            console.log('Fallback data:', fallbackData);
+            return fallbackData;
         }
 
         // Save investments to cloud using Google Drive API or fallback
@@ -3054,15 +3067,23 @@
         // Periodic sync every 30 seconds to check for cross-device updates
         let periodicSyncInProgress = false;
         setInterval(async () => {
+            console.log('=== PERIODIC SYNC CHECK ===');
+            console.log('isSignedIn:', isSignedIn);
+            console.log('periodicSyncInProgress:', periodicSyncInProgress);
+            console.log('currentUser:', currentUser);
+            
             if (isSignedIn && !periodicSyncInProgress) {
                 periodicSyncInProgress = true;
                 try {
+                    console.log('Running periodic sync...');
                     await periodicSync();
                 } catch (error) {
                     console.error('Error in periodic sync:', error);
                 } finally {
                     periodicSyncInProgress = false;
                 }
+            } else {
+                console.log('Skipping periodic sync - not signed in or already in progress');
             }
         }, 30 * 1000); // Sync every 30 seconds
     </script>
