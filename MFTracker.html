@@ -921,9 +921,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script async defer src="https://accounts.google.com/gsi/client"></script>
-    <script async defer src="https://apis.google.com/js/api.js"></script>
     <script>
+// Google Sign-In scripts removed - using email authentication only
         // Global variables
         let allFunds = [];
         let userInvestments = [];
@@ -2691,61 +2690,13 @@
             }
         }, 5 * 60 * 1000); // Refresh every 5 minutes
 
-        // Authentication initialization
+        // Authentication initialization - email only
         function initializeGoogleSignIn() {
-            if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-                google.accounts.id.initialize({
-                    client_id: '319050731055-69u2lkqeunj4odfbpiqs3gce8k6g97lq.apps.googleusercontent.com',
-                    callback: handleCredentialResponse,
-                    auto_select: false,
-                    // Allow multiple origins for development
-                    allowed_parent_origin: [
-                        'https://softwaretestingpro.github.io',
-                        'http://localhost',
-                        'https://localhost',
-                        'file://'
-                    ]
-                });
-
-                // Render sign-in buttons
-                if (document.getElementById('googleSignInBtn')) {
-                    google.accounts.id.renderButton(
-                        document.getElementById('googleSignInBtn'),
-                        {
-                            theme: 'outline',
-                            size: 'large',
-                            type: 'standard',
-                            text: 'signin_with'
-                        }
-                    );
-                }
-
-                if (document.getElementById('googleSignInBtnModal')) {
-                    google.accounts.id.renderButton(
-                        document.getElementById('googleSignInBtnModal'),
-                        {
-                            theme: 'outline',
-                            size: 'large',
-                            type: 'standard',
-                            text: 'signin_with'
-                        }
-                    );
-                }
-            }
-            
-            // Fallback: Add simple email authentication if Google Sign-In fails
-            setTimeout(() => {
-                if (!isSignedIn && document.getElementById('googleSignInBtn')) {
-                    const btn = document.getElementById('googleSignInBtn');
-                    if (!btn.innerHTML || btn.innerHTML.trim() === '') {
-                        // Google button didn't render, show fallback
-                        showFallbackSignIn();
-                    }
-                }
-            }, 3000);
+            // Directly show email sign-in
+            showFallbackSignIn();
         }
 
-        // Fallback sign-in method
+        // Email sign-in method
         function showFallbackSignIn() {
             const googleBtn = document.getElementById('googleSignInBtn');
             const modalBtn = document.getElementById('googleSignInBtnModal');
@@ -2793,52 +2744,13 @@
             }
         }
 
-        // Handle Google Sign-In response
-        function handleCredentialResponse(response) {
-            if (response.credential) {
-                // Decode JWT token to get user info
-                try {
-                    const base64Url = response.credential.split('.')[1];
-                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                    const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
-                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                    }).join(''));
-
-                    const userProfile = JSON.parse(jsonPayload);
-
-                    currentUser = {
-                        name: userProfile.name,
-                        email: userProfile.email,
-                        avatar: userProfile.picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userProfile.name) + '&background=random'
-                    };
-                    isSignedIn = true;
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    updateAuthUI();
-
-                    // Close login modal if it's open
-                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('googleLoginModal'));
-                    if (loginModal) {
-                        loginModal.hide();
-                    }
-
-                    // Auto-sync local investments to Google account
-                    autoSyncLocalInvestments();
-
-                    showToast('Successfully signed in with Google!', 'success', 'Sign In');
-                } catch (error) {
-                    console.error('Error processing Google Sign-In:', error);
-                    showError('Failed to process sign-in response');
-                }
-            }
-        }
+        // Google Sign-In response handler removed - using email only
 
         // Google Drive API removed - using simpler sync approach
 
         function signInWithGoogle() {
-            // Google Sign-In button handles the sign-in, this is for manual trigger if needed
-            if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-                google.accounts.id.prompt();
-            }
+            // Redirect to email sign-in
+            showEmailSignIn();
         }
 
         function signOut() {
