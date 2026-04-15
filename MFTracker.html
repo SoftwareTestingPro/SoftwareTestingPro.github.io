@@ -105,6 +105,26 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
             margin-top: 20px;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            max-height: 2000px;
+            opacity: 1;
+            overflow: visible;
+        }
+
+        .performance-grid.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+            overflow: hidden;
+        }
+
+        .expand-toggle-btn {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-toggle-btn.collapsed {
+            transform: rotate(-180deg);
         }
 
         .performance-card {
@@ -777,40 +797,12 @@
                     console.error('Failed to load all funds:', error);
                 }
                 
-                // Try alternative approach - load popular funds with timeout
-                try {
-                    updateLoadingText('Loading popular funds...');
-                    const popularCodes = ['120503', '118099', '119083', '122628', '100040', '118343', '120653', '119022'];
-                    const controller2 = new AbortController();
-                    const timeout2 = setTimeout(() => controller2.abort(), 2000); // Reduced to 2 seconds
-                    
-                    const promises = popularCodes.map(code => 
-                        fetch(`https://api.mfapi.in/mf/${code}`, { signal: controller2.signal })
-                            .then(res => res.json())
-                            .catch(() => null)
-                    );
-                    
-                    const results = await Promise.all(promises);
-                    clearTimeout(timeout2);
-                    
-                    allFundsCache = results.filter(fund => fund && fund.meta).map(fund => ({
-                        schemeCode: fund.meta.scheme_code,
-                        schemeName: fund.meta.scheme_name,
-                        fundType: fund.meta.fund_type,
-                        category: fund.meta.scheme_category
-                    }));
-                    console.log(`Loaded ${allFundsCache.length} popular funds into cache`);
-                    clearTimeout(timeoutId);
-                    isFundsLoading = false;
-                    return Promise.resolve();
-                } catch (fallbackError) {
-                    console.error('Fallback also failed:', fallbackError);
-                    clearTimeout(timeoutId);
-                    isFundsLoading = false;
-                    return Promise.reject(fallbackError);
-                }
+                // No fallback available
+                clearTimeout(timeoutId);
+                isFundsLoading = false;
+                return Promise.reject(new Error('Failed to load fund data'));
             } finally {
-                // Ensure loading state is reset
+                // ...existing code...
                 if (isFundsLoading) {
                     isFundsLoading = false;
                 }
@@ -930,33 +922,13 @@
             } catch (error) {
                 clearTimeout(timeout);
                 if (error.name === 'AbortError') {
-                    console.warn('Search API timeout - trying fallback');
+                    console.warn('Search API timeout');
                 } else {
                     console.error('Error fetching from MF API:', error);
                 }
                 
-                // Fallback: try popular funds search
-                try {
-                    const popularFunds = [
-                        { schemeCode: '120503', schemeName: 'HDFC Flexi Cap Fund - Direct Plan', fundType: 'Open-ended' },
-                        { schemeCode: '118099', schemeName: 'HDFC Flexi Cap Fund - Regular Plan', fundType: 'Open-ended' },
-                        { schemeCode: '119083', schemeName: 'Parag Parikh Flexi Cap Fund - Direct Plan', fundType: 'Open-ended' },
-                        { schemeCode: '122628', schemeName: 'Parag Parikh Flexi Cap Fund - Regular Plan', fundType: 'Open-ended' },
-                        { schemeCode: '100040', schemeName: 'ICICI Prudential Bluechip Fund - Direct Plan', fundType: 'Open-ended' },
-                        { schemeCode: '118343', schemeName: 'ICICI Prudential Bluechip Fund - Regular Plan', fundType: 'Open-ended' },
-                        { schemeCode: '120653', schemeName: 'Axis Bluechip Fund - Direct Plan', fundType: 'Open-ended' },
-                        { schemeCode: '119022', schemeName: 'Axis Bluechip Fund - Regular Plan', fundType: 'Open-ended' }
-                    ];
-                    
-                    const filtered = popularFunds.filter(fund => 
-                        fund.schemeName.toLowerCase().includes(query.toLowerCase()) ||
-                        fund.schemeCode.toString().includes(query)
-                    );
-                    return filtered;
-                } catch (fallbackError) {
-                    console.error('Fallback search failed:', fallbackError);
-                    return []; // Return empty array
-                }
+                // Return empty results - no fallback
+                return [];
             }
         }
 
@@ -1254,6 +1226,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 text-end">
+                                        <button type="button" class="btn btn-sm btn-outline-info me-2 expand-toggle-btn collapsed" onclick="togglePerformanceGrid('perf-${investment.id}')" title="Toggle performance details">
+                                            <i class="bi bi-chevron-up"></i>
+                                        </button>
                                         <button class="btn btn-sm btn-outline-primary me-2" onclick="editFund('${investment.id}')">
                                             <i class="bi bi-pencil"></i> Edit
                                         </button>
@@ -1263,7 +1238,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="performance-grid">
+                                <div class="performance-grid collapsed" id="perf-${investment.id}">
                                     ${performanceItems.map(item => `
                                         <div class="performance-card">
                                             <div class="small">${item.label}${item.changeDate ? ' (' + formatDate(item.changeDate.split('-').reverse().join('-')) + ')' : ''}</div>
@@ -1328,6 +1303,7 @@
         }
 
         // Calculate individual fund CAGR using the CAGR formula
+        // Calculate CAGR for individual fund
         function calculateFundCAGR(investment, currentNAV) {
             const investmentDate = new Date(investment.investmentDate);
             const currentDate = new Date();
@@ -1339,6 +1315,15 @@
             }
             
             const currentValue = investment.units * currentNAV;
+
+            // For very short periods (less than 1 year), use linear simple return
+            // This avoids extreme CAGR values and is more intuitive for short periods
+            if (daysDiff < 365) {
+                const simpleReturn = ((currentValue - investment.investmentAmount) / investment.investmentAmount) * 100;
+                return simpleReturn;
+            }
+
+            // For 1 year or more, use proper CAGR formula
             const cagr = (Math.pow(currentValue / investment.investmentAmount, 1 / years) - 1) * 100;
             return cagr;
         }
@@ -1750,7 +1735,7 @@
             
             // Scroll to form
             document.getElementById('addFundForm').scrollIntoView({ behavior: 'smooth' });
-            
+
             showInfo('Edit the fund details and submit to update');
         }
 
@@ -1762,6 +1747,17 @@
                 displayFunds();
                 updateSummary();
                 showSuccess('Fund removed successfully!');
+            }
+        }
+
+        // Toggle performance grid visibility
+        function togglePerformanceGrid(gridId) {
+            const grid = document.getElementById(gridId);
+            const button = event.target.closest('.expand-toggle-btn');
+
+            if (grid && button) {
+                grid.classList.toggle('collapsed');
+                button.classList.toggle('collapsed');
             }
         }
 
