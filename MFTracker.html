@@ -2697,7 +2697,14 @@
                 google.accounts.id.initialize({
                     client_id: '319050731055-69u2lkqeunj4odfbpiqs3gce8k6g97lq.apps.googleusercontent.com',
                     callback: handleCredentialResponse,
-                    auto_select: false
+                    auto_select: false,
+                    // Allow multiple origins for development
+                    allowed_parent_origin: [
+                        'https://softwaretestingpro.github.io',
+                        'http://localhost',
+                        'https://localhost',
+                        'file://'
+                    ]
                 });
 
                 // Render sign-in buttons
@@ -2724,6 +2731,65 @@
                         }
                     );
                 }
+            }
+            
+            // Fallback: Add simple email authentication if Google Sign-In fails
+            setTimeout(() => {
+                if (!isSignedIn && document.getElementById('googleSignInBtn')) {
+                    const btn = document.getElementById('googleSignInBtn');
+                    if (!btn.innerHTML || btn.innerHTML.trim() === '') {
+                        // Google button didn't render, show fallback
+                        showFallbackSignIn();
+                    }
+                }
+            }, 3000);
+        }
+
+        // Fallback sign-in method
+        function showFallbackSignIn() {
+            const googleBtn = document.getElementById('googleSignInBtn');
+            const modalBtn = document.getElementById('googleSignInBtnModal');
+            
+            if (googleBtn) {
+                googleBtn.innerHTML = `
+                    <button class="btn btn-primary-custom w-100" onclick="showEmailSignIn()">
+                        <i class="bi bi-envelope"></i> Sign In with Email
+                    </button>
+                `;
+            }
+            
+            if (modalBtn) {
+                modalBtn.innerHTML = `
+                    <button class="btn btn-primary-custom w-100" onclick="showEmailSignIn()">
+                        <i class="bi bi-envelope"></i> Sign In with Email
+                    </button>
+                `;
+            }
+        }
+
+        // Email-based sign-in fallback
+        function showEmailSignIn() {
+            const email = prompt('Enter your email address for sync:');
+            if (email && email.includes('@')) {
+                currentUser = {
+                    name: email.split('@')[0],
+                    email: email,
+                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=random`
+                };
+                isSignedIn = true;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                
+                // Close login modal if it's open
+                const loginModal = bootstrap.Modal.getInstance(document.getElementById('googleLoginModal'));
+                if (loginModal) {
+                    loginModal.hide();
+                }
+                
+                // Auto-sync local investments
+                autoSyncLocalInvestments();
+                
+                showToast('Successfully signed in with email!', 'success', 'Sign In');
             }
         }
 
