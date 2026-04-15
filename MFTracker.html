@@ -528,10 +528,7 @@
                             </button>
                         </div>
                         <div id="loginSection" class="login-section">
-                            <div id="googleSignInBtn" class="g-signin2" data-onsuccess="onSignInSuccess" data-onfailure="onSignInFailure">
-                                <span class="g-signin2-icon"></span>
-                                <span class="g-signin2-text">Sign in with Google</span>
-                            </div>
+                            <div id="googleSignInBtn"></div>
                         </div>
                         <div id="syncStatus" class="sync-status"></div>
                     </div>
@@ -646,10 +643,7 @@
                         Access your portfolio from any device with Google sync
                     </p>
                     <div class="d-grid gap-2 mb-3">
-                        <div id="googleSignInBtn" class="g-signin2" data-onsuccess="onSignInSuccess" data-onfailure="onSignInFailure">
-                            <span class="g-signin2-icon"></span>
-                            <span class="g-signin2-text">Continue with Google</span>
-                        </div>
+                        <div id="googleSignInBtnModal"></div>
                     </div>
                     <div class="mt-2">
                         <small class="text-muted">
@@ -665,7 +659,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script async defer src="https://accounts.google.com/gsi/client"></script>
     <script>
         // Global variables
         let allFunds = [];
@@ -679,11 +673,29 @@
         let currentUser = null;
         let isSignedIn = false;
 
+        // Check for existing authentication
+        function checkAuthState() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    isSignedIn = true;
+                    updateAuthUI();
+                } catch (error) {
+                    console.error('Error loading saved user:', error);
+                    localStorage.removeItem('currentUser');
+                }
+            }
+        }
+
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             // Check for existing authentication
             checkAuthState();
             
+            // Initialize Google Sign-In
+            setTimeout(initializeGoogleSignIn, 500);
+
             // Setup basic UI elements
             setupEventListeners();
             setMaxDate();
@@ -2022,65 +2034,86 @@
             }
         }, 5 * 60 * 1000); // Refresh every 5 minutes
 
-        // Authentication Functions
-        function checkAuthState() {
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                isSignedIn = true;
-                updateAuthUI();
+        // Authentication initialization
+        function initializeGoogleSignIn() {
+            if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                google.accounts.id.initialize({
+                    client_id: '319050731055-69u2lkqeunj4odfbpiqs3gce8k6g97lq.apps.googleusercontent.com',
+                    callback: handleCredentialResponse,
+                    auto_select: false
+                });
+
+                // Render sign-in buttons
+                if (document.getElementById('googleSignInBtn')) {
+                    google.accounts.id.renderButton(
+                        document.getElementById('googleSignInBtn'),
+                        {
+                            theme: 'outline',
+                            size: 'large',
+                            type: 'standard',
+                            text: 'signin_with'
+                        }
+                    );
+                }
+
+                if (document.getElementById('googleSignInBtnModal')) {
+                    google.accounts.id.renderButton(
+                        document.getElementById('googleSignInBtnModal'),
+                        {
+                            theme: 'outline',
+                            size: 'large',
+                            type: 'standard',
+                            text: 'signin_with'
+                        }
+                    );
+                }
+            }
+        }
+
+        // Handle Google Sign-In response
+        function handleCredentialResponse(response) {
+            if (response.credential) {
+                // Decode JWT token to get user info
+                try {
+                    const base64Url = response.credential.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+
+                    const userProfile = JSON.parse(jsonPayload);
+
+                    currentUser = {
+                        name: userProfile.name,
+                        email: userProfile.email,
+                        avatar: userProfile.picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userProfile.name) + '&background=random'
+                    };
+                    isSignedIn = true;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    updateAuthUI();
+
+                    // Close login modal if it's open
+                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('googleLoginModal'));
+                    if (loginModal) {
+                        loginModal.hide();
+                    }
+
+                    // Auto-sync local investments to Google account
+                    autoSyncLocalInvestments();
+
+                    showToast('Successfully signed in with Google!', 'success', 'Sign In');
+                } catch (error) {
+                    console.error('Error processing Google Sign-In:', error);
+                    showError('Failed to process sign-in response');
+                }
             }
         }
 
         function signInWithGoogle() {
-            // Initialize Google OAuth
-            if (typeof gapi === 'undefined') {
-                // Load Google API library
-                const script = document.createElement('script');
-                script.src = 'https://apis.google.com/js/platform.js';
-                script.onload = initializeGoogleAuth;
-                document.head.appendChild(script);
-            } else {
-                initializeGoogleAuth();
+            // Google Sign-In button handles the sign-in, this is for manual trigger if needed
+            if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                google.accounts.id.prompt();
             }
-        }
-
-        function initializeGoogleAuth() {
-            gapi.load('auth2', function() {
-                const auth2 = gapi.auth2.init({
-                    client_id: '319050731055-69u2lkqeunj4odfbpiqs3gce8k6g97lq.apps.googleusercontent.com', // Replace with actual client ID
-                    scope: 'email profile',
-                    fetch_basic_profile: true
-                });
-            });
-        }
-
-        function onSignInSuccess(googleUser) {
-            const userProfile = googleUser.getBasicProfile();
-            currentUser = {
-                name: userProfile.getName(),
-                email: userProfile.getEmail(),
-                avatar: userProfile.getImageUrl() || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userProfile.getName()) + '&background=random'
-            };
-            isSignedIn = true;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            updateAuthUI();
-            
-            // Close login modal if it's open
-            const loginModal = bootstrap.Modal.getInstance(document.getElementById('googleLoginModal'));
-            if (loginModal) {
-                loginModal.hide();
-            }
-            
-            // Auto-sync local investments to Google account
-            autoSyncLocalInvestments();
-            
-            showToast('Successfully signed in with Google!', 'success', 'Sign In');
-        }
-
-        function onSignInFailure(error) {
-            console.error('Google sign-in failed:', error);
-            showToast('Google sign-in failed: ' + error, 'error', 'Sign In Error');
         }
 
         function signOut() {
