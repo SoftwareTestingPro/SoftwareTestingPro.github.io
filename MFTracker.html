@@ -2749,9 +2749,6 @@
                     localStorage.setItem('currentUser', JSON.stringify(currentUser));
                     updateAuthUI();
 
-                    // Initialize Google Drive API for cross-device sync
-                    initializeGoogleDriveAPI();
-
                     // Close login modal if it's open
                     const loginModal = bootstrap.Modal.getInstance(document.getElementById('googleLoginModal'));
                     if (loginModal) {
@@ -2769,23 +2766,7 @@
             }
         }
 
-        // Initialize Google Drive API for cross-device sync
-        function initializeGoogleDriveAPI() {
-            if (typeof gapi !== 'undefined') {
-                gapi.load('client:auth2', () => {
-                    gapi.client.init({
-                        apiKey: 'AIzaSyBkZlLrGdYqN3jQ9sFwX7mZ6nK8pJqLrM',
-                        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-                        clientId: '319050731055-69u2lkqeunj4odfbpiqs3gce8k6g97lq.apps.googleusercontent.com',
-                        scope: 'https://www.googleapis.com/auth/drive.file'
-                    }).then(() => {
-                        console.log('Google Drive API initialized successfully');
-                    }, (error) => {
-                        console.error('Error initializing Google Drive API:', error);
-                    });
-                });
-            }
-        }
+        // Google Drive API removed - using simpler sync approach
 
         function signInWithGoogle() {
             // Google Sign-In button handles the sign-in, this is for manual trigger if needed
@@ -2912,122 +2893,19 @@
             }
         }
 
-        // Get cloud investments using Google Drive API or fallback
+        // Get cloud investments from localStorage using user email as key
         async function getCloudInvestments() {
-            try {
-                // Try to use Google Drive API first
-                if (typeof gapi !== 'undefined' && gapi.client && gapi.client.drive) {
-                    const driveData = await getInvestmentsFromDrive();
-                    if (driveData && driveData.length > 0) {
-                        return driveData;
-                    }
-                }
-            } catch (error) {
-                // Google Drive API failed, continue to fallback
-            }
-            
-            // Fallback: Try to get from localStorage (same device)
             const cloudData = localStorage.getItem(`cloud_investments_${currentUser.email}`);
-            if (cloudData) {
-                const fallbackData = JSON.parse(cloudData);
-                if (fallbackData.length > 0) {
-                    return fallbackData;
-                }
-            }
-            
-            // Final fallback: Return empty array
-            return [];
+            return cloudData ? JSON.parse(cloudData) : [];
         }
 
-        // Save investments to cloud using Google Drive API or fallback
+        // Save investments to cloud using localStorage with user email as key
         async function saveToCloud(investments) {
-            try {
-                // Try to use Google Drive API first
-                if (typeof gapi !== 'undefined' && gapi.client && gapi.client.drive) {
-                    await saveInvestmentsToDrive(investments);
-                    return;
-                }
-            } catch (error) {
-                console.warn('Google Drive API not available, using fallback');
-            }
-            
-            // Fallback to localStorage with user email as key (device-specific)
             localStorage.setItem(`cloud_investments_${currentUser.email}`, JSON.stringify(investments));
             localStorage.setItem(`lastSyncTime_${currentUser.email}`, new Date().toISOString());
         }
 
-        // Google Drive API functions for cross-device sync
-        async function getInvestmentsFromDrive() {
-            try {
-                const fileName = `mf_investments_${currentUser.email.replace(/[^a-zA-Z0-9]/g, '_')}.json`;
-                const response = await gapi.client.drive.files.list({
-                    q: `name='${fileName}' and trashed=false`,
-                    fields: 'files(id, name)'
-                });
-                
-                if (response.result.files.length > 0) {
-                    const fileId = response.result.files[0].id;
-                    const fileResponse = await gapi.client.drive.files.get({
-                        fileId: fileId,
-                        alt: 'media'
-                    });
-                    return fileResponse.result || [];
-                }
-                return [];
-            } catch (error) {
-                console.error('Error getting investments from Drive:', error);
-                return [];
-            }
-        }
-
-        async function saveInvestmentsToDrive(investments) {
-            try {
-                const fileName = `mf_investments_${currentUser.email.replace(/[^a-zA-Z0-9]/g, '_')}.json`;
-                const fileContent = JSON.stringify({
-                    investments: investments,
-                    lastSyncTime: new Date().toISOString(),
-                    userEmail: currentUser.email
-                }, null, 2);
-                
-                // Check if file exists
-                const listResponse = await gapi.client.drive.files.list({
-                    q: `name='${fileName}' and trashed=false`,
-                    fields: 'files(id, name)'
-                });
-                
-                const fileMetadata = {
-                    name: fileName,
-                    parents: ['appDataFolder'] // Store in app data folder
-                };
-                
-                if (listResponse.result.files.length > 0) {
-                    // Update existing file
-                    const fileId = listResponse.result.files[0].id;
-                    await gapi.client.drive.files.update({
-                        fileId: fileId,
-                        resource: fileMetadata,
-                        media: {
-                            mimeType: 'application/json',
-                            body: fileContent
-                        }
-                    });
-                } else {
-                    // Create new file
-                    await gapi.client.drive.files.create({
-                        resource: fileMetadata,
-                        media: {
-                            mimeType: 'application/json',
-                            body: fileContent
-                        }
-                    });
-                }
-                
-                console.log('Investments saved to Google Drive successfully');
-            } catch (error) {
-                console.error('Error saving investments to Drive:', error);
-                throw error;
-            }
-        }
+        // Google Drive API functions removed - using simpler localStorage approach
 
         // Merge local and cloud investments
         function mergeInvestments(localInvestments, cloudInvestments) {
