@@ -393,34 +393,108 @@
             color: #06ffa5;
         }
 
+        /* Google Login Modal Styles */
+        #googleLoginModal .modal-dialog {
+            max-width: 400px;
+        }
+
+        #googleLoginModal .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(66, 133, 244, 0.2);
+        }
+
+        #googleLoginModal .modal-header {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+        }
+
+        #googleLoginModal .modal-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        #googleLoginModal .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        #googleLoginModal .modal-body {
+            padding: 30px 20px;
+            background: #f8f9fa;
+        }
+
+        #googleLoginModal h6 {
+            color: #4285f4;
+            font-weight: 600;
+        }
+
+        #googleLoginModal .text-muted {
+            color: #5f6368 !important;
+        }
+
+        #googleLoginModal .modal-footer {
+            background: #f8f9fa;
+            border-radius: 0 0 20px 20px;
+            padding: 15px 20px;
+        }
+
         /* Google Sign-In Button Styles */
         .g-signin2 {
             display: inline-flex;
             align-items: center;
-            background-color: #4285f4;
+            background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
             color: white;
-            border-radius: 4px;
-            border: 1px solid #4285f4;
-            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            padding: 12px 20px;
             font-family: 'Roboto', sans-serif;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+            text-decoration: none;
+            width: 100%;
+            justify-content: center;
         }
 
         .g-signin2:hover {
-            background-color: #357ae8;
-            box-shadow: 0 2px 4px rgba(66, 133, 244, 0.3);
+            background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .g-signin2:active {
+            transform: translateY(0);
         }
 
         .g-signin2-icon {
-            width: 18px;
-            height: 18px;
-            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
         }
 
         .g-signin2-text {
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Google brand colors for text */
+        .google-blue { color: #4285f4; }
+        .google-red { color: #ea4335; }
+        .google-yellow { color: #fbbc04; }
+        .google-green { color: #34a853; }
+
+        .btn-secondary {
+            background-color: #f1f3f4;
+            color: #5f6368;
+            border: 1px solid #dadce0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e8eaed;
+            color: #3c4043;
         }
     </style>
 </head>
@@ -551,6 +625,45 @@
     <!-- Hidden file input for import -->
     <input type="file" id="importFile" accept=".json,.csv" style="display: none;">
 
+    <!-- Google Login Popup Modal -->
+    <div class="modal fade" id="googleLoginModal" tabindex="-1" aria-labelledby="googleLoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="googleLoginModalLabel">
+                        <i class="bi bi-google"></i> Sign in with Google
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-3">
+                        <div style="font-size: 2.5rem;">
+                            <span class="google-blue">G</span><span class="google-red">o</span><span class="google-yellow">o</span><span class="google-blue">g</span><span class="google-green">l</span><span class="google-red">e</span>
+                        </div>
+                    </div>
+                    <h6 class="mb-2">Sync Your Investments</h6>
+                    <p class="text-muted mb-3">
+                        Access your portfolio from any device with Google sync
+                    </p>
+                    <div class="d-grid gap-2 mb-3">
+                        <div id="googleSignInBtn" class="g-signin2" data-onsuccess="onSignInSuccess" data-onfailure="onSignInFailure">
+                            <span class="g-signin2-icon"></span>
+                            <span class="g-signin2-text">Continue with Google</span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check google-green"></i> Secure & private sync
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Maybe Later</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
@@ -582,6 +695,7 @@
                 loadUserInvestments();
                 setTimeout(() => {
                     showMainContent();
+                    showLoginPopupIfNeeded();
                 }, 500);
             }, 8000); // Maximum 8 seconds total loading time
             
@@ -595,6 +709,7 @@
                 // Show main content
                 setTimeout(() => {
                     showMainContent();
+                    showLoginPopupIfNeeded();
                 }, 500);
             }).catch(() => {
                 clearTimeout(maxLoadingTime);
@@ -605,6 +720,7 @@
                 // Show main content anyway
                 setTimeout(() => {
                     showMainContent();
+                    showLoginPopupIfNeeded();
                 }, 500);
             });
         });
@@ -1069,6 +1185,7 @@
                         const currentValue = investment.units * currentNAV;
                         const returns = currentValue - investment.investmentAmount;
                         const returnsPercentage = (returns / investment.investmentAmount) * 100;
+                        const fundCAGR = calculateFundCAGR(investment, currentNAV);
                         
                         const performance = await calculatePerformance(investment, currentNAV);
                         
@@ -1114,10 +1231,13 @@
                                                 <i class="bi bi-layers"></i> Units: ${investment.units.toFixed(3)}
                                             </small>
                                         </p>
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge bg-primary me-2">NAV: ₹${currentNAV.toFixed(2)}</span>
+                                        <div class="d-flex align-items-center flex-wrap gap-2">
+                                            <span class="badge bg-primary">NAV: ₹${currentNAV.toFixed(2)}</span>
                                             <span class="badge ${returns >= 0 ? 'bg-success' : 'bg-danger'}">
                                                 Returns: ${returns >= 0 ? '+' : ''}₹${returns.toFixed(2)} (${returnsPercentage.toFixed(2)}%)
+                                            </span>
+                                            <span class="badge ${fundCAGR >= 0 ? 'bg-info' : 'bg-warning'}">
+                                                CAGR: ${fundCAGR >= 0 ? '+' : ''}${fundCAGR.toFixed(2)}%
                                             </span>
                                         </div>
                                     </div>
@@ -1193,6 +1313,82 @@
                 hideLoading();
                 displayInProgress = false;
             }
+        }
+
+        // Calculate individual fund CAGR using the CAGR formula
+        function calculateFundCAGR(investment, currentNAV) {
+            const investmentDate = new Date(investment.investmentDate);
+            const currentDate = new Date();
+            const daysDiff = (currentDate - investmentDate) / (1000 * 60 * 60 * 24);
+            const years = daysDiff / 365.25;
+            
+            if (years <= 0 || investment.investmentAmount <= 0) {
+                return 0;
+            }
+            
+            const currentValue = investment.units * currentNAV;
+            const cagr = (Math.pow(currentValue / investment.investmentAmount, 1 / years) - 1) * 100;
+            return cagr;
+        }
+
+        // Calculate Portfolio XIRR-like CAGR (cash-flow weighted)
+        // XIRR formula: NPV = Σ(Cash_Flow / (1 + r)^t) = 0
+        // We approximate this using Newton-Raphson method
+        function calculatePortfolioXIRR(cashFlows, terminalValue) {
+            if (cashFlows.length === 0 || terminalValue <= 0) {
+                return 0;
+            }
+
+            // Add terminal cash flow (final value at today's date)
+            const today = new Date();
+            const allCashFlows = [
+                ...cashFlows,
+                { date: today, amount: terminalValue } // Terminal value is positive cash inflow
+            ];
+
+            // Check if all investments are from the same date (can't calculate meaningful CAGR)
+            const uniqueDates = new Set(allCashFlows.map(cf => cf.date.toISOString().split('T')[0]));
+            if (uniqueDates.size <= 1) {
+                return 0;
+            }
+
+            // XIRR calculation using Newton-Raphson method
+            let rate = 0.1; // Initial guess: 10%
+            const maxIterations = 100;
+            const tolerance = 0.0001;
+
+            for (let iteration = 0; iteration < maxIterations; iteration++) {
+                let npv = 0;
+                let derivativeNPV = 0;
+
+                // Calculate NPV and its derivative
+                for (const cf of allCashFlows) {
+                    const daysDiff = (cf.date - allCashFlows[0].date) / (1000 * 60 * 60 * 24);
+                    const years = daysDiff / 365.25;
+                    const discountFactor = Math.pow(1 + rate, -years);
+
+                    npv += cf.amount * discountFactor;
+                    derivativeNPV += cf.amount * (-years) * discountFactor / (1 + rate);
+                }
+
+                // Check if we've found the root
+                if (Math.abs(npv) < tolerance) {
+                    return rate * 100;
+                }
+
+                // Newton-Raphson step
+                if (Math.abs(derivativeNPV) < 1e-10) {
+                    break; // Avoid division by near-zero
+                }
+
+                rate = rate - npv / derivativeNPV;
+
+                // Bound the rate to reasonable values
+                if (rate > 2.0) rate = 2.0;
+                if (rate < -0.99) rate = -0.99;
+            }
+
+            return rate * 100;
         }
 
         // Calculate performance for different time periods using real NAV data
@@ -1450,37 +1646,27 @@
         async function updateSummary() {
             let totalInvestment = 0;
             let totalCurrentValue = 0;
-            let totalInvestmentDays = 0;
-            let weightedReturns = 0;
+            let investmentDetails = []; // Store cash flows for XIRR calculation
 
             for (const investment of userInvestments) {
                 totalInvestment += investment.investmentAmount;
                 const currentNAV = await getCurrentNAV(investment.schemeCode);
-                totalCurrentValue += investment.units * currentNAV;
-                
-                // Calculate days for CAGR
-                const investmentDate = new Date(investment.investmentDate);
-                const currentDate = new Date();
-                const daysDiff = (currentDate - investmentDate) / (1000 * 60 * 60 * 24);
-                totalInvestmentDays += daysDiff;
-                
-                // Calculate individual return for weighted average
                 const currentValue = investment.units * currentNAV;
-                const investmentReturn = (currentValue - investment.investmentAmount) / investment.investmentAmount;
-                weightedReturns += investmentReturn * investment.investmentAmount;
+                totalCurrentValue += currentValue;
+
+                // Store investment details for XIRR calculation
+                const investmentDate = new Date(investment.investmentDate);
+                investmentDetails.push({
+                    date: investmentDate,
+                    amount: -investment.investmentAmount // Negative because it's a cash outflow
+                });
             }
 
             const totalReturns = totalCurrentValue - totalInvestment;
             const returnsPercentage = totalInvestment > 0 ? (totalReturns / totalInvestment) * 100 : 0;
             
-            // Calculate CAGR (Compound Annual Growth Rate)
-            let cagr = 0;
-            if (totalInvestment > 0 && totalCurrentValue > 0 && totalInvestmentDays > 0) {
-                const years = totalInvestmentDays / 365.25;
-                if (years > 0) {
-                    cagr = (Math.pow(totalCurrentValue / totalInvestment, 1 / years) - 1) * 100;
-                }
-            }
+            // Calculate XIRR-like CAGR (Compound Annual Growth Rate) based on cash flows and timing
+            let cagr = calculatePortfolioXIRR(investmentDetails, totalCurrentValue);
 
             document.getElementById('totalInvestment').textContent = `₹${totalInvestment.toLocaleString()}`;
             document.getElementById('currentValue').textContent = `₹${totalCurrentValue.toLocaleString()}`;
@@ -1879,6 +2065,16 @@
             isSignedIn = true;
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             updateAuthUI();
+            
+            // Close login modal if it's open
+            const loginModal = bootstrap.Modal.getInstance(document.getElementById('googleLoginModal'));
+            if (loginModal) {
+                loginModal.hide();
+            }
+            
+            // Auto-sync local investments to Google account
+            autoSyncLocalInvestments();
+            
             showToast('Successfully signed in with Google!', 'success', 'Sign In');
         }
 
@@ -1917,6 +2113,92 @@
             }
         }
 
+        // Show login popup if user is not signed in
+        function showLoginPopupIfNeeded() {
+            if (!isSignedIn && userInvestments.length > 0) {
+                // Show login popup after a short delay
+                setTimeout(() => {
+                    const loginModal = new bootstrap.Modal(document.getElementById('googleLoginModal'));
+                    loginModal.show();
+                }, 2000);
+            }
+        }
+
+        // Auto-sync local investments when user signs in
+        async function autoSyncLocalInvestments() {
+            if (!isSignedIn || !currentUser) return;
+            
+            const syncStatus = document.getElementById('syncStatus');
+            syncStatus.textContent = 'Auto-syncing...';
+            syncStatus.className = 'sync-status syncing';
+            
+            try {
+                // Get existing cloud investments (simulated)
+                const cloudInvestments = getCloudInvestments();
+                const localInvestments = [...userInvestments];
+                
+                // Merge local and cloud investments
+                const mergedInvestments = mergeInvestments(localInvestments, cloudInvestments);
+                
+                // Update user investments with merged data
+                userInvestments = mergedInvestments;
+                saveUserInvestments();
+                
+                // Save to cloud (simulated)
+                saveToCloud(mergedInvestments);
+                
+                // Refresh display
+                await displayFunds();
+                await updateSummary();
+                
+                setTimeout(() => {
+                    syncStatus.textContent = 'Auto-synced';
+                    syncStatus.className = 'sync-status success';
+                    showToast(`Auto-synced ${mergedInvestments.length} investments to your Google account`, 'success', 'Auto-Sync Complete');
+                }, 1000);
+                
+            } catch (error) {
+                syncStatus.textContent = 'Sync failed';
+                syncStatus.className = 'sync-status error';
+                showToast('Failed to auto-sync investments', 'error', 'Auto-Sync Error');
+            }
+        }
+
+        // Get cloud investments (simulated)
+        function getCloudInvestments() {
+            const cloudData = localStorage.getItem(`cloud_investments_${currentUser.email}`);
+            return cloudData ? JSON.parse(cloudData) : [];
+        }
+
+        // Save investments to cloud (simulated)
+        function saveToCloud(investments) {
+            localStorage.setItem(`cloud_investments_${currentUser.email}`, JSON.stringify(investments));
+            localStorage.setItem(`lastSyncTime_${currentUser.email}`, new Date().toISOString());
+        }
+
+        // Merge local and cloud investments
+        function mergeInvestments(localInvestments, cloudInvestments) {
+            const merged = [...localInvestments];
+            const existingKeys = new Set();
+            
+            // Add local investments and track existing ones
+            localInvestments.forEach(inv => {
+                const key = `${inv.schemeCode}_${inv.investmentDate}`;
+                existingKeys.add(key);
+            });
+            
+            // Add cloud investments that don't exist locally
+            cloudInvestments.forEach(inv => {
+                const key = `${inv.schemeCode}_${inv.investmentDate}`;
+                if (!existingKeys.has(key)) {
+                    merged.push(inv);
+                    existingKeys.add(key);
+                }
+            });
+            
+            return merged;
+        }
+
         async function syncData() {
             if (!isSignedIn) {
                 showToast('Please sign in to sync data', 'warning', 'Sync Required');
@@ -1928,9 +2210,8 @@
             syncStatus.className = 'sync-status syncing';
             
             try {
-                // Simulate sync - in production, this would sync to cloud
-                localStorage.setItem('mfInvestments', JSON.stringify(userInvestments));
-                localStorage.setItem('lastSyncTime', new Date().toISOString());
+                // Save to cloud (simulated)
+                saveToCloud(userInvestments);
                 
                 setTimeout(() => {
                     syncStatus.textContent = 'Synced';
