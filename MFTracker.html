@@ -2841,20 +2841,15 @@
             syncStatus.className = 'sync-status syncing';
             
             try {
-                console.log('Starting auto-sync for user:', currentUser.email);
-                
                 // Get existing cloud investments
                 const cloudInvestments = await getCloudInvestments();
                 const localInvestments = [...userInvestments];
-                
-                console.log('Cloud investments:', cloudInvestments.length);
-                console.log('Local investments:', localInvestments.length);
                 
                 // If local is empty and cloud has data, use cloud data
                 if (localInvestments.length === 0 && cloudInvestments.length > 0) {
                     userInvestments = cloudInvestments;
                     saveUserInvestments();
-                    console.log('Using cloud investments as local is empty');
+                    showToast(`Loaded ${cloudInvestments.length} investments from cloud`, 'success', 'Sync Complete');
                 } else {
                     // Merge local and cloud investments
                     const mergedInvestments = mergeInvestments(localInvestments, cloudInvestments);
@@ -2876,11 +2871,9 @@
                 setTimeout(() => {
                     syncStatus.textContent = 'Auto-synced';
                     syncStatus.className = 'sync-status success';
-                    showToast(`Auto-synced ${userInvestments.length} investments to your Google account`, 'success', 'Auto-Sync Complete');
                 }, 1000);
                 
             } catch (error) {
-                console.error('Auto-sync error:', error);
                 syncStatus.textContent = 'Sync failed';
                 syncStatus.className = 'sync-status error';
                 showToast('Failed to auto-sync investments', 'error', 'Auto-Sync Error');
@@ -2921,31 +2914,29 @@
 
         // Get cloud investments using Google Drive API or fallback
         async function getCloudInvestments() {
-            console.log('=== GETTING CLOUD INVESTMENTS ===');
-            console.log('gapi available:', typeof gapi !== 'undefined');
-            console.log('gapi.client available:', typeof gapi !== 'undefined' && gapi.client);
-            console.log('gapi.client.drive available:', typeof gapi !== 'undefined' && gapi.client && gapi.client.drive);
-            
             try {
                 // Try to use Google Drive API first
                 if (typeof gapi !== 'undefined' && gapi.client && gapi.client.drive) {
-                    console.log('Using Google Drive API to get investments');
                     const driveData = await getInvestmentsFromDrive();
-                    console.log('Drive data retrieved:', driveData);
-                    return driveData;
-                } else {
-                    console.warn('Google Drive API not fully available');
+                    if (driveData && driveData.length > 0) {
+                        return driveData;
+                    }
                 }
             } catch (error) {
-                console.warn('Google Drive API error, using fallback:', error);
+                // Google Drive API failed, continue to fallback
             }
             
-            // Fallback to localStorage with user email as key (device-specific)
-            console.log('Using localStorage fallback');
+            // Fallback: Try to get from localStorage (same device)
             const cloudData = localStorage.getItem(`cloud_investments_${currentUser.email}`);
-            const fallbackData = cloudData ? JSON.parse(cloudData) : [];
-            console.log('Fallback data:', fallbackData);
-            return fallbackData;
+            if (cloudData) {
+                const fallbackData = JSON.parse(cloudData);
+                if (fallbackData.length > 0) {
+                    return fallbackData;
+                }
+            }
+            
+            // Final fallback: Return empty array
+            return [];
         }
 
         // Save investments to cloud using Google Drive API or fallback
@@ -3067,23 +3058,15 @@
         // Periodic sync every 30 seconds to check for cross-device updates
         let periodicSyncInProgress = false;
         setInterval(async () => {
-            console.log('=== PERIODIC SYNC CHECK ===');
-            console.log('isSignedIn:', isSignedIn);
-            console.log('periodicSyncInProgress:', periodicSyncInProgress);
-            console.log('currentUser:', currentUser);
-            
             if (isSignedIn && !periodicSyncInProgress) {
                 periodicSyncInProgress = true;
                 try {
-                    console.log('Running periodic sync...');
                     await periodicSync();
                 } catch (error) {
-                    console.error('Error in periodic sync:', error);
+                    // Error handling without console
                 } finally {
                     periodicSyncInProgress = false;
                 }
-            } else {
-                console.log('Skipping periodic sync - not signed in or already in progress');
             }
         }, 30 * 1000); // Sync every 30 seconds
     </script>
