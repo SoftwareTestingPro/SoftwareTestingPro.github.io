@@ -947,20 +947,10 @@
             const currDate = new Date();
             const todayStr = currDate.toDateString(); // e.g. "Thu Apr 16 2026"
 
-            // 1. SMART LOCK Logic (Market Awareness)
-            const isBeforeUpdateTime = (currDate.getHours() < 22 || (currDate.getHours() === 22 && currDate.getMinutes() < 30));
-            const hasSyncedToday = lastSyncStr && new Date(parseInt(lastSyncStr)).toDateString() === todayStr;
-
             // Check if any fund is missing its NAV (newly added)
             const hasNewFunds = userInvestments.some(inv => {
                 return !localStorage.getItem(`nav_cache_${inv.schemeCode}`);
             });
-
-            // If we've already synced the whole portfolio today, and it's before the evening update, block it.
-            if (hasSyncedToday && isBeforeUpdateTime && !hasNewFunds) {
-                showToast(`All funds have the latest available NAVs. Next market update tonight after 10:30 PM.`, 'success');
-                return; // HARD STOP - Do not hit API
-            }
 
             // 2. Cooldown Lock (15 mins) - Only if not already blocked by above logic
             if (!hasNewFunds && lastSyncStr && (now - parseInt(lastSyncStr)) < SYNC_COOLDOWN_MS) {
@@ -1200,7 +1190,8 @@
                                     <!-- Periodic Performance Scroller -->
                                     ${performanceItems.length > 0 ? performanceItems.map(item => {
                                         const amount = item.value !== null ? (item.endNAV - item.startNAV) * investment.units : undefined;
-                                        return getMiniCardHTML(item.label === 'Yesterday' ? 'Yesterday' : (item.label.includes('Last') ? item.label : `Last ${item.label}`), amount, { percentage: item.value });
+                                        const displayLabel = item.label === 'Yesterday' ? 'Yesterday' : (!isNaN(String(item.label)) && String(item.label).length === 4 ? `Year ${item.label}` : (item.label.includes('Last') ? item.label : `Last ${item.label}`));
+                                        return getMiniCardHTML(displayLabel, amount, { percentage: item.value });
                                     }).join('') : `
                                         <div style="grid-column: 1 / -1; padding: 25px; text-align: center; color: #5f6368; background: #fcfcfc; border-radius: 12px; border: 1px dashed #ddd;">
                                             <div style="font-weight: 600; font-size: 1.1rem; color: #202124;">Nurturing Investment</div>
@@ -2303,9 +2294,10 @@
                                             ${getMiniCardHTML('XIRR (Annual)', undefined, { percentage: fundXIRR })}
 
                                             <!-- Periodic Returns (Standardized Scroller) -->
-                                            ${Object.values(fundSchemeStats.periodicReturns).map(p => 
-                                                getMiniCardHTML(p.label === 'Yesterday' ? 'Yesterday' : (p.label.includes('Last') ? p.label : `Last ${p.label}`), p.amount, { percentage: p.percentage })
-                                            ).join('')}
+                                            ${Object.values(fundSchemeStats.periodicReturns).map(p => {
+                                                const displayLabel = p.label === 'Yesterday' ? 'Yesterday' : (!isNaN(String(p.label)) && String(p.label).length === 4 ? `Year ${p.label}` : (p.label.includes('Last') ? p.label : `Last ${p.label}`));
+                                                return getMiniCardHTML(displayLabel, p.amount, { percentage: p.percentage });
+                                            }).join('')}
                                         </div>
                                     </div>
                                 </div>
@@ -2476,6 +2468,44 @@
                         amount: totalDiffAmount,
                         startDate: periodStartDate,
                         endDate: periodEndDate
+                    };
+                }
+            });
+
+            // Aggregate yearly breakdown for group
+            const yearlyReturns = {};
+            perfResults.forEach(res => {
+                if (res && res.perf && res.perf.yearlyBreakdown) {
+                    Object.entries(res.perf.yearlyBreakdown).forEach(([year, data]) => {
+                        if (!yearlyReturns[year]) {
+                            const formatDDMMYYYY = (d) => {
+                                if (!(d instanceof Date)) return d;
+                                return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
+                            };
+                            yearlyReturns[year] = {
+                                label: year,
+                                totalDiffAmount: 0,
+                                totalPastValue: 0,
+                                startDate: formatDDMMYYYY(data.startDate),
+                                endDate: formatDDMMYYYY(data.endDate)
+                            };
+                        }
+                        yearlyReturns[year].totalDiffAmount += (data.endNAV - data.startNAV) * res.units;
+                        yearlyReturns[year].totalPastValue += data.startNAV * res.units;
+                    });
+                }
+            });
+
+            // Need them sorted descending by year
+            Object.keys(yearlyReturns).sort((a, b) => b - a).forEach(year => {
+                const p = yearlyReturns[year];
+                if (p.totalPastValue > 0) {
+                    periodicReturns['year_' + year] = {
+                        label: p.label,
+                        percentage: (p.totalDiffAmount / p.totalPastValue) * 100,
+                        amount: p.totalDiffAmount,
+                        startDate: p.startDate,
+                        endDate: p.endDate
                     };
                 }
             });

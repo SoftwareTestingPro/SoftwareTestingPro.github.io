@@ -310,11 +310,19 @@
         
         .border-positive { 
             border: 1.5px solid #137333 !important; 
-            background: #f8fff9 !important;
+            background: #f8fff9 !important; /* Light for large group/fund containers */
         }
         .border-negative { 
             border: 1.5px solid var(--danger-color) !important; 
-            background: #fffafa !important;
+            background: #fffafa !important; /* Light for large group/fund containers */
+        }
+
+        /* Specific deeper tints for top Summary Cards */
+        .summary-card.border-positive {
+            background: #e2f6ea !important;
+        }
+        .summary-card.border-negative {
+            background: #ffebeb !important;
         }
 
 
