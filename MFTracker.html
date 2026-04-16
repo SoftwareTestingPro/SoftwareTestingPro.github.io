@@ -886,9 +886,13 @@
                                 const data = performance.periodic[key];
                                 if (data) {
                                     const dateStr = formatDate(data.date.split('-').reverse().join('-'));
+                                    
+                                    // Rule: For Daily, show the latest NAV date. For others, show "(Since ...)"
+                                    const subLabelText = key === 'daily' ? `${dateStr}` : `(Since ${dateStr})`;
+                                    
                                     performanceItems.push({
                                         label: label,
-                                        subLabel: key === 'daily' ? '' : `(Since ${dateStr})`,
+                                        subLabel: subLabelText,
                                         value: data.value,
                                         startNAV: data.startNAV,
                                         endNAV: data.endNAV
@@ -949,7 +953,7 @@
                                 </div>
                                 
                                 <div class="performance-grid collapsed" id="perf-${investment.id}">
-                                    ${performanceItems.map(item => `
+                                    ${performanceItems.length > 0 ? performanceItems.map(item => `
                                         <div class="performance-card">
                                             <div class="small fw-bold">${item.label}</div>
                                             <div style="font-size: 0.7rem; color: #6c757d; line-height: 1.2; margin-bottom: 4px;">${item.subLabel || ''}</div>
@@ -961,7 +965,13 @@
                                                 <span class="badge bg-primary">End: ₹${item.endNAV ? item.endNAV.toFixed(2) : 'N/A'}</span>
                                             </div>
                                         </div>
-                                    `).join('')}
+                                    `).join('') : `
+                                        <div style="grid-column: 1 / -1; padding: 30px; text-align: center; color: #5f6368; background: #f8f9fa; border-radius: 12px; border: 1px dashed #dadce0;">
+                                            <i class="bi bi-clock-history" style="font-size: 2rem; color: #1a73e8; display: block; margin-bottom: 12px;"></i>
+                                            <div style="font-weight: 500;">Investment maturity in progress</div>
+                                            <div style="font-size: 0.85rem; margin-top: 4px;">Detailed performance metrics will activate as your fund's timeline grows.</div>
+                                        </div>
+                                    `}
                                 </div>
                             </div>
                         `;
@@ -1331,7 +1341,9 @@
                         // Rule: Split labels for Summary Cards too
                         if (labelElem && oldestTargetDateStr) {
                              const ds = formatDate(oldestTargetDateStr.split('-').reverse().join('-'));
-                             const subT = pKey === 'daily' ? '' : `<div style="font-size: 0.65rem; opacity: 0.8; line-height: 1;">(Since ${ds})</div>`;
+                             // For daily, just show the date. For others, "Since [Date]"
+                             const subText = pKey === 'daily' ? ds : `(Since ${ds})`;
+                             const subT = `<div style="font-size: 0.65rem; opacity: 0.8; line-height: 1;">${subText}</div>`;
                              labelElem.innerHTML = `<div>${pInfo.title}</div>${subT}`;
                         }
                         
