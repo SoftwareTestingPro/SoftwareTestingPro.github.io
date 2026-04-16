@@ -1249,27 +1249,7 @@
                 daily: 0, weekly: 0, monthly: 0, quarterly: 0, halfYearly: 0, yearly: 0
             };
             
-            if (totalCurrentValue > 0) {
-                const perfPromises = userInvestments.map(async (inv) => {
-                    const navRes = navResults.find(r => String(r.id) === String(inv.id));
-                    if (navRes && navRes.nav > 0) {
-                        return { inv, perf: await calculatePerformance(inv, navRes.nav), currentVal: inv.units * navRes.nav };
-                    }
-                    return null;
-                });
-                
-                const allPerfs = await Promise.all(perfPromises);
-                
-                allPerfs.forEach(item => {
-                    if (item && item.perf) {
-                        const weight = item.currentVal / totalCurrentValue;
-                        Object.keys(portfolioPerf).forEach(p => {
-                            if (item.perf[p] !== null) {
-                                portfolioPerf[p] += (item.perf[p] * weight);
-                            }
-                        });
-                    }
-                });            // 1. Core Financial Metrics (Investment, Current, Returns, XIRR)
+            // 1. Core Financial Metrics (Investment, Current, Returns, XIRR)
             document.getElementById('totalInvestment').textContent = `₹${totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             document.getElementById('currentValue').textContent = `₹${totalCurrentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             document.getElementById('totalReturns').textContent = `${totalReturns >= 0 ? '+' : ''}₹${totalReturns.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
