@@ -74,7 +74,7 @@
             </div>
 
             <!-- Summary Statistics -->
-            <div class="summary-stats" id="summaryStats">
+            <div class="summary-stats">
                 <div class="summary-card main-stats">
                     <div class="summary-value" id="totalInvestment">₹0</div>
                     <div class="summary-label">Total Investment</div>
@@ -84,12 +84,9 @@
                     <div class="summary-label">Current Value</div>
                 </div>
                 <div class="summary-card main-stats">
-                    <div class="summary-value" id="totalReturns">₹0</div>
-                    <div class="summary-label">Total Returns</div>
-                </div>
-                <div class="summary-card main-stats">
                     <div class="summary-value" id="totalReturnsPercentage">0%</div>
-                    <div class="summary-label">Returns %</div>
+                    <div class="summary-subvalue" id="totalReturns">₹0</div>
+                    <div class="summary-label">Total Returns</div>
                 </div>
                 <div class="summary-card main-stats">
                     <div class="summary-value" id="cagrValue">0%</div>
@@ -98,31 +95,38 @@
                 
                 <!-- Periodic Performance Summary -->
                 <div class="summary-card" id="cardDaily" style="display: none;">
-                    <div class="summary-value" id="portfolioDaily">0%</div>
-                    <div class="summary-label" id="labelDaily">Daily</div>
+                    <div class="summary-value" id="portfolioDailyPercentage">0%</div>
+                    <div class="summary-subvalue" id="portfolioDailyAmount">₹0</div>
+                    <div class="summary-label" id="labelDaily">Yesterday</div>
                 </div>
                 <div class="summary-card" id="cardWeekly" style="display: none;">
-                    <div class="summary-value" id="portfolioWeekly">0%</div>
+                    <div class="summary-value" id="portfolioWeeklyPercentage">0%</div>
+                    <div class="summary-subvalue" id="portfolioWeeklyAmount">₹0</div>
                     <div class="summary-label" id="labelWeekly">1 Week</div>
                 </div>
                 <div class="summary-card" id="cardFifteenDays" style="display: none;">
-                    <div class="summary-value" id="portfolioFifteenDays">0%</div>
+                    <div class="summary-value" id="portfolioFifteenDaysPercentage">0%</div>
+                    <div class="summary-subvalue" id="portfolioFifteenDaysAmount">₹0</div>
                     <div class="summary-label" id="labelFifteenDays">15 Days</div>
                 </div>
                 <div class="summary-card" id="cardMonthly" style="display: none;">
-                    <div class="summary-value" id="portfolioMonthly">0%</div>
+                    <div class="summary-value" id="portfolioMonthlyPercentage">0%</div>
+                    <div class="summary-subvalue" id="portfolioMonthlyAmount">₹0</div>
                     <div class="summary-label" id="labelMonthly">1 Month</div>
                 </div>
                 <div class="summary-card" id="cardQuarterly" style="display: none;">
-                    <div class="summary-value" id="portfolioQuarterly">0%</div>
+                    <div class="summary-value" id="portfolioQuarterlyPercentage">0%</div>
+                    <div class="summary-subvalue" id="portfolioQuarterlyAmount">₹0</div>
                     <div class="summary-label" id="labelQuarterly">3 Months</div>
                 </div>
                 <div class="summary-card" id="cardHalfYearly" style="display: none;">
-                    <div class="summary-value" id="portfolioHalfYearly">0%</div>
+                    <div class="summary-value" id="portfolioHalfYearlyPercentage">0%</div>
+                    <div class="summary-subvalue" id="portfolioHalfYearlyAmount">₹0</div>
                     <div class="summary-label" id="labelHalfYearly">6 Months</div>
                 </div>
                 <div class="summary-card" id="cardYearly" style="display: none;">
-                    <div class="summary-value" id="portfolioYearly">0%</div>
+                    <div class="summary-value" id="portfolioYearlyPercentage">0%</div>
+                    <div class="summary-subvalue" id="portfolioYearlyAmount">₹0</div>
                     <div class="summary-label" id="labelYearly">1 Year</div>
                 </div>
             </div>
@@ -967,10 +971,9 @@
                                             </div>
                                         </div>
                                     `).join('') : `
-                                        <div style="grid-column: 1 / -1; padding: 30px; text-align: center; color: #5f6368; background: #f8f9fa; border-radius: 12px; border: 1px dashed #dadce0;">
-                                            <i class="bi bi-clock-history" style="font-size: 2rem; color: #1a73e8; display: block; margin-bottom: 12px;"></i>
-                                            <div style="font-weight: 500;">Investment maturity in progress</div>
-                                            <div style="font-size: 0.85rem; margin-top: 4px;">Detailed performance metrics will activate as your fund's timeline grows.</div>
+                                        <div style="grid-column: 1 / -1; padding: 25px; text-align: center; color: #5f6368; background: #fcfcfc; border-radius: 12px; border: 1px dashed #ddd;">
+                                            <div style="font-weight: 600; font-size: 1.1rem; color: #202124;">Nurturing Investment</div>
+                                            <div style="font-size: 0.9rem; margin-top: 6px; opacity: 0.8;">Building your profit story... Performance data will unlock as your investment matures.</div>
                                         </div>
                                     `}
                                 </div>
@@ -1294,20 +1297,20 @@
                 new Date(Math.min(...userInvestments.map(inv => new Date(inv.investmentDate)))) : null;
             
             const periods = {
-                daily: { id: 'portfolioDaily', card: 'cardDaily', label: 'labelDaily', title: 'Daily', days: 1 },
-                weekly: { id: 'portfolioWeekly', card: 'cardWeekly', label: 'labelWeekly', title: 'Last 7 Days', days: 7 },
-                fifteenDays: { id: 'portfolioFifteenDays', card: 'cardFifteenDays', label: 'labelFifteenDays', title: 'Last 15 Days', days: 15 },
-                monthly: { id: 'portfolioMonthly', card: 'cardMonthly', label: 'labelMonthly', title: 'Last 1 Month', days: 30 },
-                quarterly: { id: 'portfolioQuarterly', card: 'cardQuarterly', label: 'labelQuarterly', title: 'Last 3 Months', days: 90 },
-                halfYearly: { id: 'portfolioHalfYearly', card: 'cardHalfYearly', label: 'labelHalfYearly', title: 'Last 6 Months', days: 180 },
-                yearly: { id: 'portfolioYearly', card: 'cardYearly', label: 'labelYearly', title: 'Last 1 Year', days: 365 }
+                daily: { id: 'portfolioDailyPercentage', amountId: 'portfolioDailyAmount', card: 'cardDaily', label: 'labelDaily', title: 'Yesterday', days: 1 },
+                weekly: { id: 'portfolioWeeklyPercentage', amountId: 'portfolioWeeklyAmount', card: 'cardWeekly', label: 'labelWeekly', title: 'Last 7 Days', days: 7 },
+                fifteenDays: { id: 'portfolioFifteenDaysPercentage', amountId: 'portfolioFifteenDaysAmount', card: 'cardFifteenDays', label: 'labelFifteenDays', title: 'Last 15 Days', days: 15 },
+                monthly: { id: 'portfolioMonthlyPercentage', amountId: 'portfolioMonthlyAmount', card: 'cardMonthly', label: 'labelMonthly', title: 'Last 1 Month', days: 30 },
+                quarterly: { id: 'portfolioQuarterlyPercentage', amountId: 'portfolioQuarterlyAmount', card: 'cardQuarterly', label: 'labelQuarterly', title: 'Last 3 Months', days: 90 },
+                halfYearly: { id: 'portfolioHalfYearlyPercentage', amountId: 'portfolioHalfYearlyAmount', card: 'cardHalfYearly', label: 'labelHalfYearly', title: 'Last 6 Months', days: 180 },
+                yearly: { id: 'portfolioYearlyPercentage', amountId: 'portfolioYearlyAmount', card: 'cardYearly', label: 'labelYearly', title: 'Last 1 Year', days: 365 }
             };
 
             const today = new Date();
             const results = await Promise.all(userInvestments.map(async (inv) => {
                 const navRes = navResults.find(r => String(r.id) === String(inv.id));
                 if (navRes && navRes.nav > 0) {
-                    return { val: inv.units * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
+                    return { inv, val: inv.units * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
                 }
                 return null;
             }));
@@ -1315,55 +1318,61 @@
             Object.entries(periods).forEach(([pKey, pInfo]) => {
                 const card = document.getElementById(pInfo.card);
                 const valueElem = document.getElementById(pInfo.id);
+                const amountElem = document.getElementById(pInfo.amountId);
                 const labelElem = document.getElementById(pInfo.label);
 
-                // Rule: Global summary card only shows if oldest fund covers that duration
-                const durationDate = new Date(today);
+                // Check if portfolio has coverage for this duration
+                const durationDate = new Date();
                 durationDate.setDate(durationDate.getDate() - pInfo.days);
                 
                 if (oldestDate && oldestDate <= durationDate) {
                     let weightedSum = 0;
-                    let totalWeight = 0;
-                    let oldestTargetDateStr = null;
+                    let totalValAtEndForWeight = 0;
+                    let totalAmountChange = 0;
+                    let sampleStartDateStr = null;
+                    let sampleEndDateStr = null;
 
                     results.forEach(res => {
                         if (res && res.data && res.data.periodic && res.data.periodic[pKey]) {
                             const pItem = res.data.periodic[pKey];
                             weightedSum += pItem.value * res.val;
-                            totalWeight += res.val;
-                            if (pItem.date) oldestTargetDateStr = pItem.date;
+                            totalValAtEndForWeight += res.val;
+                            
+                            // Amount Change = (EndNAV - StartNAV) * units
+                            const amtChange = (pItem.endNAV - pItem.startNAV) * res.inv.units;
+                            totalAmountChange += amtChange;
+                            
+                            if (pItem.startDate) sampleStartDateStr = pItem.startDate;
+                            if (pItem.endDate) sampleEndDateStr = pItem.endDate;
                         }
                     });
 
-                    if (totalWeight > 0) {
-                        const finalVal = weightedSum / totalWeight;
-                        valueElem.textContent = `${finalVal >= 0 ? '+' : ''}${finalVal.toFixed(2)}%`;
-                        valueElem.className = `summary-value ${finalVal >= 0 ? 'positive' : 'negative'}`;
+                    if (totalValAtEndForWeight > 0) {
+                        const weightedAvg = weightedSum / totalValAtEndForWeight;
+                        const sign = weightedAvg >= 0 ? '+' : '';
+                        const colorClass = weightedAvg >= 0 ? 'positive' : 'negative';
+
+                        valueElem.textContent = `${sign}${weightedAvg.toFixed(2)}%`;
+                        valueElem.className = `summary-value ${colorClass}`;
                         
-                        // Rule: Split labels for Summary Cards too
-                        if (labelElem && oldestTargetDateStr) {
-                             let displaySub = "";
-                             if (pKey === 'daily') {
-                                 // For daily, use the latest record date
-                                 const latestRes = results.find(r => r && r.data && r.data.periodic && r.data.periodic.daily);
-                                 if (latestRes) {
-                                     const ed = formatDate(latestRes.data.periodic.daily.endDate.split('-').reverse().join('-'));
-                                     displaySub = `(${ed})`;
-                                 }
-                             } else {
-                                 const sd = formatDate(oldestTargetDateStr.split('-').reverse().join('-'));
-                                 displaySub = `(Since ${sd})`;
-                             }
-                             
-                             const subT = `<div style="font-size: 0.65rem; opacity: 0.8; line-height: 1;">${displaySub}</div>`;
-                             labelElem.innerHTML = `<div>${pInfo.title}</div>${subT}`;
+                        amountElem.textContent = `${sign}₹${Math.abs(totalAmountChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+                        amountElem.className = `summary-subvalue ${colorClass}`;
+
+                        // Update Label with Date Info in stacked format
+                        let dateSub = "";
+                        if (pKey === 'daily' && sampleEndDateStr) {
+                             dateSub = `(${sampleEndDateStr})`;
+                        } else if (sampleStartDateStr) {
+                             dateSub = `(Since ${sampleStartDateStr})`;
                         }
                         
-                        card.style.display = 'flex';
-                    } else {
+                        labelElem.innerHTML = `<strong>${pInfo.title}</strong>${dateSub ? `<br><small style="font-weight: 500; opacity: 0.8;">${dateSub}</small>` : ''}`;
+
+                        if (card) card.style.display = 'flex';
+                    } else if (card) {
                         card.style.display = 'none';
                     }
-                } else {
+                } else if (card) {
                     card.style.display = 'none';
                 }
             });
@@ -1909,7 +1918,7 @@
                                     <div class="group-fund-name">
                                         ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem; font-weight: 500;">${agg.count} Txns</span>` : ''}
                                         <div style="font-size: 0.75rem; color: #6c757d;">
-                                            Avg Inv. NAV: ₹${avgNav.toFixed(2)} | NAV as on ${navDate}: ₹${currentNAV.toFixed(2)}
+                                            Invested: ₹${agg.investmentAmount.toLocaleString(undefined, {maximumFractionDigits: 0})} | Avg Inv. NAV: ₹${avgNav.toFixed(2)} | NAV as on ${navDate}: ₹${currentNAV.toFixed(2)}
                                             &nbsp;&nbsp;
                                             <span style="color: ${returns >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
                                                 <i class="bi bi-caret-${returns >= 0 ? 'up' : 'down'}-fill"></i>
