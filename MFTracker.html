@@ -97,29 +97,33 @@
                 </div>
                 
                 <!-- Periodic Performance Summary -->
-                <div class="summary-card">
+                <div class="summary-card" id="cardDaily" style="display: none;">
                     <div class="summary-value" id="portfolioDaily">0%</div>
-                    <div class="summary-label">Daily</div>
+                    <div class="summary-label" id="labelDaily">Daily</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card" id="cardWeekly" style="display: none;">
                     <div class="summary-value" id="portfolioWeekly">0%</div>
-                    <div class="summary-label">1 Week</div>
+                    <div class="summary-label" id="labelWeekly">1 Week</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card" id="cardFifteenDays" style="display: none;">
+                    <div class="summary-value" id="portfolioFifteenDays">0%</div>
+                    <div class="summary-label" id="labelFifteenDays">15 Days</div>
+                </div>
+                <div class="summary-card" id="cardMonthly" style="display: none;">
                     <div class="summary-value" id="portfolioMonthly">0%</div>
-                    <div class="summary-label">1 Month</div>
+                    <div class="summary-label" id="labelMonthly">1 Month</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card" id="cardQuarterly" style="display: none;">
                     <div class="summary-value" id="portfolioQuarterly">0%</div>
-                    <div class="summary-label">3 Months</div>
+                    <div class="summary-label" id="labelQuarterly">3 Months</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card" id="cardHalfYearly" style="display: none;">
                     <div class="summary-value" id="portfolioHalfYearly">0%</div>
-                    <div class="summary-label">6 Months</div>
+                    <div class="summary-label" id="labelHalfYearly">6 Months</div>
                 </div>
-                <div class="summary-card">
+                <div class="summary-card" id="cardYearly" style="display: none;">
                     <div class="summary-value" id="portfolioYearly">0%</div>
-                    <div class="summary-label">1 Year</div>
+                    <div class="summary-label" id="labelYearly">1 Year</div>
                 </div>
             </div>
 
@@ -881,23 +885,17 @@
                             Object.entries(labels).forEach(([key, label]) => {
                                 const data = performance.periodic[key];
                                 if (data) {
+                                    // Rule: "Since [Date]" for all except yesterday
+                                    const dateStr = formatDate(data.date.split('-').reverse().join('-'));
+                                    const finalLabel = key === 'daily' ? label : `${label} (Since ${dateStr})`;
+                                    
                                     performanceItems.push({
-                                        label,
+                                        label: finalLabel,
                                         value: data.value,
                                         startNAV: data.startNAV,
-                                        endNAV: data.endNAV,
-                                        changeDate: data.date
+                                        endNAV: data.endNAV
                                     });
                                 }
-                            });
-                        }
-                        
-                        if (performance && performance.currentYear) {
-                            performanceItems.push({
-                                label: 'Current Year',
-                                value: performance.currentYear.value,
-                                startNAV: performance.currentYear.startNAV,
-                                endNAV: performance.currentYear.endNAV
                             });
                         }
                         
@@ -1117,8 +1115,7 @@
 
             const performance = {
                 periodic: {},
-                yearlyBreakdown: {},
-                currentYear: null
+                yearlyBreakdown: {}
             };
             
             const investmentDate = new Date(investment.investmentDate);
@@ -1172,30 +1169,7 @@
                     }
                 }
 
-                // 2. Current Year (YTD) Performance
-                const jan1 = new Date(today.getFullYear(), 0, 1);
-                // If bought before or this year
-                if (investmentDate <= today) {
-                    const effectiveStart = investmentDate > jan1 ? investmentDate : jan1;
-                    let startNAV = null;
-                    for (let i = 0; i < navData.length; i++) {
-                        const [d, m, y] = navData[i].date.split('-');
-                        const dDate = new Date(y, m - 1, d);
-                        if (dDate >= effectiveStart) {
-                            startNAV = parseFloat(navData[i].nav);
-                            break;
-                        }
-                    }
-                    if (startNAV) {
-                        performance.currentYear = {
-                            value: ((currentNAV - startNAV) / startNAV) * 100,
-                            startNAV,
-                            endNAV: currentNAV
-                        };
-                    }
-                }
-
-                // 3. Previous Full Calendar Years
+                // 2. Previous Full Calendar Years (Removed Current Year YTD per request)
                 const startYear = investmentDate.getFullYear();
                 const curYearIdx = today.getFullYear();
                 for (let year = startYear; year < curYearIdx; year++) {
@@ -1295,40 +1269,83 @@
                             }
                         });
                     }
-                });
-            }
-
-            // Update UI for main metrics
+                });            // 1. Core Financial Metrics (Investment, Current, Returns, XIRR)
             document.getElementById('totalInvestment').textContent = `₹${totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             document.getElementById('currentValue').textContent = `₹${totalCurrentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             document.getElementById('totalReturns').textContent = `${totalReturns >= 0 ? '+' : ''}₹${totalReturns.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             document.getElementById('totalReturnsPercentage').textContent = `${totalReturns >= 0 ? '+' : ''}${returnsPercentage.toFixed(2)}%`;
             document.getElementById('cagrValue').textContent = `${cagr >= 0 ? '+' : ''}${cagr.toFixed(2)}%`;
-            
-            // Update UI for periodic metrics
-            const periodMap = {
-                daily: 'portfolioDaily',
-                weekly: 'portfolioWeekly',
-                monthly: 'portfolioMonthly',
-                quarterly: 'portfolioQuarterly',
-                halfYearly: 'portfolioHalfYearly',
-                yearly: 'portfolioYearly'
-            };
-            
-            Object.entries(periodMap).forEach(([key, id]) => {
-                const elem = document.getElementById(id);
-                if (elem) {
-                    const val = portfolioPerf[key];
-                    elem.textContent = `${val >= 0 ? '+' : ''}${val.toFixed(2)}%`;
-                    elem.className = `summary-value ${val >= 0 ? 'positive' : 'negative'}`;
-                }
-            });
 
             // Update colors for main metrics
-            const mainMetrics = ['totalReturns', 'totalReturnsPercentage', 'cagrValue'];
-            mainMetrics.forEach(id => {
+            ['totalReturns', 'totalReturnsPercentage', 'cagrValue'].forEach(id => {
                 const elem = document.getElementById(id);
                 if (elem) elem.className = `summary-value ${totalReturns >= 0 ? 'positive' : 'negative'}`;
+            });
+
+            // 2. Portfolio Periodic Performance (Weighted Average)
+            const oldestDate = userInvestments.length > 0 ? 
+                new Date(Math.min(...userInvestments.map(inv => new Date(inv.investmentDate)))) : null;
+            
+            const periods = {
+                daily: { id: 'portfolioDaily', card: 'cardDaily', label: 'labelDaily', title: 'Daily', days: 1 },
+                weekly: { id: 'portfolioWeekly', card: 'cardWeekly', label: 'labelWeekly', title: 'Last 7 Days', days: 7 },
+                fifteenDays: { id: 'portfolioFifteenDays', card: 'cardFifteenDays', label: 'labelFifteenDays', title: 'Last 15 Days', days: 15 },
+                monthly: { id: 'portfolioMonthly', card: 'cardMonthly', label: 'labelMonthly', title: 'Last 1 Month', days: 30 },
+                quarterly: { id: 'portfolioQuarterly', card: 'cardQuarterly', label: 'labelQuarterly', title: 'Last 3 Months', days: 90 },
+                halfYearly: { id: 'portfolioHalfYearly', card: 'cardHalfYearly', label: 'labelHalfYearly', title: 'Last 6 Months', days: 180 },
+                yearly: { id: 'portfolioYearly', card: 'cardYearly', label: 'labelYearly', title: 'Last 1 Year', days: 365 }
+            };
+
+            const today = new Date();
+            const results = await Promise.all(userInvestments.map(async (inv) => {
+                const navRes = navResults.find(r => String(r.id) === String(inv.id));
+                if (navRes && navRes.nav > 0) {
+                    return { val: inv.units * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
+                }
+                return null;
+            }));
+
+            Object.entries(periods).forEach(([pKey, pInfo]) => {
+                const card = document.getElementById(pInfo.card);
+                const valueElem = document.getElementById(pInfo.id);
+                const labelElem = document.getElementById(pInfo.label);
+
+                // Rule: Global summary card only shows if oldest fund covers that duration
+                const durationDate = new Date(today);
+                durationDate.setDate(durationDate.getDate() - pInfo.days);
+                
+                if (oldestDate && oldestDate <= durationDate) {
+                    let weightedSum = 0;
+                    let totalWeight = 0;
+                    let oldestTargetDateStr = null;
+
+                    results.forEach(res => {
+                        if (res && res.data && res.data.periodic && res.data.periodic[pKey]) {
+                            const pItem = res.data.periodic[pKey];
+                            weightedSum += pItem.value * res.val;
+                            totalWeight += res.val;
+                            if (pItem.date) oldestTargetDateStr = pItem.date;
+                        }
+                    });
+
+                    if (totalWeight > 0) {
+                        const finalVal = weightedSum / totalWeight;
+                        valueElem.textContent = `${finalVal >= 0 ? '+' : ''}${finalVal.toFixed(2)}%`;
+                        valueElem.className = `summary-value ${finalVal >= 0 ? 'positive' : 'negative'}`;
+                        
+                        // Rule: Since [Date] for labels
+                        if (labelElem && oldestTargetDateStr) {
+                             const ds = formatDate(oldestTargetDateStr.split('-').reverse().join('-'));
+                             labelElem.textContent = pKey === 'daily' ? pInfo.title : `${pInfo.title} (Since ${ds})`;
+                        }
+                        
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
             });
         }
 
