@@ -23,20 +23,26 @@
             <div class="login-card">
                 <div class="login-header">
                     <h1>Mutual Fund Tracker</h1>
-                    <p>Welcome back! Sign in securely using your Google account to access and sync your unified dashboard.</p>
+                    <p>Welcome back! Sign in securely using your Google account to access and sync your unified
+                        dashboard.</p>
                 </div>
                 <div class="login-body">
                     <button type="button" class="btn-google" onclick="signInWithGoogle()">
                         <svg viewBox="0 0 48 48">
-                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                            <path fill="#EA4335"
+                                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                            <path fill="#4285F4"
+                                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                            <path fill="#FBBC05"
+                                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                            <path fill="#34A853"
+                                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
                         </svg>
                         Continue with Google
                     </button>
                     <div class="text-center mt-4">
-                        <small style="color: #80868b; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <small
+                            style="color: #80868b; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
                             <i class="bi bi-shield-check"></i> Automatically backed up via Google Drive
                         </small>
                     </div>
@@ -74,7 +80,7 @@
             </div>
 
             <!-- Summary Statistics -->
-            <div class="summary-stats">
+            <div class="summary-stats" id="summaryStats">
                 <div class="summary-card main-stats">
                     <div class="summary-value" id="totalInvestment">₹0</div>
                     <div class="summary-label">Total Investment</div>
@@ -92,7 +98,7 @@
                     <div class="summary-value" id="cagrValue">0%</div>
                     <div class="summary-label">XIRR (Annual)</div>
                 </div>
-                
+
                 <!-- Periodic Performance Summary -->
                 <div class="summary-card" id="cardDaily" style="display: none;">
                     <div class="summary-value" id="portfolioDailyPercentage">0%</div>
@@ -139,23 +145,28 @@
                         <form id="addFundForm">
                             <div class="add-fund-grid">
                                 <div class="search-container modern-floating-label" style="margin-bottom: 0;">
-                                    <input type="text" class="form-control-modern" id="fundSearch" placeholder=" " autocomplete="off">
+                                    <input type="text" class="form-control-modern" id="fundSearch" placeholder=" "
+                                        autocomplete="off">
                                     <label for="fundSearch">Search Mutual Fund</label>
-                                    <div class="search-dropdown" id="searchDropdown" style="top: 100%; z-index: 100;"></div>
+                                    <div class="search-dropdown" id="searchDropdown">
+                                    </div>
                                 </div>
                                 <div class="modern-floating-label">
-                                    <input type="date" class="form-control-modern" id="investmentDate" placeholder=" " required>
+                                    <input type="date" class="form-control-modern" id="investmentDate" placeholder=" "
+                                        required>
                                     <label for="investmentDate">Investment Date</label>
                                 </div>
                                 <div class="modern-floating-label">
-                                    <input type="number" class="form-control-modern" id="investmentAmount" placeholder=" " min="1" required>
+                                    <input type="number" class="form-control-modern" id="investmentAmount"
+                                        placeholder=" " min="1" required>
                                     <label for="investmentAmount">Amount (₹)</label>
                                 </div>
                                 <div class="modern-form-actions">
                                     <button type="submit" class="btn btn-primary-custom flex-grow-1" id="submitBtn">
                                         <i class="bi bi-plus-lg"></i> Add Fund
                                     </button>
-                                    <button type="button" class="btn btn-secondary" id="clearForm" aria-label="Clear Form" title="Clear form">
+                                    <button type="button" class="btn btn-secondary" id="clearForm"
+                                        aria-label="Clear Form" title="Clear form">
                                         <i class="bi bi-x-lg"></i>
                                     </button>
                                 </div>
@@ -332,7 +343,7 @@
                         accessToken = parsed.accessToken;
                         currentUser = parsed.user;
                         isSignedIn = true;
-                        
+
                         // Update UI shortly after to allow DOM to be ready
                         setTimeout(() => {
                             updateAuthUI();
@@ -341,7 +352,7 @@
                     } else {
                         localStorage.removeItem('mf_auth');
                     }
-                } catch(e) {}
+                } catch (e) { }
             }
             currentUser = null;
             isSignedIn = false;
@@ -374,7 +385,7 @@
             // Load main UI immediately while database loads in background
             loadUserInvestments();
             showMainContent();
-            
+
             // Fetch fund list in background if needed
             loadAllFundsCache().catch(err => console.warn('Background cache load failed', err));
         });
@@ -395,7 +406,7 @@
                         allFundsCache = parsed.data;
                         return;
                     }
-                } catch (e) {}
+                } catch (e) { }
             }
 
             isFundsLoading = true;
@@ -412,7 +423,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     allFundsCache = data;
-                    
+
                     // Save to local storage for next time with safety check
                     try {
                         localStorage.setItem(CACHE_KEY, JSON.stringify({
@@ -424,7 +435,7 @@
                         // If quota is full, try to clear at least the old cache to free some space
                         try {
                             localStorage.removeItem(CACHE_KEY);
-                        } catch (e) {}
+                        } catch (e) { }
                     }
                 }
             } catch (error) {
@@ -756,7 +767,7 @@
                 for (const navRecord of navData) {
                     const [d, m, y] = navRecord.date.split('-');
                     const recordTimestamp = new Date(y, m - 1, d).getTime();
-                    
+
                     if (recordTimestamp <= targetTimestamp) {
                         if (closestTimestamp === null || recordTimestamp > closestTimestamp) {
                             closestTimestamp = recordTimestamp;
@@ -829,13 +840,13 @@
                 return navResult;
             } catch (error) {
                 console.error('Error fetching current NAV:', error);
-                
+
                 // If fetch fails, try to use expired cache as last resort
                 const cachedData = localStorage.getItem(CACHE_KEY);
                 if (cachedData) {
                     return JSON.parse(cachedData).data;
                 }
-                
+
                 throw error;
             }
         }
@@ -886,7 +897,7 @@
 
                         // Prepare performance items based on User's requested categories and purchase date
                         const performanceItems = [];
-                        
+
                         if (performance && performance.periodic) {
                             const labels = {
                                 daily: 'Yesterday',
@@ -897,27 +908,27 @@
                                 halfYearly: 'Last 6 Months',
                                 yearly: 'Last 1 Year'
                             };
-                            
-                             Object.entries(labels).forEach(([key, label]) => {
-                                 const data = performance.periodic[key];
-                                 if (data) {
-                                     const startD = formatDate(data.startDate.split('-').reverse().join('-'));
-                                     const endD = formatDate(data.endDate.split('-').reverse().join('-'));
-                                     
-                                     // Rule: For Daily, show the end date in brackets. For others, show "(Since ...)"
-                                     const subText = key === 'daily' ? `(${endD})` : `(Since ${startD})`;
-                                     
-                                     performanceItems.push({
-                                         label: label,
-                                         subLabel: subText,
-                                         value: data.value,
-                                         startNAV: data.startNAV,
-                                         endNAV: data.endNAV
-                                     });
-                                 }
-                             });
+
+                            Object.entries(labels).forEach(([key, label]) => {
+                                const data = performance.periodic[key];
+                                if (data) {
+                                    const startD = formatDate(data.startDate.split('-').reverse().join('-'));
+                                    const endD = formatDate(data.endDate.split('-').reverse().join('-'));
+
+                                    // Rule: For Daily, show the end date in brackets. For others, show "(Since ...)"
+                                    const subText = key === 'daily' ? `(${endD})` : `(Since ${startD})`;
+
+                                    performanceItems.push({
+                                        label: label,
+                                        subLabel: subText,
+                                        value: data.value,
+                                        startNAV: data.startNAV,
+                                        endNAV: data.endNAV
+                                    });
+                                }
+                            });
                         }
-                        
+
                         if (performance && performance.yearlyBreakdown) {
                             // Display previous years in descending order
                             Object.entries(performance.yearlyBreakdown)
@@ -1054,10 +1065,10 @@
             // Standard CAGR formula: (Final Value / Initial Value) ^ (1 / Years) - 1
             // Apply strictly for all periods to mathematically match standard CAGR/XIRR definitions
             let cagr = (Math.pow(currentValue / investment.investmentAmount, 1 / years) - 1) * 100;
-            
+
             // Safeguard against astronomical numbers for <= 1 day investments
             if (cagr > 100000) cagr = 100000;
-            
+
             return cagr;
         }
 
@@ -1143,7 +1154,7 @@
                 periodic: {},
                 yearlyBreakdown: {}
             };
-            
+
             const investmentDate = new Date(investment.investmentDate);
             investmentDate.setHours(0, 0, 0, 0);
 
@@ -1152,7 +1163,7 @@
                     signal: controller.signal
                 });
                 if (!response.ok) throw new Error('Failed to fetch historical data');
-                
+
                 const data = await response.json();
                 // Sort oldest to newest
                 const navData = data.data.sort((a, b) => {
@@ -1176,7 +1187,7 @@
                     const target = new Date();
                     target.setHours(0, 0, 0, 0);
                     target.setDate(target.getDate() - days);
-                    
+
                     // User Rule: Only show if purchase Date is within/before this duration
                     if (target < investmentDate) return null;
 
@@ -1196,7 +1207,7 @@
                 for (const [key, days] of Object.entries(periods)) {
                     // For "Yesterday" (Daily), we specifically want the previous record 
                     // compared to latest, regardless of how many calendar days apart (e.g. over weekend)
-                    const pastData = (key === 'daily') ? 
+                    const pastData = (key === 'daily') ?
                         getNAVForDaysAgo(1, true) : getNAVForDaysAgo(days);
 
                     if (pastData) {
@@ -1220,7 +1231,7 @@
 
                     const effectiveYearStart = investmentDate > yearStart ? investmentDate : yearStart;
                     let sNAV = null, eNAV = null;
-                    
+
                     for (let i = 0; i < navData.length; i++) {
                         const [d, m, y] = navData[i].date.split('-');
                         const dDate = new Date(y, m - 1, d);
@@ -1267,7 +1278,7 @@
             for (const investment of userInvestments) {
                 const navResult = navResults.find(r => String(r.id) === String(investment.id));
                 const currentNAV = navResult ? navResult.nav : 0;
-                
+
                 totalInvestment += (investment.investmentAmount || 0);
                 const currentValue = (investment.units || 0) * currentNAV;
                 totalCurrentValue += currentValue;
@@ -1291,25 +1302,25 @@
             const portfolioPerf = {
                 daily: 0, weekly: 0, monthly: 0, quarterly: 0, halfYearly: 0, yearly: 0
             };
-            
+
             // 1. Core Financial Metrics (Investment, Current, Returns, XIRR)
             document.getElementById('totalInvestment').textContent = `₹${totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             document.getElementById('currentValue').textContent = `₹${totalCurrentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-            
+
             // Consolidate Returns: +₹9,104 (+1.94%)
             const retSign = totalReturns >= 0 ? '+' : '';
             const retAmount = `₹${Math.abs(totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             const retPct = `(${retSign}${returnsPercentage.toFixed(2)}%)`;
-            
+
             document.getElementById('totalReturnsPercentage').textContent = `${retSign}${retAmount} ${retPct}`;
             document.getElementById('totalReturns').style.display = 'none';
-            
+
             document.getElementById('cagrValue').textContent = `${cagr >= 0 ? '+' : ''}${cagr.toFixed(2)}%`;
 
             // Update colors for main metrics
             const colorClass = totalReturns >= 0 ? 'positive' : 'negative';
             const xirrColorClass = cagr >= 0 ? 'positive' : 'negative';
-            
+
             ['totalReturnsPercentage', 'cagrValue'].forEach(id => {
                 const elem = document.getElementById(id);
                 if (elem) elem.className = `summary-value ${id === 'cagrValue' ? xirrColorClass : colorClass}`;
@@ -1322,7 +1333,7 @@
                 'totalReturnsPercentage': 'Total Returns',
                 'cagrValue': 'XIRR (Annual)'
             };
-            
+
             Object.keys(staticLabels).forEach(id => {
                 const card = document.getElementById(id).closest('.summary-card');
                 const label = card.querySelector('.summary-label');
@@ -1331,21 +1342,18 @@
                 }
             });
 
-            // 2. Portfolio Periodic Performance (Weighted Average)
+            // 2. Portfolio Periodic & Yearly Performance (Dynamic Generation)
+            const summaryContainer = document.getElementById('summaryStats');
+            if (!summaryContainer) return; // Safeguard against null target
+            
+            // Remove any existing dynamic cards while keeping the 4 main stats
+            const staticCards = summaryContainer.querySelectorAll('.main-stats');
+            summaryContainer.innerHTML = '';
+            staticCards.forEach(c => summaryContainer.appendChild(c));
+
             const oldestDate = userInvestments.length > 0 ? 
                 new Date(Math.min(...userInvestments.map(inv => new Date(inv.investmentDate)))) : null;
             
-            const periods = {
-                daily: { id: 'portfolioDailyPercentage', amountId: 'portfolioDailyAmount', card: 'cardDaily', label: 'labelDaily', title: 'Yesterday', days: 1 },
-                weekly: { id: 'portfolioWeeklyPercentage', amountId: 'portfolioWeeklyAmount', card: 'cardWeekly', label: 'labelWeekly', title: 'Last 7 Days', days: 7 },
-                fifteenDays: { id: 'portfolioFifteenDaysPercentage', amountId: 'portfolioFifteenDaysAmount', card: 'cardFifteenDays', label: 'labelFifteenDays', title: 'Last 15 Days', days: 15 },
-                monthly: { id: 'portfolioMonthlyPercentage', amountId: 'portfolioMonthlyAmount', card: 'cardMonthly', label: 'labelMonthly', title: 'Last 1 Month', days: 30 },
-                quarterly: { id: 'portfolioQuarterlyPercentage', amountId: 'portfolioQuarterlyAmount', card: 'cardQuarterly', label: 'labelQuarterly', title: 'Last 3 Months', days: 90 },
-                halfYearly: { id: 'portfolioHalfYearlyPercentage', amountId: 'portfolioHalfYearlyAmount', card: 'cardHalfYearly', label: 'labelHalfYearly', title: 'Last 6 Months', days: 180 },
-                yearly: { id: 'portfolioYearlyPercentage', amountId: 'portfolioYearlyAmount', card: 'cardYearly', label: 'labelYearly', title: 'Last 1 Year', days: 365 }
-            };
-
-            const today = new Date();
             const results = await Promise.all(userInvestments.map(async (inv) => {
                 const navRes = navResults.find(r => String(r.id) === String(inv.id));
                 if (navRes && navRes.nav > 0) {
@@ -1354,71 +1362,87 @@
                 return null;
             }));
 
-            Object.entries(periods).forEach(([pKey, pInfo]) => {
-                const card = document.getElementById(pInfo.card);
-                const valueElem = document.getElementById(pInfo.id);
-                const amountElem = document.getElementById(pInfo.amountId);
-                const labelElem = document.getElementById(pInfo.label);
+            // Helper to generate dynamic card
+            const createCard = (title, subLabel, weightedPct, absoluteChange) => {
+                const sign = weightedPct >= 0 ? '+' : '';
+                const colorClass = weightedPct >= 0 ? 'positive' : 'negative';
+                const formattedAmt = `${sign}₹${Math.abs(absoluteChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+                const formattedPct = `(${sign}${weightedPct.toFixed(2)}%)`;
 
-                // Check if portfolio has coverage for this duration
+                const card = document.createElement('div');
+                card.className = 'summary-card';
+                card.innerHTML = `
+                    <div class="summary-value ${colorClass}">${formattedAmt} ${formattedPct}</div>
+                    <div class="summary-label">
+                        <div class="summary-label-main">${title}</div>
+                        ${subLabel ? `<div class="summary-label-sub">${subLabel}</div>` : ''}
+                    </div>
+                `;
+                return card;
+            };
+
+            // 2A. Standard Periodic Durations
+            const standardPeriods = [
+                { key: 'daily', title: 'Yesterday', days: 1 },
+                { key: 'weekly', title: 'Last 7 Days', days: 7 },
+                { key: 'fifteenDays', title: 'Last 15 Days', days: 15 },
+                { key: 'monthly', title: 'Last 1 Month', days: 30 },
+                { key: 'quarterly', title: 'Last 3 Months', days: 90 },
+                { key: 'halfYearly', title: 'Last 6 Months', days: 180 },
+                { key: 'yearly', title: 'Last 1 Year', days: 365 }
+            ];
+
+            standardPeriods.forEach(p => {
                 const durationDate = new Date();
-                durationDate.setDate(durationDate.getDate() - pInfo.days);
+                durationDate.setDate(durationDate.getDate() - p.days);
                 
                 if (oldestDate && oldestDate <= durationDate) {
-                    let weightedSum = 0;
-                    let totalValAtEndForWeight = 0;
-                    let totalAmountChange = 0;
-                    let sampleStartDateStr = null;
-                    let sampleEndDateStr = null;
+                    let weightedSum = 0, totalVal = 0, totalAmt = 0;
+                    let sDate = null, eDate = null;
 
                     results.forEach(res => {
-                        if (res && res.data && res.data.periodic && res.data.periodic[pKey]) {
-                            const pItem = res.data.periodic[pKey];
+                        if (res && res.data?.periodic?.[p.key]) {
+                            const pItem = res.data.periodic[p.key];
                             weightedSum += pItem.value * res.val;
-                            totalValAtEndForWeight += res.val;
-                            
-                            // Amount Change = (EndNAV - StartNAV) * units
-                            const amtChange = (pItem.endNAV - pItem.startNAV) * res.inv.units;
-                            totalAmountChange += amtChange;
-                            
-                            if (pItem.startDate) sampleStartDateStr = pItem.startDate;
-                            if (pItem.endDate) sampleEndDateStr = pItem.endDate;
+                            totalVal += res.val;
+                            totalAmt += (pItem.endNAV - pItem.startNAV) * res.inv.units;
+                            if (pItem.startDate) sDate = pItem.startDate;
+                            if (pItem.endDate) eDate = pItem.endDate;
                         }
                     });
 
-                    if (totalValAtEndForWeight > 0) {
-                        const weightedAvg = weightedSum / totalValAtEndForWeight;
-                        const sign = weightedAvg >= 0 ? '+' : '';
-                        const colorClass = weightedAvg >= 0 ? 'positive' : 'negative';
-
-                        // Format: +₹9,104 (+1.94%)
-                        const formattedAmount = `${sign}₹${Math.abs(totalAmountChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-                        const formattedPct = `(${sign}${weightedAvg.toFixed(2)}%)`;
-                        
-                        valueElem.textContent = `${formattedAmount} ${formattedPct}`;
-                        valueElem.className = `summary-value ${colorClass}`;
-                        
-                        // AmountElem is no longer needed in dual layout, hide it if it exists
-                        if (amountElem) amountElem.style.display = 'none';
-
-                        // Update Label with Date Info in stacked format
-                        let dateSub = "";
-                        if (pKey === 'daily' && sampleEndDateStr) {
-                             dateSub = `(${sampleEndDateStr})`;
-                        } else if (sampleStartDateStr) {
-                             dateSub = `(Since ${sampleStartDateStr})`;
-                        }
-                        
-                        labelElem.innerHTML = `<div class="summary-label-main">${pInfo.title}</div>${dateSub ? `<div class="summary-label-sub">${dateSub}</div>` : ''}`;
-
-                        if (card) card.style.display = 'flex';
-                    } else if (card) {
-                        card.style.display = 'none';
+                    if (totalVal > 0) {
+                        const sub = (p.key === 'daily') ? `(${eDate})` : `(Since ${sDate})`;
+                        summaryContainer.appendChild(createCard(p.title, sub, weightedSum / totalVal, totalAmt));
                     }
-                } else if (card) {
-                    card.style.display = 'none';
                 }
             });
+
+            // 2B. Historical Yearly Breakdown
+            if (oldestDate) {
+                const startYear = oldestDate.getFullYear();
+                const endYear = new Date().getFullYear() - 1; // Previous years only
+                
+                for (let year = endYear; year >= startYear; year--) {
+                    let weightedSum = 0, totalVal = 0, totalAmt = 0;
+                    let found = false;
+
+                    results.forEach(res => {
+                        if (res && res.data?.yearlyBreakdown?.[year]) {
+                            const yItem = res.data.yearlyBreakdown[year];
+                            weightedSum += yItem.value * res.val;
+                            totalVal += res.val;
+                            totalAmt += (yItem.endNAV - yItem.startNAV) * res.inv.units;
+                            found = true;
+                        }
+                    });
+
+                    if (found && totalVal > 0) {
+                        const sub = `(1 Jan ${year} - 31 Dec ${year})`;
+                        summaryContainer.appendChild(createCard(`Year ${year}`, sub, weightedSum / totalVal, totalAmt));
+                    }
+                }
+            }
         }
 
         // Refresh a specific fund
@@ -1469,7 +1493,7 @@
             // Scroll to form
             document.getElementById('addFundForm').scrollIntoView({ behavior: 'smooth' });
 
- 
+
         }
 
         // Remove a fund
@@ -1572,16 +1596,16 @@
 
             // 1. Group by Fund House (Intelligent heuristic detection)
             const houses = {};
-            
+
             userInvestments.forEach(inv => {
                 const words = inv.schemeName.split(' ');
                 // Words that typically indicate the start of the fund's specific category or strategy
                 const stopWords = [
-                    "Small", "Mid", "Large", "Flexi", "Multi", "Index", "Nifty", "ELSS", "Tax", "Equity", 
-                    "Liquid", "Debt", "Hybrid", "Fund", "Balanced", "Opportunities", "Emerging", "Contra", 
+                    "Small", "Mid", "Large", "Flexi", "Multi", "Index", "Nifty", "ELSS", "Tax", "Equity",
+                    "Liquid", "Debt", "Hybrid", "Fund", "Balanced", "Opportunities", "Emerging", "Contra",
                     "Value", "Focused", "Bluechip", "Aggressive", "Conservative", "Dynamic", "Arbitrage"
                 ];
-                
+
                 let stopIndex = words.length;
                 for (let i = 0; i < words.length; i++) {
                     const cleanWord = words[i].toLowerCase().replace(/[^a-z]/g, '');
@@ -1590,13 +1614,13 @@
                         break;
                     }
                 }
-                
+
                 // The Fund House is everything before the first category stop-word (minimum 1 word)
                 let house = words.slice(0, Math.max(1, stopIndex)).join(' ');
-                
+
                 // Cleanup common administrative suffixes to keep group names clean
                 house = house.replace(/\s+(Mutual|AMC|MF|Asset|Management)$/i, '').trim();
-                
+
                 if (!houses[house]) houses[house] = [];
                 houses[house].push(inv.id);
             });
@@ -1627,28 +1651,28 @@
                 { name: "Hybrid", patterns: [/hybrid/i, /balanced/i, /arbitrage/i] },
                 { name: "Equity", patterns: [/equity/i, /growth/i, /opportunit/i, /focused/i, /alpha/i, /bluechip/i] }
             ];
-            
+
             userInvestments.forEach(inv => {
                 let matchingTypes = new Set();
-                
+
                 // Add from category field if present
                 if (inv.category && inv.category !== 'N/A') {
                     matchingTypes.add(inv.category);
                 }
-                
+
                 // Add all matching keywords
                 for (const typeCfg of typeKeywords) {
                     if (typeCfg.patterns.some(p => p.test(inv.schemeName))) {
                         matchingTypes.add(typeCfg.name);
                     }
                 }
-                
+
                 // Intelligent Inference: Cross-link sub-types to broad categories
                 const equitySubTypes = ["Small Cap", "Mid Cap", "Large Cap", "Flexi Cap", "Multi Cap", "ELSS", "Index"];
                 if ([...matchingTypes].some(t => equitySubTypes.includes(t))) {
                     matchingTypes.add("Equity");
                 }
-                
+
                 if ([...matchingTypes].some(t => t.includes("Debt") || t === "Liquid")) {
                     matchingTypes.add("Debt Funds");
                 }
@@ -1944,7 +1968,7 @@
                             const fundInvestments = group.fundIds
                                 .map(id => userInvestments.find(inv => String(inv.id) === String(id)))
                                 .filter(inv => inv && inv.schemeCode === agg.schemeCode);
-                            
+
                             // Prepare cash flows for this specific fund's XIRR calculation
                             const cashFlows = fundInvestments.map(inv => {
                                 const [y, m, d] = inv.investmentDate.split('-');
@@ -1965,11 +1989,11 @@
                                     <div class="group-fund-name">
                                         ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem; font-weight: 500;">${agg.count} Txns</span>` : ''}
                                         <div style="font-size: 0.75rem; color: #6c757d;">
-                                            Invested: ₹${agg.investmentAmount.toLocaleString(undefined, {maximumFractionDigits: 0})} | Avg Inv. NAV: ₹${avgNav.toFixed(2)} | NAV as on ${navDate}: ₹${currentNAV.toFixed(2)}
+                                            Invested: ₹${agg.investmentAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })} | Avg Inv. NAV: ₹${avgNav.toFixed(2)} | NAV as on ${navDate}: ₹${currentNAV.toFixed(2)}
                                             &nbsp;&nbsp;
                                             <span style="color: ${returns >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
                                                 <i class="bi bi-caret-${returns >= 0 ? 'up' : 'down'}-fill"></i>
-                                                ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, {maximumFractionDigits: 0})} (${returnsPercentage.toFixed(2)}%)
+                                                ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, { maximumFractionDigits: 0 })} (${returnsPercentage.toFixed(2)}%)
                                             </span>
                                             &nbsp;&nbsp;
                                             <span style="color: ${fundXIRR >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
@@ -1979,7 +2003,7 @@
                                         </div>
                                     </div>
                                     <div class="group-fund-returns" style="text-align: right;">
-                                        <div style="font-weight: 600; color: #2c3e50;">₹${currentValue.toLocaleString(undefined, {maximumFractionDigits: 0})}</div>
+                                        <div style="font-weight: 600; color: #2c3e50;">₹${currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
                                         <div style="font-size: 0.7rem; color: #6c757d;">Current Value</div>
                                     </div>
                                 </div>
@@ -2079,7 +2103,7 @@
                 totalInvestment += (investment.investmentAmount || 0);
                 const navResult = navResults.find(r => String(r.fundId) === String(fundId));
                 const currentNAV = navResult ? navResult.nav : 0;
-                
+
                 const units = (investment.units && !isNaN(investment.units)) ? investment.units : 0;
                 const currentValue = units * currentNAV;
                 totalCurrentValue += currentValue;
@@ -2202,7 +2226,7 @@
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
 
- 
+
         }
 
         // Export data to CSV
@@ -2245,7 +2269,7 @@
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
 
- 
+
         }
 
         // Import data from file
@@ -2366,12 +2390,12 @@
                                     avatar: userInfo.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.email)}&background=random`
                                 };
                                 isSignedIn = true;
-                                
+
                                 // Save to localStorage (15 minute session)
                                 localStorage.setItem('mf_auth', JSON.stringify({
                                     accessToken: accessToken,
                                     user: currentUser,
-                                    expiry: Date.now() + (15 * 60 * 1000) 
+                                    expiry: Date.now() + (15 * 60 * 1000)
                                 }));
 
                                 updateAuthUI();
@@ -2524,10 +2548,6 @@
 
             } catch (error) {
                 console.error('Failed to sync from Drive:', error);
-                if (syncStatus) {
-                    syncStatus.textContent = 'Sync failed';
-                    syncStatus.className = 'sync-status error';
-                }
                 showToast('Failed to sync data from cloud', 'error', 'Sync Error');
             }
         }
@@ -2690,4 +2710,3 @@
 </body>
 
 </html>
-
