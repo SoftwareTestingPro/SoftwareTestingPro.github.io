@@ -1159,9 +1159,10 @@
 
                 // Helper to get NAV for X calendar days ago
                 const getNAVForDaysAgo = (days, forceStrictlyBeforeLatest = false) => {
-                    // Rule: Always anchor durations relative to the latest available NAV date
-                    // This prevents 0% changes on weekends/holidays
-                    const target = new Date(latestDataDate);
+                    // Rule: Anchor target dates relative to 'today' (calendar days), but
+                    // compare against 'latestDataDate' to show the most recent change.
+                    const target = new Date();
+                    target.setHours(0, 0, 0, 0);
                     target.setDate(target.getDate() - days);
                     
                     // User Rule: Only show if purchase Date is within/before this duration
@@ -1282,14 +1283,40 @@
             // 1. Core Financial Metrics (Investment, Current, Returns, XIRR)
             document.getElementById('totalInvestment').textContent = `₹${totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             document.getElementById('currentValue').textContent = `₹${totalCurrentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-            document.getElementById('totalReturns').textContent = `${totalReturns >= 0 ? '+' : ''}₹${totalReturns.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-            document.getElementById('totalReturnsPercentage').textContent = `${totalReturns >= 0 ? '+' : ''}${returnsPercentage.toFixed(2)}%`;
+            
+            // Consolidate Returns: +₹9,104 (+1.94%)
+            const retSign = totalReturns >= 0 ? '+' : '';
+            const retAmount = `₹${Math.abs(totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+            const retPct = `(${retSign}${returnsPercentage.toFixed(2)}%)`;
+            
+            document.getElementById('totalReturnsPercentage').textContent = `${retSign}${retAmount} ${retPct}`;
+            document.getElementById('totalReturns').style.display = 'none';
+            
             document.getElementById('cagrValue').textContent = `${cagr >= 0 ? '+' : ''}${cagr.toFixed(2)}%`;
 
             // Update colors for main metrics
-            ['totalReturns', 'totalReturnsPercentage', 'cagrValue'].forEach(id => {
+            const colorClass = totalReturns >= 0 ? 'positive' : 'negative';
+            const xirrColorClass = cagr >= 0 ? 'positive' : 'negative';
+            
+            ['totalReturnsPercentage', 'cagrValue'].forEach(id => {
                 const elem = document.getElementById(id);
-                if (elem) elem.className = `summary-value ${totalReturns >= 0 ? 'positive' : 'negative'}`;
+                if (elem) elem.className = `summary-value ${id === 'cagrValue' ? xirrColorClass : colorClass}`;
+            });
+
+            // Ensure static labels are wrapped correctly
+            const staticLabels = {
+                'totalInvestment': 'Total Investment',
+                'currentValue': 'Current Value',
+                'totalReturnsPercentage': 'Total Returns',
+                'cagrValue': 'XIRR (Annual)'
+            };
+            
+            Object.keys(staticLabels).forEach(id => {
+                const card = document.getElementById(id).closest('.summary-card');
+                const label = card.querySelector('.summary-label');
+                if (label) {
+                    label.innerHTML = `<div class="summary-label-main">${staticLabels[id]}</div>`;
+                }
             });
 
             // 2. Portfolio Periodic Performance (Weighted Average)
@@ -1352,11 +1379,15 @@
                         const sign = weightedAvg >= 0 ? '+' : '';
                         const colorClass = weightedAvg >= 0 ? 'positive' : 'negative';
 
-                        valueElem.textContent = `${sign}${weightedAvg.toFixed(2)}%`;
+                        // Format: +₹9,104 (+1.94%)
+                        const formattedAmount = `${sign}₹${Math.abs(totalAmountChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+                        const formattedPct = `(${sign}${weightedAvg.toFixed(2)}%)`;
+                        
+                        valueElem.textContent = `${formattedAmount} ${formattedPct}`;
                         valueElem.className = `summary-value ${colorClass}`;
                         
-                        amountElem.textContent = `${sign}₹${Math.abs(totalAmountChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-                        amountElem.className = `summary-subvalue ${colorClass}`;
+                        // AmountElem is no longer needed in dual layout, hide it if it exists
+                        if (amountElem) amountElem.style.display = 'none';
 
                         // Update Label with Date Info in stacked format
                         let dateSub = "";
@@ -1366,7 +1397,7 @@
                              dateSub = `(Since ${sampleStartDateStr})`;
                         }
                         
-                        labelElem.innerHTML = `<strong>${pInfo.title}</strong>${dateSub ? `<br><small style="font-weight: 500; opacity: 0.8;">${dateSub}</small>` : ''}`;
+                        labelElem.innerHTML = `<div class="summary-label-main">${pInfo.title}</div>${dateSub ? `<div class="summary-label-sub">${dateSub}</div>` : ''}`;
 
                         if (card) card.style.display = 'flex';
                     } else if (card) {
@@ -1436,7 +1467,11 @@
                 // Sync to cloud since we're cloud-only
                 syncAutomatedGroups();
                 await saveUserInvestments();
-                displayFunds();
+                if (currentView === 'individual') {
+                    displayFunds();
+                } else {
+                    displayGroups();
+                }
                 updateSummary();
             }
         }
@@ -2278,7 +2313,11 @@
             if (userInvestments.length > 0 && !autoRefreshInProgress) {
                 autoRefreshInProgress = true;
                 try {
-                    await displayFunds();
+                    if (currentView === 'individual') {
+                        await displayFunds();
+                    } else {
+                        await displayGroups();
+                    }
                     await updateSummary();
                 } catch (error) {
                     console.error('Error in auto-refresh:', error);
