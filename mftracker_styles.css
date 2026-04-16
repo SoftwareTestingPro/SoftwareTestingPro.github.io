@@ -100,7 +100,7 @@
         .fund-card {
             background: white;
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px 12px 4px 12px;
             margin-bottom: 12px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
             border: 1px solid #eee;
@@ -119,24 +119,21 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
-        .performance-grid {
+        /* Unified Scroller System */
+        .summary-stats, .performance-grid, .group-stats {
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
-            gap: 15px;
-            margin-top: 12px;
-            margin-bottom: 8px;
-            padding: 5px 2px 5px 2px;
+            gap: 12px;
+            margin-top: 10px;
+            margin-bottom: 0px;
+            padding: 2px 2px 4px 2px;
             scroll-snap-type: x mandatory;
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) #f0f0f0;
             -webkit-overflow-scrolling: touch;
             transition: max-height 0.4s ease, opacity 0.3s ease;
-            max-height: 2000px;
-            opacity: 1;
         }
-
-        /* Standardized scrollbars handled globally above */
 
         .performance-grid.collapsed {
             max-height: 0;
@@ -145,6 +142,27 @@
             margin-bottom: 0;
             overflow: hidden;
             padding: 0;
+        }
+
+        /* Standardized Scrollbar Styles */
+        .summary-stats::-webkit-scrollbar,
+        .performance-grid::-webkit-scrollbar,
+        .group-stats::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .summary-stats::-webkit-scrollbar-track,
+        .performance-grid::-webkit-scrollbar-track,
+        .group-stats::-webkit-scrollbar-track {
+            background: #f1f3f4;
+            border-radius: 10px;
+        }
+
+        .summary-stats::-webkit-scrollbar-thumb,
+        .performance-grid::-webkit-scrollbar-thumb,
+        .group-stats::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
         }
 
         .expand-toggle-btn {
@@ -265,38 +283,14 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        .summary-stats::-webkit-scrollbar,
-        .performance-grid::-webkit-scrollbar,
-        .group-stats::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .summary-stats::-webkit-scrollbar-track,
-        .performance-grid::-webkit-scrollbar-track,
-        .group-stats::-webkit-scrollbar-track {
-            background: #f1f3f4;
-            border-radius: 10px;
-        }
-
-        .summary-stats::-webkit-scrollbar-thumb,
-        .performance-grid::-webkit-scrollbar-thumb,
-        .group-stats::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 10px;
-            opacity: 0.8;
-        }
 
 
 
         .summary-card {
             background: white;
             border-radius: 12px;
-            padding: 18px 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-            text-align: center;
             padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Lighter, more stable shadow */
             border: 1px solid #f0f1f2;
             flex: 0 0 auto;
             min-width: 160px;
@@ -305,17 +299,22 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            text-align: center;
+            transform: translateZ(0); /* Hardware acceleration to fix scrolling artifacts */
+            backface-visibility: hidden;
         }
 
         .summary-card.main-stats {
-            border-left: 1px solid #f0f1f2; /* Conforming to standard cards */
+            /* Handled via performance borders */
         }
         
-        .summary-card.border-positive { 
+        .border-positive { 
             border: 1.5px solid #137333 !important; 
+            background: #f8fff9 !important;
         }
-        .summary-card.border-negative { 
+        .border-negative { 
             border: 1.5px solid var(--danger-color) !important; 
+            background: #fffafa !important;
         }
 
 
@@ -650,18 +649,104 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
+            padding: 10px 14px;
             background: #f8f9fa;
             border-radius: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-size: 1rem;
+            border: 1px solid transparent;
+            transition: background 0.2s ease;
+        }
+
+        .group-fund-item.positive {
+            background: #effaf3 !important;
+            border: 1px solid #d1f2e1;
+        }
+
+        .group-fund-item.negative {
+            background: #fff5f5 !important;
+            border: 1px solid #fad2cf;
         }
 
         .group-fund-name {
             flex: 1;
             font-weight: 600;
-            line-height: 1.4;
+            line-height: 1.2;
+            width: 100%;
         }
+
+        .minicard-scroller {
+            display: flex;
+            overflow-x: auto;
+            gap: 6px;
+            margin-top: 8px;
+            padding-bottom: 8px; /* Added space for scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #f0f0f0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .minicard-scroller::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .minicard-scroller::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+        
+        .minicard-scroller::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        .minicard {
+            flex: 0 0 auto;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid #f0f1f2;
+            min-width: 105px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .minicard-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .minicard-label {
+            font-size: 0.6rem;
+            color: #5f6368;
+            display: block;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            margin-top: 3px;
+        }
+
+        /* Themed Mini-Cards */
+        .minicard.positive { 
+            border: 1px solid #137333 !important; 
+            background: #e2f6ea !important; /* Slightly darker than parent group-fund-item */
+        }
+        .minicard.positive .minicard-value { color: #137333; }
+
+        .minicard.negative { 
+            border: 1px solid var(--danger-color) !important; 
+            background: #ffebeb !important; /* Slightly darker than parent group-fund-item */
+        }
+        .minicard.negative .minicard-value { color: var(--danger-color); }
+
+        .minicard.neutral { 
+            border: 1px solid #bdc1c6; 
+        }
+        .minicard.neutral .minicard-value { color: #202124; }
 
         .group-fund-returns {
             font-weight: 600;
@@ -1590,19 +1675,6 @@
 }
 
 
-/* Synchronizing Group Stats with Performance Scroller */
-.group-stats {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 12px;
-    margin-bottom: -5px;
-    padding: 0 2px 2px 2px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    scrollbar-color: var(--primary-color) #f0f0f0;
-    -webkit-overflow-scrolling: touch;
-}
 
 /* Group scroller styles handled globally above */
 

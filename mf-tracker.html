@@ -1153,8 +1153,10 @@
                         }
 
 
+                        const fundBorderClass = returns >= 0 ? 'border-positive' : 'border-negative';
+
                         const fundHTML = `
-                            <div class="fund-card modern-added-fund">
+                            <div class="fund-card modern-added-fund ${fundBorderClass}">
                                 <div class="fund-header">
                                     <div class="fund-info-main">
                                         <h5 class="fund-title">${investment.schemeName}</h5>
@@ -1188,21 +1190,18 @@
                                     </span>
                                 </div>
                                 
-                                <div class="performance-grid collapsed" id="perf-${investment.id}">
-                                    ${performanceItems.length > 0 ? performanceItems.map(item => `
-                                        <div class="performance-card">
-                                        <div class="performance-value ${item.value !== null ? (item.value >= 0 ? 'positive' : 'negative') : ''}" style="font-size: 1.15rem; font-weight: 600; margin-bottom: 2px;">
-                                            ${item.value !== null ? (item.value >= 0 ? '+' : '') + item.value.toFixed(2) + '%' : 'N/A'}
-                                            ${item.value !== null ? `(${item.value >= 0 ? '+' : ''}₹${Math.abs(item.value * (item.startNAV * investment.units / 100)).toLocaleString(undefined, { maximumFractionDigits: 0 })})` : ''}
-                                        </div>
-                                            <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">${item.label}</div>
-                                            <div class="perf-meta-text">${item.subLabel || ''}</div>
-                                            <div class="d-flex justify-content-between small text-muted" style="gap: 8px;">
-                                                <span class="perf-nav-badge">S: ₹${item.startNAV ? item.startNAV.toFixed(1) : 'N'}</span>
-                                                <span class="perf-nav-badge">E: ₹${item.endNAV ? item.endNAV.toFixed(1) : 'N'}</span>
-                                            </div>
-                                        </div>
-                                    `).join('') : `
+                                <div class="minicard-scroller performance-grid collapsed" id="perf-${investment.id}">
+                                    <!-- Standard Basis Metrics -->
+                                    ${getMiniCardHTML('Purchase Value', investment.investmentAmount, { themePercentage: returnsPercentage })}
+                                    ${getMiniCardHTML('Current Value', currentValue, { themePercentage: returnsPercentage })}
+                                    ${getMiniCardHTML('Total Returns', returns, { percentage: returnsPercentage })}
+                                    ${getMiniCardHTML('XIRR (Annual)', undefined, { percentage: fundCAGR })}
+
+                                    <!-- Periodic Performance Scroller -->
+                                    ${performanceItems.length > 0 ? performanceItems.map(item => {
+                                        const amount = item.value !== null ? (item.endNAV - item.startNAV) * investment.units : undefined;
+                                        return getMiniCardHTML(item.label === 'Yesterday' ? 'Yesterday' : (item.label.includes('Last') ? item.label : `Last ${item.label}`), amount, { percentage: item.value });
+                                    }).join('') : `
                                         <div style="grid-column: 1 / -1; padding: 25px; text-align: center; color: #5f6368; background: #fcfcfc; border-radius: 12px; border: 1px dashed #ddd;">
                                             <div style="font-weight: 600; font-size: 1.1rem; color: #202124;">Nurturing Investment</div>
                                             <div style="font-size: 0.9rem; margin-top: 6px; opacity: 0.8;">Building your profit story... Performance data will unlock as your investment matures.</div>
@@ -1526,10 +1525,10 @@
                 document.getElementById('currentValue').textContent = `₹${totalCurrentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 
                 // Consolidate Returns: +1.94% (+₹9,104)
-                const retSign = totalReturns >= 0 ? '+' : '';
-                const retAmount = `(${retSign}₹${Math.abs(totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
-                const retPct = `${retSign}${returnsPercentage.toFixed(2)}%`;
-
+                const retDisplaySign = totalReturns >= 0 ? '+' : '-';
+                const retAmount = `(₹${retDisplaySign}${Math.abs(totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
+                const retPct = `${retDisplaySign}${Math.abs(returnsPercentage).toFixed(2)}%`;
+                
                 const retElem = document.getElementById('totalReturnsPercentage');
                 retElem.textContent = `${retPct} ${retAmount}`;
                 document.getElementById('totalReturns').style.display = 'none';
@@ -1598,24 +1597,11 @@
                     return null;
                 }));
 
-                // Helper to generate dynamic card
+                // Helper to generate dynamic card (standardized)
                 const createCard = (title, subLabel, weightedPct, absoluteChange, isDynamic = false) => {
-                    const sign = weightedPct >= 0 ? '+' : '';
-                    const colorClass = weightedPct >= 0 ? 'positive' : 'negative';
-                    const formattedAmt = `${sign}₹${Math.abs(absoluteChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-                    const formattedPct = `(${sign}${weightedPct.toFixed(2)}%)`;
-
-                    const borderClass = weightedPct >= 0 ? 'border-positive' : 'border-negative';
-                    const card = document.createElement('div');
-                    card.className = `summary-card ${isDynamic ? 'dynamic-yearly-card' : ''} ${borderClass}`;
-                    card.innerHTML = `
-                    <div class="summary-value ${colorClass}">${formattedAmt} ${formattedPct}</div>
-                    <div class="summary-label">
-                        <div class="summary-label-main">${title}</div>
-                        ${subLabel ? `<div class="summary-label-sub">${subLabel}</div>` : ''}
-                    </div>
-                `;
-                    return card;
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = getSummaryCardHTML(title, subLabel, weightedPct, absoluteChange, { isDynamic });
+                    return tempDiv.firstElementChild;
                 };
 
                 // 2A. Periodic Performance (Populate Existing HTML Cards)
@@ -1656,8 +1642,9 @@
                             const labelElem = document.getElementById(`label${p.id}`);
 
                             if (pctElem) {
-                                const formattedAmt = `(${sign}₹${Math.abs(totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
-                                pctElem.textContent = `${sign}${weightedPct.toFixed(2)}% ${formattedAmt}`;
+                                const pDisplaySign = weightedPct >= 0 ? '+' : '-';
+                                const formattedAmt = `(₹${pDisplaySign}${Math.abs(totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
+                                pctElem.textContent = `${pDisplaySign}${Math.abs(weightedPct).toFixed(2)}% ${formattedAmt}`;
                                 pctElem.className = `summary-value ${colorClass}`;
                             }
                             if (amtElem) card.querySelector('.summary-subvalue').style.display = 'none';
@@ -2299,28 +2286,27 @@
                             const navData = await getCurrentNAV(agg.schemeCode);
                             const currentNAV = navData.nav;
                             const currentValue = agg.units * currentNAV;
-                            const returns = currentValue - agg.investmentAmount;
-                            const returnsPercentage = (returns / agg.investmentAmount) * 100;
-                            const fundXIRR = calculatePortfolioXIRR(cashFlows, currentValue);
+                            const fundSchemeStats = await calculateGroupStats(fundInvestments.map(i => i.id));
+                            const returns = fundSchemeStats.totalReturns;
+                            const returnsPercentage = fundSchemeStats.totalInvestment > 0 ? (returns / fundSchemeStats.totalInvestment) * 100 : 0;
+                            const fundXIRR = fundSchemeStats.cagr;
 
                             return `
-                                <div class="group-fund-item">
+                                <div class="group-fund-item ${returns >= 0 ? 'positive' : 'negative'}">
                                     <div class="group-fund-name">
                                         ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem;">${agg.count} Txns</span>` : ''}
-                                        <div style="font-size: 0.75rem; color: #6c757d;">
-                                            Invested: ₹${agg.investmentAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })} | NAV: ₹${currentNAV.toFixed(2)}
-                                            &nbsp;&nbsp;
-                                            <span style="color: ${returns >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
-                                                ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, { maximumFractionDigits: 0 })} (${returnsPercentage.toFixed(2)}%)
-                                            </span>
-                                            &nbsp;&nbsp;
-                                            <span style="color: ${fundXIRR >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
-                                                XIRR: ${fundXIRR.toFixed(2)}%
-                                            </span>
+                                        <div class="minicard-scroller">
+                                            <!-- Standard Detail Pattern (Standardized) -->
+                                            ${getMiniCardHTML('Purchase Value', fundSchemeStats.totalInvestment, { themePercentage: returnsPercentage })}
+                                            ${getMiniCardHTML('Current Value', fundSchemeStats.currentValue, { themePercentage: returnsPercentage })}
+                                            ${getMiniCardHTML('Total Returns', fundSchemeStats.totalReturns, { percentage: returnsPercentage })}
+                                            ${getMiniCardHTML('XIRR (Annual)', undefined, { percentage: fundXIRR })}
+
+                                            <!-- Periodic Returns (Standardized Scroller) -->
+                                            ${Object.values(fundSchemeStats.periodicReturns).map(p => 
+                                                getMiniCardHTML(p.label === 'Yesterday' ? 'Yesterday' : (p.label.includes('Last') ? p.label : `Last ${p.label}`), p.amount, { percentage: p.percentage })
+                                            ).join('')}
                                         </div>
-                                    </div>
-                                    <div class="group-fund-returns ${returns >= 0 ? 'positive' : 'negative'}" style="text-align: right;">
-                                        <div style="font-weight: 600;">₹${currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
                                     </div>
                                 </div>
                             `;
@@ -2328,7 +2314,7 @@
                     }));
 
                     return `
-                        <div class="group-card">
+                        <div class="group-card ${totalReturnsPercentage >= 0 ? 'border-positive' : 'border-negative'}">
                             <div class="group-header">
                                 <h5 class="group-title">${group.name}</h5>
                                 <div class="group-actions">
@@ -2345,63 +2331,23 @@
                             ${group.description ? `<p class="text-muted small">${group.description}</p>` : ''}
                             
                             <div class="group-stats">
-                                <!-- Base Totals -->
-                                <div class="summary-card">
-                                    <div class="summary-value">₹${groupStats.totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                                    <div class="summary-label">
-                                        <div class="summary-label-main">Total Investment</div>
-                                        <div class="summary-label-sub">Since ${formatDate(groupStats.oldestDate)}</div>
-                                    </div>
-                                </div>
-                                <div class="summary-card ${groupStats.totalReturns >= 0 ? 'border-positive' : 'border-negative'}">
-                                    <div class="summary-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">₹${groupStats.currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                                    <div class="summary-label">
-                                        <div class="summary-label-main">Current Value</div>
-                                        <div class="summary-label-sub">As on ${formatDate(new Date().toISOString().split('T')[0])}</div>
-                                    </div>
-                                </div>
-                                <div class="summary-card ${groupStats.totalReturns >= 0 ? 'border-positive' : 'border-negative'}">
-                                    <div class="summary-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">
-                                        ${totalReturnsPercentage >= 0 ? '+' : ''}${totalReturnsPercentage.toFixed(2)}% (${groupStats.totalReturns >= 0 ? '+' : ''}₹${Math.abs(groupStats.totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })})
-                                    </div>
-                                    <div class="summary-label">
-                                        <div class="summary-label-main">Total Returns</div>
-                                        <div class="summary-label-sub">Period: ${formatDate(groupStats.oldestDate)} - ${formatDate(groupStats.latestNAVDate)}</div>
-                                    </div>
-                                </div>
-                                <div class="summary-card ${groupStats.cagr >= 0 ? 'border-positive' : 'border-negative'}">
-                                    <div class="summary-value ${groupStats.cagr >= 0 ? 'positive' : 'negative'}">
-                                        ${groupStats.cagr >= 0 ? '+' : ''}${groupStats.cagr.toFixed(2)}%
-                                    </div>
-                                    <div class="summary-label">
-                                        <div class="summary-label-main">XIRR (Annual)</div>
-                                        <div class="summary-label-sub">Internal Rate of Return</div>
-                                    </div>
-                                </div>
+                                <!-- Base Totals (Standardized) -->
+                                ${getSummaryCardHTML('Total Investment', `Since ${formatDate(groupStats.oldestDate)}`, undefined, groupStats.totalInvestment, { percentage: totalReturnsPercentage, isNeutral: true })}
+                                ${getSummaryCardHTML('Current Value', `As on ${formatDate(new Date().toISOString().split('T')[0])}`, undefined, groupStats.currentValue, { percentage: totalReturnsPercentage })}
+                                ${getSummaryCardHTML('Total Returns', `Period: ${formatDate(groupStats.oldestDate)} - ${formatDate(groupStats.latestNAVDate)}`, totalReturnsPercentage, groupStats.totalReturns)}
+                                ${getSummaryCardHTML('XIRR (Annual)', 'Internal Rate of Return', groupStats.cagr)}
 
-                                <!-- Periodic Stats (Merged into same scroller) -->
+                                <!-- Periodic Stats (Standardized) -->
                                 ${Object.values(groupStats.periodicReturns).map(p => {
                                     const formattedStartDate = (p.startDate && p.startDate.includes('-')) ? 
                                         (p.startDate.split('-')[0].length === 4 ? formatDate(p.startDate) : formatDate(p.startDate.split('-').reverse().join('-'))) : 
                                         p.startDate;
-                                    
                                     const formattedEndDate = (p.endDate && p.endDate.includes('-')) ? 
                                         (p.endDate.split('-')[0].length === 4 ? formatDate(p.endDate) : formatDate(p.endDate.split('-').reverse().join('-'))) : 
                                         p.endDate;
                                     
-                                    const borderClass = p.amount >= 0 ? 'border-positive' : 'border-negative';
-                                    
-                                    return `
-                                    <div class="summary-card ${borderClass}">
-                                        <div class="summary-value ${p.amount >= 0 ? 'positive' : 'negative'}">
-                                            ${p.percentage >= 0 ? '+' : ''}${p.percentage.toFixed(2)}% (${p.amount >= 0 ? '+' : ''}₹${Math.abs(p.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })})
-                                        </div>
-                                        <div class="summary-label">
-                                            <div class="summary-label-main">${p.label}</div>
-                                            <div class="summary-label-sub">${p.label === 'Yesterday' ? formattedEndDate : `Since ${formattedStartDate}`}</div>
-                                        </div>
-                                    </div>
-                                `}).join('')}
+                                    return getSummaryCardHTML(p.label, p.label === 'Yesterday' ? formattedEndDate : `Since ${formattedStartDate}`, p.percentage, p.amount);
+                                }).join('')}
                             </div>
                             
                             <div class="group-funds-header" onclick="togglePerformanceGrid('funds-${group.id}')">
@@ -2568,6 +2514,77 @@
                 newestDate: formatDateToISO(newestDateObj),
                 latestNAVDate: latestNAVDate
             };
+        }
+
+        // Utility to generate a standardized summary card HTML string
+        function getSummaryCardHTML(title, subLabel, percentage, amount, options = {}) {
+            const { isDynamic = false, isNeutral = false } = options;
+            
+            // Determine performance state
+            const effectivePct = options.percentage !== undefined ? options.percentage : percentage;
+            const isPositive = effectivePct >= 0 || (effectivePct === undefined && amount >= 0);
+            const sign = isPositive ? '+' : '';
+            const colorClass = isNeutral ? '' : (isPositive ? 'positive' : 'negative');
+            
+            // Border is shown if performance data exists, regardless of text neutral-ness
+            const borderClass = (effectivePct !== undefined) ? (isPositive ? 'border-positive' : 'border-negative') : '';
+            
+            let valueHTML = '';
+            const displaySign = isPositive ? '+' : '-';
+            const absAmt = amount !== undefined ? Math.abs(amount).toLocaleString(undefined, { maximumFractionDigits: 0 }) : '';
+            const absPct = percentage !== undefined ? Math.abs(percentage).toFixed(2) : '';
+
+            if (percentage !== undefined && amount !== undefined) {
+                valueHTML = `${displaySign}${absPct}% (₹${displaySign}${absAmt})`;
+            } else if (amount !== undefined) {
+                // Absolute asset values (like currentValue) should NOT show +/- signs
+                valueHTML = `₹${absAmt}`;
+            } else if (percentage !== undefined) {
+                valueHTML = `${displaySign}${absPct}%`;
+            }
+
+            return `
+                <div class="summary-card ${isDynamic ? 'dynamic-yearly-card' : ''} ${borderClass}">
+                    <div class="summary-value ${colorClass}">${valueHTML}</div>
+                    <div class="summary-label">
+                        <div class="summary-label-main">${title}</div>
+                        ${subLabel ? `<div class="summary-label-sub">${subLabel}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Utility to generate a standardized mini-card HTML string (for Fund Details)
+        function getMiniCardHTML(title, amount, options = {}) {
+            const { percentage, themePercentage, isNeutral = false } = options;
+            
+            // Determine performance state for the container (Border/Background)
+            // Priority: options.themePercentage > options.percentage > 0
+            const statePct = themePercentage !== undefined ? themePercentage : (percentage !== undefined ? percentage : 0);
+            const isPositive = statePct >= 0;
+            
+            const displaySign = isPositive ? '+' : '-';
+            const stateClass = isPositive ? 'positive' : 'negative';
+            
+            const absAmt = amount !== undefined ? Math.abs(amount).toLocaleString(undefined, { maximumFractionDigits: 0 }) : '';
+            const absPct = percentage !== undefined ? Math.abs(percentage).toFixed(2) : '';
+            
+            let valueHTML = '';
+            // Combined view ONLY if a display percentage is provided
+            if (percentage !== undefined && amount !== undefined) {
+                valueHTML = `${displaySign}${absPct}% (₹${displaySign}${absAmt})`;
+            } else if (amount !== undefined) {
+                valueHTML = `₹${absAmt}`;
+            } else if (percentage !== undefined) {
+                valueHTML = `${displaySign}${absPct}%`;
+            }
+
+            return `
+                <div class="minicard ${stateClass}">
+                    <span class="minicard-value">${valueHTML}</span>
+                    <span class="minicard-label">${title}</span>
+                </div>
+            `;
         }
 
         // Utility functions
