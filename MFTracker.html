@@ -1746,33 +1746,52 @@
                         `;
                     }
 
-                    const groupFundsHTML = await Promise.all(group.fundIds.map(async (fundId) => {
+                    // Aggregate funds by schemeCode for cleaner display
+                    const aggregatedFunds = {};
+                    group.fundIds.forEach(fundId => {
                         const investment = userInvestments.find(inv => String(inv.id) === String(fundId));
-                        if (!investment) {
-                            return '';
+                        if (investment) {
+                            if (!aggregatedFunds[investment.schemeCode]) {
+                                aggregatedFunds[investment.schemeCode] = {
+                                    schemeCode: investment.schemeCode,
+                                    schemeName: investment.schemeName,
+                                    investmentAmount: 0,
+                                    units: 0,
+                                    count: 0
+                                };
+                            }
+                            aggregatedFunds[investment.schemeCode].investmentAmount += investment.investmentAmount;
+                            aggregatedFunds[investment.schemeCode].units += investment.units;
+                            aggregatedFunds[investment.schemeCode].count++;
                         }
+                    });
 
+                    const groupFundsHTML = await Promise.all(Object.values(aggregatedFunds).map(async (agg) => {
                         try {
-                            const currentNAV = await getCurrentNAV(investment.schemeCode);
-                            const currentValue = investment.units * currentNAV;
-                            const returns = currentValue - investment.investmentAmount;
-                            const returnsPercentage = (returns / investment.investmentAmount) * 100;
+                            const currentNAV = await getCurrentNAV(agg.schemeCode);
+                            const currentValue = agg.units * currentNAV;
+                            const returns = currentValue - agg.investmentAmount;
+                            const returnsPercentage = (returns / agg.investmentAmount) * 100;
+                            const avgNav = agg.investmentAmount / agg.units;
 
                             return `
                                 <div class="group-fund-item">
                                     <div class="group-fund-name">
-                                        ${investment.schemeName}
-                                        <div style="font-size: 0.75rem; color: #6c757d;">Inv. NAV: ₹${investment.nav.toFixed(2)} | Curr: ₹${currentNAV.toFixed(2)}</div>
+                                        ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem; font-weight: 500;">${agg.count} Txns</span>` : ''}
+                                        <div style="font-size: 0.75rem; color: #6c757d;">
+                                            Avg Inv. NAV: ₹${avgNav.toFixed(2)} | Curr: ₹${currentNAV.toFixed(2)}
+                                        </div>
                                     </div>
-                                    <div class="group-fund-returns ${returns >= 0 ? 'positive' : 'negative'}">
-                                        ${returns >= 0 ? '+' : ''}₹${returns.toFixed(2)} (${returnsPercentage.toFixed(2)}%)
+                                    <div class="group-fund-returns ${returns >= 0 ? 'positive' : 'negative'}" style="text-align: right;">
+                                        <div style="font-weight: 600;">${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                                        <div style="font-size: 0.7rem;">${returnsPercentage.toFixed(2)}%</div>
                                     </div>
                                 </div>
                             `;
                         } catch (error) {
                             return `
                                 <div class="group-fund-item">
-                                    <div class="group-fund-name">${investment.schemeName}</div>
+                                    <div class="group-fund-name">${agg.schemeName}</div>
                                     <div class="text-muted">Data unavailable</div>
                                 </div>
                             `;
