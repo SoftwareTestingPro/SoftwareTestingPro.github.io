@@ -1287,6 +1287,8 @@
             document.getElementById('totalReturns').textContent = `${totalReturns >= 0 ? '+' : ''}₹${totalReturns.toLocaleString()}`;
             document.getElementById('totalReturnsPercentage').textContent = `${totalReturns >= 0 ? '+' : ''}${returnsPercentage.toFixed(2)}%`;
             document.getElementById('cagrValue').textContent = `${cagr >= 0 ? '+' : ''}${cagr.toFixed(2)}%`;
+            const cagrLabel = document.querySelector('[data-id="cagrLabel"]');
+            if (cagrLabel) cagrLabel.textContent = 'XIRR (Annual)';
 
             // Update colors based on performance
             const returnsElement = document.getElementById('totalReturns');
@@ -1819,11 +1821,23 @@
 
                     const groupFundsHTML = await Promise.all(Object.values(aggregatedFunds).map(async (agg) => {
                         try {
+                            // Find all investments for this specific fund within the current group
+                            const fundInvestments = group.fundIds
+                                .map(id => userInvestments.find(inv => String(inv.id) === String(id)))
+                                .filter(inv => inv && inv.schemeCode === agg.schemeCode);
+                            
+                            // Prepare cash flows for this specific fund's XIRR calculation
+                            const cashFlows = fundInvestments.map(inv => {
+                                const [y, m, d] = inv.investmentDate.split('-');
+                                return { date: new Date(y, m - 1, d), amount: -inv.investmentAmount };
+                            });
+
                             const currentNAV = await getCurrentNAV(agg.schemeCode);
                             const currentValue = agg.units * currentNAV;
                             const returns = currentValue - agg.investmentAmount;
                             const returnsPercentage = (returns / agg.investmentAmount) * 100;
                             const avgNav = agg.investmentAmount / agg.units;
+                            const fundXIRR = calculatePortfolioXIRR(cashFlows, currentValue);
 
                             return `
                                 <div class="group-fund-item">
@@ -1831,14 +1845,21 @@
                                         ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem; font-weight: 500;">${agg.count} Txns</span>` : ''}
                                         <div style="font-size: 0.75rem; color: #6c757d;">
                                             Avg Inv. NAV: ₹${avgNav.toFixed(2)} | Curr: ₹${currentNAV.toFixed(2)}
+                                            <div class="d-flex align-items-center mt-1" style="font-size: 0.7rem;">
+                                                <span class="${returns >= 0 ? 'text-success' : 'text-danger'} me-3 fw-bold">
+                                                    <i class="bi bi-caret-${returns >= 0 ? 'up' : 'down'}-fill"></i>
+                                                    ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, {maximumFractionDigits: 0})} (${returnsPercentage.toFixed(2)}%)
+                                                </span>
+                                                <span class="${fundXIRR >= 0 ? 'text-success' : 'text-danger'} fw-bold">
+                                                    <i class="bi bi-caret-${fundXIRR >= 0 ? 'up' : 'down'}-fill"></i>
+                                                    XIRR: ${fundXIRR.toFixed(2)}%
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="group-fund-returns ${returns >= 0 ? 'positive' : 'negative'}" style="text-align: right;">
-                                        <div style="font-weight: 600;">
-                                            <i class="bi bi-caret-${returns >= 0 ? 'up' : 'down'}-fill" style="font-size: 0.8rem;"></i>
-                                            ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                                        </div>
-                                        <div style="font-size: 0.7rem;">${returnsPercentage >= 0 ? '+' : ''}${returnsPercentage.toFixed(2)}%</div>
+                                    <div class="group-fund-returns" style="text-align: right;">
+                                        <div style="font-weight: 600; color: #2c3e50;">₹${currentValue.toLocaleString(undefined, {maximumFractionDigits: 0})}</div>
+                                        <div style="font-size: 0.7rem; color: #6c757d;">Current Value</div>
                                     </div>
                                 </div>
                             `;
@@ -1893,7 +1914,7 @@
                             </div>
                             
                             <div class="group-funds">
-                                <h6><i class="bi bi-layers"></i> Funds in this group (${group.fundIds.length}):</h6>
+                                <h6><i class="bi bi-layers"></i> Funds in this group (${Object.keys(aggregatedFunds).length}):</h6>
                                 ${groupFundsHTML.join('')}
                             </div>
                         </div>
