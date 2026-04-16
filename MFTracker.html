@@ -413,11 +413,19 @@
                     const data = await response.json();
                     allFundsCache = data;
                     
-                    // Save to local storage for next time
-                    localStorage.setItem(CACHE_KEY, JSON.stringify({
-                        timestamp: Date.now(),
-                        data: allFundsCache
-                    }));
+                    // Save to local storage for next time with safety check
+                    try {
+                        localStorage.setItem(CACHE_KEY, JSON.stringify({
+                            timestamp: Date.now(),
+                            data: allFundsCache
+                        }));
+                    } catch (quotaError) {
+                        console.warn('Storage quota exceeded. Using in-memory cache only.');
+                        // If quota is full, try to clear at least the old cache to free some space
+                        try {
+                            localStorage.removeItem(CACHE_KEY);
+                        } catch (e) {}
+                    }
                 }
             } catch (error) {
                 console.warn('Background fund fetch skipped/failed');
@@ -808,11 +816,15 @@
                     date: data.data[0].date
                 };
 
-                // Update cache
-                localStorage.setItem(CACHE_KEY, JSON.stringify({
-                    timestamp: Date.now(),
-                    data: navResult
-                }));
+                // Update cache with quota protection
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify({
+                        timestamp: Date.now(),
+                        data: navResult
+                    }));
+                } catch (e) {
+                    console.warn(`Storage quota nearly full. Could not cache NAV for ${schemeCode}`);
+                }
 
                 return navResult;
             } catch (error) {
