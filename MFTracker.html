@@ -872,13 +872,13 @@
                                         </div>
                                     </div>
                                     <div class="fund-actions">
-                                        <button class="btn-icon" onclick="editFund('${investment.id}')" title="Edit">
+                                        <button class="btn-icon edit-icon" onclick="editFund('${investment.id}')" title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </button>
-                                        <button class="btn-icon text-danger" onclick="removeFund('${investment.id}')" title="Delete">
+                                        <button class="btn-icon delete-icon" onclick="removeFund('${investment.id}')" title="Delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
-                                        <button class="btn-icon expand-toggle-btn collapsed" onclick="togglePerformanceGrid('perf-${investment.id}')" title="Toggle Details">
+                                        <button class="btn-icon toggle-icon expand-toggle-btn collapsed" onclick="togglePerformanceGrid('perf-${investment.id}')" title="Toggle Details">
                                             <i class="bi bi-chevron-up"></i>
                                         </button>
                                     </div>
@@ -927,10 +927,10 @@
                                         </div>
                                     </div>
                                     <div class="fund-actions">
-                                        <button class="btn-icon" onclick="editFund('${investment.id}')" title="Edit">
+                                        <button class="btn-icon edit-icon" onclick="editFund('${investment.id}')" title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </button>
-                                        <button class="btn-icon text-danger" onclick="removeFund('${investment.id}')" title="Delete">
+                                        <button class="btn-icon delete-icon" onclick="removeFund('${investment.id}')" title="Delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -970,15 +970,13 @@
 
             const currentValue = investment.units * currentNAV;
 
-            // For very short periods (less than 1 year), use linear simple return
-            // This avoids extreme CAGR values and is more intuitive for short periods
-            if (daysDiff < 365) {
-                const simpleReturn = ((currentValue - investment.investmentAmount) / investment.investmentAmount) * 100;
-                return simpleReturn;
-            }
-
-            // For 1 year or more, use proper CAGR formula
-            const cagr = (Math.pow(currentValue / investment.investmentAmount, 1 / years) - 1) * 100;
+            // Standard CAGR formula: (Final Value / Initial Value) ^ (1 / Years) - 1
+            // Apply strictly for all periods to mathematically match standard CAGR/XIRR definitions
+            let cagr = (Math.pow(currentValue / investment.investmentAmount, 1 / years) - 1) * 100;
+            
+            // Safeguard against astronomical numbers for <= 1 day investments
+            if (cagr > 100000) cagr = 100000;
+            
             return cagr;
         }
 
@@ -1033,9 +1031,9 @@
                 }
 
                 rate = rate - npv / derivativeNPV;
-
-                // Bound the rate to reasonable values
-                if (rate > 2.0) rate = 2.0;
+                // Bound the rate to prevent mathematical divergence in Newton-Raphson
+                // A massive ceiling (100,000%) ensures we don't artificially limit standard calculations
+                if (rate > 1000.0) rate = 1000.0;
                 if (rate < -0.99) rate = -0.99;
             }
 
@@ -2446,3 +2444,4 @@
 </body>
 
 </html>
+
