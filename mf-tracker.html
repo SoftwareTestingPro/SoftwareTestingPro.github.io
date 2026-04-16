@@ -1536,13 +1536,25 @@
 
                 document.getElementById('cagrValue').textContent = `${cagr >= 0 ? '+' : ''}${cagr.toFixed(2)}%`;
 
-                // Update colors for main metrics
+                // Update colors and borders for main metrics
                 const colorClass = totalReturns >= 0 ? 'positive' : 'negative';
                 const xirrColorClass = cagr >= 0 ? 'positive' : 'negative';
 
-                ['currentValue', 'totalReturnsPercentage', 'cagrValue'].forEach(id => {
+                ['totalInvestment', 'currentValue', 'totalReturnsPercentage', 'cagrValue'].forEach(id => {
                     const elem = document.getElementById(id);
-                    if (elem) elem.className = `summary-value ${id === 'cagrValue' ? xirrColorClass : colorClass}`;
+                    if (elem) {
+                        // totalInvestment text remains neutral, others get colored
+                        if (id !== 'totalInvestment') {
+                            elem.className = `summary-value ${id === 'cagrValue' ? xirrColorClass : colorClass}`;
+                        }
+                        
+                        // Apply dynamic border to the parent card based on performance
+                        const card = elem.closest('.summary-card');
+                        if (card) {
+                            card.classList.remove('border-positive', 'border-negative');
+                            card.classList.add(id === 'cagrValue' ? (cagr >= 0 ? 'border-positive' : 'border-negative') : (totalReturns >= 0 ? 'border-positive' : 'border-negative'));
+                        }
+                    }
                 });
 
                 // Handle Context Dates for Summary Cards
@@ -1593,8 +1605,9 @@
                     const formattedAmt = `${sign}₹${Math.abs(absoluteChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
                     const formattedPct = `(${sign}${weightedPct.toFixed(2)}%)`;
 
+                    const borderClass = weightedPct >= 0 ? 'border-positive' : 'border-negative';
                     const card = document.createElement('div');
-                    card.className = `summary-card ${isDynamic ? 'dynamic-yearly-card' : ''}`;
+                    card.className = `summary-card ${isDynamic ? 'dynamic-yearly-card' : ''} ${borderClass}`;
                     card.innerHTML = `
                     <div class="summary-value ${colorClass}">${formattedAmt} ${formattedPct}</div>
                     <div class="summary-label">
@@ -1653,6 +1666,8 @@
                                 if (!labelElem.getAttribute('data-original-label')) labelElem.setAttribute('data-original-label', labelElem.textContent);
                                 labelElem.innerHTML = `<div class="summary-label-main">${labelElem.getAttribute('data-original-label')}</div><div class="summary-label-sub">${(p.key === 'daily') ? eDate : `Since ${sDate}`}</div>`;
                             }
+                            card.classList.remove('border-positive', 'border-negative');
+                            card.classList.add(weightedPct >= 0 ? 'border-positive' : 'border-negative');
                             card.style.display = 'flex';
                         } else {
                             card.style.display = 'none';
@@ -1760,7 +1775,11 @@
         // Toggle performance grid visibility
         function togglePerformanceGrid(gridId) {
             const grid = document.getElementById(gridId);
-            const button = event.target.closest('.expand-toggle-btn');
+            // Search for button within the click target or its parent
+            let button = event.target.closest('.expand-toggle-btn');
+            if (!button && event.currentTarget) {
+                button = event.currentTarget.querySelector('.expand-toggle-btn');
+            }
 
             if (grid && button) {
                 grid.classList.toggle('collapsed');
@@ -2327,44 +2346,71 @@
                             
                             <div class="group-stats">
                                 <!-- Base Totals -->
-                                <div class="group-stat">
-                                    <div class="performance-value" style="font-size: 1.2rem; font-weight: 600;">₹${groupStats.totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                                    <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">Invested</div>
-                                    <div class="perf-meta-text">Total Cost</div>
-                                </div>
-                                <div class="group-stat">
-                                    <div class="performance-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}" style="font-size: 1.2rem; font-weight: 600;">₹${groupStats.currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                                    <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">Current</div>
-                                    <div class="perf-meta-text">Market Value</div>
-                                </div>
-                                <div class="group-stat">
-                                    <div class="performance-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}" style="font-size: 1.2rem; font-weight: 600;">
-                                        ${groupStats.totalReturns >= 0 ? '+' : ''}₹${groupStats.totalReturns.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                                <div class="summary-card">
+                                    <div class="summary-value">₹${groupStats.totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                                    <div class="summary-label">
+                                        <div class="summary-label-main">Total Investment</div>
+                                        <div class="summary-label-sub">Since ${formatDate(groupStats.oldestDate)}</div>
                                     </div>
-                                    <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">Returns</div>
-                                    <div class="perf-meta-text">${totalReturnsPercentage >= 0 ? '+' : ''}${totalReturnsPercentage.toFixed(1)}%</div>
                                 </div>
-                                <div class="group-stat">
-                                    <div class="performance-value ${groupStats.cagr >= 0 ? 'positive' : 'negative'}" style="font-size: 1.2rem; font-weight: 600;">
+                                <div class="summary-card ${groupStats.totalReturns >= 0 ? 'border-positive' : 'border-negative'}">
+                                    <div class="summary-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">₹${groupStats.currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                                    <div class="summary-label">
+                                        <div class="summary-label-main">Current Value</div>
+                                        <div class="summary-label-sub">As on ${formatDate(new Date().toISOString().split('T')[0])}</div>
+                                    </div>
+                                </div>
+                                <div class="summary-card ${groupStats.totalReturns >= 0 ? 'border-positive' : 'border-negative'}">
+                                    <div class="summary-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">
+                                        ${totalReturnsPercentage >= 0 ? '+' : ''}${totalReturnsPercentage.toFixed(2)}% (${groupStats.totalReturns >= 0 ? '+' : ''}₹${Math.abs(groupStats.totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })})
+                                    </div>
+                                    <div class="summary-label">
+                                        <div class="summary-label-main">Total Returns</div>
+                                        <div class="summary-label-sub">Period: ${formatDate(groupStats.oldestDate)} - ${formatDate(groupStats.latestNAVDate)}</div>
+                                    </div>
+                                </div>
+                                <div class="summary-card ${groupStats.cagr >= 0 ? 'border-positive' : 'border-negative'}">
+                                    <div class="summary-value ${groupStats.cagr >= 0 ? 'positive' : 'negative'}">
                                         ${groupStats.cagr >= 0 ? '+' : ''}${groupStats.cagr.toFixed(2)}%
                                     </div>
-                                    <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">XIRR</div>
-                                    <div class="perf-meta-text">Annualized</div>
+                                    <div class="summary-label">
+                                        <div class="summary-label-main">XIRR (Annual)</div>
+                                        <div class="summary-label-sub">Internal Rate of Return</div>
+                                    </div>
                                 </div>
 
                                 <!-- Periodic Stats (Merged into same scroller) -->
-                                ${Object.values(groupStats.periodicReturns).map(p => `
-                                    <div class="group-stat">
-                                        <div class="performance-value ${p.amount >= 0 ? 'positive' : 'negative'}" style="font-size: 1.15rem; font-weight: 600; margin-bottom: 2px;">
+                                ${Object.values(groupStats.periodicReturns).map(p => {
+                                    const formattedStartDate = (p.startDate && p.startDate.includes('-')) ? 
+                                        (p.startDate.split('-')[0].length === 4 ? formatDate(p.startDate) : formatDate(p.startDate.split('-').reverse().join('-'))) : 
+                                        p.startDate;
+                                    
+                                    const formattedEndDate = (p.endDate && p.endDate.includes('-')) ? 
+                                        (p.endDate.split('-')[0].length === 4 ? formatDate(p.endDate) : formatDate(p.endDate.split('-').reverse().join('-'))) : 
+                                        p.endDate;
+                                    
+                                    const borderClass = p.amount >= 0 ? 'border-positive' : 'border-negative';
+                                    
+                                    return `
+                                    <div class="summary-card ${borderClass}">
+                                        <div class="summary-value ${p.amount >= 0 ? 'positive' : 'negative'}">
                                             ${p.percentage >= 0 ? '+' : ''}${p.percentage.toFixed(2)}% (${p.amount >= 0 ? '+' : ''}₹${Math.abs(p.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })})
                                         </div>
-                                        <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">${p.label}</div>
-                                        <div class="perf-meta-text">(Since ${p.startDate})</div>
+                                        <div class="summary-label">
+                                            <div class="summary-label-main">${p.label}</div>
+                                            <div class="summary-label-sub">${p.label === 'Yesterday' ? formattedEndDate : `Since ${formattedStartDate}`}</div>
+                                        </div>
                                     </div>
-                                `).join('')}
+                                `}).join('')}
                             </div>
                             
-                            <div class="group-funds">
+                            <div class="group-funds-header" onclick="togglePerformanceGrid('funds-${group.id}')">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="m-0" style="font-weight: 700; color: #444; font-size: 1.1rem;">Funds in this group (${Object.keys(aggregatedFunds).length})</h6>
+                                    <i class="bi bi-chevron-up expand-toggle-btn collapsed"></i>
+                                </div>
+                            </div>
+                            <div class="group-funds collapsed" id="funds-${group.id}">
                                 ${groupFundsHTML.join('')}
                             </div>
                         </div>
@@ -2399,6 +2445,9 @@
                 }
             }));
 
+            let oldestDateObj = null;
+            let newestDateObj = null;
+
             for (const fundId of fundIds) {
                 const investment = userInvestments.find(inv => String(inv.id) === String(fundId));
                 if (!investment) {
@@ -2416,6 +2465,10 @@
                 // Store investment details for XIRR calculation
                 const [y, m, d] = investment.investmentDate.split('-');
                 const investmentDate = new Date(y, m - 1, d);
+                
+                if (!oldestDateObj || investmentDate < oldestDateObj) oldestDateObj = investmentDate;
+                if (!newestDateObj || investmentDate > newestDateObj) newestDateObj = investmentDate;
+                
                 investmentDetails.push({
                     date: investmentDate,
                     amount: -(investment.investmentAmount || 0)
@@ -2454,8 +2507,8 @@
             Object.keys(periods).forEach(key => {
                 let totalDiffAmount = 0;
                 let totalPastValue = 0;
-                let hasData = false;
                 let periodStartDate = '';
+                let periodEndDate = '';
 
                 perfResults.forEach(res => {
                     if (res && res.perf && res.perf.periodic[key]) {
@@ -2466,6 +2519,7 @@
                         totalPastValue += pastValue;
                         hasData = true;
                         if (!periodStartDate) periodStartDate = p.startDate;
+                        if (!periodEndDate) periodEndDate = p.endDate;
                     }
                 });
 
@@ -2474,17 +2528,45 @@
                         label: periods[key],
                         percentage: (totalDiffAmount / totalPastValue) * 100,
                         amount: totalDiffAmount,
-                        startDate: periodStartDate
+                        startDate: periodStartDate,
+                        endDate: periodEndDate
                     };
                 }
             });
+
+            // Find the absolute latest NAV date across all periodic returns for this group
+            let latestNAVDate = 'N/A';
+            Object.values(periodicReturns).forEach(p => {
+                if (p.endDate && p.endDate !== 'N/A') {
+                    // Convert DD-MM-YYYY to YYYY-MM-DD for reliable Date parsing
+                    let parts = p.endDate.split('-');
+                    let isoDate = (parts.length === 3 && parts[0].length === 2) ? 
+                                    `${parts[2]}-${parts[1]}-${parts[0]}` : p.endDate;
+                    
+                    if (latestNAVDate === 'N/A' || isoDate > latestNAVDate) {
+                        latestNAVDate = isoDate;
+                    }
+                }
+            });
+
+            // Use string reconstruction to avoid UTC-shifting off-by-one errors
+            const formatDateToISO = (date) => {
+                if (!date) return 'N/A';
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+            };
 
             return {
                 totalInvestment,
                 currentValue: totalCurrentValueNum,
                 totalReturns,
                 cagr,
-                periodicReturns
+                periodicReturns,
+                oldestDate: formatDateToISO(oldestDateObj),
+                newestDate: formatDateToISO(newestDateObj),
+                latestNAVDate: latestNAVDate
             };
         }
 
