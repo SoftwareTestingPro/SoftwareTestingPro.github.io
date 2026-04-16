@@ -19,18 +19,32 @@
             backdrop-filter: blur(10px);
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
+            margin: 15px auto;
             max-width: 1400px;
-            padding: 30px;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            display: block;
+            width: calc(100% - 30px);
         }
 
         .header-section {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
             text-align: center;
+        }
+        
+        .header-section h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+        
+        .header-section p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         .search-container {
@@ -80,10 +94,17 @@
         .fund-card {
             background: white;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .fund-card h4 {
+            margin-top: 5px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
         .fund-card:hover {
@@ -357,6 +378,7 @@
 
         .main-content.loaded {
             display: block;
+            padding: 0;
         }
 
         /* Authentication Styles */
@@ -389,26 +411,6 @@
             display: flex;
             align-items: center;
         }
-
-        .sync-status {
-            color: white;
-            font-size: 0.8rem;
-            margin-top: 5px;
-            min-height: 20px;
-        }
-
-        .sync-status.syncing {
-            color: #06ffa5;
-        }
-
-        .sync-status.error {
-            color: #ff006e;
-        }
-
-        .sync-status.success {
-            color: #06ffa5;
-        }
-
 
         .btn-secondary {
             background-color: #f1f3f4;
@@ -735,7 +737,7 @@
         }
 
         .mb-4 {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         .mt-2 {

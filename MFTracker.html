@@ -69,7 +69,6 @@
                         <div id="loginSection" class="login-section">
                             <div id="mainEmailSignInBtn"></div>
                         </div>
-                        <div id="syncStatus" class="sync-status"></div>
                     </div>
                 </div>
             </div>
@@ -331,7 +330,6 @@
 
             // Add maximum loading time limit
             const maxLoadingTime = setTimeout(() => {
-                console.warn('Maximum loading time reached, showing app anyway');
                 updateLoadingText('Loading complete (limited mode)...');
                 loadUserInvestments();
                 setTimeout(() => {
@@ -369,7 +367,6 @@
 
             isFundsLoading = true;
             const timeoutId = setTimeout(() => {
-                console.warn('Cache loading timeout - will try fallback');
                 isFundsLoading = false;
             }, 5000); // Reduced to 5 second timeout
 
@@ -388,7 +385,6 @@
                     updateLoadingText('Processing fund data...');
                     const data = await response.json();
                     allFundsCache = data;
-                    console.log(`Loaded ${allFundsCache.length} funds into cache`);
                     clearTimeout(timeoutId);
                     isFundsLoading = false;
                     return Promise.resolve();
@@ -398,7 +394,6 @@
             } catch (error) {
                 clearTimeout(timeoutId);
                 if (error.name === 'AbortError') {
-                    console.warn('Cache loading aborted due to timeout');
                 } else {
                     console.error('Failed to load all funds:', error);
                 }
@@ -430,7 +425,6 @@
                 const mainContent = document.getElementById('mainContent');
                 const loginContent = document.getElementById('loginContent');
 
-                console.log('showMainContent called, isSignedIn:', isSignedIn, 'currentUser:', currentUser);
 
                 // Hide loading screen
                 if (loadingScreen) {
@@ -442,13 +436,10 @@
                     // Show main content if user is signed in
                     if (mainContent) {
                         mainContent.style.display = 'block';
-                        console.log('Main content displayed');
                     }
                     if (loginContent) {
                         loginContent.style.display = 'none';
-                        console.log('Login content hidden');
                     }
-                    console.log('Showing main content for signed-in user');
                 } else {
                     // Show login content if user is not signed in
                     if (mainContent) {
@@ -457,7 +448,6 @@
                     if (loginContent) {
                         loginContent.style.display = 'flex';
                     }
-                    console.log('Showing login content for unsigned-in user');
                 }
             } catch (error) {
                 console.error('Error in showMainContent:', error);
@@ -569,7 +559,6 @@
             } catch (error) {
                 clearTimeout(timeout);
                 if (error.name === 'AbortError') {
-                    console.warn('Search API timeout');
                 } else {
                     console.error('Error fetching from MF API:', error);
                 }
@@ -627,20 +616,10 @@
 
         // Select a fund from search results
         function selectFund(schemeCode, schemeName, nav) {
-            console.log('Fund selected:', { schemeCode, schemeName, nav });
             selectedFund = { schemeCode, schemeName, nav };
             document.getElementById('fundSearch').value = schemeName;
             document.getElementById('searchDropdown').style.display = 'none';
 
-            // Check if this is HDFC Flexi Cap Fund and provide helpful info
-            if (schemeName.toLowerCase().includes('hdfc flexi cap')) {
-                if (schemeName.toLowerCase().includes('direct')) {
-                    showToast('Direct Plan selected. Note: Direct plans have data from 2013 onwards. For historical data before 2013, consider the Regular Plan.', 'info', 'Fund Selected');
-                } else {
-                    showToast('Regular Plan selected. This fund has comprehensive historical data available from 2006.', 'success', 'Fund Selected');
-                }
-            } else {
-                showToast(`${schemeName} selected successfully`, 'success', 'Fund Selected');
             }
         }
 
@@ -684,7 +663,6 @@
                             units,
                             addedDate: userInvestments[investmentIndex].addedDate
                         };
-                        showSuccess('Fund updated successfully!');
                     }
                     editingInvestmentId = null; // Reset editing flag
                 } else {
@@ -700,9 +678,6 @@
                         addedDate: new Date().toISOString()
                     };
                     userInvestments.push(investment);
-                    console.log('New investment added:', investment);
-                    console.log('Total investments after adding:', userInvestments.length);
-                    showSuccess('Fund added successfully!');
                 }
 
                 // Sync to cloud since we're cloud-only
@@ -797,7 +772,6 @@
         let displayInProgress = false;
         async function displayFunds() {
             if (displayInProgress) {
-                console.log('Display already in progress, skipping');
                 return;
             }
 
@@ -821,7 +795,6 @@
 
                 const fundsHTML = await Promise.all(userInvestments.map(async (investment) => {
                     try {
-                        console.log('Processing investment:', investment.schemeName);
                         const currentNAV = await getCurrentNAV(investment.schemeCode);
                         const currentValue = investment.units * currentNAV;
                         const returns = currentValue - investment.investmentAmount;
@@ -843,7 +816,6 @@
                         // Add yearly breakdown items
                         if (performance.yearlyBreakdown && Object.keys(performance.yearlyBreakdown).length > 0) {
                             const sortedYears = Object.keys(performance.yearlyBreakdown).sort((a, b) => b - a); // Sort years descending
-                            console.log('Sorted years:', sortedYears);
                             sortedYears.forEach(year => {
                                 const yearNav = performance.yearlyNAV[year] || { startNAV: null, endNAV: null };
                                 performanceItems.push({
@@ -855,10 +827,8 @@
                             });
                         } else {
                             // No yearly breakdown data available
-                            console.log('No yearly breakdown data available');
                         }
 
-                        console.log('Performance items:', performanceItems);
 
                         const fundHTML = `
                             <div class="fund-card modern-added-fund">
@@ -869,6 +839,7 @@
                                             <span><i class="bi bi-calendar"></i> ${formatDate(investment.investmentDate)}</span>
                                             <span><i class="bi bi-currency-rupee"></i> ${investment.investmentAmount.toLocaleString()}</span>
                                             <span><i class="bi bi-layers"></i> ${investment.units.toFixed(3)} Units</span>
+                                            <span><i class="bi bi-info-circle"></i> Inv. NAV: ₹${investment.nav.toFixed(2)}</span>
                                         </div>
                                     </div>
                                     <div class="fund-actions">
@@ -884,7 +855,7 @@
                                     </div>
                                 </div>
                                 <div class="fund-badges">
-                                    <span class="modern-badge neutral">NAV: ₹${currentNAV.toFixed(2)}</span>
+                                    <span class="modern-badge neutral">Curr. NAV: ₹${currentNAV.toFixed(2)}</span>
                                     <span class="modern-badge ${returns >= 0 ? 'success' : 'danger'}">
                                         <i class="bi ${returns >= 0 ? 'bi-arrow-up-right' : 'bi-arrow-down-right'}"></i> 
                                         ₹${Math.abs(returns).toFixed(2)} (${returnsPercentage.toFixed(2)}%)
@@ -911,7 +882,6 @@
                             </div>
                         `;
 
-                        console.log('Generated HTML for fund:', fundHTML.substring(0, 200) + '...');
                         return fundHTML;
 
                     } catch (fundError) {
@@ -944,7 +914,6 @@
                 }));
 
                 const finalHTML = fundsHTML.join('');
-                console.log('Final HTML length:', finalHTML.length);
                 container.innerHTML = finalHTML;
 
             } catch (error) {
@@ -1070,8 +1039,6 @@
                     return dateB.localeCompare(dateA); // Sort descending (newest first)
                 }); // Sort chronologically (oldest first)
 
-                console.log('NAV data received:', navData.length, 'records');
-                console.log('Date range:', navData[0]?.date, 'to', navData[navData.length - 1]?.date);
 
                 if (!navData || navData.length === 0) {
                     throw new Error('No NAV data available');
@@ -1085,14 +1052,11 @@
                     performance.dailyStartNAV = yesterdayNAV;
                     performance.dailyEndNAV = todayNAV;
                     performance.dailyChangeDate = navData[0].date; // Store today's date for last change
-                    console.log(`Daily performance DEBUG: Today=${todayNAV} (${navData[0].date}), Yesterday=${yesterdayNAV} (${navData[1].date}), Change=${performance.daily.toFixed(2)}%`);
-                    console.log('Daily performance DEBUG: First 5 NAV records:', navData.slice(0, 5).map(r => `${r.date}: ₹${r.nav}`));
                 } else {
                     performance.daily = null;
                     performance.dailyStartNAV = null;
                     performance.dailyEndNAV = null;
                     performance.dailyChangeDate = null;
-                    console.log('Daily: Not enough data for daily calculation');
                 }
 
                 // Calculate other periods
@@ -1124,12 +1088,10 @@
                         performance[period] = ((currentNAV - closestNAV) / closestNAV) * 100;
                         performance[period + 'StartNAV'] = closestNAV;
                         performance[period + 'EndNAV'] = currentNAV;
-                        console.log(`${period} performance: Current=${currentNAV}, ${days}days ago=${closestNAV} (${closestDate?.toISOString().split('T')[0]}), Change=${performance[period].toFixed(2)}%`);
                     } else {
                         performance[period] = null;
                         performance[period + 'StartNAV'] = null;
                         performance[period + 'EndNAV'] = null;
-                        console.log(`${period}: No data available for ${days} days ago`);
                     }
                 }
 
@@ -1157,12 +1119,10 @@
                     performance.yearly = ((currentNAV - yearStartNAV) / yearStartNAV) * 100;
                     performance.yearlyStartNAV = yearStartNAV;
                     performance.yearlyEndNAV = currentNAV;
-                    console.log(`Yearly performance (from Jan 1): Current=${currentNAV}, Jan 1=${yearStartNAV} (${yearStartRecordDate?.toISOString().split('T')[0]}), Change=${performance.yearly.toFixed(2)}%`);
                 } else {
                     performance.yearly = null;
                     performance.yearlyStartNAV = null;
                     performance.yearlyEndNAV = null;
-                    console.log('Yearly: No data available from Jan 1 of current year');
                 }
 
                 // Calculate year-wise performance for previous years
@@ -1176,7 +1136,6 @@
                     availableYears.add(parseInt(year));
                 });
 
-                console.log('Available years:', Array.from(availableYears).sort());
 
                 // Calculate for each year from current year - 1 down to investment year
                 const investmentYear = new Date(investment.investmentDate).getFullYear();
@@ -1195,7 +1154,6 @@
                             (investmentDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
                             investmentDate.getDate().toString().padStart(2, '0'); // YYYY-MM-DD format
 
-                        console.log(`Investment year ${year}: Investment date = ${investmentDateStr}`);
 
                         // Since data is descending, find first NAV on/after investment date
                         let investmentYearNavs = [];
@@ -1211,12 +1169,10 @@
                         // Sort ascending for proper year calculation
                         investmentYearNavs.sort((a, b) => a.date.localeCompare(b.date));
 
-                        console.log(`Investment year ${year}: Found ${investmentYearNavs.length} NAV records`);
 
                         if (investmentYearNavs.length > 0) {
                             startNAV = investmentYearNavs[0].nav; // First NAV on/after investment date
                             endNAV = investmentYearNavs[investmentYearNavs.length - 1].nav; // Last NAV of the year
-                            console.log(`Investment year ${year}: Start NAV = ₹${startNAV} (${investmentYearNavs[0].date}), End NAV = ₹${endNAV} (${investmentYearNavs[investmentYearNavs.length - 1].date})`);
 
                             // Store for display
                             performance.startNAV = startNAV;
@@ -1239,7 +1195,6 @@
                         if (yearNavs.length > 0) {
                             startNAV = yearNavs[0].nav; // First NAV of the year
                             endNAV = yearNavs[yearNavs.length - 1].nav; // Last NAV of the year
-                            console.log(`Year ${year}: Found ${yearNavs.length} NAV records, Start: ₹${startNAV} (${yearNavs[0].date}), End: ₹${endNAV} (${yearNavs[yearNavs.length - 1].date})`);
                         }
                     }
 
@@ -1254,28 +1209,22 @@
                         }
                     }
 
-                    console.log(`Year ${year}: Start NAV=${startNAV}, End NAV=${endNAV}`);
 
                     if (startNAV && endNAV && startNAV > 0) {
                         yearWisePerformance[year] = ((endNAV - startNAV) / startNAV) * 100;
                         yearWiseNAV[year] = { startNAV, endNAV };
-                        console.log(`Year ${year} performance: ${yearWisePerformance[year].toFixed(2)}% (Start: ₹${startNAV}, End: ₹${endNAV})`);
                     } else {
                         yearWisePerformance[year] = null;
                         yearWiseNAV[year] = { startNAV: null, endNAV: null };
-                        console.log(`Year ${year}: No data available (Start: ${startNAV}, End: ${endNAV})`);
                     }
                 }
 
                 performance.yearlyBreakdown = yearWisePerformance;
                 performance.yearlyNAV = yearWiseNAV;
-                console.log('Final yearly breakdown:', yearWisePerformance);
-                console.log('Final yearly NAV:', yearWiseNAV);
 
             } catch (error) {
                 clearTimeout(timeout);
                 if (error.name === 'AbortError') {
-                    console.warn('Performance calculation timed out');
                 } else {
                     console.error('Error calculating performance:', error);
                 }
@@ -1345,7 +1294,6 @@
             try {
                 await displayFunds();
                 await updateSummary();
-                showSuccess('Fund data refreshed successfully!');
             } catch (error) {
                 console.error('Error refreshing fund:', error);
                 showError('Failed to refresh fund data');
@@ -1388,7 +1336,7 @@
             // Scroll to form
             document.getElementById('addFundForm').scrollIntoView({ behavior: 'smooth' });
 
-            showInfo('Edit the fund details and submit to update');
+ 
         }
 
         // Remove a fund
@@ -1399,7 +1347,6 @@
                 await saveUserInvestments();
                 displayFunds();
                 updateSummary();
-                showSuccess('Fund removed successfully!');
             }
         }
 
@@ -1431,7 +1378,6 @@
         // Save user investments to cloud
         async function saveUserInvestments() {
             if (!isSignedIn || !currentUser) {
-                console.warn('Cannot save investments: User not signed in');
                 return;
             }
             await saveToCloud(userInvestments);
@@ -1440,14 +1386,12 @@
         // Load user investments from cloud
         async function loadUserInvestments() {
             if (!isSignedIn || !currentUser) {
-                console.warn('Cannot load investments: User not signed in');
                 userInvestments = [];
                 return;
             }
 
             try {
                 userInvestments = await getCloudInvestments();
-                console.log('Loaded investments from Google Drive:', userInvestments.length);
 
                 // Defer display to prevent blocking
                 setTimeout(() => {
@@ -1467,14 +1411,12 @@
         // Fund Groups Management Functions
         async function loadFundGroups() {
             if (!isSignedIn || !currentUser) {
-                console.warn('Cannot load fund groups: User not signed in');
                 fundGroups = [];
                 return;
             }
 
             try {
                 fundGroups = await getCloudFundGroups();
-                console.log('Loaded fund groups from Google Drive:', fundGroups.length);
             } catch (error) {
                 console.error('Error loading fund groups from Google Drive:', error);
                 fundGroups = [];
@@ -1483,7 +1425,6 @@
 
         async function saveFundGroups() {
             if (!isSignedIn || !currentUser) {
-                console.warn('Cannot save fund groups: User not signed in');
                 return;
             }
             await saveToCloudFundGroups(fundGroups);
@@ -1539,7 +1480,6 @@
                 createdDate: new Date().toISOString()
             };
 
-            console.log('Creating new group:', newGroup);
 
             fundGroups.push(newGroup);
             await saveFundGroups();
@@ -1549,15 +1489,10 @@
             modal.hide();
 
             displayGroups();
-            showSuccess(`Group "${groupName}" created successfully! Click "Edit" to add funds to this group.`);
         }
 
         // Debug function to check current state
         function debugGroupState() {
-            console.log('=== GROUP DEBUG INFO ===');
-            console.log('Fund Groups:', fundGroups);
-            console.log('User Investments:', userInvestments);
-            console.log('Current View:', currentView);
 
             // Check for any orphaned fund IDs
             fundGroups.forEach(group => {
@@ -1565,7 +1500,6 @@
                     !userInvestments.some(inv => parseInt(inv.id) === parseInt(fundId))
                 );
                 if (orphanedIds.length > 0) {
-                    console.warn(`Group "${group.name}" has orphaned fund IDs:`, orphanedIds);
                 }
             });
         }
@@ -1578,9 +1512,6 @@
             loadUserInvestments();
 
             // Debug: Log group details
-            console.log('Editing group:', group);
-            console.log('Group fund IDs:', group.fundIds);
-            console.log('All investments:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
 
             // Set current editing group
             window.currentEditingGroupId = groupId;
@@ -1608,15 +1539,12 @@
             }
 
             // Debug: Log the selected fund IDs and investment IDs
-            console.log('Selected fund IDs:', selectedFundIds);
-            console.log('Available investment IDs:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
 
             const fundItemsHTML = userInvestments.map(investment => {
                 // Ensure both are numbers for proper comparison
                 const investmentId = parseInt(investment.id);
                 const isSelected = selectedFundIds.some(id => parseInt(id) === investmentId);
 
-                console.log(`Checking fund "${investment.schemeName}" (ID: ${investmentId}): Selected = ${isSelected}`);
 
                 return `
                     <div class="fund-assignment-item">
@@ -1662,7 +1590,6 @@
             });
 
             // Debug: Log the selected IDs
-            console.log('Updating group with selected fund IDs:', selectedFundIds);
 
             // Update group
             group.name = groupName;
@@ -1676,7 +1603,6 @@
             modal.hide();
 
             displayGroups();
-            showSuccess(`Group "${groupName}" updated successfully!`);
         }
 
         async function deleteGroup() {
@@ -1696,7 +1622,6 @@
             modal.hide();
 
             displayGroups();
-            showSuccess(`Group "${group.name}" deleted successfully!`);
         }
 
         async function displayGroups() {
@@ -1742,7 +1667,6 @@
                         // Use parseInt for proper type comparison
                         const investment = userInvestments.find(inv => parseInt(inv.id) === parseInt(fundId));
                         if (!investment) {
-                            console.warn(`Investment not found for fund ID in display: ${fundId}`);
                             return '';
                         }
 
@@ -1754,7 +1678,10 @@
 
                             return `
                                 <div class="group-fund-item">
-                                    <div class="group-fund-name">${investment.schemeName}</div>
+                                    <div class="group-fund-name">
+                                        ${investment.schemeName}
+                                        <div style="font-size: 0.75rem; color: #6c757d;">Inv. NAV: ₹${investment.nav.toFixed(2)} | Curr: ₹${currentNAV.toFixed(2)}</div>
+                                    </div>
                                     <div class="group-fund-returns ${returns >= 0 ? 'positive' : 'negative'}">
                                         ${returns >= 0 ? '+' : ''}₹${returns.toFixed(2)} (${returnsPercentage.toFixed(2)}%)
                                     </div>
@@ -1828,19 +1755,14 @@
             let totalCurrentValue = 0;
             let investmentDetails = [];
 
-            console.log('=== CALCULATING GROUP STATS ===');
-            console.log('Fund IDs to process:', fundIds);
-            console.log('Available investments:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
 
             for (const fundId of fundIds) {
                 // Use parseInt for proper type comparison
                 const investment = userInvestments.find(inv => parseInt(inv.id) === parseInt(fundId));
                 if (!investment) {
-                    console.warn(`Investment not found for fund ID: ${fundId}`);
                     continue;
                 }
 
-                console.log(`Found investment: ${investment.schemeName} (ID: ${investment.id})`);
                 totalInvestment += investment.investmentAmount;
 
                 try {
@@ -1942,7 +1864,6 @@
         // Export data to JSON
         function exportToJSON() {
             if (userInvestments.length === 0) {
-                showWarning('No investments to export');
                 return;
             }
 
@@ -1968,13 +1889,12 @@
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
 
-            showSuccess('Data exported to JSON successfully');
+ 
         }
 
         // Export data to CSV
         function exportToCSV() {
             if (userInvestments.length === 0) {
-                showWarning('No investments to export');
                 return;
             }
 
@@ -2012,7 +1932,7 @@
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
 
-            showSuccess('Data exported to CSV successfully');
+ 
         }
 
         // Import data from file
@@ -2039,7 +1959,6 @@
                                 await saveUserInvestments();
                                 displayFunds();
                                 updateSummary();
-                                showSuccess(`Imported ${userInvestments.length} investments successfully`);
                             } else {
                                 showError('Invalid JSON format. Missing investments array.');
                             }
@@ -2072,7 +1991,6 @@
                                 await saveUserInvestments();
                                 displayFunds();
                                 updateSummary();
-                                showSuccess(`Imported ${investments.length} investments successfully`);
                             } else {
                                 showError('No valid data found in CSV file');
                             }
@@ -2096,7 +2014,6 @@
                 try {
                     await displayFunds();
                     await updateSummary();
-                    console.log('Data refreshed automatically');
                 } catch (error) {
                     console.error('Error in auto-refresh:', error);
                 } finally {
@@ -2150,8 +2067,6 @@
                                         console.error('Sync from Drive error:', error);
                                     }
                                 }, 500);
-
-                                showToast('Successfully signed in with Google!', 'success', 'Sign In');
                             }).catch(err => {
                                 console.error('Error fetching user info:', err);
                                 showToast('Failed to retrieve user information.', 'error', 'Sign In Error');
@@ -2176,7 +2091,6 @@
             localStorage.removeItem('mf_auth');
             updateAuthUI();
             showLoginContent();
-            showToast('Successfully signed out', 'info', 'Sign Out');
         }
 
         function updateAuthUI() {
@@ -2279,12 +2193,6 @@
         async function syncFromDriveOnLogin() {
             if (!isSignedIn || !currentUser) return;
 
-            const syncStatus = document.getElementById('syncStatus');
-            if (syncStatus) {
-                syncStatus.textContent = 'Syncing from cloud...';
-                syncStatus.className = 'sync-status syncing';
-            }
-
             try {
                 // Load from Drive
                 await loadUserInvestments();
@@ -2296,15 +2204,6 @@
                     await displayGroups();
                 }
                 await updateSummary();
-
-                if (syncStatus) {
-                    setTimeout(() => {
-                        syncStatus.textContent = 'Synced from cloud';
-                        syncStatus.className = 'sync-status success';
-                    }, 1000);
-                }
-
-                showToast(`Loaded ${userInvestments.length} investments and ${fundGroups.length} groups from cloud`, 'success', 'Sync Complete');
 
             } catch (error) {
                 console.error('Failed to sync from Drive:', error);
@@ -2335,7 +2234,6 @@
                     investments: investments,
                     lastSyncTime: new Date().toISOString()
                 });
-                console.log('Successfully saved to Google Drive');
             } catch (error) {
                 console.error('Failed to save to Google Drive:', error);
                 showToast('Failed to save investments to cloud. Please check your connection.', 'error', 'Sync Error');
@@ -2361,7 +2259,6 @@
                     fundGroups: fundGroups,
                     lastSyncTime: new Date().toISOString()
                 });
-                console.log('Successfully saved fund groups to Google Drive');
             } catch (error) {
                 console.error('Failed to save fund groups to Google Drive:', error);
                 showToast('Failed to save groups to cloud. Please check your connection.', 'error', 'Sync Error');
