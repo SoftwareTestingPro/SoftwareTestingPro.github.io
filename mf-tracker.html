@@ -66,6 +66,13 @@
                     </div>
                     <div class="auth-section">
                         <div id="userInfo" class="user-info" style="display: none;">
+                            <div class="sync-status-container me-2">
+                                <button id="syncBtn" class="btn btn-sm btn-outline-light" onclick="refreshAllData()"
+                                    title="Force refresh all NAVs">
+                                    <i class="bi bi-arrow-repeat" id="syncIcon"></i> Sync
+                                </button>
+                                <div id="lastSyncLabel" class="sync-time-label"></div>
+                            </div>
                             <img id="userAvatar" src="" alt="User" class="user-avatar">
                             <span id="userName" class="user-name"></span>
                             <button id="logoutBtn" class="btn btn-sm btn-outline-light ms-2" onclick="signOut()">
@@ -185,10 +192,13 @@
                 <button class="btn btn-outline-primary" id="groupsViewBtn" onclick="switchView('groups')">
                     <i class="bi bi-collection"></i> Groups
                 </button>
-                <button class="btn btn-primary-custom" id="createGroupBtn" onclick="showCreateGroupModal()"
-                    style="display: none;">
-                    <i class="bi bi-plus-lg"></i> Create Group
-                </button>
+            </div>
+
+            <!-- Group Specific Controls (Lower Tier) -->
+            <div id="groupControls" class="group-controls" style="display: none;">
+                <div class="group-filter-row">
+                    <!-- Buttons generated dynamically in updateGroupFilterUI() -->
+                </div>
             </div>
 
             <!-- Loading Spinner -->
@@ -216,7 +226,7 @@
     <!-- Create Group Modal -->
     <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createGroupModalLabel">
@@ -229,20 +239,20 @@
                         <div class="mb-3">
                             <label for="groupName" class="form-label">Group Name</label>
                             <input type="text" class="form-control" id="groupName"
-                                placeholder="e.g., Small Cap Funds, Large Cap Funds" required>
-                            <div class="form-text">Give your group a descriptive name</div>
+                                placeholder="e.g., Retirement Funds, My Top Picks" required>
                         </div>
                         <div class="mb-3">
-                            <label for="groupDescription" class="form-label">Description (Optional)</label>
-                            <textarea class="form-control" id="groupDescription" rows="2"
-                                placeholder="Brief description of this group..."></textarea>
+                            <label class="form-label">Select Funds to Include</label>
+                            <div class="fund-assignment-list" id="createGroupFundList">
+                                <!-- Populated dynamically -->
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary-custom" onclick="createGroup()">
-                        <i class="bi bi-plus-lg"></i> Create Group
+                        <i class="bi bi-check-lg"></i> Create Group
                     </button>
                 </div>
             </div>
@@ -264,10 +274,6 @@
                         <div class="mb-3">
                             <label for="editGroupName" class="form-label">Group Name</label>
                             <input type="text" class="form-control" id="editGroupName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editGroupDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="editGroupDescription" rows="2"></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Assign Funds to Group</label>
@@ -292,6 +298,55 @@
 
 
     <script>
+        // IndexedDB Utility for large datasets (Master Fund List)
+        const DB_NAME = 'MFTrackerDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'masterData';
+
+        function getDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME);
+                    }
+                };
+                request.onsuccess = (e) => resolve(e.target.result);
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        async function saveToDB(key, data) {
+            try {
+                const db = await getDB();
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction(STORE_NAME, 'readwrite');
+                    const store = transaction.objectStore(STORE_NAME);
+                    store.put({ data, timestamp: Date.now() }, key);
+                    transaction.oncomplete = () => resolve();
+                    transaction.onerror = (e) => reject(e.target.error);
+                });
+            } catch (err) {
+                console.warn('IndexedDB write failed', err);
+            }
+        }
+
+        async function getFromDB(key) {
+            try {
+                const db = await getDB();
+                return new Promise((resolve, reject) => {
+                    const transaction = db.transaction(STORE_NAME, 'readonly');
+                    const store = transaction.objectStore(STORE_NAME);
+                    const request = store.get(key);
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = (e) => reject(e.target.error);
+                });
+            } catch (err) {
+                return null;
+            }
+        }
+
         // Simple modal implementation to replace Bootstrap modal
         class SimpleModal {
             constructor(elementId) {
@@ -328,6 +383,7 @@
         // Fund Groups functionality
         let fundGroups = []; // Array to store fund groups
         let currentView = 'individual'; // 'individual' or 'groups'
+        let currentGroupFilter = 'all'; // 'all', 'default', 'custom'
 
         // Authentication variables
         let currentUser = null;
@@ -346,7 +402,7 @@
 
                         // Update UI shortly after to allow DOM to be ready
                         setTimeout(() => {
-                            updateAuthUI();
+                            updateAuthUI(); updateSyncUI();
                         }, 100);
                         return;
                     } else {
@@ -359,36 +415,79 @@
         }
 
         // Initialize the app
-        document.addEventListener('DOMContentLoaded', function () {
-            // Check for existing authentication
-            checkAuthState();
-
-            // Initialize Email Sign-In
-            setTimeout(initializeEmailSignIn, 500);
-
+        document.addEventListener('DOMContentLoaded', async function () {
             // Setup basic UI elements
             setupEventListeners();
             setMaxDate();
 
-            // Load fund groups
-            loadFundGroups();
-
-            // Add maximum loading time limit
-            const maxLoadingTime = setTimeout(() => {
-                updateLoadingText('Loading complete (limited mode)...');
-                loadUserInvestments();
-                setTimeout(() => {
-                    showMainContent();
-                }, 500);
-            }, 8000); // Maximum 8 seconds total loading time
-
-            // Load main UI immediately while database loads in background
-            loadUserInvestments();
-            showMainContent();
-
-            // Fetch fund list in background if needed
-            loadAllFundsCache().catch(err => console.warn('Background cache load failed', err));
+            // Start the initialization sequence
+            await initApp();
         });
+
+        async function initApp() {
+            // Priority 1: Show the loader and yield to browser to ensure it's painted
+            await showGlobalLoader('Mutual Fund Tracker', 'Restoring your secure session...');
+
+            // Allow spinner to start animating before blocking main thread
+            await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 100)));
+
+            checkAuthState();
+
+            if (isSignedIn) {
+                updateAuthUI(); updateSyncUI();
+                updateSyncUI(); // Refresh last sync label and button state
+                updateLoadingText('Fetching your groups...');
+                await loadFundGroups();
+                updateLoadingText('Synchronizing investments...');
+                await loadUserInvestments();
+                updateLoadingText('Verifying fund database...');
+                await loadAllFundsCache();
+                showMainContent();
+            } else {
+                showMainContent(); // Show login screen
+            }
+
+            hideGlobalLoader();
+        }
+
+        async function showGlobalLoader(text = 'Loading...', subtext = '') {
+            return new Promise(resolve => {
+                const screen = document.getElementById('loadingScreen');
+                const mainContainer = document.querySelector('.main-container');
+
+                if (screen) {
+                    screen.querySelector('.loading-text').textContent = text;
+                    if (subtext) updateLoadingText(subtext);
+                    screen.style.display = 'flex';
+                    screen.classList.remove('hidden');
+                }
+
+                if (mainContainer) {
+                    mainContainer.classList.add('blurred');
+                }
+
+                // Double requestAnimationFrame ensures the browser has rendered the state change
+                requestAnimationFrame(() => requestAnimationFrame(resolve));
+            });
+        }
+
+        function hideGlobalLoader() {
+            const screen = document.getElementById('loadingScreen');
+            const mainContainer = document.querySelector('.main-container');
+
+            if (screen) {
+                screen.classList.add('hidden');
+                setTimeout(() => {
+                    if (screen.classList.contains('hidden')) {
+                        screen.style.display = 'none';
+                    }
+                }, 400);
+            }
+
+            if (mainContainer) {
+                mainContainer.classList.remove('blurred');
+            }
+        }
 
         // Load all funds into cache with timeout protection
         async function loadAllFundsCache() {
@@ -397,23 +496,18 @@
             const CACHE_KEY = 'master_fund_list_cache';
             const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-            // Try loading from localStorage first
-            const cached = localStorage.getItem(CACHE_KEY);
-            if (cached) {
-                try {
-                    const parsed = JSON.parse(cached);
-                    if (Date.now() - parsed.timestamp < CACHE_TTL) {
-                        allFundsCache = parsed.data;
-                        return;
-                    }
-                } catch (e) { }
+            // Try loading from IndexedDB first (no 5MB limit)
+            const cached = await getFromDB(CACHE_KEY);
+            if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
+                allFundsCache = cached.data;
+                return;
             }
 
             isFundsLoading = true;
             try {
-                // Fetch in background without blocking UI
+                updateLoadingText('Fetching master fund database...');
                 const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 10000); // 10 second background timeout
+                const timeout = setTimeout(() => controller.abort(), 15000);
 
                 const response = await fetch('https://api.mfapi.in/mf', {
                     signal: controller.signal
@@ -424,22 +518,11 @@
                     const data = await response.json();
                     allFundsCache = data;
 
-                    // Save to local storage for next time with safety check
-                    try {
-                        localStorage.setItem(CACHE_KEY, JSON.stringify({
-                            timestamp: Date.now(),
-                            data: allFundsCache
-                        }));
-                    } catch (quotaError) {
-                        console.warn('Storage quota exceeded. Using in-memory cache only.');
-                        // If quota is full, try to clear at least the old cache to free some space
-                        try {
-                            localStorage.removeItem(CACHE_KEY);
-                        } catch (e) { }
-                    }
+                    // Save to IndexedDB (Safely handles 2MB-4MB data)
+                    await saveToDB(CACHE_KEY, allFundsCache);
                 }
             } catch (error) {
-                console.warn('Background fund fetch skipped/failed');
+                console.warn('Fund fetch from API failed/timed out');
             } finally {
                 isFundsLoading = false;
             }
@@ -789,24 +872,26 @@
         }
 
         // Get current NAV for a fund using MF API
-        async function getCurrentNAV(schemeCode) {
+        async function getCurrentNAV(schemeCode, forceRefresh = false) {
             const CACHE_KEY = `nav_cache_${schemeCode}`;
             const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
             try {
-                // Check cache first
-                const cachedData = localStorage.getItem(CACHE_KEY);
-                if (cachedData) {
-                    const cache = JSON.parse(cachedData);
-                    const now = Date.now();
-                    if (now - cache.timestamp < CACHE_TTL) {
-                        return cache.data;
+                // Check cache first (unless forceRefresh is true)
+                if (!forceRefresh) {
+                    const cachedData = localStorage.getItem(CACHE_KEY);
+                    if (cachedData) {
+                        const cache = JSON.parse(cachedData);
+                        const now = Date.now();
+                        if (now - cache.timestamp < CACHE_TTL) {
+                            return cache.data;
+                        }
                     }
                 }
 
                 // Set a network timeout for safety
                 const controller = new AbortController();
-                const fetchTimeout = setTimeout(() => controller.abort(), 5000);
+                const fetchTimeout = setTimeout(() => controller.abort(), 8000); // Extended timeout for force refresh
 
                 const response = await fetch(`https://api.mfapi.in/mf/${schemeCode}`, {
                     signal: controller.signal
@@ -834,14 +919,16 @@
                         data: navResult
                     }));
                 } catch (e) {
-                    console.warn(`Storage quota nearly full. Could not cache NAV for ${schemeCode}`);
+                    // If full, try to remove one old cache and retry
+                    console.warn(`Storage quota nearly full. Cleaning up...`);
+                    // Optional: logic to clear oldest cache could go here
                 }
 
                 return navResult;
             } catch (error) {
                 console.error('Error fetching current NAV:', error);
 
-                // If fetch fails, try to use expired cache as last resort
+                // If fetch fails, try to use (potentially expired) cache as last resort
                 const cachedData = localStorage.getItem(CACHE_KEY);
                 if (cachedData) {
                     return JSON.parse(cachedData).data;
@@ -850,6 +937,134 @@
                 throw error;
             }
         }
+
+        // Global function to refresh all data with smart cooldown
+        const SYNC_COOLDOWN_MS = 15 * 60 * 1000; // 15 minutes cooldown
+
+        async function refreshAllData() {
+            if (userInvestments.length === 0) {
+                showToast('No funds to refresh', 'info');
+                return;
+            }
+
+            const syncIcon = document.getElementById('syncIcon');
+            const syncBtn = document.getElementById('syncBtn');
+            const lastSyncStr = localStorage.getItem('last_global_sync');
+            const now = Date.now();
+            const currDate = new Date();
+            const todayStr = currDate.toDateString(); // e.g. "Thu Apr 16 2026"
+
+            // 1. SMART LOCK Logic (Market Awareness)
+            const isBeforeUpdateTime = (currDate.getHours() < 22 || (currDate.getHours() === 22 && currDate.getMinutes() < 30));
+            const hasSyncedToday = lastSyncStr && new Date(parseInt(lastSyncStr)).toDateString() === todayStr;
+
+            // Check if any fund is missing its NAV (newly added)
+            const hasNewFunds = userInvestments.some(inv => {
+                return !localStorage.getItem(`nav_cache_${inv.schemeCode}`);
+            });
+
+            // If we've already synced the whole portfolio today, and it's before the evening update, block it.
+            if (hasSyncedToday && isBeforeUpdateTime && !hasNewFunds) {
+                showToast(`All funds have the latest available NAVs. Next market update tonight after 10:30 PM.`, 'success');
+                return; // HARD STOP - Do not hit API
+            }
+
+            // 2. Cooldown Lock (15 mins) - Only if not already blocked by above logic
+            if (!hasNewFunds && lastSyncStr && (now - parseInt(lastSyncStr)) < SYNC_COOLDOWN_MS) {
+                const minsLeft = Math.ceil((SYNC_COOLDOWN_MS - (now - parseInt(lastSyncStr))) / 60000);
+                showToast(`Data is fresh. Sync cooldown: ${minsLeft} mins.`, 'success');
+                return; // HARD STOP
+            }
+
+            // Case C: Busy Sync (Already running)
+            if (syncBtn.classList.contains('disabled') || syncIcon.classList.contains('bi-spin')) return;
+
+            try {
+                syncBtn.classList.add('disabled');
+                syncIcon.classList.add('bi-spin');
+                showToast('Synchronizing with latest NAVs...', 'info');
+
+                const batchSize = 3;
+                for (let i = 0; i < userInvestments.length; i += batchSize) {
+                    const batch = userInvestments.slice(i, i + batchSize);
+                    await Promise.all(batch.map(inv => getCurrentNAV(inv.schemeCode, true)));
+                }
+
+                // Update last sync time
+                localStorage.setItem('last_global_sync', Date.now().toString());
+                updateSyncUI();
+
+                showToast('All funds updated successfully!', 'success');
+
+                if (currentView === 'individual') {
+                    await displayFunds();
+                } else {
+                    await displayGroups();
+                }
+                updateSummary();
+            } catch (err) {
+                console.error('Refresh failed', err);
+                showToast('Sync failed. Please try again later.', 'error');
+            } finally {
+                syncIcon.classList.remove('bi-spin');
+                syncBtn.classList.remove('disabled');
+            }
+        }
+
+        function updateSyncUI() {
+            const label = document.getElementById('lastSyncLabel');
+            const syncBtn = document.getElementById('syncBtn');
+            if (!label || !syncBtn) return;
+
+            const lastSync = localStorage.getItem('last_global_sync');
+            if (lastSync) {
+                const timeStr = new Date(parseInt(lastSync)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                label.textContent = `Synced at ${timeStr}`;
+            }
+
+            const now = Date.now();
+            const currDate = new Date();
+            const hour = currDate.getHours();
+            const min = currDate.getMinutes();
+
+            // Perform the same smart freshness check as refreshAllData
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            const allUpToDate = userInvestments.every(inv => {
+                const cache = JSON.parse(localStorage.getItem(`nav_cache_${inv.schemeCode}`));
+                if (!cache || !cache.date) return false;
+                const parts = cache.date.split('-');
+                const cacheDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                cacheDate.setHours(0, 0, 0, 0);
+                return cacheDate >= yesterday;
+            });
+
+            const isBeforeUpdateTime = (hour < 22 || (hour === 22 && min < 30));
+            const isAfterMorningStart = (hour >= 8);
+
+            // Determine Button State & Message
+            if (isAfterMorningStart && isBeforeUpdateTime && allUpToDate) {
+                // Market aware lock
+                syncBtn.classList.add('sync-btn-disabled');
+                syncBtn.title = 'All funds have the latest available NAVs. Next market update expected tonight after 10:30 PM.';
+            } else if (allUpToDate && lastSync && (now - parseInt(lastSync)) < SYNC_COOLDOWN_MS) {
+                // Cooldown lock (only if data is already fresh)
+                syncBtn.classList.add('sync-btn-disabled');
+                const mins = Math.ceil((SYNC_COOLDOWN_MS - (now - parseInt(lastSync))) / 60000);
+                syncBtn.title = `Data is fresh. Sync cooldown: ${mins} mins.`;
+            } else {
+                // Enabled (stale data exists OR past updated time OR after cooldown)
+                syncBtn.classList.remove('sync-btn-disabled');
+                syncBtn.style.opacity = '1';
+                syncBtn.title = 'Force refresh all NAVs';
+            }
+        }
+
+        // Keep sync time label accurate in real-time
+        setInterval(updateSyncUI, 60000); // Update every minute
 
         // Display all funds with concurrency control
         let displayInProgress = false;
@@ -983,14 +1198,14 @@
                                 <div class="performance-grid collapsed" id="perf-${investment.id}">
                                     ${performanceItems.length > 0 ? performanceItems.map(item => `
                                         <div class="performance-card">
-                                            <div class="small fw-bold">${item.label}</div>
-                                            <div style="font-size: 0.7rem; color: #6c757d; line-height: 1.2; margin-bottom: 4px;">${item.subLabel || ''}</div>
-                                            <div class="performance-value ${item.value !== null ? (item.value >= 0 ? 'positive' : 'negative') : ''}">
+                                            <div class="performance-value ${item.value !== null ? (item.value >= 0 ? 'positive' : 'negative') : ''}" style="font-size: 1.2rem; font-weight: 600; margin-bottom: 2px;">
                                                 ${item.value !== null ? (item.value >= 0 ? '+' : '') + item.value.toFixed(2) + '%' : 'N/A'}
                                             </div>
-                                            <div class="d-flex justify-content-between small text-muted mt-8">
-                                                <span class="badge bg-primary me-2">Start: ₹${item.startNAV ? item.startNAV.toFixed(2) : 'N/A'}</span>
-                                                <span class="badge bg-primary">End: ₹${item.endNAV ? item.endNAV.toFixed(2) : 'N/A'}</span>
+                                            <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">${item.label}</div>
+                                            <div style="font-size: 0.75rem; color: #5f6368; line-height: 1.2; margin-bottom: 8px;">${item.subLabel || ''}</div>
+                                            <div class="d-flex justify-content-between small text-muted" style="gap: 8px;">
+                                                <span style="font-size: 0.7rem; background: #f8f9fa; padding: 2px 6px; border-radius: 4px; border: 1px solid #eee;">S: ₹${item.startNAV ? item.startNAV.toFixed(1) : 'N'}</span>
+                                                <span style="font-size: 0.7rem; background: #f8f9fa; padding: 2px 6px; border-radius: 4px; border: 1px solid #eee;">E: ₹${item.endNAV ? item.endNAV.toFixed(1) : 'N'}</span>
                                             </div>
                                         </div>
                                     `).join('') : `
@@ -1204,20 +1419,24 @@
                 };
 
                 // 1. Calculate periodic returns (Daily, 7d, 15d, etc.)
-                for (const [key, days] of Object.entries(periods)) {
-                    // For "Yesterday" (Daily), we specifically want the previous record 
-                    // compared to latest, regardless of how many calendar days apart (e.g. over weekend)
-                    const pastData = (key === 'daily') ?
-                        getNAVForDaysAgo(1, true) : getNAVForDaysAgo(days);
+                // Rule: If the user purchased the fund on or after the latest data date, 
+                // they have no periodic performance yet.
+                if (investmentDate < latestDataDate) {
+                    for (const [key, days] of Object.entries(periods)) {
+                        // For "Yesterday" (Daily), we specifically want the previous record 
+                        // compared to latest, regardless of how many calendar days apart (e.g. over weekend)
+                        const pastData = (key === 'daily') ?
+                            getNAVForDaysAgo(1, true) : getNAVForDaysAgo(days);
 
-                    if (pastData) {
-                        performance.periodic[key] = {
-                            value: ((currentNAV - pastData.nav) / pastData.nav) * 100,
-                            startNAV: pastData.nav,
-                            endNAV: currentNAV,
-                            startDate: pastData.date,
-                            endDate: latestRecord.date // Always compare to the latest available data point
-                        };
+                        if (pastData) {
+                            performance.periodic[key] = {
+                                value: ((currentNAV - pastData.nav) / pastData.nav) * 100,
+                                startNAV: pastData.nav,
+                                endNAV: currentNAV,
+                                startDate: pastData.date,
+                                endDate: latestRecord.date // Always compare to the latest available data point
+                            };
+                        }
                     }
                 }
 
@@ -1258,147 +1477,154 @@
             return performance;
         }
 
-        // Update summary statistics
+        // Update summary statistics with concurrency lock to prevent duplication
+        let isSummaryUpdating = false;
         async function updateSummary() {
-            let totalInvestment = 0;
-            let totalCurrentValue = 0;
-            let investmentDetails = []; // Store cash flows for XIRR calculation
+            if (isSummaryUpdating) return;
+            isSummaryUpdating = true;
 
-            // Prefetch all NAVs in parallel for speed
-            const navResults = await Promise.all(userInvestments.map(async (investment) => {
-                try {
-                    const navData = await getCurrentNAV(investment.schemeCode);
-                    return { id: investment.id, nav: navData.nav };
-                } catch (err) {
-                    console.error('Error fetching NAV for summary:', investment.schemeCode, err);
-                    return { id: investment.id, nav: 0 };
+            try {
+                let totalInvestment = 0;
+                let totalCurrentValue = 0;
+                let investmentDetails = []; // Store cash flows for XIRR calculation
+
+                // Prefetch all NAVs in parallel for speed
+                const navResults = await Promise.all(userInvestments.map(async (investment) => {
+                    try {
+                        const navData = await getCurrentNAV(investment.schemeCode);
+                        return { id: investment.id, nav: navData.nav };
+                    } catch (err) {
+                        console.error('Error fetching NAV for summary:', investment.schemeCode, err);
+                        return { id: investment.id, nav: 0 };
+                    }
+                }));
+
+                for (const investment of userInvestments) {
+                    const navResult = navResults.find(r => String(r.id) === String(investment.id));
+                    const currentNAV = navResult ? navResult.nav : 0;
+
+                    totalInvestment += (investment.investmentAmount || 0);
+                    const currentValue = (investment.units || 0) * currentNAV;
+                    totalCurrentValue += currentValue;
+
+                    // Store investment details for XIRR calculation
+                    const [y, m, d] = investment.investmentDate.split('-');
+                    const investmentDate = new Date(y, m - 1, d);
+                    investmentDetails.push({
+                        date: investmentDate,
+                        amount: -(investment.investmentAmount || 0)
+                    });
                 }
-            }));
 
-            for (const investment of userInvestments) {
-                const navResult = navResults.find(r => String(r.id) === String(investment.id));
-                const currentNAV = navResult ? navResult.nav : 0;
+                const totalReturns = totalCurrentValue - totalInvestment;
+                const returnsPercentage = totalInvestment > 0 ? (totalReturns / totalInvestment) * 100 : 0;
 
-                totalInvestment += (investment.investmentAmount || 0);
-                const currentValue = (investment.units || 0) * currentNAV;
-                totalCurrentValue += currentValue;
+                // Calculate XIRR-like CAGR (Compound Annual Growth Rate) based on cash flows and timing
+                let cagr = calculatePortfolioXIRR(investmentDetails, totalCurrentValue);
 
-                // Store investment details for XIRR calculation
-                const [y, m, d] = investment.investmentDate.split('-');
-                const investmentDate = new Date(y, m - 1, d);
-                investmentDetails.push({
-                    date: investmentDate,
-                    amount: -(investment.investmentAmount || 0)
+                // Calculate Portfolio Periodic Performance (Weighted Average)
+                const portfolioPerf = {
+                    daily: 0, weekly: 0, monthly: 0, quarterly: 0, halfYearly: 0, yearly: 0
+                };
+
+                // 1. Core Financial Metrics (Investment, Current, Returns, XIRR)
+                document.getElementById('totalInvestment').textContent = `₹${totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+                document.getElementById('currentValue').textContent = `₹${totalCurrentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+
+                // Consolidate Returns: +1.94% (+₹9,104)
+                const retSign = totalReturns >= 0 ? '+' : '';
+                const retAmount = `(${retSign}₹${Math.abs(totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
+                const retPct = `${retSign}${returnsPercentage.toFixed(2)}%`;
+
+                const retElem = document.getElementById('totalReturnsPercentage');
+                retElem.textContent = `${retPct} ${retAmount}`;
+                document.getElementById('totalReturns').style.display = 'none';
+
+                document.getElementById('cagrValue').textContent = `${cagr >= 0 ? '+' : ''}${cagr.toFixed(2)}%`;
+
+                // Update colors for main metrics
+                const colorClass = totalReturns >= 0 ? 'positive' : 'negative';
+                const xirrColorClass = cagr >= 0 ? 'positive' : 'negative';
+
+                ['currentValue', 'totalReturnsPercentage', 'cagrValue'].forEach(id => {
+                    const elem = document.getElementById(id);
+                    if (elem) elem.className = `summary-value ${id === 'cagrValue' ? xirrColorClass : colorClass}`;
                 });
-            }
 
-            const totalReturns = totalCurrentValue - totalInvestment;
-            const returnsPercentage = totalInvestment > 0 ? (totalReturns / totalInvestment) * 100 : 0;
+                // Handle Context Dates for Summary Cards
+                const allDates = userInvestments.map(inv => new Date(inv.investmentDate)).sort((a, b) => a - b);
+                const oldestDate = allDates.length > 0 ? formatDate(allDates[0].toISOString().split('T')[0]) : 'N/A';
+                const newestDate = allDates.length > 0 ? formatDate(allDates[allDates.length - 1].toISOString().split('T')[0]) : 'N/A';
+                const todayDate = formatDate(new Date().toISOString().split('T')[0]);
 
-            // Calculate XIRR-like CAGR (Compound Annual Growth Rate) based on cash flows and timing
-            let cagr = calculatePortfolioXIRR(investmentDetails, totalCurrentValue);
+                // Ensure static labels are wrapped correctly
+                const staticLabels = {
+                    'totalInvestment': { main: 'Total Investment', sub: `Since ${oldestDate}` },
+                    'currentValue': { main: 'Current Value', sub: `As on ${todayDate}` },
+                    'totalReturnsPercentage': { main: 'Total Returns', sub: `Period: ${oldestDate} - ${newestDate}` },
+                    'cagrValue': { main: 'XIRR (Annual)', sub: 'Internal Rate of Return' }
+                };
 
-            // Calculate Portfolio Periodic Performance (Weighted Average)
-            const portfolioPerf = {
-                daily: 0, weekly: 0, monthly: 0, quarterly: 0, halfYearly: 0, yearly: 0
-            };
+                Object.keys(staticLabels).forEach(id => {
+                    const card = document.getElementById(id).closest('.summary-card');
+                    const label = card.querySelector('.summary-label');
+                    if (label) {
+                        label.innerHTML = `
+                        <div class="summary-label-main">${staticLabels[id].main}</div>
+                        <div class="summary-label-sub" style="font-size: 0.75rem; opacity: 0.7; font-weight: 500;">${staticLabels[id].sub}</div>
+                    `;
+                    }
+                });
 
-            // 1. Core Financial Metrics (Investment, Current, Returns, XIRR)
-            document.getElementById('totalInvestment').textContent = `₹${totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-            document.getElementById('currentValue').textContent = `₹${totalCurrentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+                // 2. Portfolio Periodic & Yearly Performance (Dynamic Generation)
+                const summaryContainer = document.getElementById('summaryStats');
+                if (!summaryContainer) return;
 
-            // Consolidate Returns: +₹9,104 (+1.94%)
-            const retSign = totalReturns >= 0 ? '+' : '';
-            const retAmount = `₹${Math.abs(totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-            const retPct = `(${retSign}${returnsPercentage.toFixed(2)}%)`;
+                // Remove only dynamic yearly cards from previous updates, keeping all fixed summary-cards
+                const dynamicYearlyCards = summaryContainer.querySelectorAll('.dynamic-yearly-card');
+                dynamicYearlyCards.forEach(c => c.remove());
 
-            document.getElementById('totalReturnsPercentage').textContent = `${retSign}${retAmount} ${retPct}`;
-            document.getElementById('totalReturns').style.display = 'none';
+                const results = await Promise.all(userInvestments.map(async (inv) => {
+                    const navRes = navResults.find(r => String(r.id) === String(inv.id));
+                    if (navRes && navRes.nav > 0) {
+                        return { inv, val: inv.units * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
+                    }
+                    return null;
+                }));
 
-            document.getElementById('cagrValue').textContent = `${cagr >= 0 ? '+' : ''}${cagr.toFixed(2)}%`;
+                // Helper to generate dynamic card
+                const createCard = (title, subLabel, weightedPct, absoluteChange, isDynamic = false) => {
+                    const sign = weightedPct >= 0 ? '+' : '';
+                    const colorClass = weightedPct >= 0 ? 'positive' : 'negative';
+                    const formattedAmt = `${sign}₹${Math.abs(absoluteChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+                    const formattedPct = `(${sign}${weightedPct.toFixed(2)}%)`;
 
-            // Update colors for main metrics
-            const colorClass = totalReturns >= 0 ? 'positive' : 'negative';
-            const xirrColorClass = cagr >= 0 ? 'positive' : 'negative';
-
-            ['totalReturnsPercentage', 'cagrValue'].forEach(id => {
-                const elem = document.getElementById(id);
-                if (elem) elem.className = `summary-value ${id === 'cagrValue' ? xirrColorClass : colorClass}`;
-            });
-
-            // Ensure static labels are wrapped correctly
-            const staticLabels = {
-                'totalInvestment': 'Total Investment',
-                'currentValue': 'Current Value',
-                'totalReturnsPercentage': 'Total Returns',
-                'cagrValue': 'XIRR (Annual)'
-            };
-
-            Object.keys(staticLabels).forEach(id => {
-                const card = document.getElementById(id).closest('.summary-card');
-                const label = card.querySelector('.summary-label');
-                if (label) {
-                    label.innerHTML = `<div class="summary-label-main">${staticLabels[id]}</div>`;
-                }
-            });
-
-            // 2. Portfolio Periodic & Yearly Performance (Dynamic Generation)
-            const summaryContainer = document.getElementById('summaryStats');
-            if (!summaryContainer) return; // Safeguard against null target
-            
-            // Remove any existing dynamic cards while keeping the 4 main stats
-            const staticCards = summaryContainer.querySelectorAll('.main-stats');
-            summaryContainer.innerHTML = '';
-            staticCards.forEach(c => summaryContainer.appendChild(c));
-
-            const oldestDate = userInvestments.length > 0 ? 
-                new Date(Math.min(...userInvestments.map(inv => new Date(inv.investmentDate)))) : null;
-            
-            const results = await Promise.all(userInvestments.map(async (inv) => {
-                const navRes = navResults.find(r => String(r.id) === String(inv.id));
-                if (navRes && navRes.nav > 0) {
-                    return { inv, val: inv.units * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
-                }
-                return null;
-            }));
-
-            // Helper to generate dynamic card
-            const createCard = (title, subLabel, weightedPct, absoluteChange) => {
-                const sign = weightedPct >= 0 ? '+' : '';
-                const colorClass = weightedPct >= 0 ? 'positive' : 'negative';
-                const formattedAmt = `${sign}₹${Math.abs(absoluteChange).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-                const formattedPct = `(${sign}${weightedPct.toFixed(2)}%)`;
-
-                const card = document.createElement('div');
-                card.className = 'summary-card';
-                card.innerHTML = `
+                    const card = document.createElement('div');
+                    card.className = `summary-card ${isDynamic ? 'dynamic-yearly-card' : ''}`;
+                    card.innerHTML = `
                     <div class="summary-value ${colorClass}">${formattedAmt} ${formattedPct}</div>
                     <div class="summary-label">
                         <div class="summary-label-main">${title}</div>
                         ${subLabel ? `<div class="summary-label-sub">${subLabel}</div>` : ''}
                     </div>
                 `;
-                return card;
-            };
+                    return card;
+                };
 
-            // 2A. Standard Periodic Durations
-            const standardPeriods = [
-                { key: 'daily', title: 'Yesterday', days: 1 },
-                { key: 'weekly', title: 'Last 7 Days', days: 7 },
-                { key: 'fifteenDays', title: 'Last 15 Days', days: 15 },
-                { key: 'monthly', title: 'Last 1 Month', days: 30 },
-                { key: 'quarterly', title: 'Last 3 Months', days: 90 },
-                { key: 'halfYearly', title: 'Last 6 Months', days: 180 },
-                { key: 'yearly', title: 'Last 1 Year', days: 365 }
-            ];
+                // 2A. Periodic Performance (Populate Existing HTML Cards)
+                const periods = [
+                    { key: 'daily', id: 'Daily' },
+                    { key: 'weekly', id: 'Weekly' },
+                    { key: 'fifteenDays', id: 'FifteenDays' },
+                    { key: 'monthly', id: 'Monthly' },
+                    { key: 'quarterly', id: 'Quarterly' },
+                    { key: 'halfYearly', id: 'HalfYearly' },
+                    { key: 'yearly', id: 'Yearly' }
+                ];
 
-            standardPeriods.forEach(p => {
-                const durationDate = new Date();
-                durationDate.setDate(durationDate.getDate() - p.days);
-                
-                if (oldestDate && oldestDate <= durationDate) {
+                periods.forEach(p => {
                     let weightedSum = 0, totalVal = 0, totalAmt = 0;
-                    let sDate = null, eDate = null;
+                    let sDate = '', eDate = '';
 
                     results.forEach(res => {
                         if (res && res.data?.periodic?.[p.key]) {
@@ -1411,37 +1637,62 @@
                         }
                     });
 
-                    if (totalVal > 0) {
-                        const sub = (p.key === 'daily') ? `(${eDate})` : `(Since ${sDate})`;
-                        summaryContainer.appendChild(createCard(p.title, sub, weightedSum / totalVal, totalAmt));
-                    }
-                }
-            });
+                    const card = document.getElementById(`card${p.id}`);
+                    if (card) {
+                        if (totalVal > 0) {
+                            const weightedPct = weightedSum / totalVal;
+                            const sign = weightedPct >= 0 ? '+' : '';
+                            const colorClass = weightedPct >= 0 ? 'positive' : 'negative';
+                            
+                            const pctElem = document.getElementById(`portfolio${p.id}Percentage`);
+                            const amtElem = document.getElementById(`portfolio${p.id}Amount`);
+                            const labelElem = document.getElementById(`label${p.id}`);
 
-            // 2B. Historical Yearly Breakdown
-            if (oldestDate) {
-                const startYear = oldestDate.getFullYear();
-                const endYear = new Date().getFullYear() - 1; // Previous years only
-                
-                for (let year = endYear; year >= startYear; year--) {
-                    let weightedSum = 0, totalVal = 0, totalAmt = 0;
-                    let found = false;
-
-                    results.forEach(res => {
-                        if (res && res.data?.yearlyBreakdown?.[year]) {
-                            const yItem = res.data.yearlyBreakdown[year];
-                            weightedSum += yItem.value * res.val;
-                            totalVal += res.val;
-                            totalAmt += (yItem.endNAV - yItem.startNAV) * res.inv.units;
-                            found = true;
+                            if (pctElem) {
+                                const formattedAmt = `(${sign}₹${Math.abs(totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
+                                pctElem.textContent = `${sign}${weightedPct.toFixed(2)}% ${formattedAmt}`;
+                                pctElem.className = `summary-value ${colorClass}`;
+                            }
+                            if (amtElem) card.querySelector('.summary-subvalue').style.display = 'none';
+                            if (labelElem) {
+                                const sub = (p.key === 'daily') ? `Yesterday (${eDate})` : `${labelElem.getAttribute('data-original-label') || labelElem.textContent} (Since ${sDate})`;
+                                if (!labelElem.getAttribute('data-original-label')) labelElem.setAttribute('data-original-label', labelElem.textContent);
+                                labelElem.innerHTML = `<div class="summary-label-main">${labelElem.getAttribute('data-original-label')}</div><div class="summary-label-sub" style="font-size: 0.7rem; opacity: 0.7;">${(p.key === 'daily') ? eDate : `Since ${sDate}`}</div>`;
+                            }
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
                         }
-                    });
+                    }
+                });
 
-                    if (found && totalVal > 0) {
-                        const sub = `(1 Jan ${year} - 31 Dec ${year})`;
-                        summaryContainer.appendChild(createCard(`Year ${year}`, sub, weightedSum / totalVal, totalAmt));
+                // 2B. Historical Yearly Breakdown
+                if (allDates.length > 0) {
+                    const startYear = allDates[0].getFullYear();
+                    const endYear = new Date().getFullYear() - 1; // Previous years only
+
+                    for (let year = endYear; year >= startYear; year--) {
+                        let weightedSum = 0, totalVal = 0, totalAmt = 0;
+                        let found = false;
+
+                        results.forEach(res => {
+                            if (res && res.data?.yearlyBreakdown?.[year]) {
+                                const yItem = res.data.yearlyBreakdown[year];
+                                weightedSum += yItem.value * res.val;
+                                totalVal += res.val;
+                                totalAmt += (yItem.endNAV - yItem.startNAV) * res.inv.units;
+                                found = true;
+                            }
+                        });
+
+                        if (found && totalVal > 0) {
+                            const sub = `(1 Jan ${year} - 31 Dec ${year})`;
+                            summaryContainer.appendChild(createCard(`Year ${year}`, sub, weightedSum / totalVal, totalAmt, true));
+                        }
                     }
                 }
+            } finally {
+                isSummaryUpdating = false;
             }
         }
 
@@ -1555,15 +1806,12 @@
             try {
                 userInvestments = await getCloudInvestments();
 
-                // Defer display to prevent blocking
-                setTimeout(() => {
-                    if (currentView === 'individual') {
-                        displayFunds();
-                    } else {
-                        displayGroups();
-                    }
-                    updateSummary();
-                }, 100);
+                if (currentView === 'individual') {
+                    await displayFunds();
+                } else {
+                    await displayGroups();
+                }
+                await updateSummary();
             } catch (error) {
                 console.error('Error loading investments from Google Drive:', error);
                 userInvestments = [];
@@ -1628,56 +1876,46 @@
             for (const [house, ids] of Object.entries(houses)) {
                 automatedGroups.push({
                     id: `house-${house.replace(/\s+/g, '-')}`,
-                    name: `${house} House`,
-                    description: `Automated group for ${house} Mutual Fund house`,
+                    name: `${house}`,
+                    description: `Funds from ${house} house`,
                     fundIds: ids,
                     createdDate: new Date().toISOString(),
-                    isAutomated: true
+                    isAutomated: true,
+                    autoType: 'house' // Tag for filtering
                 });
             }
 
-            // 2. Group by Fund Type (Allows multiple groups per fund)
+            // 2. Group by Fund Type & Category
             const types = {};
             const typeKeywords = [
-                { name: "Small Cap", patterns: [/small\s*cap/i] },
-                { name: "Mid Cap", patterns: [/mid\s*cap/i] },
-                { name: "Large Cap", patterns: [/large\s*cap/i] },
-                { name: "Flexi Cap", patterns: [/flexi\s*cap/i] },
-                { name: "Multi Cap", patterns: [/multi\s*cap/i] },
-                { name: "ELSS", patterns: [/elss/i, /tax\s*saver/i] },
-                { name: "Index", patterns: [/index/i, /nifty/i, /sensex/i] },
-                { name: "Liquid", patterns: [/liquid/i] },
-                { name: "Debt", patterns: [/debt/i, /gilt/i, /corporate/i, /treasury/i] },
-                { name: "Hybrid", patterns: [/hybrid/i, /balanced/i, /arbitrage/i] },
-                { name: "Equity", patterns: [/equity/i, /growth/i, /opportunit/i, /focused/i, /alpha/i, /bluechip/i] }
+                { name: "Small Cap", type: 'category', patterns: [/small\s*cap/i] },
+                { name: "Mid Cap", type: 'category', patterns: [/mid\s*cap/i] },
+                { name: "Large Cap", type: 'category', patterns: [/large\s*cap/i] },
+                { name: "Flexi Cap", type: 'category', patterns: [/flexi\s*cap/i] },
+                { name: "Multi Cap", type: 'category', patterns: [/multi\s*cap/i] },
+                { name: "ELSS", type: 'type', patterns: [/elss/i, /tax\s*saver/i] },
+                { name: "Index", type: 'type', patterns: [/index/i, /nifty/i, /sensex/i] },
+                { name: "Liquid", type: 'category', patterns: [/liquid/i] },
+                { name: "Debt", type: 'type', patterns: [/debt/i, /gilt/i, /corporate/i, /treasury/i] },
+                { name: "Hybrid", type: 'type', patterns: [/hybrid/i, /balanced/i, /arbitrage/i] },
+                { name: "Equity", type: 'type', patterns: [/equity/i, /growth/i, /opportunit/i, /focused/i, /alpha/i, /bluechip/i] }
             ];
 
             userInvestments.forEach(inv => {
                 let matchingTypes = new Set();
+                if (inv.category && inv.category !== 'N/A') matchingTypes.add(inv.category);
 
-                // Add from category field if present
-                if (inv.category && inv.category !== 'N/A') {
-                    matchingTypes.add(inv.category);
-                }
-
-                // Add all matching keywords
                 for (const typeCfg of typeKeywords) {
                     if (typeCfg.patterns.some(p => p.test(inv.schemeName))) {
                         matchingTypes.add(typeCfg.name);
                     }
                 }
 
-                // Intelligent Inference: Cross-link sub-types to broad categories
+                // Cross-link
                 const equitySubTypes = ["Small Cap", "Mid Cap", "Large Cap", "Flexi Cap", "Multi Cap", "ELSS", "Index"];
-                if ([...matchingTypes].some(t => equitySubTypes.includes(t))) {
-                    matchingTypes.add("Equity");
-                }
+                if ([...matchingTypes].some(t => equitySubTypes.includes(t))) matchingTypes.add("Equity");
+                if ([...matchingTypes].some(t => t.includes("Debt") || t === "Liquid")) matchingTypes.add("Debt");
 
-                if ([...matchingTypes].some(t => t.includes("Debt") || t === "Liquid")) {
-                    matchingTypes.add("Debt Funds");
-                }
-
-                // Assign fund to all identified groups
                 matchingTypes.forEach(t => {
                     if (!types[t]) types[t] = [];
                     types[t].push(inv.id);
@@ -1685,13 +1923,18 @@
             });
 
             for (const [type, ids] of Object.entries(types)) {
+                // Determine if this name matches one of our defined categories or defaults to 'type'
+                const cfg = typeKeywords.find(c => c.name === type);
+                const subType = cfg ? cfg.type : 'type';
+
                 automatedGroups.push({
                     id: `type-${type.replace(/\s+/g, '-')}`,
                     name: `${type}`,
                     description: `Automated group for ${type} funds`,
                     fundIds: ids,
                     createdDate: new Date().toISOString(),
-                    isAutomated: true
+                    isAutomated: true,
+                    autoType: subType
                 });
             }
 
@@ -1711,30 +1954,106 @@
             // Update button states
             const individualBtn = document.getElementById('individualViewBtn');
             const groupsBtn = document.getElementById('groupsViewBtn');
-            const createGroupBtn = document.getElementById('createGroupBtn');
+            const groupControls = document.getElementById('groupControls');
 
             if (view === 'individual') {
                 individualBtn.classList.add('active');
                 groupsBtn.classList.remove('active');
-                createGroupBtn.style.display = 'none';
+                groupControls.style.display = 'none';
                 displayFunds();
             } else {
                 individualBtn.classList.remove('active');
                 groupsBtn.classList.add('active');
-                createGroupBtn.style.display = 'inline-block';
+                groupControls.style.display = 'flex';
+                updateGroupFilterUI(); // NEW: Dynamically generate filters
                 displayGroups();
             }
+        }
+
+        function updateGroupFilterUI() {
+            const filterRow = document.querySelector('.group-filter-row');
+            if (!filterRow) return;
+
+            syncAutomatedGroups();
+
+            const hasCustom = fundGroups.some(g => !g.isAutomated);
+            const hasHouse = fundGroups.some(g => g.autoType === 'house');
+            const hasCategory = fundGroups.some(g => g.autoType === 'category');
+            const hasType = fundGroups.some(g => g.autoType === 'type');
+
+            let html = `
+                <button class="group-filter-btn ${currentGroupFilter === 'all' ? 'active' : ''}" 
+                        onclick="switchGroupFilter('all')">
+                    All
+                </button>
+            `;
+
+            if (hasHouse) {
+                html += `
+                    <button class="group-filter-btn ${currentGroupFilter === 'house' ? 'active' : ''}" 
+                            onclick="switchGroupFilter('house')">
+                        AMC House
+                    </button>
+                `;
+            }
+
+            if (hasCategory) {
+                html += `
+                    <button class="group-filter-btn ${currentGroupFilter === 'category' ? 'active' : ''}" 
+                            onclick="switchGroupFilter('category')">
+                        Fund Size
+                    </button>
+                `;
+            }
+
+            if (hasType) {
+                html += `
+                    <button class="group-filter-btn ${currentGroupFilter === 'type' ? 'active' : ''}" 
+                            onclick="switchGroupFilter('type')">
+                        Fund Type
+                    </button>
+                `;
+            }
+
+            if (hasCustom) {
+                html += `
+                    <button class="group-filter-btn ${currentGroupFilter === 'custom' ? 'active' : ''}" 
+                            onclick="switchGroupFilter('custom')">
+                        Custom
+                    </button>
+                `;
+            }
+
+            // Always add the "Add New Group" button at the very end
+            html += `
+                <button class="group-filter-btn" id="createGroupBtn" onclick="showCreateGroupModal()" 
+                        style="border: 1.5px dashed var(--primary-color); color: var(--primary-color); margin-left: 5px;">
+                    <i class="bi bi-plus-circle"></i> Add Group
+                </button>
+            `;
+
+            filterRow.innerHTML = html;
+        }
+
+        function switchGroupFilter(filter) {
+            currentGroupFilter = filter;
+            updateGroupFilterUI(); // Refresh UI to update active states
+            displayGroups();
         }
 
         function showCreateGroupModal() {
             const modal = new SimpleModal('createGroupModal');
             document.getElementById('createGroupForm').reset();
+
+            // Populate fund list for selection (none selected by default)
+            loadUserInvestments();
+            populateFundAssignmentList([], 'createGroupFundList');
+
             modal.show();
         }
 
         async function createGroup() {
             const groupName = document.getElementById('groupName').value.trim();
-            const groupDescription = document.getElementById('groupDescription').value.trim();
 
             if (!groupName) {
                 showError('Please enter a group name');
@@ -1747,30 +2066,37 @@
                 return;
             }
 
+            // Get selected fund IDs from the create modal list
+            const selectedFundIds = [];
+            document.querySelectorAll('#createGroupFundList input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedFundIds.push(parseInt(checkbox.value));
+            });
+
             const newGroup = {
                 id: Date.now(),
                 name: groupName,
-                description: groupDescription,
-                fundIds: [], // Start with empty array - funds can be added later via edit
+                fundIds: selectedFundIds,
                 createdDate: new Date().toISOString(),
                 isAutomated: false
             };
 
-
             fundGroups.push(newGroup);
-            await saveFundGroups();
 
-            // Close modal and refresh display
+            // 1. Close modal immediately
             const modal = new SimpleModal('createGroupModal');
             modal.hide();
 
+            // 2. Navigate to Custom view as requested
+            currentGroupFilter = 'custom';
+            updateGroupFilterUI();
             displayGroups();
+
+            // 3. Save to cloud in background
+            saveFundGroups();
         }
 
         // Debug function to check current state
         function debugGroupState() {
-
-            // Check for any orphaned fund IDs
             fundGroups.forEach(group => {
                 const orphanedIds = group.fundIds.filter(fundId =>
                     !userInvestments.some(inv => String(inv.id) === String(fundId))
@@ -1784,21 +2110,15 @@
             const group = fundGroups.find(g => String(g.id) === String(groupId));
             if (!group) return;
 
-            // Force refresh userInvestments from localStorage to catch recently added funds
             loadUserInvestments();
-
-            // Debug: Log group details
-
-            // Set current editing group
             window.currentEditingGroupId = groupId;
 
             // Populate form
             document.getElementById('editGroupName').value = group.name;
-            document.getElementById('editGroupDescription').value = group.description || '';
 
-            // Populate fund assignment list after a small delay to ensure data is loaded
+            // Populate fund assignment list for edit modal
             setTimeout(() => {
-                populateFundAssignmentList(group.fundIds);
+                populateFundAssignmentList(group.fundIds, 'fundAssignmentList');
             }, 200);
 
             // Show modal
@@ -1806,29 +2126,28 @@
             modal.show();
         }
 
-        function populateFundAssignmentList(selectedFundIds) {
-            const assignmentList = document.getElementById('fundAssignmentList');
+        function populateFundAssignmentList(selectedFundIds, targetListId = 'fundAssignmentList') {
+            const assignmentList = document.getElementById(targetListId);
+            if (!assignmentList) return;
 
             if (userInvestments.length === 0) {
                 assignmentList.innerHTML = '<p class="text-muted">No funds available. Add some funds first.</p>';
                 return;
             }
 
-            // Debug: Log the selected fund IDs and investment IDs
-
             const fundItemsHTML = userInvestments.map(investment => {
-                // Ensure both are numbers for proper comparison
                 const investmentId = String(investment.id);
                 const isSelected = selectedFundIds.some(id => String(id) === investmentId);
-
+                // Use a unique ID prefix based on target list to avoid DOM conflicts
+                const uniqueId = `${targetListId}-fund-${investment.id}`;
 
                 return `
                     <div class="fund-assignment-item">
                         <div class="d-flex align-items-center">
                             <input type="checkbox" class="form-check-input assignment-checkbox" 
-                                   id="fund-${investment.id}" value="${investment.id}" 
+                                   id="${uniqueId}" value="${investment.id}" 
                                    ${isSelected ? 'checked' : ''}>
-                            <label class="form-check-label ms-2" for="fund-${investment.id}">
+                            <label class="form-check-label ms-2" for="${uniqueId}">
                                 <strong>${investment.schemeName}</strong>
                                 <br><small class="text-muted">Invested: ₹${investment.investmentAmount.toLocaleString()} on ${formatDate(investment.investmentDate)}</small>
                             </label>
@@ -1846,7 +2165,6 @@
             if (!group) return;
 
             const groupName = document.getElementById('editGroupName').value.trim();
-            const groupDescription = document.getElementById('editGroupDescription').value.trim();
 
             if (!groupName) {
                 showError('Please enter a group name');
@@ -1865,20 +2183,20 @@
                 selectedFundIds.push(parseInt(checkbox.value));
             });
 
-            // Debug: Log the selected IDs
-
             // Update group
             group.name = groupName;
-            group.description = groupDescription;
             group.fundIds = selectedFundIds;
 
-            await saveFundGroups();
-
-            // Close modal and refresh display
+            // 1. Close modal immediately
             const modal = new SimpleModal('editGroupModal');
             modal.hide();
 
+            // 2. Refresh UI immediately
+            updateGroupFilterUI();
             displayGroups();
+
+            // 3. Save to cloud in background
+            saveFundGroups();
         }
 
         async function deleteGroup() {
@@ -1891,13 +2209,13 @@
             }
 
             fundGroups = fundGroups.filter(g => String(g.id) !== String(groupId));
-            await saveFundGroups();
 
-            // Close modal and refresh display
-            const modal = new SimpleModal('editGroupModal');
-            modal.hide();
-
+            // 1. Refresh UI immediately
+            updateGroupFilterUI();
             displayGroups();
+
+            // 2. Save to cloud in background
+            saveFundGroups();
         }
 
         async function displayGroups() {
@@ -1905,12 +2223,29 @@
 
             syncAutomatedGroups();
 
-            if (fundGroups.length === 0) {
+            // Filter groups based on current selection
+            let filteredGroups = fundGroups;
+            if (currentGroupFilter === 'custom') {
+                filteredGroups = fundGroups.filter(g => !g.isAutomated);
+            } else if (['house', 'category', 'type'].includes(currentGroupFilter)) {
+                filteredGroups = fundGroups.filter(g => g.autoType === currentGroupFilter);
+            }
+
+            // Sort groups alphabetically (ascending, case-insensitive)
+            filteredGroups.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+
+            if (filteredGroups.length === 0) {
+                let emptyMsg = 'No groups created yet';
+                if (currentGroupFilter === 'custom') emptyMsg = 'No custom groups created';
+                if (currentGroupFilter === 'house') emptyMsg = 'No fund houses detected';
+                if (currentGroupFilter === 'category') emptyMsg = 'No fund categories detected';
+                if (currentGroupFilter === 'type') emptyMsg = 'No fund types detected';
+
                 container.innerHTML = `
                     <div class="empty-group-state">
                         <i class="bi bi-collection"></i>
-                        <h4>No Groups Created Yet</h4>
-                        <p>Click "Create Group" to organize your funds into categories like "Small Cap Funds", "Large Cap Funds", etc.</p>
+                        <h4>${emptyMsg}</h4>
+                        ${currentGroupFilter === 'custom' ? '<p>Create your own group to organize funds your way!</p>' : ''}
                     </div>
                 `;
                 return;
@@ -1919,41 +2254,19 @@
             showLoading();
 
             try {
-                const groupsHTML = await Promise.all(fundGroups.map(async (group) => {
+                const groupsHTML = await Promise.all(filteredGroups.map(async (group) => {
                     const groupStats = await calculateGroupStats(group.fundIds);
+                    const totalReturnsPercentage = groupStats.totalInvestment > 0 ? (groupStats.totalReturns / groupStats.totalInvestment) * 100 : 0;
 
-                    if (group.fundIds.length === 0) {
-                        return `
-                            <div class="group-card">
-                                <div class="group-header">
-                                    <h5 class="group-title">${group.name}</h5>
-                                    <div class="group-actions">
-                                        ${!group.isAutomated ? `
-                                        <button class="btn btn-sm btn-outline-primary btn-group-sm" onclick="showEditGroupModal('${group.id}')">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </button>` : '<span class="badge bg-light text-dark" style="font-size: 0.7rem;">Auto</span>'}
-                                    </div>
-                                </div>
-                                ${group.description ? `<p class="text-muted">${group.description}</p>` : ''}
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle"></i> No funds assigned to this group. Click "Edit" to add funds.
-                                </div>
-                            </div>
-                        `;
-                    }
-
-                    // Aggregate funds by schemeCode for cleaner display
+                    // Aggregate funds... (rest of aggregation logic remains same)
                     const aggregatedFunds = {};
                     group.fundIds.forEach(fundId => {
                         const investment = userInvestments.find(inv => String(inv.id) === String(fundId));
                         if (investment) {
                             if (!aggregatedFunds[investment.schemeCode]) {
                                 aggregatedFunds[investment.schemeCode] = {
-                                    schemeCode: investment.schemeCode,
-                                    schemeName: investment.schemeName,
-                                    investmentAmount: 0,
-                                    units: 0,
-                                    count: 0
+                                    schemeCode: investment.schemeCode, schemeName: investment.schemeName,
+                                    investmentAmount: 0, units: 0, count: 0
                                 };
                             }
                             aggregatedFunds[investment.schemeCode].investmentAmount += investment.investmentAmount;
@@ -1964,61 +2277,43 @@
 
                     const groupFundsHTML = await Promise.all(Object.values(aggregatedFunds).map(async (agg) => {
                         try {
-                            // Find all investments for this specific fund within the current group
                             const fundInvestments = group.fundIds
                                 .map(id => userInvestments.find(inv => String(inv.id) === String(id)))
                                 .filter(inv => inv && inv.schemeCode === agg.schemeCode);
-
-                            // Prepare cash flows for this specific fund's XIRR calculation
                             const cashFlows = fundInvestments.map(inv => {
                                 const [y, m, d] = inv.investmentDate.split('-');
                                 return { date: new Date(y, m - 1, d), amount: -inv.investmentAmount };
                             });
-
                             const navData = await getCurrentNAV(agg.schemeCode);
                             const currentNAV = navData.nav;
-                            const navDate = navData.date;
                             const currentValue = agg.units * currentNAV;
                             const returns = currentValue - agg.investmentAmount;
                             const returnsPercentage = (returns / agg.investmentAmount) * 100;
-                            const avgNav = agg.investmentAmount / agg.units;
                             const fundXIRR = calculatePortfolioXIRR(cashFlows, currentValue);
 
                             return `
                                 <div class="group-fund-item">
                                     <div class="group-fund-name">
-                                        ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem; font-weight: 500;">${agg.count} Txns</span>` : ''}
+                                        ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem;">${agg.count} Txns</span>` : ''}
                                         <div style="font-size: 0.75rem; color: #6c757d;">
-                                            Invested: ₹${agg.investmentAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })} | Avg Inv. NAV: ₹${avgNav.toFixed(2)} | NAV as on ${navDate}: ₹${currentNAV.toFixed(2)}
+                                            Invested: ₹${agg.investmentAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })} | NAV: ₹${currentNAV.toFixed(2)}
                                             &nbsp;&nbsp;
                                             <span style="color: ${returns >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
-                                                <i class="bi bi-caret-${returns >= 0 ? 'up' : 'down'}-fill"></i>
                                                 ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, { maximumFractionDigits: 0 })} (${returnsPercentage.toFixed(2)}%)
                                             </span>
                                             &nbsp;&nbsp;
                                             <span style="color: ${fundXIRR >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
-                                                <i class="bi bi-caret-${fundXIRR >= 0 ? 'up' : 'down'}-fill"></i>
                                                 XIRR: ${fundXIRR.toFixed(2)}%
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="group-fund-returns" style="text-align: right;">
-                                        <div style="font-weight: 600; color: #2c3e50;">₹${currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                                        <div style="font-size: 0.7rem; color: #6c757d;">Current Value</div>
+                                    <div class="group-fund-returns ${returns >= 0 ? 'positive' : 'negative'}" style="text-align: right;">
+                                        <div style="font-weight: 600;">₹${currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
                                     </div>
                                 </div>
                             `;
-                        } catch (error) {
-                            return `
-                                <div class="group-fund-item">
-                                    <div class="group-fund-name">${agg.schemeName}</div>
-                                    <div class="text-muted">Data unavailable</div>
-                                </div>
-                            `;
-                        }
+                        } catch (e) { return `<div class="group-fund-item text-muted">Data unavailable</div>`; }
                     }));
-
-                    const totalReturnsPercentage = groupStats.totalInvestment > 0 ? (groupStats.totalReturns / groupStats.totalInvestment) * 100 : 0;
 
                     return `
                         <div class="group-card">
@@ -2026,40 +2321,41 @@
                                 <h5 class="group-title">${group.name}</h5>
                                 <div class="group-actions">
                                     ${!group.isAutomated ? `
-                                    <button class="btn btn-sm btn-outline-primary btn-group-sm" onclick="showEditGroupModal('${group.id}')">
+                                    <button class="btn btn-sm btn-outline-primary btn-group-action me-1" onclick="showEditGroupModal('${group.id}')">
                                         <i class="bi bi-pencil"></i> Edit
-                                    </button>` : '<span class="badge bg-light text-dark" style="font-size: 0.7rem;">Auto</span>'}
+                                    </button>
+                                    <button class="btn btn-sm btn-delete-group btn-group-action" onclick="window.currentEditingGroupId='${group.id}'; deleteGroup();">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                    ` : '<span class="badge bg-light text-dark" style="font-size: 0.7rem;">Default</span>'}
                                 </div>
                             </div>
-                            ${group.description ? `<p class="text-muted">${group.description}</p>` : ''}
+                            ${group.description ? `<p class="text-muted small">${group.description}</p>` : ''}
                             
                             <div class="group-stats">
                                 <div class="group-stat">
                                     <div class="group-stat-value">₹${groupStats.totalInvestment.toLocaleString()}</div>
-                                    <div class="group-stat-label">Total Investment</div>
+                                    <div class="group-stat-label">Invested</div>
                                 </div>
                                 <div class="group-stat">
-                                    <div class="group-stat-value">₹${groupStats.currentValue.toLocaleString()}</div>
-                                    <div class="group-stat-label">Current Value</div>
+                                    <div class="group-stat-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">₹${groupStats.currentValue.toLocaleString()}</div>
+                                    <div class="group-stat-label">Current</div>
                                 </div>
                                 <div class="group-stat">
                                     <div class="group-stat-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">
-                                        <i class="bi bi-caret-${groupStats.totalReturns >= 0 ? 'up' : 'down'}-fill"></i>
                                         ${groupStats.totalReturns >= 0 ? '+' : ''}₹${groupStats.totalReturns.toLocaleString()}
                                     </div>
-                                    <div class="group-stat-label">Returns (${totalReturnsPercentage >= 0 ? '+' : ''}${totalReturnsPercentage.toFixed(2)}%)</div>
+                                    <div class="group-stat-label">Returns (${totalReturnsPercentage.toFixed(1)}%)</div>
                                 </div>
                                 <div class="group-stat">
                                     <div class="group-stat-value ${groupStats.cagr >= 0 ? 'positive' : 'negative'}">
-                                        <i class="bi bi-caret-${groupStats.cagr >= 0 ? 'up' : 'down'}-fill"></i>
-                                        ${groupStats.cagr >= 0 ? '+' : ''}${groupStats.cagr.toFixed(2)}%
+                                        ${groupStats.cagr.toFixed(2)}%
                                     </div>
-                                    <div class="group-stat-label">XIRR (Annual)</div>
+                                    <div class="group-stat-label">XIRR</div>
                                 </div>
                             </div>
                             
                             <div class="group-funds">
-                                <h6><i class="bi bi-layers"></i> Funds in this group (${Object.keys(aggregatedFunds).length}):</h6>
                                 ${groupFundsHTML.join('')}
                             </div>
                         </div>
@@ -2070,7 +2366,7 @@
 
             } catch (error) {
                 console.error('Error displaying groups:', error);
-                showError('Failed to load group data. Please check your internet connection.');
+                showError('Failed to load group data.');
             } finally {
                 hideLoading();
             }
@@ -2147,39 +2443,31 @@
             document.getElementById('loadingSpinner').style.display = 'none';
         }
 
-        function showToast(message, type = 'info', title = '') {
+        function showToast(message, type = 'info') {
             const toastContainer = document.getElementById('toastContainer');
             const toastId = 'toast-' + Date.now();
 
             const toastHTML = `
-                <div id="${toastId}" class="toast ${type}" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <strong class="me-auto">${title || type.charAt(0).toUpperCase() + type.slice(1)}</strong>
-                        <small>${new Date().toLocaleTimeString()}</small>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body">
-                        ${message}
-                    </div>
+                <div id="${toastId}" class="toast ${type}">
+                    <div class="toast-message">${message}</div>
                 </div>
             `;
 
             toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-
             const toastElement = document.getElementById(toastId);
 
-            // Show toast with custom implementation
-            toastElement.style.display = 'block';
-            toastElement.classList.add('show');
+            // Trigger animation
+            requestAnimationFrame(() => {
+                toastElement.classList.add('show');
+            });
 
-            // Auto-hide toast after delay
-            const delay = type === 'error' ? 5000 : type === 'info' ? 10000 : 3000;
+            // Magic auto-dismiss after exactly 2 seconds
             setTimeout(() => {
-                toastElement.classList.remove('show');
-                setTimeout(() => {
-                    toastElement.remove();
-                }, 300); // Wait for fade out animation
-            }, delay);
+                if (toastElement) {
+                    toastElement.classList.remove('show');
+                    setTimeout(() => toastElement.remove(), 400);
+                }
+            }, 2000);
         }
 
         function showError(message) {
@@ -2379,11 +2667,14 @@
                     if (tokenResponse && tokenResponse.access_token) {
                         accessToken = tokenResponse.access_token;
 
+                        // Show global loader immediately
+                        showGlobalLoader('Signing in...', 'Retrieving your profile...');
+
                         fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                             headers: { 'Authorization': `Bearer ${accessToken}` }
                         })
                             .then(res => res.json())
-                            .then(userInfo => {
+                            .then(async userInfo => {
                                 currentUser = {
                                     name: userInfo.name || userInfo.email.split('@')[0],
                                     email: userInfo.email,
@@ -2398,18 +2689,19 @@
                                     expiry: Date.now() + (15 * 60 * 1000)
                                 }));
 
-                                updateAuthUI();
-                                showMainContent();
+                                updateAuthUI(); updateSyncUI();
 
-                                setTimeout(async () => {
-                                    try {
-                                        await syncFromDriveOnLogin();
-                                    } catch (error) {
-                                        console.error('Sync from Drive error:', error);
-                                    }
-                                }, 500);
+                                // Await full initialization before showing content
+                                updateLoadingText('Synchronizing data...');
+                                await loadFundGroups();
+                                await loadUserInvestments();
+
+                                showMainContent();
+                                hideGlobalLoader();
+
                             }).catch(err => {
                                 console.error('Error fetching user info:', err);
+                                hideGlobalLoader();
                                 showToast('Failed to retrieve user information.', 'error', 'Sign In Error');
                             });
                     }
@@ -2430,7 +2722,7 @@
             isSignedIn = false;
             accessToken = null;
             localStorage.removeItem('mf_auth');
-            updateAuthUI();
+            updateAuthUI(); updateSyncUI();
             showLoginContent();
         }
 
@@ -2630,80 +2922,34 @@
             return merged;
         }
 
-        // Manual sync function removed - auto-sync handles everything
-        // If needed, can be called manually: await periodicSync();
-
-
-
-        // Modal close button event listeners
-        document.addEventListener('DOMContentLoaded', function () {
-            // Add event listeners for modal close buttons
+        // Page initialization - Handle Session Persistence and Modal logic
+        document.addEventListener('DOMContentLoaded', async function () {
+            // Setup Modal close logic
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
                 button.addEventListener('click', function () {
                     const modal = this.closest('.modal');
-                    if (modal) {
-                        modal.classList.remove('show');
-                    }
+                    if (modal) modal.classList.remove('show');
                 });
             });
 
-            // Close modal when clicking outside
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.addEventListener('click', function (e) {
-                    if (e.target === this) {
-                        this.classList.remove('show');
-                    }
+                    if (e.target === this) this.classList.remove('show');
                 });
             });
-        });
 
-        // Page initialization - Handle Session Persistence
-        document.addEventListener('DOMContentLoaded', function () {
-            const authData = localStorage.getItem('mf_auth');
-            if (authData) {
-                try {
-                    const auth = JSON.parse(authData);
-                    // Check if session is still valid (15 mins)
-                    if (auth.expiry && Date.now() < auth.expiry) {
-                        accessToken = auth.accessToken;
-                        currentUser = auth.user;
-                        isSignedIn = true;
-
-                        // Refresh expiry time on new page load (Rolling session)
-                        auth.expiry = Date.now() + (15 * 60 * 1000);
-                        localStorage.setItem('mf_auth', JSON.stringify(auth));
-
-                        updateAuthUI();
-                        showMainContent();
-
-                        // Automatically restore data from cloud
-                        setTimeout(async () => {
-                            try {
-                                await syncFromDriveOnLogin();
-                            } catch (error) {
-                                console.error('Auto-sync failed:', error);
-                            }
-                        }, 800);
-                        return;
-                    }
-                } catch (e) {
-                    console.error('Session restore failed:', e);
-                }
-            }
-
-            // No valid session or expired, show login screen
-            showLoginContent();
+            // Start master initialization
+            initializeEmailSignIn(); // Start GSI initialization
+            setupEventListeners();
+            setMaxDate();
+            await initApp();
         });
 
         function showLoginContent() {
             const mainContent = document.getElementById('mainContent');
             const loginContent = document.getElementById('loginContent');
-            if (mainContent) {
-                mainContent.style.display = 'none';
-            }
-            if (loginContent) {
-                loginContent.style.display = 'flex';
-            }
+            if (mainContent) mainContent.style.display = 'none';
+            if (loginContent) loginContent.style.display = 'flex';
         }
 
     </script>
