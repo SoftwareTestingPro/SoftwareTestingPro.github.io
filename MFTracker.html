@@ -2307,11 +2307,11 @@
                                 };
                                 isSignedIn = true;
                                 
-                                // Save to localStorage
+                                // Save to localStorage (15 minute session)
                                 localStorage.setItem('mf_auth', JSON.stringify({
                                     accessToken: accessToken,
                                     user: currentUser,
-                                    expiry: Date.now() + (3500 * 1000) // valid for 58 mins
+                                    expiry: Date.now() + (15 * 60 * 1000) 
                                 }));
 
                                 updateAuthUI();
@@ -2577,9 +2577,41 @@
             });
         });
 
-        // Page initialization - show login page by default
+        // Page initialization - Handle Session Persistence
         document.addEventListener('DOMContentLoaded', function () {
-            // Always show login page - no localStorage concept
+            const authData = localStorage.getItem('mf_auth');
+            if (authData) {
+                try {
+                    const auth = JSON.parse(authData);
+                    // Check if session is still valid (15 mins)
+                    if (auth.expiry && Date.now() < auth.expiry) {
+                        accessToken = auth.accessToken;
+                        currentUser = auth.user;
+                        isSignedIn = true;
+
+                        // Refresh expiry time on new page load (Rolling session)
+                        auth.expiry = Date.now() + (15 * 60 * 1000);
+                        localStorage.setItem('mf_auth', JSON.stringify(auth));
+
+                        updateAuthUI();
+                        showMainContent();
+
+                        // Automatically restore data from cloud
+                        setTimeout(async () => {
+                            try {
+                                await syncFromDriveOnLogin();
+                            } catch (error) {
+                                console.error('Auto-sync failed:', error);
+                            }
+                        }, 800);
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Session restore failed:', e);
+                }
+            }
+
+            // No valid session or expired, show login screen
             showLoginContent();
         });
 
