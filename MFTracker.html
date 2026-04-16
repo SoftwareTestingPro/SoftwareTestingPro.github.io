@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mutual Fund Tracker</title>
-        <style>
+    <style>
         :root {
             --primary-color: #4361ee;
             --secondary-color: #3f37c9;
@@ -338,8 +339,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .loading-text {
@@ -411,7 +417,7 @@
             color: #06ffa5;
         }
 
-        
+
         .btn-secondary {
             background-color: #f1f3f4;
             color: #5f6368;
@@ -696,18 +702,41 @@
             color: #6c757d;
         }
 
-        .mb-0 { margin-bottom: 0; }
-        .mb-2 { margin-bottom: 8px; }
-        .mb-3 { margin-bottom: 16px; }
-        .mb-4 { margin-bottom: 24px; }
+        .mb-0 {
+            margin-bottom: 0;
+        }
 
-        .mt-2 { margin-top: 8px; }
-        .mt-3 { margin-top: 16px; }
+        .mb-2 {
+            margin-bottom: 8px;
+        }
 
-        .ms-2 { margin-left: 8px; }
+        .mb-3 {
+            margin-bottom: 16px;
+        }
 
-        .gap-2 { gap: 8px; }
-        .gap-3 { gap: 16px; }
+        .mb-4 {
+            margin-bottom: 24px;
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        .mt-3 {
+            margin-top: 16px;
+        }
+
+        .ms-2 {
+            margin-left: 8px;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+
+        .gap-3 {
+            gap: 16px;
+        }
 
         .btn {
             display: inline-block;
@@ -931,6 +960,7 @@
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
+
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
@@ -1031,7 +1061,8 @@
                                 <div class="col-md-6">
                                     <div class="search-container">
                                         <label for="fundSearch" class="form-label">Search Mutual Fund</label>
-                                        <input type="text" class="form-control" id="fundSearch" placeholder="Type to search funds..." autocomplete="off">
+                                        <input type="text" class="form-control" id="fundSearch"
+                                            placeholder="Type to search funds..." autocomplete="off">
                                         <div class="search-dropdown" id="searchDropdown"></div>
                                     </div>
                                 </div>
@@ -1041,7 +1072,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label for="investmentAmount" class="form-label">Investment Amount (₹)</label>
-                                    <input type="number" class="form-control" id="investmentAmount" placeholder="10000" min="1" required>
+                                    <input type="number" class="form-control" id="investmentAmount" placeholder="10000"
+                                        min="1" required>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -1061,13 +1093,15 @@
 
             <!-- View Toggle -->
             <div class="view-toggle">
-                <button class="btn btn-outline-primary active" id="individualViewBtn" onclick="switchView('individual')">
+                <button class="btn btn-outline-primary active" id="individualViewBtn"
+                    onclick="switchView('individual')">
                     <i class="bi bi-person"></i> Individual Funds
                 </button>
                 <button class="btn btn-outline-primary" id="groupsViewBtn" onclick="switchView('groups')">
                     <i class="bi bi-collection"></i> Groups
                 </button>
-                <button class="btn btn-primary-custom" id="createGroupBtn" onclick="showCreateGroupModal()" style="display: none;">
+                <button class="btn btn-primary-custom" id="createGroupBtn" onclick="showCreateGroupModal()"
+                    style="display: none;">
                     <i class="bi bi-plus-lg"></i> Create Group
                 </button>
             </div>
@@ -1095,7 +1129,8 @@
     <input type="file" id="importFile" accept=".json,.csv" style="display: none;">
 
     <!-- Create Group Modal -->
-    <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1108,12 +1143,14 @@
                     <form id="createGroupForm">
                         <div class="mb-3">
                             <label for="groupName" class="form-label">Group Name</label>
-                            <input type="text" class="form-control" id="groupName" placeholder="e.g., Small Cap Funds, Large Cap Funds" required>
+                            <input type="text" class="form-control" id="groupName"
+                                placeholder="e.g., Small Cap Funds, Large Cap Funds" required>
                             <div class="form-text">Give your group a descriptive name</div>
                         </div>
                         <div class="mb-3">
                             <label for="groupDescription" class="form-label">Description (Optional)</label>
-                            <textarea class="form-control" id="groupDescription" rows="2" placeholder="Brief description of this group..."></textarea>
+                            <textarea class="form-control" id="groupDescription" rows="2"
+                                placeholder="Brief description of this group..."></textarea>
                         </div>
                     </form>
                 </div>
@@ -1168,9 +1205,9 @@
         </div>
     </div>
 
-    
-        <script>
-// Simple modal implementation to replace Bootstrap modal
+
+    <script>
+        // Simple modal implementation to replace Bootstrap modal
         class SimpleModal {
             constructor(elementId) {
                 this.element = document.getElementById(elementId);
@@ -1200,13 +1237,13 @@
         let allFundsCache = null; // Cache for all funds
         let isFundsLoading = false;
         let editingInvestmentId = null; // Track if we're editing an investment
-        
+
         // Note: userInvestments now represents cloud data - no local storage concept
-        
+
         // Fund Groups functionality
         let fundGroups = []; // Array to store fund groups
         let currentView = 'individual'; // 'individual' or 'groups'
-        
+
         // Authentication variables
         let currentUser = null;
         let isSignedIn = false;
@@ -1219,20 +1256,20 @@
         }
 
         // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Check for existing authentication
             checkAuthState();
-            
+
             // Initialize Email Sign-In
             setTimeout(initializeEmailSignIn, 500);
 
             // Setup basic UI elements
             setupEventListeners();
             setMaxDate();
-            
+
             // Load fund groups
             loadFundGroups();
-            
+
             // Add maximum loading time limit
             const maxLoadingTime = setTimeout(() => {
                 console.warn('Maximum loading time reached, showing app anyway');
@@ -1242,14 +1279,14 @@
                     showMainContent();
                 }, 500);
             }, 8000); // Maximum 8 seconds total loading time
-            
+
             // Load cache first, then initialize everything else
             loadAllFundsCache().then(() => {
                 clearTimeout(maxLoadingTime);
                 // Cache loaded successfully
                 updateLoadingText('Loading your investments...');
                 loadUserInvestments();
-                
+
                 // Show main content
                 setTimeout(() => {
                     showMainContent();
@@ -1259,7 +1296,7 @@
                 // Cache loading failed, but continue with basic functionality
                 updateLoadingText('Cache loading failed, continuing...');
                 loadUserInvestments();
-                
+
                 // Show main content anyway
                 setTimeout(() => {
                     showMainContent();
@@ -1270,24 +1307,24 @@
         // Load all funds into cache with timeout protection
         async function loadAllFundsCache() {
             if (allFundsCache || isFundsLoading) return Promise.resolve();
-            
+
             isFundsLoading = true;
             const timeoutId = setTimeout(() => {
                 console.warn('Cache loading timeout - will try fallback');
                 isFundsLoading = false;
             }, 5000); // Reduced to 5 second timeout
-            
+
             try {
                 updateLoadingText('Fetching fund database...');
                 // Try to get a comprehensive list of funds
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 3000); // Reduced to 3 second timeout
-                
-                const response = await fetch('https://api.mfapi.in/mf', { 
-                    signal: controller.signal 
+
+                const response = await fetch('https://api.mfapi.in/mf', {
+                    signal: controller.signal
                 });
                 clearTimeout(timeout);
-                
+
                 if (response.ok) {
                     updateLoadingText('Processing fund data...');
                     const data = await response.json();
@@ -1306,7 +1343,7 @@
                 } else {
                     console.error('Failed to load all funds:', error);
                 }
-                
+
                 // No fallback available
                 clearTimeout(timeoutId);
                 isFundsLoading = false;
@@ -1333,14 +1370,14 @@
                 const loadingScreen = document.getElementById('loadingScreen');
                 const mainContent = document.getElementById('mainContent');
                 const loginContent = document.getElementById('loginContent');
-                
+
                 console.log('showMainContent called, isSignedIn:', isSignedIn, 'currentUser:', currentUser);
-                
+
                 // Hide loading screen
                 if (loadingScreen) {
                     loadingScreen.style.display = 'none';
                 }
-                
+
                 // Show appropriate content based on authentication state
                 if (isSignedIn && currentUser) {
                     // Show main content if user is signed in
@@ -1388,10 +1425,10 @@
         function setupEventListeners() {
             // Form submission
             document.getElementById('addFundForm').addEventListener('submit', handleAddFund);
-            
+
             // Clear form
             document.getElementById('clearForm').addEventListener('click', clearForm);
-            
+
             // Search functionality
             const searchInput = document.getElementById('fundSearch');
             searchInput.addEventListener('input', debounce(handleSearch, 300));
@@ -1400,9 +1437,9 @@
                     handleSearch();
                 }
             });
-            
+
             // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
+            document.addEventListener('click', function (e) {
                 if (!e.target.closest('.search-container')) {
                     document.getElementById('searchDropdown').style.display = 'none';
                 }
@@ -1426,7 +1463,7 @@
         async function handleSearch() {
             const query = document.getElementById('fundSearch').value.trim();
             const dropdown = document.getElementById('searchDropdown');
-            
+
             if (query.length < 2) {
                 dropdown.style.display = 'none';
                 return;
@@ -1448,23 +1485,23 @@
         async function searchFunds(query) {
             // Use cache if available
             if (allFundsCache) {
-                const filtered = allFundsCache.filter(fund => 
+                const filtered = allFundsCache.filter(fund =>
                     fund.schemeName.toLowerCase().includes(query.toLowerCase()) ||
                     fund.schemeCode.toString().includes(query)
                 ).slice(0, 15); // Increased from 10 to 15 to show more options
                 return filtered;
             }
-            
+
             // If cache not loaded, try API with timeout
             try {
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-                
+
                 const response = await fetch(`https://api.mfapi.in/mf/search?q=${encodeURIComponent(query)}`, {
                     signal: controller.signal
                 });
                 clearTimeout(timeout);
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch funds');
                 }
@@ -1477,7 +1514,7 @@
                 } else {
                     console.error('Error fetching from MF API:', error);
                 }
-                
+
                 // Return empty results - no fallback
                 return [];
             }
@@ -1486,14 +1523,14 @@
         // Display search results
         function displaySearchResults(funds) {
             const dropdown = document.getElementById('searchDropdown');
-            
+
             if (funds.length === 0) {
                 dropdown.innerHTML = '<div class="search-dropdown-item">No funds found</div>';
             } else {
                 dropdown.innerHTML = funds.map(fund => {
                     const schemeName = fund.schemeName.replace(/'/g, "\\'").replace(/"/g, '\\"');
                     const fundType = fund.fundType || fund.category || 'N/A';
-                    
+
                     // Detect plan type
                     let planType = 'Regular';
                     let planTypeClass = 'bg-success';
@@ -1501,7 +1538,7 @@
                         planType = 'Direct';
                         planTypeClass = 'bg-primary';
                     }
-                    
+
                     return `
                     <div class="search-dropdown-item" data-scheme-code="${fund.schemeCode}" data-scheme-name="${schemeName}" data-nav="${fund.nav || 0}">
                         <div class="d-flex justify-content-between align-items-start">
@@ -1514,10 +1551,10 @@
                     </div>
                 `;
                 }).join('');
-                
+
                 // Add event listeners to dropdown items
                 dropdown.querySelectorAll('.search-dropdown-item').forEach(item => {
-                    item.addEventListener('click', function() {
+                    item.addEventListener('click', function () {
                         const schemeCode = this.getAttribute('data-scheme-code');
                         const schemeName = this.getAttribute('data-scheme-name');
                         const nav = parseFloat(this.getAttribute('data-nav'));
@@ -1525,7 +1562,7 @@
                     });
                 });
             }
-            
+
             dropdown.style.display = 'block';
         }
 
@@ -1535,7 +1572,7 @@
             selectedFund = { schemeCode, schemeName, nav };
             document.getElementById('fundSearch').value = schemeName;
             document.getElementById('searchDropdown').style.display = 'none';
-            
+
             // Check if this is HDFC Flexi Cap Fund and provide helpful info
             if (schemeName.toLowerCase().includes('hdfc flexi cap')) {
                 if (schemeName.toLowerCase().includes('direct')) {
@@ -1551,7 +1588,7 @@
         // Handle add fund form submission
         async function handleAddFund(e) {
             e.preventDefault();
-            
+
             const schemeCode = selectedFund?.schemeCode;
             const schemeName = selectedFund?.schemeName;
             const investmentDate = document.getElementById('investmentDate').value;
@@ -1569,7 +1606,7 @@
 
             try {
                 showLoading();
-                
+
                 // Get NAV for the investment date
                 const nav = await getNAVForDate(schemeCode, investmentDate);
                 const units = investmentAmount / nav;
@@ -1611,20 +1648,20 @@
 
                 // Sync to cloud since we're cloud-only
                 await saveUserInvestments();
-                
+
                 // Reset button text
                 const submitBtn = document.getElementById('submitBtn');
                 submitBtn.innerHTML = '<i class="bi bi-plus-lg"></i> Add Fund';
-                
+
                 clearForm();
-                
+
                 // Display based on current view
                 if (currentView === 'individual') {
                     displayFunds();
                 } else {
                     displayGroups();
                 }
-                
+
                 updateSummary();
             } catch (error) {
                 console.error('Error adding fund:', error);
@@ -1643,18 +1680,18 @@
                     throw new Error('Failed to fetch NAV data');
                 }
                 const data = await response.json();
-                
+
                 if (!data.data || data.data.length === 0) {
                     throw new Error('No NAV data available for this fund');
                 }
-                
+
                 // Find NAV for the specific date or closest previous date
                 const targetDate = new Date(date);
                 const navData = data.data;
-                
+
                 let closestNAV = null;
                 let closestDate = null;
-                
+
                 for (const navRecord of navData) {
                     const recordDate = new Date(navRecord.date);
                     if (recordDate <= targetDate) {
@@ -1664,7 +1701,7 @@
                         }
                     }
                 }
-                
+
                 if (closestNAV) {
                     return closestNAV;
                 } else {
@@ -1685,11 +1722,11 @@
                     throw new Error('Failed to fetch current NAV');
                 }
                 const data = await response.json();
-                
+
                 if (!data.data || data.data.length === 0) {
                     throw new Error('No NAV data available for this fund');
                 }
-                
+
                 return parseFloat(data.data[0].nav); // Latest NAV is first in the array
             } catch (error) {
                 console.error('Error fetching current NAV:', error);
@@ -1704,10 +1741,10 @@
                 console.log('Display already in progress, skipping');
                 return;
             }
-            
+
             displayInProgress = true;
             const container = document.getElementById('fundsContainer');
-            
+
             try {
                 if (userInvestments.length === 0) {
                     container.innerHTML = `
@@ -1722,8 +1759,8 @@
                 }
 
                 showLoading();
-            
-            const fundsHTML = await Promise.all(userInvestments.map(async (investment) => {
+
+                const fundsHTML = await Promise.all(userInvestments.map(async (investment) => {
                     try {
                         console.log('Processing investment:', investment.schemeName);
                         const currentNAV = await getCurrentNAV(investment.schemeCode);
@@ -1731,9 +1768,9 @@
                         const returns = currentValue - investment.investmentAmount;
                         const returnsPercentage = (returns / investment.investmentAmount) * 100;
                         const fundCAGR = calculateFundCAGR(investment, currentNAV);
-                        
+
                         const performance = await calculatePerformance(investment, currentNAV);
-                        
+
                         // Prepare all performance items for the grid
                         const performanceItems = [
                             { label: 'Last change', value: performance.daily, startNAV: performance.dailyStartNAV, endNAV: currentNAV, changeDate: performance.dailyChangeDate },
@@ -1743,7 +1780,7 @@
                             { label: 'Last 180 Days', value: performance.halfYearly, startNAV: performance.halfYearlyStartNAV, endNAV: currentNAV },
                             { label: 'Current year', value: performance.yearly, startNAV: performance.yearlyStartNAV, endNAV: currentNAV }
                         ];
-                        
+
                         // Add yearly breakdown items
                         if (performance.yearlyBreakdown && Object.keys(performance.yearlyBreakdown).length > 0) {
                             const sortedYears = Object.keys(performance.yearlyBreakdown).sort((a, b) => b - a); // Sort years descending
@@ -1761,9 +1798,9 @@
                             // No yearly breakdown data available
                             console.log('No yearly breakdown data available');
                         }
-                        
+
                         console.log('Performance items:', performanceItems);
-                        
+
                         const fundHTML = `
                             <div class="fund-card">
                                 <div class="row align-items-center">
@@ -1815,10 +1852,10 @@
                                 </div>
                             </div>
                         `;
-                        
+
                         console.log('Generated HTML for fund:', fundHTML.substring(0, 200) + '...');
                         return fundHTML;
-                        
+
                     } catch (fundError) {
                         console.error(`Error loading fund ${investment.schemeName}:`, fundError);
                         return `
@@ -1853,7 +1890,7 @@
                 const finalHTML = fundsHTML.join('');
                 console.log('Final HTML length:', finalHTML.length);
                 container.innerHTML = finalHTML;
-                
+
             } catch (error) {
                 console.error('Error displaying funds:', error);
                 showError('Failed to load fund data. Please check your internet connection.');
@@ -1870,11 +1907,11 @@
             const currentDate = new Date();
             const daysDiff = (currentDate - investmentDate) / (1000 * 60 * 60 * 24);
             const years = daysDiff / 365.25;
-            
+
             if (years <= 0 || investment.investmentAmount <= 0) {
                 return 0;
             }
-            
+
             const currentValue = investment.units * currentNAV;
 
             // For very short periods (less than 1 year), use linear simple return
@@ -1954,7 +1991,7 @@
             // Add performance calculation timeout
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-            
+
             const periods = {
                 weekly: 7,
                 monthly: 30,
@@ -1964,7 +2001,7 @@
             };
 
             const performance = {};
-            
+
             try {
                 const response = await fetch(`https://api.mfapi.in/mf/${investment.schemeCode}`, {
                     signal: controller.signal
@@ -1978,14 +2015,14 @@
                     const dateB = b.date.split('-').reverse().join('-');
                     return dateB.localeCompare(dateA); // Sort descending (newest first)
                 }); // Sort chronologically (oldest first)
-                
+
                 console.log('NAV data received:', navData.length, 'records');
                 console.log('Date range:', navData[0]?.date, 'to', navData[navData.length - 1]?.date);
-                
+
                 if (!navData || navData.length === 0) {
                     throw new Error('No NAV data available');
                 }
-                
+
                 // Calculate daily performance (previous day's change)
                 if (navData.length >= 2) {
                     const todayNAV = parseFloat(navData[0].nav);
@@ -2003,19 +2040,19 @@
                     performance.dailyChangeDate = null;
                     console.log('Daily: Not enough data for daily calculation');
                 }
-                
+
                 // Calculate other periods
                 for (const [period, days] of Object.entries(periods)) {
                     // Skip yearly as it's handled separately
                     if (period === 'yearly') continue;
-                    
+
                     const targetDate = new Date();
                     targetDate.setDate(targetDate.getDate() - days);
-                    
+
                     // Find NAV closest to the target date
                     let closestNAV = null;
                     let closestDate = null;
-                    
+
                     // Since data is sorted descending (newest first), we need to find the closest date <= targetDate
                     for (const navRecord of navData) {
                         const [day, month, year] = navRecord.date.split('-');
@@ -2028,7 +2065,7 @@
                             }
                         }
                     }
-                    
+
                     if (closestNAV && closestNAV > 0) {
                         performance[period] = ((currentNAV - closestNAV) / closestNAV) * 100;
                         performance[period + 'StartNAV'] = closestNAV;
@@ -2041,19 +2078,19 @@
                         console.log(`${period}: No data available for ${days} days ago`);
                     }
                 }
-                
+
                 // Calculate yearly performance from Jan 1 of current year
                 const currentYear = new Date().getFullYear();
                 const yearStartDate = new Date(currentYear, 0, 1); // January 1st of current year
                 let yearStartNAV = null;
                 let yearStartRecordDate = null;
-                
+
                 // Find first NAV on or after Jan 1 of current year
                 for (const navRecord of navData) {
                     const [day, month, year] = navRecord.date.split('-');
                     const recordDateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
                     const recordDate = new Date(recordDateStr);
-                    
+
                     if (recordDate >= yearStartDate) {
                         if (!yearStartRecordDate || recordDate < yearStartRecordDate) {
                             yearStartRecordDate = recordDate;
@@ -2061,7 +2098,7 @@
                         }
                     }
                 }
-                
+
                 if (yearStartNAV && yearStartNAV > 0) {
                     performance.yearly = ((currentNAV - yearStartNAV) / yearStartNAV) * 100;
                     performance.yearlyStartNAV = yearStartNAV;
@@ -2073,60 +2110,60 @@
                     performance.yearlyEndNAV = null;
                     console.log('Yearly: No data available from Jan 1 of current year');
                 }
-                
+
                 // Calculate year-wise performance for previous years
                 const yearWisePerformance = {};
                 const yearWiseNAV = {};
-                
+
                 // Get all available years from the data (data is sorted descending)
                 const availableYears = new Set();
                 navData.forEach(record => {
                     const [day, month, year] = record.date.split('-');
                     availableYears.add(parseInt(year));
                 });
-                
+
                 console.log('Available years:', Array.from(availableYears).sort());
-                
+
                 // Calculate for each year from current year - 1 down to investment year
                 const investmentYear = new Date(investment.investmentDate).getFullYear();
                 for (let year = currentYear - 1; year >= investmentYear; year--) {
                     const yearStart = new Date(year, 0, 1); // January 1st of the year
                     const yearEnd = new Date(year, 11, 31); // December 31st of the year
-                    
+
                     // Find NAV at the start and end of the year
                     let startNAV = null;
                     let endNAV = null;
-                    
+
                     if (year === investmentYear) {
                         // Use investment date as start NAV
                         const investmentDate = new Date(investment.investmentDate);
-                        const investmentDateStr = investmentDate.getFullYear() + '-' + 
-                                                 (investmentDate.getMonth() + 1).toString().padStart(2, '0') + '-' + 
-                                                 investmentDate.getDate().toString().padStart(2, '0'); // YYYY-MM-DD format
-                        
+                        const investmentDateStr = investmentDate.getFullYear() + '-' +
+                            (investmentDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                            investmentDate.getDate().toString().padStart(2, '0'); // YYYY-MM-DD format
+
                         console.log(`Investment year ${year}: Investment date = ${investmentDateStr}`);
-                        
+
                         // Since data is descending, find first NAV on/after investment date
                         let investmentYearNavs = [];
                         for (const navRecord of navData) {
                             const [day, month, yearStr] = navRecord.date.split('-');
                             const recordDateStr = `${yearStr}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; // Convert DD-MM-YYYY to YYYY-MM-DD
-                            
+
                             if (recordDateStr >= investmentDateStr && recordDateStr <= `${year}-12-31`) {
-                                investmentYearNavs.push({date: recordDateStr, nav: parseFloat(navRecord.nav)});
+                                investmentYearNavs.push({ date: recordDateStr, nav: parseFloat(navRecord.nav) });
                             }
                         }
-                        
+
                         // Sort ascending for proper year calculation
                         investmentYearNavs.sort((a, b) => a.date.localeCompare(b.date));
-                        
+
                         console.log(`Investment year ${year}: Found ${investmentYearNavs.length} NAV records`);
-                        
+
                         if (investmentYearNavs.length > 0) {
                             startNAV = investmentYearNavs[0].nav; // First NAV on/after investment date
                             endNAV = investmentYearNavs[investmentYearNavs.length - 1].nav; // Last NAV of the year
                             console.log(`Investment year ${year}: Start NAV = ₹${startNAV} (${investmentYearNavs[0].date}), End NAV = ₹${endNAV} (${investmentYearNavs[investmentYearNavs.length - 1].date})`);
-                            
+
                             // Store for display
                             performance.startNAV = startNAV;
                             performance.endNAV = endNAV;
@@ -2138,20 +2175,20 @@
                             const [day, month, yearStr] = navRecord.date.split('-');
                             if (parseInt(yearStr) === year) {
                                 const recordDateStr = `${yearStr}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-                                yearNavs.push({date: recordDateStr, nav: parseFloat(navRecord.nav)});
+                                yearNavs.push({ date: recordDateStr, nav: parseFloat(navRecord.nav) });
                             }
                         }
-                        
+
                         // Sort ascending for proper year calculation
                         yearNavs.sort((a, b) => a.date.localeCompare(b.date));
-                        
+
                         if (yearNavs.length > 0) {
                             startNAV = yearNavs[0].nav; // First NAV of the year
                             endNAV = yearNavs[yearNavs.length - 1].nav; // Last NAV of the year
                             console.log(`Year ${year}: Found ${yearNavs.length} NAV records, Start: ₹${startNAV} (${yearNavs[0].date}), End: ₹${endNAV} (${yearNavs[yearNavs.length - 1].date})`);
                         }
                     }
-                    
+
                     // If we still don't have endNAV, try to find the first NAV after year end
                     if (!endNAV) {
                         for (const navRecord of navData) {
@@ -2162,9 +2199,9 @@
                             }
                         }
                     }
-                    
+
                     console.log(`Year ${year}: Start NAV=${startNAV}, End NAV=${endNAV}`);
-                    
+
                     if (startNAV && endNAV && startNAV > 0) {
                         yearWisePerformance[year] = ((endNAV - startNAV) / startNAV) * 100;
                         yearWiseNAV[year] = { startNAV, endNAV };
@@ -2175,12 +2212,12 @@
                         console.log(`Year ${year}: No data available (Start: ${startNAV}, End: ${endNAV})`);
                     }
                 }
-                
+
                 performance.yearlyBreakdown = yearWisePerformance;
                 performance.yearlyNAV = yearWiseNAV;
                 console.log('Final yearly breakdown:', yearWisePerformance);
                 console.log('Final yearly NAV:', yearWiseNAV);
-                
+
             } catch (error) {
                 clearTimeout(timeout);
                 if (error.name === 'AbortError') {
@@ -2222,7 +2259,7 @@
 
             const totalReturns = totalCurrentValue - totalInvestment;
             const returnsPercentage = totalInvestment > 0 ? (totalReturns / totalInvestment) * 100 : 0;
-            
+
             // Calculate XIRR-like CAGR (Compound Annual Growth Rate) based on cash flows and timing
             let cagr = calculatePortfolioXIRR(investmentDetails, totalCurrentValue);
 
@@ -2231,12 +2268,12 @@
             document.getElementById('totalReturns').textContent = `${totalReturns >= 0 ? '+' : ''}₹${totalReturns.toLocaleString()}`;
             document.getElementById('totalReturnsPercentage').textContent = `${totalReturns >= 0 ? '+' : ''}${returnsPercentage.toFixed(2)}%`;
             document.getElementById('cagrValue').textContent = `${cagr >= 0 ? '+' : ''}${cagr.toFixed(2)}%`;
-            
+
             // Update colors based on performance
             const returnsElement = document.getElementById('totalReturns');
             const percentageElement = document.getElementById('totalReturnsPercentage');
             const cagrElement = document.getElementById('cagrValue');
-            
+
             if (totalReturns >= 0) {
                 returnsElement.className = 'summary-value positive';
                 percentageElement.className = 'summary-value positive';
@@ -2267,33 +2304,33 @@
         function editFund(investmentId) {
             const investment = userInvestments.find(inv => inv.id == investmentId);
             if (!investment) return;
-            
+
             // Set editing flag
             editingInvestmentId = investmentId;
-            
+
             // Update button text
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.innerHTML = '<i class="bi bi-pencil"></i> Update Fund';
-            
+
             // Populate form with investment data
             document.getElementById('fundSearch').value = investment.schemeName;
             selectedFund = {
                 schemeCode: investment.schemeCode,
                 schemeName: investment.schemeName
             };
-            
+
             document.getElementById('investmentAmount').value = investment.investmentAmount;
             document.getElementById('investmentDate').value = investment.investmentDate;
             document.getElementById('nav').value = investment.nav;
-            
+
             // Calculate units
             const units = investment.investmentAmount / investment.nav;
             document.getElementById('units').value = units.toFixed(3);
-            
+
             // Show fund details
             document.getElementById('fundDetails').style.display = 'block';
             document.getElementById('searchDropdown').style.display = 'none';
-            
+
             // Scroll to form
             document.getElementById('addFundForm').scrollIntoView({ behavior: 'smooth' });
 
@@ -2329,11 +2366,11 @@
             document.getElementById('investmentDate').value = new Date().toISOString().split('T')[0];
             selectedFund = null;
             editingInvestmentId = null; // Reset editing flag
-            
+
             // Reset button text
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.innerHTML = '<i class="bi bi-plus-lg"></i> Add Fund';
-            
+
             document.getElementById('searchDropdown').style.display = 'none';
         }
 
@@ -2353,11 +2390,11 @@
                 userInvestments = [];
                 return;
             }
-            
+
             try {
                 userInvestments = await getCloudInvestments();
                 console.log('Loaded investments from Google Drive:', userInvestments.length);
-                
+
                 // Defer display to prevent blocking
                 setTimeout(() => {
                     if (currentView === 'individual') {
@@ -2380,7 +2417,7 @@
                 fundGroups = [];
                 return;
             }
-            
+
             try {
                 fundGroups = await getCloudFundGroups();
                 console.log('Loaded fund groups from Google Drive:', fundGroups.length);
@@ -2400,12 +2437,12 @@
 
         function switchView(view) {
             currentView = view;
-            
+
             // Update button states
             const individualBtn = document.getElementById('individualViewBtn');
             const groupsBtn = document.getElementById('groupsViewBtn');
             const createGroupBtn = document.getElementById('createGroupBtn');
-            
+
             if (view === 'individual') {
                 individualBtn.classList.add('active');
                 groupsBtn.classList.remove('active');
@@ -2428,18 +2465,18 @@
         async function createGroup() {
             const groupName = document.getElementById('groupName').value.trim();
             const groupDescription = document.getElementById('groupDescription').value.trim();
-            
+
             if (!groupName) {
                 showError('Please enter a group name');
                 return;
             }
-            
+
             // Check for duplicate group names
             if (fundGroups.some(group => group.name.toLowerCase() === groupName.toLowerCase())) {
                 showError('A group with this name already exists');
                 return;
             }
-            
+
             const newGroup = {
                 id: Date.now(),
                 name: groupName,
@@ -2447,16 +2484,16 @@
                 fundIds: [], // Start with empty array - funds can be added later via edit
                 createdDate: new Date().toISOString()
             };
-            
+
             console.log('Creating new group:', newGroup);
-            
+
             fundGroups.push(newGroup);
             await saveFundGroups();
-            
+
             // Close modal and refresh display
             const modal = new SimpleModal('createGroupModal');
             modal.hide();
-            
+
             displayGroups();
             showSuccess(`Group "${groupName}" created successfully! Click "Edit" to add funds to this group.`);
         }
@@ -2467,10 +2504,10 @@
             console.log('Fund Groups:', fundGroups);
             console.log('User Investments:', userInvestments);
             console.log('Current View:', currentView);
-            
+
             // Check for any orphaned fund IDs
             fundGroups.forEach(group => {
-                const orphanedIds = group.fundIds.filter(fundId => 
+                const orphanedIds = group.fundIds.filter(fundId =>
                     !userInvestments.some(inv => parseInt(inv.id) === parseInt(fundId))
                 );
                 if (orphanedIds.length > 0) {
@@ -2482,27 +2519,27 @@
         function showEditGroupModal(groupId) {
             const group = fundGroups.find(g => g.id === groupId);
             if (!group) return;
-            
+
             // Force refresh userInvestments from localStorage to catch recently added funds
             loadUserInvestments();
-            
+
             // Debug: Log group details
             console.log('Editing group:', group);
             console.log('Group fund IDs:', group.fundIds);
             console.log('All investments:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
-            
+
             // Set current editing group
             window.currentEditingGroupId = groupId;
-            
+
             // Populate form
             document.getElementById('editGroupName').value = group.name;
             document.getElementById('editGroupDescription').value = group.description || '';
-            
+
             // Populate fund assignment list after a small delay to ensure data is loaded
             setTimeout(() => {
                 populateFundAssignmentList(group.fundIds);
             }, 200);
-            
+
             // Show modal
             const modal = new SimpleModal('editGroupModal');
             modal.show();
@@ -2510,23 +2547,23 @@
 
         function populateFundAssignmentList(selectedFundIds) {
             const assignmentList = document.getElementById('fundAssignmentList');
-            
+
             if (userInvestments.length === 0) {
                 assignmentList.innerHTML = '<p class="text-muted">No funds available. Add some funds first.</p>';
                 return;
             }
-            
+
             // Debug: Log the selected fund IDs and investment IDs
             console.log('Selected fund IDs:', selectedFundIds);
             console.log('Available investment IDs:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
-            
+
             const fundItemsHTML = userInvestments.map(investment => {
                 // Ensure both are numbers for proper comparison
                 const investmentId = parseInt(investment.id);
                 const isSelected = selectedFundIds.some(id => parseInt(id) === investmentId);
-                
+
                 console.log(`Checking fund "${investment.schemeName}" (ID: ${investmentId}): Selected = ${isSelected}`);
-                
+
                 return `
                     <div class="fund-assignment-item">
                         <div class="d-flex align-items-center">
@@ -2541,7 +2578,7 @@
                     </div>
                 `;
             }).join('');
-            
+
             assignmentList.innerHTML = fundItemsHTML;
         }
 
@@ -2549,41 +2586,41 @@
             const groupId = window.currentEditingGroupId;
             const group = fundGroups.find(g => g.id === groupId);
             if (!group) return;
-            
+
             const groupName = document.getElementById('editGroupName').value.trim();
             const groupDescription = document.getElementById('editGroupDescription').value.trim();
-            
+
             if (!groupName) {
                 showError('Please enter a group name');
                 return;
             }
-            
+
             // Check for duplicate names (excluding current group)
             if (fundGroups.some(g => g.id !== groupId && g.name.toLowerCase() === groupName.toLowerCase())) {
                 showError('A group with this name already exists');
                 return;
             }
-            
+
             // Get selected fund IDs
             const selectedFundIds = [];
             document.querySelectorAll('#fundAssignmentList input[type="checkbox"]:checked').forEach(checkbox => {
                 selectedFundIds.push(parseInt(checkbox.value));
             });
-            
+
             // Debug: Log the selected IDs
             console.log('Updating group with selected fund IDs:', selectedFundIds);
-            
+
             // Update group
             group.name = groupName;
             group.description = groupDescription;
             group.fundIds = selectedFundIds;
-            
+
             await saveFundGroups();
-            
+
             // Close modal and refresh display
             const modal = new SimpleModal('editGroupModal');
             modal.hide();
-            
+
             displayGroups();
             showSuccess(`Group "${groupName}" updated successfully!`);
         }
@@ -2592,25 +2629,25 @@
             const groupId = window.currentEditingGroupId;
             const group = fundGroups.find(g => g.id === groupId);
             if (!group) return;
-            
+
             if (!confirm(`Are you sure you want to delete the group "${group.name}"? This will not delete the individual funds.`)) {
                 return;
             }
-            
+
             fundGroups = fundGroups.filter(g => g.id !== groupId);
             await saveFundGroups();
-            
+
             // Close modal and refresh display
             const modal = new SimpleModal('editGroupModal');
             modal.hide();
-            
+
             displayGroups();
             showSuccess(`Group "${group.name}" deleted successfully!`);
         }
 
         async function displayGroups() {
             const container = document.getElementById('fundsContainer');
-            
+
             if (fundGroups.length === 0) {
                 container.innerHTML = `
                     <div class="empty-group-state">
@@ -2621,13 +2658,13 @@
                 `;
                 return;
             }
-            
+
             showLoading();
-            
+
             try {
                 const groupsHTML = await Promise.all(fundGroups.map(async (group) => {
                     const groupStats = await calculateGroupStats(group.fundIds);
-                    
+
                     if (group.fundIds.length === 0) {
                         return `
                             <div class="group-card">
@@ -2646,7 +2683,7 @@
                             </div>
                         `;
                     }
-                    
+
                     const groupFundsHTML = await Promise.all(group.fundIds.map(async (fundId) => {
                         // Use parseInt for proper type comparison
                         const investment = userInvestments.find(inv => parseInt(inv.id) === parseInt(fundId));
@@ -2654,13 +2691,13 @@
                             console.warn(`Investment not found for fund ID in display: ${fundId}`);
                             return '';
                         }
-                        
+
                         try {
                             const currentNAV = await getCurrentNAV(investment.schemeCode);
                             const currentValue = investment.units * currentNAV;
                             const returns = currentValue - investment.investmentAmount;
                             const returnsPercentage = (returns / investment.investmentAmount) * 100;
-                            
+
                             return `
                                 <div class="group-fund-item">
                                     <div class="group-fund-name">${investment.schemeName}</div>
@@ -2678,7 +2715,7 @@
                             `;
                         }
                     }));
-                    
+
                     return `
                         <div class="group-card">
                             <div class="group-header">
@@ -2721,9 +2758,9 @@
                         </div>
                     `;
                 }));
-                
+
                 container.innerHTML = groupsHTML.join('');
-                
+
             } catch (error) {
                 console.error('Error displaying groups:', error);
                 showError('Failed to load group data. Please check your internet connection.');
@@ -2736,11 +2773,11 @@
             let totalInvestment = 0;
             let totalCurrentValue = 0;
             let investmentDetails = [];
-            
+
             console.log('=== CALCULATING GROUP STATS ===');
             console.log('Fund IDs to process:', fundIds);
             console.log('Available investments:', userInvestments.map(inv => ({ id: inv.id, name: inv.schemeName })));
-            
+
             for (const fundId of fundIds) {
                 // Use parseInt for proper type comparison
                 const investment = userInvestments.find(inv => parseInt(inv.id) === parseInt(fundId));
@@ -2748,15 +2785,15 @@
                     console.warn(`Investment not found for fund ID: ${fundId}`);
                     continue;
                 }
-                
+
                 console.log(`Found investment: ${investment.schemeName} (ID: ${investment.id})`);
                 totalInvestment += investment.investmentAmount;
-                
+
                 try {
                     const currentNAV = await getCurrentNAV(investment.schemeCode);
                     const currentValue = investment.units * currentNAV;
                     totalCurrentValue += currentValue;
-                    
+
                     // Store investment details for CAGR calculation
                     const investmentDate = new Date(investment.investmentDate);
                     investmentDetails.push({
@@ -2767,10 +2804,10 @@
                     console.error(`Error calculating stats for fund ${investment.schemeName}:`, error);
                 }
             }
-            
+
             const totalReturns = totalCurrentValue - totalInvestment;
             const cagr = calculatePortfolioXIRR(investmentDetails, totalCurrentValue);
-            
+
             return {
                 totalInvestment,
                 currentValue: totalCurrentValue,
@@ -2782,10 +2819,10 @@
         // Utility functions
         function formatDate(dateString) {
             const date = new Date(dateString);
-            return date.toLocaleDateString('en-IN', { 
-                day: 'numeric', 
-                month: 'short', 
-                year: 'numeric' 
+            return date.toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
             });
         }
 
@@ -2800,7 +2837,7 @@
         function showToast(message, type = 'info', title = '') {
             const toastContainer = document.getElementById('toastContainer');
             const toastId = 'toast-' + Date.now();
-            
+
             const toastHTML = `
                 <div id="${toastId}" class="toast ${type}" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header">
@@ -2813,15 +2850,15 @@
                     </div>
                 </div>
             `;
-            
+
             toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-            
+
             const toastElement = document.getElementById(toastId);
-            
+
             // Show toast with custom implementation
             toastElement.style.display = 'block';
             toastElement.classList.add('show');
-            
+
             // Auto-hide toast after delay
             const delay = type === 'error' ? 5000 : type === 'info' ? 10000 : 3000;
             setTimeout(() => {
@@ -2868,7 +2905,7 @@
             const jsonString = JSON.stringify(exportData, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            
+
             const link = document.createElement('a');
             link.href = url;
             link.download = `mutual-funds-${new Date().toISOString().split('T')[0]}.json`;
@@ -2876,7 +2913,7 @@
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            
+
             showSuccess('Data exported to JSON successfully');
         }
 
@@ -2912,7 +2949,7 @@
 
             const blob = new Blob([csvContent], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
-            
+
             const link = document.createElement('a');
             link.href = url;
             link.download = `mutual-funds-${new Date().toISOString().split('T')[0]}.csv`;
@@ -2920,7 +2957,7 @@
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            
+
             showSuccess('Data exported to CSV successfully');
         }
 
@@ -2928,20 +2965,20 @@
         async function importData() {
             const fileInput = document.getElementById('importFile');
             fileInput.click();
-            
-            fileInput.onchange = async function(e) {
+
+            fileInput.onchange = async function (e) {
                 const file = e.target.files[0];
                 if (!file) return;
 
                 const reader = new FileReader();
-                reader.onload = async function(event) {
+                reader.onload = async function (event) {
                     try {
                         const content = event.target.result;
                         let importedData;
 
                         if (file.name.endsWith('.json')) {
                             importedData = JSON.parse(content);
-                            
+
                             if (importedData.investments && Array.isArray(importedData.investments)) {
                                 userInvestments = importedData.investments;
                                 // Save to cloud since we're cloud-only
@@ -2956,11 +2993,11 @@
                             // Simple CSV import
                             const lines = content.split('\n');
                             const investments = [];
-                            
+
                             for (let i = 1; i < lines.length; i++) {
                                 const line = lines[i].trim();
                                 if (!line) continue;
-                                
+
                                 const values = line.split(',').map(v => v.replace(/"/g, ''));
                                 if (values.length >= 6) {
                                     investments.push({
@@ -2975,7 +3012,7 @@
                                     });
                                 }
                             }
-                            
+
                             if (investments.length > 0) {
                                 userInvestments = investments;
                                 await saveUserInvestments();
@@ -2991,7 +3028,7 @@
                         showError('Failed to import data. Please check the file format.');
                     }
                 };
-                
+
                 reader.readAsText(file);
                 fileInput.value = ''; // Reset file input
             };
@@ -3024,39 +3061,39 @@
                 return;
             }
             tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: '319050731055-69u2lkqeunj4odfbpiqs3gce8k6g97lq.apps.googleusercontent.com',
+                client_id: '648600237663-25le2m3002pk7si6g511k7dssrsnv1i8.apps.googleusercontent.com',
                 scope: 'https://www.googleapis.com/auth/drive.appdata email profile',
                 callback: (tokenResponse) => {
                     if (tokenResponse && tokenResponse.access_token) {
                         accessToken = tokenResponse.access_token;
-                        
+
                         fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                             headers: { 'Authorization': `Bearer ${accessToken}` }
                         })
-                        .then(res => res.json())
-                        .then(userInfo => {
-                            currentUser = {
-                                name: userInfo.name || userInfo.email.split('@')[0],
-                                email: userInfo.email,
-                                avatar: userInfo.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.email)}&background=random`
-                            };
-                            isSignedIn = true;
-                            updateAuthUI();
-                            showMainContent();
-                            
-                            setTimeout(async () => {
-                                try {
-                                    await syncFromDriveOnLogin();
-                                } catch (error) {
-                                    console.error('Sync from Drive error:', error);
-                                }
-                            }, 500);
-                            
-                            showToast('Successfully signed in with Google!', 'success', 'Sign In');
-                        }).catch(err => {
-                            console.error('Error fetching user info:', err);
-                            showToast('Failed to retrieve user information.', 'error', 'Sign In Error');
-                        });
+                            .then(res => res.json())
+                            .then(userInfo => {
+                                currentUser = {
+                                    name: userInfo.name || userInfo.email.split('@')[0],
+                                    email: userInfo.email,
+                                    avatar: userInfo.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.email)}&background=random`
+                                };
+                                isSignedIn = true;
+                                updateAuthUI();
+                                showMainContent();
+
+                                setTimeout(async () => {
+                                    try {
+                                        await syncFromDriveOnLogin();
+                                    } catch (error) {
+                                        console.error('Sync from Drive error:', error);
+                                    }
+                                }, 500);
+
+                                showToast('Successfully signed in with Google!', 'success', 'Sign In');
+                            }).catch(err => {
+                                console.error('Error fetching user info:', err);
+                                showToast('Failed to retrieve user information.', 'error', 'Sign In Error');
+                            });
                     }
                 }
             });
@@ -3084,12 +3121,12 @@
                 const loginSection = document.getElementById('loginSection');
                 const userInfo = document.getElementById('userInfo');
                 const logoutBtn = document.getElementById('logoutBtn');
-                
+
                 if (isSignedIn && currentUser) {
                     if (loginSection) loginSection.style.display = 'none';
                     if (userInfo) userInfo.style.display = 'flex';
                     if (logoutBtn) logoutBtn.style.display = 'inline-block';
-                    
+
                     const userNameElement = document.getElementById('userName');
                     const userAvatarElement = document.getElementById('userAvatar');
                     if (userNameElement) userNameElement.textContent = currentUser.name;
@@ -3103,32 +3140,32 @@
                 console.error('Error updating auth UI:', error);
             }
         }
-        
+
         async function fetchDriveAPI(url, options = {}) {
             if (!accessToken) throw new Error('Not authenticated');
-            
+
             const headers = {
                 'Authorization': `Bearer ${accessToken}`,
                 ...(options.headers || {})
             };
-            
+
             const response = await fetch(url, { ...options, headers });
-            
+
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`Drive API error: ${response.status} ${errorText}`);
             }
-            
+
             return response;
         }
 
         async function getDriveFileId(fileName) {
             const q = encodeURIComponent(`name='${fileName}' and 'appDataFolder' in parents and trashed=false`);
             const url = `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id)`;
-            
+
             const response = await fetchDriveAPI(url);
             const data = await response.json();
-            
+
             if (data.files && data.files.length > 0) {
                 return data.files[0].id;
             }
@@ -3144,7 +3181,7 @@
 
         async function writeDriveFile(fileName, contentObj) {
             let fileId = await getDriveFileId(fileName);
-            
+
             if (!fileId) {
                 // Create file metadata
                 const createUrl = `https://www.googleapis.com/drive/v3/files`;
@@ -3159,7 +3196,7 @@
                 const createData = await createResponse.json();
                 fileId = createData.id;
             }
-            
+
             // Update file content
             const fileContent = JSON.stringify(contentObj, null, 2);
             const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`;
@@ -3172,34 +3209,34 @@
 
         async function syncFromDriveOnLogin() {
             if (!isSignedIn || !currentUser) return;
-            
+
             const syncStatus = document.getElementById('syncStatus');
             if (syncStatus) {
                 syncStatus.textContent = 'Syncing from cloud...';
                 syncStatus.className = 'sync-status syncing';
             }
-            
+
             try {
                 // Load from Drive
                 await loadUserInvestments();
                 await loadFundGroups();
-                
+
                 if (currentView === 'individual') {
                     await displayFunds();
                 } else {
                     await displayGroups();
                 }
                 await updateSummary();
-                
+
                 if (syncStatus) {
                     setTimeout(() => {
                         syncStatus.textContent = 'Synced from cloud';
                         syncStatus.className = 'sync-status success';
                     }, 1000);
                 }
-                
+
                 showToast(`Loaded ${userInvestments.length} investments and ${fundGroups.length} groups from cloud`, 'success', 'Sync Complete');
-                
+
             } catch (error) {
                 console.error('Failed to sync from Drive:', error);
                 if (syncStatus) {
@@ -3260,22 +3297,22 @@
             }
         }
 
-        
 
-        
+
+
 
 
         // Merge local and cloud investments
         function mergeInvestments(localInvestments, cloudInvestments) {
             const merged = [...localInvestments];
             const existingKeys = new Set();
-            
+
             // Add local investments and track existing ones
             localInvestments.forEach(inv => {
                 const key = `${inv.schemeCode}_${inv.investmentDate}`;
                 existingKeys.add(key);
             });
-            
+
             // Add cloud investments that don't exist locally
             cloudInvestments.forEach(inv => {
                 const key = `${inv.schemeCode}_${inv.investmentDate}`;
@@ -3284,20 +3321,20 @@
                     existingKeys.add(key);
                 }
             });
-            
+
             return merged;
         }
 
         // Manual sync function removed - auto-sync handles everything
         // If needed, can be called manually: await periodicSync();
-        
-        
+
+
 
         // Modal close button event listeners
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Add event listeners for modal close buttons
             document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const modal = this.closest('.modal');
                     if (modal) {
                         modal.classList.remove('show');
@@ -3307,7 +3344,7 @@
 
             // Close modal when clicking outside
             document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
+                modal.addEventListener('click', function (e) {
                     if (e.target === this) {
                         this.classList.remove('show');
                     }
@@ -3316,7 +3353,7 @@
         });
 
         // Page initialization - show login page by default
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Always show login page - no localStorage concept
             showLoginContent();
         });
@@ -3332,6 +3369,7 @@
             }
         }
 
-            </script>
+    </script>
 </body>
+
 </html>
