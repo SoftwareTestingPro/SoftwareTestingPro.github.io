@@ -1099,6 +1099,7 @@
         }
 
         // Calculate performance for different time periods using real NAV data
+        // Calculate performance for different time periods using real NAV data
         async function calculatePerformance(investment, currentNAV) {
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 15000);
@@ -1226,111 +1227,6 @@
             } finally {
                 clearTimeout(timeout);
             }
-            return performance;
-        }
-
-
-                // Calculate for each year from current year - 1 down to investment year
-                const [invY, invM, invD] = investment.investmentDate.split('-');
-                const investmentYear = parseInt(invY);
-                for (let year = currentYear - 1; year >= investmentYear; year--) {
-                    const yearStart = new Date(year, 0, 1); // January 1st of the year
-                    const yearEnd = new Date(year, 11, 31); // December 31st of the year
-
-                    // Find NAV at the start and end of the year
-                    let startNAV = null;
-                    let endNAV = null;
-
-                    if (year === investmentYear) {
-                        // Use investment date as start NAV
-                        const investmentDate = new Date(investment.investmentDate);
-                        const investmentDateStr = investmentDate.getFullYear() + '-' +
-                            (investmentDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
-                            investmentDate.getDate().toString().padStart(2, '0'); // YYYY-MM-DD format
-
-
-                        // Since data is descending, find first NAV on/after investment date
-                        let investmentYearNavs = [];
-                        for (const navRecord of navData) {
-                            const [day, month, yearStr] = navRecord.date.split('-');
-                            const recordDateStr = `${yearStr}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; // Convert DD-MM-YYYY to YYYY-MM-DD
-
-                            if (recordDateStr >= investmentDateStr && recordDateStr <= `${year}-12-31`) {
-                                investmentYearNavs.push({ date: recordDateStr, nav: parseFloat(navRecord.nav) });
-                            }
-                        }
-
-                        // Sort ascending for proper year calculation
-                        investmentYearNavs.sort((a, b) => a.date.localeCompare(b.date));
-
-
-                        if (investmentYearNavs.length > 0) {
-                            startNAV = investmentYearNavs[0].nav; // First NAV on/after investment date
-                            endNAV = investmentYearNavs[investmentYearNavs.length - 1].nav; // Last NAV of the year
-
-                            // Store for display
-                            performance.startNAV = startNAV;
-                            performance.endNAV = endNAV;
-                        }
-                    } else {
-                        // For other years, use full year - find first and last NAV of the year
-                        let yearNavs = [];
-                        for (const navRecord of navData) {
-                            const [day, month, yearStr] = navRecord.date.split('-');
-                            if (parseInt(yearStr) === year) {
-                                const recordDateStr = `${yearStr}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-                                yearNavs.push({ date: recordDateStr, nav: parseFloat(navRecord.nav) });
-                            }
-                        }
-
-                        // Sort ascending for proper year calculation
-                        yearNavs.sort((a, b) => a.date.localeCompare(b.date));
-
-                        if (yearNavs.length > 0) {
-                            startNAV = yearNavs[0].nav; // First NAV of the year
-                            endNAV = yearNavs[yearNavs.length - 1].nav; // Last NAV of the year
-                        }
-                    }
-
-                    // If we still don't have endNAV, try to find the first NAV after year end
-                    if (!endNAV) {
-                        for (const navRecord of navData) {
-                            const recordDate = new Date(navRecord.date);
-                            if (recordDate > yearEnd) {
-                                endNAV = parseFloat(navRecord.nav);
-                                break;
-                            }
-                        }
-                    }
-
-
-                    if (startNAV && endNAV && startNAV > 0) {
-                        yearWisePerformance[year] = ((endNAV - startNAV) / startNAV) * 100;
-                        yearWiseNAV[year] = { startNAV, endNAV };
-                    } else {
-                        yearWisePerformance[year] = null;
-                        yearWiseNAV[year] = { startNAV: null, endNAV: null };
-                    }
-                }
-
-                performance.yearlyBreakdown = yearWisePerformance;
-                performance.yearlyNAV = yearWiseNAV;
-
-            } catch (error) {
-                clearTimeout(timeout);
-                if (error.name === 'AbortError') {
-                } else {
-                    console.error('Error calculating performance:', error);
-                }
-                // If we can't get real data, mark all periods as unavailable
-                performance.daily = null;
-                for (const period of Object.keys(periods)) {
-                    performance[period] = null;
-                }
-                performance.yearlyBreakdown = {};
-            }
-
-            clearTimeout(timeout);
             return performance;
         }
 
