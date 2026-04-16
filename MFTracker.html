@@ -885,12 +885,10 @@
                             Object.entries(labels).forEach(([key, label]) => {
                                 const data = performance.periodic[key];
                                 if (data) {
-                                    // Rule: "Since [Date]" for all except yesterday
                                     const dateStr = formatDate(data.date.split('-').reverse().join('-'));
-                                    const finalLabel = key === 'daily' ? label : `${label} (Since ${dateStr})`;
-                                    
                                     performanceItems.push({
-                                        label: finalLabel,
+                                        label: label,
+                                        subLabel: key === 'daily' ? '' : `(Since ${dateStr})`,
                                         value: data.value,
                                         startNAV: data.startNAV,
                                         endNAV: data.endNAV
@@ -905,7 +903,8 @@
                                 .sort((a, b) => b[0] - a[0])
                                 .forEach(([year, data]) => {
                                     performanceItems.push({
-                                        label: `Year ${year}`,
+                                        label: year,
+                                        subLabel: `(${formatDate(data.startDate)} - ${formatDate(data.endDate)})`,
                                         value: data.value,
                                         startNAV: data.startNAV,
                                         endNAV: data.endNAV
@@ -952,7 +951,8 @@
                                 <div class="performance-grid collapsed" id="perf-${investment.id}">
                                     ${performanceItems.map(item => `
                                         <div class="performance-card">
-                                            <div class="small">${item.label}${item.changeDate ? ' (' + formatDate(item.changeDate.split('-').reverse().join('-')) + ')' : ''}</div>
+                                            <div class="small fw-bold">${item.label}</div>
+                                            <div style="font-size: 0.7rem; color: #6c757d; line-height: 1.2; margin-bottom: 4px;">${item.subLabel || ''}</div>
                                             <div class="performance-value ${item.value !== null ? (item.value >= 0 ? 'positive' : 'negative') : ''}">
                                                 ${item.value !== null ? (item.value >= 0 ? '+' : '') + item.value.toFixed(2) + '%' : 'N/A'}
                                             </div>
@@ -1138,15 +1138,24 @@
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
 
+                // Get the latest date actually present in the data to anchor durations correctly
+                const latestRecord = navData[navData.length - 1];
+                const [ld, lm, ly] = latestRecord.date.split('-');
+                const latestDataDate = new Date(ly, lm - 1, ld);
+
                 // Helper to get NAV for X calendar days ago
-                const getNAVForDaysAgo = (days) => {
-                    const target = new Date(today);
+                const getNAVForDaysAgo = (days, forceStrictlyBeforeLatest = false) => {
+                    // Rule: Always anchor durations relative to the latest available NAV date
+                    // This prevents 0% changes on weekends/holidays
+                    const target = new Date(latestDataDate);
                     target.setDate(target.getDate() - days);
                     
                     // User Rule: Only show if purchase Date is within/before this duration
                     if (target < investmentDate) return null;
 
                     for (let i = navData.length - 1; i >= 0; i--) {
+                        if (forceStrictlyBeforeLatest && i === navData.length - 1) continue;
+
                         const [d, m, y] = navData[i].date.split('-');
                         const dDate = new Date(y, m - 1, d);
                         if (dDate <= target) {
@@ -1158,7 +1167,11 @@
 
                 // 1. Calculate periodic returns (Daily, 7d, 15d, etc.)
                 for (const [key, days] of Object.entries(periods)) {
-                    const pastData = getNAVForDaysAgo(days);
+                    // For "Yesterday" (Daily), we specifically want the previous record 
+                    // compared to latest, regardless of how many calendar days apart (e.g. over weekend)
+                    const pastData = (key === 'daily') ? 
+                        getNAVForDaysAgo(1, true) : getNAVForDaysAgo(days);
+
                     if (pastData) {
                         performance.periodic[key] = {
                             value: ((currentNAV - pastData.nav) / pastData.nav) * 100,
@@ -1191,7 +1204,9 @@
                         performance.yearlyBreakdown[year] = {
                             value: ((eNAV - sNAV) / sNAV) * 100,
                             startNAV: sNAV,
-                            endNAV: eNAV
+                            endNAV: eNAV,
+                            startDate: effectiveYearStart,
+                            endDate: yearEnd
                         };
                     }
                 }
@@ -1313,10 +1328,11 @@
                         valueElem.textContent = `${finalVal >= 0 ? '+' : ''}${finalVal.toFixed(2)}%`;
                         valueElem.className = `summary-value ${finalVal >= 0 ? 'positive' : 'negative'}`;
                         
-                        // Rule: Since [Date] for labels
+                        // Rule: Split labels for Summary Cards too
                         if (labelElem && oldestTargetDateStr) {
                              const ds = formatDate(oldestTargetDateStr.split('-').reverse().join('-'));
-                             labelElem.textContent = pKey === 'daily' ? pInfo.title : `${pInfo.title} (Since ${ds})`;
+                             const subT = pKey === 'daily' ? '' : `<div style="font-size: 0.65rem; opacity: 0.8; line-height: 1;">(Since ${ds})</div>`;
+                             labelElem.innerHTML = `<div>${pInfo.title}</div>${subT}`;
                         }
                         
                         card.style.display = 'flex';
