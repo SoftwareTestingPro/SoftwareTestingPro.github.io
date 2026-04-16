@@ -766,10 +766,14 @@
                     throw new Error('No NAV data available for this fund');
                 }
 
-                return parseFloat(data.data[0].nav); // Latest NAV is first in the array
+                // Return both NAV and date
+                return {
+                    nav: parseFloat(data.data[0].nav),
+                    date: data.data[0].date
+                };
             } catch (error) {
                 console.error('Error fetching current NAV:', error);
-                throw error; // Re-throw to let caller handle the error
+                throw error;
             }
         }
 
@@ -807,7 +811,9 @@
 
                 const fundsHTML = await Promise.all(sortedInvestments.map(async (investment) => {
                     try {
-                        const currentNAV = await getCurrentNAV(investment.schemeCode);
+                        const navData = await getCurrentNAV(investment.schemeCode);
+                        const currentNAV = navData.nav;
+                        const navDate = navData.date;
                         const currentValue = investment.units * currentNAV;
                         const returns = currentValue - investment.investmentAmount;
                         const returnsPercentage = (returns / investment.investmentAmount) * 100;
@@ -867,13 +873,13 @@
                                     </div>
                                 </div>
                                 <div class="fund-badges">
-                                    <span class="modern-badge neutral">Curr. NAV: ₹${currentNAV.toFixed(2)}</span>
+                                    <span class="modern-badge neutral">NAV as on ${navDate}: ₹${currentNAV.toFixed(2)}</span>
                                     <span class="modern-badge ${returns >= 0 ? 'success' : 'danger'}">
                                         <i class="bi ${returns >= 0 ? 'bi-arrow-up-right' : 'bi-arrow-down-right'}"></i> 
                                         ₹${Math.abs(returns).toFixed(2)} (${returnsPercentage.toFixed(2)}%)
                                     </span>
                                     <span class="modern-badge ${fundCAGR >= 0 ? 'info' : 'warning'}">
-                                        CAGR: ${fundCAGR >= 0 ? '+' : ''}${fundCAGR.toFixed(2)}%
+                                        XIRR (Annual): ${fundCAGR >= 0 ? '+' : ''}${fundCAGR.toFixed(2)}%
                                     </span>
                                 </div>
                                 
@@ -1262,18 +1268,23 @@
             let investmentDetails = []; // Store cash flows for XIRR calculation
 
             for (const investment of userInvestments) {
-                totalInvestment += investment.investmentAmount;
-                const currentNAV = await getCurrentNAV(investment.schemeCode);
-                const currentValue = investment.units * currentNAV;
-                totalCurrentValue += currentValue;
+                try {
+                    const navData = await getCurrentNAV(investment.schemeCode);
+                    const currentNAV = navData.nav;
+                    totalInvestment += investment.investmentAmount;
+                    const currentValue = investment.units * currentNAV;
+                    totalCurrentValue += currentValue;
 
-                // Store investment details for XIRR calculation
-                const [y, m, d] = investment.investmentDate.split('-');
-                const investmentDate = new Date(y, m - 1, d);
-                investmentDetails.push({
-                    date: investmentDate,
-                    amount: -investment.investmentAmount // Negative because it's a cash outflow
-                });
+                    // Store investment details for XIRR calculation
+                    const [y, m, d] = investment.investmentDate.split('-');
+                    const investmentDate = new Date(y, m - 1, d);
+                    investmentDetails.push({
+                        date: investmentDate,
+                        amount: -investment.investmentAmount // Negative because it's a cash outflow
+                    });
+                } catch (err) {
+                    console.error('Error updating summary for fund:', investment.schemeCode, err);
+                }
             }
 
             const totalReturns = totalCurrentValue - totalInvestment;
@@ -1832,7 +1843,9 @@
                                 return { date: new Date(y, m - 1, d), amount: -inv.investmentAmount };
                             });
 
-                            const currentNAV = await getCurrentNAV(agg.schemeCode);
+                            const navData = await getCurrentNAV(agg.schemeCode);
+                            const currentNAV = navData.nav;
+                            const navDate = navData.date;
                             const currentValue = agg.units * currentNAV;
                             const returns = currentValue - agg.investmentAmount;
                             const returnsPercentage = (returns / agg.investmentAmount) * 100;
@@ -1844,17 +1857,17 @@
                                     <div class="group-fund-name">
                                         ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem; font-weight: 500;">${agg.count} Txns</span>` : ''}
                                         <div style="font-size: 0.75rem; color: #6c757d;">
-                                            Avg Inv. NAV: ₹${avgNav.toFixed(2)} | Curr: ₹${currentNAV.toFixed(2)}
-                                            <div class="d-flex align-items-center mt-1" style="font-size: 0.7rem;">
-                                                <span class="${returns >= 0 ? 'text-success' : 'text-danger'} me-3 fw-bold">
-                                                    <i class="bi bi-caret-${returns >= 0 ? 'up' : 'down'}-fill"></i>
-                                                    ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, {maximumFractionDigits: 0})} (${returnsPercentage.toFixed(2)}%)
-                                                </span>
-                                                <span class="${fundXIRR >= 0 ? 'text-success' : 'text-danger'} fw-bold">
-                                                    <i class="bi bi-caret-${fundXIRR >= 0 ? 'up' : 'down'}-fill"></i>
-                                                    XIRR: ${fundXIRR.toFixed(2)}%
-                                                </span>
-                                            </div>
+                                            Avg Inv. NAV: ₹${avgNav.toFixed(2)} | NAV as on ${navDate}: ₹${currentNAV.toFixed(2)}
+                                            &nbsp;&nbsp;
+                                            <span style="color: ${returns >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
+                                                <i class="bi bi-caret-${returns >= 0 ? 'up' : 'down'}-fill"></i>
+                                                ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, {maximumFractionDigits: 0})} (${returnsPercentage.toFixed(2)}%)
+                                            </span>
+                                            &nbsp;&nbsp;
+                                            <span style="color: ${fundXIRR >= 0 ? '#28a745' : '#dc3545'}; font-weight: 700;">
+                                                <i class="bi bi-caret-${fundXIRR >= 0 ? 'up' : 'down'}-fill"></i>
+                                                XIRR: ${fundXIRR.toFixed(2)}%
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="group-fund-returns" style="text-align: right;">
