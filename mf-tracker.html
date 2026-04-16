@@ -41,8 +41,7 @@
                         Continue with Google
                     </button>
                     <div class="text-center mt-4">
-                        <small
-                            style="color: #80868b; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <small class="login-footer-info">
                             <i class="bi bi-shield-check"></i> Automatically backed up via Google Drive
                         </small>
                     </div>
@@ -151,7 +150,7 @@
                         <h4><i class="bi bi-plus-circle"></i> Add Mutual Fund</h4>
                         <form id="addFundForm">
                             <div class="add-fund-grid">
-                                <div class="search-container modern-floating-label" style="margin-bottom: 0;">
+                                <div class="search-container modern-floating-label">
                                     <input type="text" class="form-control-modern" id="fundSearch" placeholder=" "
                                         autocomplete="off">
                                     <label for="fundSearch">Search Mutual Fund</label>
@@ -459,7 +458,6 @@
                     screen.querySelector('.loading-text').textContent = text;
                     if (subtext) updateLoadingText(subtext);
                     screen.style.display = 'flex';
-                    screen.classList.remove('hidden');
                 }
 
                 if (mainContainer) {
@@ -476,12 +474,7 @@
             const mainContainer = document.querySelector('.main-container');
 
             if (screen) {
-                screen.classList.add('hidden');
-                setTimeout(() => {
-                    if (screen.classList.contains('hidden')) {
-                        screen.style.display = 'none';
-                    }
-                }, 400);
+                screen.style.display = 'none';
             }
 
             if (mainContainer) {
@@ -1198,14 +1191,15 @@
                                 <div class="performance-grid collapsed" id="perf-${investment.id}">
                                     ${performanceItems.length > 0 ? performanceItems.map(item => `
                                         <div class="performance-card">
-                                            <div class="performance-value ${item.value !== null ? (item.value >= 0 ? 'positive' : 'negative') : ''}" style="font-size: 1.2rem; font-weight: 600; margin-bottom: 2px;">
-                                                ${item.value !== null ? (item.value >= 0 ? '+' : '') + item.value.toFixed(2) + '%' : 'N/A'}
-                                            </div>
+                                        <div class="performance-value ${item.value !== null ? (item.value >= 0 ? 'positive' : 'negative') : ''}" style="font-size: 1.15rem; font-weight: 600; margin-bottom: 2px;">
+                                            ${item.value !== null ? (item.value >= 0 ? '+' : '') + item.value.toFixed(2) + '%' : 'N/A'}
+                                            ${item.value !== null ? `(${item.value >= 0 ? '+' : ''}₹${Math.abs(item.value * (item.startNAV * investment.units / 100)).toLocaleString(undefined, { maximumFractionDigits: 0 })})` : ''}
+                                        </div>
                                             <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">${item.label}</div>
-                                            <div style="font-size: 0.75rem; color: #5f6368; line-height: 1.2; margin-bottom: 8px;">${item.subLabel || ''}</div>
+                                            <div class="perf-meta-text">${item.subLabel || ''}</div>
                                             <div class="d-flex justify-content-between small text-muted" style="gap: 8px;">
-                                                <span style="font-size: 0.7rem; background: #f8f9fa; padding: 2px 6px; border-radius: 4px; border: 1px solid #eee;">S: ₹${item.startNAV ? item.startNAV.toFixed(1) : 'N'}</span>
-                                                <span style="font-size: 0.7rem; background: #f8f9fa; padding: 2px 6px; border-radius: 4px; border: 1px solid #eee;">E: ₹${item.endNAV ? item.endNAV.toFixed(1) : 'N'}</span>
+                                                <span class="perf-nav-badge">S: ₹${item.startNAV ? item.startNAV.toFixed(1) : 'N'}</span>
+                                                <span class="perf-nav-badge">E: ₹${item.endNAV ? item.endNAV.toFixed(1) : 'N'}</span>
                                             </div>
                                         </div>
                                     `).join('') : `
@@ -1571,7 +1565,7 @@
                     if (label) {
                         label.innerHTML = `
                         <div class="summary-label-main">${staticLabels[id].main}</div>
-                        <div class="summary-label-sub" style="font-size: 0.75rem; opacity: 0.7; font-weight: 500;">${staticLabels[id].sub}</div>
+                        <div class="summary-label-sub">${staticLabels[id].sub}</div>
                     `;
                     }
                 });
@@ -1657,7 +1651,7 @@
                             if (labelElem) {
                                 const sub = (p.key === 'daily') ? `Yesterday (${eDate})` : `${labelElem.getAttribute('data-original-label') || labelElem.textContent} (Since ${sDate})`;
                                 if (!labelElem.getAttribute('data-original-label')) labelElem.setAttribute('data-original-label', labelElem.textContent);
-                                labelElem.innerHTML = `<div class="summary-label-main">${labelElem.getAttribute('data-original-label')}</div><div class="summary-label-sub" style="font-size: 0.7rem; opacity: 0.7;">${(p.key === 'daily') ? eDate : `Since ${sDate}`}</div>`;
+                                labelElem.innerHTML = `<div class="summary-label-main">${labelElem.getAttribute('data-original-label')}</div><div class="summary-label-sub">${(p.key === 'daily') ? eDate : `Since ${sDate}`}</div>`;
                             }
                             card.style.display = 'flex';
                         } else {
@@ -1959,12 +1953,12 @@
             if (view === 'individual') {
                 individualBtn.classList.add('active');
                 groupsBtn.classList.remove('active');
-                groupControls.style.display = 'none';
+                if (groupControls) groupControls.style.display = 'none';
                 displayFunds();
             } else {
                 individualBtn.classList.remove('active');
                 groupsBtn.classList.add('active');
-                groupControls.style.display = 'flex';
+                if (groupControls) groupControls.style.display = 'flex';
                 updateGroupFilterUI(); // NEW: Dynamically generate filters
                 displayGroups();
             }
@@ -2026,8 +2020,7 @@
 
             // Always add the "Add New Group" button at the very end
             html += `
-                <button class="group-filter-btn" id="createGroupBtn" onclick="showCreateGroupModal()" 
-                        style="border: 1.5px dashed var(--primary-color); color: var(--primary-color); margin-left: 5px;">
+                <button class="group-filter-btn btn-add-group" id="createGroupBtn" onclick="showCreateGroupModal()">
                     <i class="bi bi-plus-circle"></i> Add Group
                 </button>
             `;
@@ -2333,26 +2326,42 @@
                             ${group.description ? `<p class="text-muted small">${group.description}</p>` : ''}
                             
                             <div class="group-stats">
+                                <!-- Base Totals -->
                                 <div class="group-stat">
-                                    <div class="group-stat-value">₹${groupStats.totalInvestment.toLocaleString()}</div>
-                                    <div class="group-stat-label">Invested</div>
+                                    <div class="performance-value" style="font-size: 1.2rem; font-weight: 600;">₹${groupStats.totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                                    <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">Invested</div>
+                                    <div class="perf-meta-text">Total Cost</div>
                                 </div>
                                 <div class="group-stat">
-                                    <div class="group-stat-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">₹${groupStats.currentValue.toLocaleString()}</div>
-                                    <div class="group-stat-label">Current</div>
+                                    <div class="performance-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}" style="font-size: 1.2rem; font-weight: 600;">₹${groupStats.currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                                    <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">Current</div>
+                                    <div class="perf-meta-text">Market Value</div>
                                 </div>
                                 <div class="group-stat">
-                                    <div class="group-stat-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">
-                                        ${groupStats.totalReturns >= 0 ? '+' : ''}₹${groupStats.totalReturns.toLocaleString()}
+                                    <div class="performance-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}" style="font-size: 1.2rem; font-weight: 600;">
+                                        ${groupStats.totalReturns >= 0 ? '+' : ''}₹${groupStats.totalReturns.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                                     </div>
-                                    <div class="group-stat-label">Returns (${totalReturnsPercentage.toFixed(1)}%)</div>
+                                    <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">Returns</div>
+                                    <div class="perf-meta-text">${totalReturnsPercentage >= 0 ? '+' : ''}${totalReturnsPercentage.toFixed(1)}%</div>
                                 </div>
                                 <div class="group-stat">
-                                    <div class="group-stat-value ${groupStats.cagr >= 0 ? 'positive' : 'negative'}">
-                                        ${groupStats.cagr.toFixed(2)}%
+                                    <div class="performance-value ${groupStats.cagr >= 0 ? 'positive' : 'negative'}" style="font-size: 1.2rem; font-weight: 600;">
+                                        ${groupStats.cagr >= 0 ? '+' : ''}${groupStats.cagr.toFixed(2)}%
                                     </div>
-                                    <div class="group-stat-label">XIRR</div>
+                                    <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">XIRR</div>
+                                    <div class="perf-meta-text">Annualized</div>
                                 </div>
+
+                                <!-- Periodic Stats (Merged into same scroller) -->
+                                ${Object.values(groupStats.periodicReturns).map(p => `
+                                    <div class="group-stat">
+                                        <div class="performance-value ${p.amount >= 0 ? 'positive' : 'negative'}" style="font-size: 1.15rem; font-weight: 600; margin-bottom: 2px;">
+                                            ${p.percentage >= 0 ? '+' : ''}${p.percentage.toFixed(2)}% (${p.amount >= 0 ? '+' : ''}₹${Math.abs(p.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })})
+                                        </div>
+                                        <div class="fw-bold" style="font-size: 0.85rem; color: #202124;">${p.label}</div>
+                                        <div class="perf-meta-text">(Since ${p.startDate})</div>
+                                    </div>
+                                `).join('')}
                             </div>
                             
                             <div class="group-funds">
@@ -2417,11 +2426,65 @@
             const totalReturns = totalCurrentValueNum - totalInvestment;
             const cagr = calculatePortfolioXIRR(investmentDetails, totalCurrentValueNum);
 
+            // Calculate Periodic Performance for the whole group
+            const periodicReturns = {};
+            const periods = {
+                daily: 'Yesterday',
+                weekly: '1 Week',
+                fifteenDays: '15 Days',
+                monthly: '1 Month',
+                quarterly: '3 Months',
+                halfYearly: '6 Months',
+                yearly: '1 Year'
+            };
+
+            // Run individual performance calculations for each fund in parallel
+            const perfResults = await Promise.all(fundIds.map(async (fundId) => {
+                const inv = userInvestments.find(i => String(i.id) === String(fundId));
+                if (!inv) return null;
+                const units = inv.units || 0;
+                const navResult = navResults.find(r => String(r.fundId) === String(fundId));
+                if (!navResult) return null;
+
+                const perf = await calculatePerformance(inv, navResult.nav);
+                return { units, perf };
+            }));
+
+            // Aggregate results for each period
+            Object.keys(periods).forEach(key => {
+                let totalDiffAmount = 0;
+                let totalPastValue = 0;
+                let hasData = false;
+                let periodStartDate = '';
+
+                perfResults.forEach(res => {
+                    if (res && res.perf && res.perf.periodic[key]) {
+                        const p = res.perf.periodic[key];
+                        const diff = (p.endNAV - p.startNAV) * res.units;
+                        const pastValue = p.startNAV * res.units;
+                        totalDiffAmount += diff;
+                        totalPastValue += pastValue;
+                        hasData = true;
+                        if (!periodStartDate) periodStartDate = p.startDate;
+                    }
+                });
+
+                if (hasData && totalPastValue > 0) {
+                    periodicReturns[key] = {
+                        label: periods[key],
+                        percentage: (totalDiffAmount / totalPastValue) * 100,
+                        amount: totalDiffAmount,
+                        startDate: periodStartDate
+                    };
+                }
+            });
+
             return {
                 totalInvestment,
                 currentValue: totalCurrentValueNum,
                 totalReturns,
-                cagr
+                cagr,
+                periodicReturns
             };
         }
 

@@ -278,10 +278,12 @@
             border-radius: 10px;
         }
 
-        .summary-stats::-webkit-scrollbar-thumb {
-            background: #dadce0;
+        .group-stats::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
             border-radius: 10px;
+            opacity: 0.8;
         }
+
 
 
         .summary-card {
@@ -1065,8 +1067,8 @@
 
         /* Modern Add Fund Form Styles */
         .add-fund-grid {
-            display: flex;
-            grid-template-columns: 2fr 1fr 1fr auto;
+            display: grid;
+            grid-template-columns: minmax(300px, 1fr) 140px 180px auto;
             gap: 16px;
             align-items: center;
         }
@@ -1451,3 +1453,125 @@
 
 @charset " UTF-8\; .modal-body *, .modal-body { box-sizing: border-box !important; } .form-control { width: 100% !important; max-width: 100%; }
 .modal-body .mb-3 { width: 100%; padding: 0 2px; } .modal-body .form-control { width: 100% !important; box-sizing: border-box !important; margin: 0 !important; }
+
+/* Responsive & Utility System */
+.hidden { display: none !important; }
+
+.login-footer-info {
+    color: #80868b;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.summary-label-sub {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    font-weight: 500;
+}
+
+.perf-nav-badge {
+    font-size: 0.7rem;
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.perf-meta-text {
+    font-size: 0.75rem;
+    color: #5f6368;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+    .summary-stats, .performance-grid {
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+    
+    .summary-card, .performance-card {
+        min-width: 130px;
+        padding: 8px 12px;
+    }
+    
+    .summary-value, .performance-value {
+        font-size: 1.05rem;
+    }
+    
+    .header-section h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-card, .performance-card {
+        min-width: 120px;
+    }
+    
+    .main-container {
+        padding: 10px;
+    }
+    
+    .header-section {
+        padding: 15px;
+    }
+}
+
+.flex { display: flex !important; }
+.flex-column { flex-direction: column !important; }
+.align-center { align-items: center !important; }
+.justify-center { justify-content: center !important; }
+
+
+.btn-add-group {
+    border: 1.5px dashed var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    margin-left: 5px;
+    background: transparent !important;
+}
+.btn-add-group:hover {
+    background: rgba(26, 115, 232, 0.05) !important;
+}
+
+
+/* Synchronizing Group Stats with Performance Scroller */
+.group-stats {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 2px 2px 10px 2px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.group-stats::-webkit-scrollbar {
+    height: 4px;
+}
+
+.group-stats::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.group-stat {
+    background: white;
+    border: 1px solid #f0f1f2;
+    padding: 10px 15px;
+    border-radius: 12px;
+    text-align: center;
+    flex: 0 0 auto;
+    min-width: 140px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
