@@ -594,7 +594,7 @@
             left: 0 !important;
             width: 100% !important;
             height: 100vh !important;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: #f0f2f5 !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -610,7 +610,7 @@
 
         .login-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -618,46 +618,74 @@
 
         .login-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
             overflow: hidden;
             width: 100%;
             transform: translateY(0);
-            transition: transform 0.3s ease;
-        }
-
-        .login-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
-
-        .login-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 30px 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            padding: 40px 30px;
             text-align: center;
         }
 
         .login-header h1 {
             font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
+            font-weight: 500;
+            margin-bottom: 25px;
+            color: #202124;
+            font-family: 'Google Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         .login-header p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 0.9rem;
+            margin: 0 0 35px 0;
+            color: #5f6368;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .btn-google {
+            background-color: white;
+            color: #3c4043;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+            letter-spacing: 0.25px;
+            font-family: 'Google Sans', Roboto, Arial, sans-serif;
+            text-decoration: none;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            border-color: #d2e3fc;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            color: #174ea6;
+        }
+        
+        .btn-google:active {
+            background-color: #e8f0fe;
+        }
+
+        .btn-google svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
         }
 
         .login-body {
-            padding: 40px 30px;
+            padding: 0;
         }
 
         .login-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
+            display: none;
         }
 
         .login-content .btn-primary-custom {
@@ -957,6 +985,91 @@
             background: #fff3cd;
             border-bottom-color: #ffeaa7;
         }
+
+        /* Modern Add Fund Form Styles */
+        .add-fund-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 16px;
+            align-items: center;
+        }
+        @media (max-width: 900px) {
+            .add-fund-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+        .modern-floating-label {
+            position: relative;
+            margin-bottom: 0;
+            width: 100%;
+        }
+        .modern-floating-label .search-dropdown {
+            width: 100%;
+        }
+        .form-control-modern {
+            width: 100%;
+            height: 56px;
+            padding: 1.25rem 0.75rem 0.25rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #dadce0;
+            background: #fff;
+            box-sizing: border-box;
+            font-size: 1rem;
+            color: #202124;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.01);
+            font-family: inherit;
+        }
+        .form-control-modern:focus {
+            outline: none;
+            border: 2px solid #1a73e8;
+            padding: 1.25rem 0.75rem 0.25rem 0.75rem;
+        }
+        .modern-floating-label label {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            color: #5f6368;
+            font-size: 1rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            margin: 0;
+            padding: 0;
+            z-index: 2;
+        }
+        .form-control-modern:focus ~ label,
+        .form-control-modern:not(:placeholder-shown) ~ label,
+        .form-control-modern[type="date"] ~ label {
+            top: 14px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .form-control-modern:focus ~ label {
+            color: #1a73e8;
+        }
+        .form-control-modern:not(:focus):not(:placeholder-shown) ~ label,
+        .form-control-modern[type="date"]:not(:focus) ~ label {
+            color: #5f6368;
+        }
+        .modern-form-actions {
+            display: flex;
+            gap: 8px;
+            height: 56px;
+        }
+        .modern-form-actions .btn {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            padding: 0 20px;
+        }
+        .modern-form-actions #clearForm {
+            padding: 0 16px;
+        }
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -974,23 +1087,22 @@
         <div class="login-container">
             <div class="login-card">
                 <div class="login-header">
-                    <h1><i class="bi bi-graph-up-arrow"></i> Mutual Fund Tracker</h1>
-                    <p>Sign in to sync your investments across devices</p>
+                    <h1>Mutual Fund Tracker</h1>
+                    <p>Welcome back! Sign in securely using your Google account to access and sync your unified dashboard.</p>
                 </div>
                 <div class="login-body">
-                    <div class="text-center mb-4">
-                        <div class="login-icon">
-                            <i class="bi bi-shield-lock"></i>
-                        </div>
-                    </div>
-                    <div class="d-grid gap-2 mb-3">
-                        <button type="button" class="btn btn-primary-custom w-100" onclick="signInWithGoogle()">
-                            <i class="bi bi-google"></i> Sign In with Google
-                        </button>
-                    </div>
-                    <div class="text-center">
-                        <small class="text-muted">
-                            <i class="bi bi-lock"></i> Your data is securely synced using Google Drive
+                    <button type="button" class="btn-google" onclick="signInWithGoogle()">
+                        <svg viewBox="0 0 48 48">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+                    <div class="text-center mt-4">
+                        <small style="color: #80868b; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <i class="bi bi-shield-check"></i> Automatically backed up via Google Drive
                         </small>
                     </div>
                 </div>
@@ -1057,32 +1169,26 @@
                     <div class="fund-card">
                         <h4><i class="bi bi-plus-circle"></i> Add Mutual Fund</h4>
                         <form id="addFundForm">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="search-container">
-                                        <label for="fundSearch" class="form-label">Search Mutual Fund</label>
-                                        <input type="text" class="form-control" id="fundSearch"
-                                            placeholder="Type to search funds..." autocomplete="off">
-                                        <div class="search-dropdown" id="searchDropdown"></div>
-                                    </div>
+                            <div class="add-fund-grid">
+                                <div class="search-container modern-floating-label" style="margin-bottom: 0;">
+                                    <input type="text" class="form-control-modern" id="fundSearch" placeholder=" " autocomplete="off">
+                                    <label for="fundSearch">Search Mutual Fund</label>
+                                    <div class="search-dropdown" id="searchDropdown" style="top: 100%; z-index: 100;"></div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="investmentDate" class="form-label">Investment Date</label>
-                                    <input type="date" class="form-control" id="investmentDate" required>
+                                <div class="modern-floating-label">
+                                    <input type="date" class="form-control-modern" id="investmentDate" placeholder=" " required>
+                                    <label for="investmentDate">Investment Date</label>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="investmentAmount" class="form-label">Investment Amount (₹)</label>
-                                    <input type="number" class="form-control" id="investmentAmount" placeholder="10000"
-                                        min="1" required>
+                                <div class="modern-floating-label">
+                                    <input type="number" class="form-control-modern" id="investmentAmount" placeholder=" " min="1" required>
+                                    <label for="investmentAmount">Amount (₹)</label>
                                 </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-primary-custom" id="submitBtn">
+                                <div class="modern-form-actions">
+                                    <button type="submit" class="btn btn-primary-custom flex-grow-1" id="submitBtn">
                                         <i class="bi bi-plus-lg"></i> Add Fund
                                     </button>
-                                    <button type="button" class="btn btn-secondary ms-2" id="clearForm">
-                                        <i class="bi bi-x-lg"></i> Clear
+                                    <button type="button" class="btn btn-secondary" id="clearForm" aria-label="Clear Form" title="Clear form">
+                                        <i class="bi bi-x-lg"></i>
                                     </button>
                                 </div>
                             </div>
@@ -1250,7 +1356,25 @@
 
         // Check for existing authentication (cloud-only)
         function checkAuthState() {
-            // No localStorage concept - user must always sign in
+            const authData = localStorage.getItem('mf_auth');
+            if (authData) {
+                try {
+                    const parsed = JSON.parse(authData);
+                    if (parsed.expiry > Date.now() && parsed.accessToken && parsed.user) {
+                        accessToken = parsed.accessToken;
+                        currentUser = parsed.user;
+                        isSignedIn = true;
+                        
+                        // Update UI shortly after to allow DOM to be ready
+                        setTimeout(() => {
+                            updateAuthUI();
+                        }, 100);
+                        return;
+                    } else {
+                        localStorage.removeItem('mf_auth');
+                    }
+                } catch(e) {}
+            }
             currentUser = null;
             isSignedIn = false;
         }
@@ -1802,38 +1926,37 @@
                         console.log('Performance items:', performanceItems);
 
                         const fundHTML = `
-                            <div class="fund-card">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <h5>${investment.schemeName}</h5>
-                                        <p class="text-muted mb-2">
-                                            <small>
-                                                <i class="bi bi-calendar"></i> Invested: ${formatDate(investment.investmentDate)} | 
-                                                <i class="bi bi-currency-rupee"></i> Amount: ₹${investment.investmentAmount.toLocaleString()} | 
-                                                <i class="bi bi-layers"></i> Units: ${investment.units.toFixed(3)}
-                                            </small>
-                                        </p>
-                                        <div class="d-flex align-items-center flex-wrap gap-2">
-                                            <span class="badge bg-primary">NAV: ₹${currentNAV.toFixed(2)}</span>
-                                            <span class="badge ${returns >= 0 ? 'bg-success' : 'bg-danger'}">
-                                                Returns: ${returns >= 0 ? '+' : ''}₹${returns.toFixed(2)} (${returnsPercentage.toFixed(2)}%)
-                                            </span>
-                                            <span class="badge ${fundCAGR >= 0 ? 'bg-info' : 'bg-warning'}">
-                                                CAGR: ${fundCAGR >= 0 ? '+' : ''}${fundCAGR.toFixed(2)}%
-                                            </span>
+                            <div class="fund-card modern-added-fund">
+                                <div class="fund-header">
+                                    <div class="fund-info-main">
+                                        <h5 class="fund-title">${investment.schemeName}</h5>
+                                        <div class="fund-meta">
+                                            <span><i class="bi bi-calendar"></i> ${formatDate(investment.investmentDate)}</span>
+                                            <span><i class="bi bi-currency-rupee"></i> ${investment.investmentAmount.toLocaleString()}</span>
+                                            <span><i class="bi bi-layers"></i> ${investment.units.toFixed(3)} Units</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 text-end">
-                                        <button type="button" class="btn btn-sm btn-outline-info me-2 expand-toggle-btn collapsed" onclick="togglePerformanceGrid('perf-${investment.id}')" title="Toggle performance details">
-                                            <i class="bi bi-chevron-up"></i>
+                                    <div class="fund-actions">
+                                        <button class="btn-icon" onclick="editFund('${investment.id}')" title="Edit">
+                                            <i class="bi bi-pencil"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-primary me-2" onclick="editFund('${investment.id}')">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="removeFund('${investment.id}')">
+                                        <button class="btn-icon text-danger" onclick="removeFund('${investment.id}')" title="Delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                        <button class="btn-icon expand-toggle-btn collapsed" onclick="togglePerformanceGrid('perf-${investment.id}')" title="Toggle Details">
+                                            <i class="bi bi-chevron-up"></i>
+                                        </button>
                                     </div>
+                                </div>
+                                <div class="fund-badges">
+                                    <span class="modern-badge neutral">NAV: ₹${currentNAV.toFixed(2)}</span>
+                                    <span class="modern-badge ${returns >= 0 ? 'success' : 'danger'}">
+                                        <i class="bi ${returns >= 0 ? 'bi-arrow-up-right' : 'bi-arrow-down-right'}"></i> 
+                                        ₹${Math.abs(returns).toFixed(2)} (${returnsPercentage.toFixed(2)}%)
+                                    </span>
+                                    <span class="modern-badge ${fundCAGR >= 0 ? 'info' : 'warning'}">
+                                        CAGR: ${fundCAGR >= 0 ? '+' : ''}${fundCAGR.toFixed(2)}%
+                                    </span>
                                 </div>
                                 
                                 <div class="performance-grid collapsed" id="perf-${investment.id}">
@@ -1859,28 +1982,26 @@
                     } catch (fundError) {
                         console.error(`Error loading fund ${investment.schemeName}:`, fundError);
                         return `
-                            <div class="fund-card">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <h5>${investment.schemeName}</h5>
-                                        <p class="text-muted mb-2">
-                                            <small>
-                                                <i class="bi bi-calendar"></i> Invested: ${formatDate(investment.investmentDate)} | 
-                                                <i class="bi bi-currency-rupee"></i> Amount: ₹${investment.investmentAmount.toLocaleString()}
-                                            </small>
-                                        </p>
-                                        <div class="alert alert-warning">
-                                            <i class="bi bi-exclamation-triangle"></i> Unable to fetch current NAV data: ${fundError.message}
+                            <div class="fund-card modern-added-fund">
+                                <div class="fund-header">
+                                    <div class="fund-info-main">
+                                        <h5 class="fund-title">${investment.schemeName}</h5>
+                                        <div class="fund-meta">
+                                            <span><i class="bi bi-calendar"></i> ${formatDate(investment.investmentDate)}</span>
+                                            <span><i class="bi bi-currency-rupee"></i> ${investment.investmentAmount.toLocaleString()}</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 text-end">
-                                        <button class="btn btn-sm btn-outline-primary me-2" onclick="editFund('${investment.id}')">
-                                            <i class="bi bi-pencil"></i> Edit
+                                    <div class="fund-actions">
+                                        <button class="btn-icon" onclick="editFund('${investment.id}')" title="Edit">
+                                            <i class="bi bi-pencil"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="removeFund('${investment.id}')">
+                                        <button class="btn-icon text-danger" onclick="removeFund('${investment.id}')" title="Delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
+                                </div>
+                                <div style="padding: 12px; background: #fce8e6; color: #c5221f; border-radius: 8px; font-size: 0.85rem; margin-top: 12px; display: inline-block;">
+                                    <i class="bi bi-exclamation-triangle"></i> Unable to fetch NAV data: ${fundError.message}
                                 </div>
                             </div>
                         `;
@@ -3078,6 +3199,14 @@
                                     avatar: userInfo.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.email)}&background=random`
                                 };
                                 isSignedIn = true;
+                                
+                                // Save to localStorage
+                                localStorage.setItem('mf_auth', JSON.stringify({
+                                    accessToken: accessToken,
+                                    user: currentUser,
+                                    expiry: Date.now() + (3500 * 1000) // valid for 58 mins
+                                }));
+
                                 updateAuthUI();
                                 showMainContent();
 
@@ -3111,6 +3240,7 @@
             currentUser = null;
             isSignedIn = false;
             accessToken = null;
+            localStorage.removeItem('mf_auth');
             updateAuthUI();
             showLoginContent();
             showToast('Successfully signed out', 'info', 'Sign Out');
@@ -3149,7 +3279,13 @@
                 ...(options.headers || {})
             };
 
-            const response = await fetch(url, { ...options, headers });
+            const fetchOptions = {
+                cache: 'no-store',
+                ...options,
+                headers
+            };
+
+            const response = await fetch(url, fetchOptions);
 
             if (!response.ok) {
                 const errorText = await response.text();
@@ -3269,6 +3405,7 @@
                 console.log('Successfully saved to Google Drive');
             } catch (error) {
                 console.error('Failed to save to Google Drive:', error);
+                showToast('Failed to save investments to cloud. Please check your connection.', 'error', 'Sync Error');
             }
         }
 
@@ -3294,6 +3431,7 @@
                 console.log('Successfully saved fund groups to Google Drive');
             } catch (error) {
                 console.error('Failed to save fund groups to Google Drive:', error);
+                showToast('Failed to save groups to cloud. Please check your connection.', 'error', 'Sync Error');
             }
         }
 
