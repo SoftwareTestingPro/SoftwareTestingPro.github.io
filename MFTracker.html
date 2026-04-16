@@ -1449,17 +1449,40 @@
             let manualGroups = fundGroups.filter(g => !g.isAutomated);
             let automatedGroups = [];
 
-            // 1. Group by Fund House
+            // 1. Group by Fund House (Intelligent heuristic detection)
             const houses = {};
+            
             userInvestments.forEach(inv => {
-                const house = inv.schemeName.split(' ')[0];
+                const words = inv.schemeName.split(' ');
+                // Words that typically indicate the start of the fund's specific category or strategy
+                const stopWords = [
+                    "Small", "Mid", "Large", "Flexi", "Multi", "Index", "Nifty", "ELSS", "Tax", "Equity", 
+                    "Liquid", "Debt", "Hybrid", "Fund", "Balanced", "Opportunities", "Emerging", "Contra", 
+                    "Value", "Focused", "Bluechip", "Aggressive", "Conservative", "Dynamic", "Arbitrage"
+                ];
+                
+                let stopIndex = words.length;
+                for (let i = 0; i < words.length; i++) {
+                    const cleanWord = words[i].toLowerCase().replace(/[^a-z]/g, '');
+                    if (stopWords.some(sw => cleanWord.includes(sw.toLowerCase()))) {
+                        stopIndex = i;
+                        break;
+                    }
+                }
+                
+                // The Fund House is everything before the first category stop-word (minimum 1 word)
+                let house = words.slice(0, Math.max(1, stopIndex)).join(' ');
+                
+                // Cleanup common administrative suffixes to keep group names clean
+                house = house.replace(/\s+(Mutual|AMC|MF|Asset|Management)$/i, '').trim();
+                
                 if (!houses[house]) houses[house] = [];
                 houses[house].push(inv.id);
             });
 
             for (const [house, ids] of Object.entries(houses)) {
                 automatedGroups.push({
-                    id: `house-${house}`,
+                    id: `house-${house.replace(/\s+/g, '-')}`,
                     name: `${house} House`,
                     description: `Automated group for ${house} Mutual Fund house`,
                     fundIds: ids,
@@ -1468,24 +1491,52 @@
                 });
             }
 
-            // 2. Group by Fund Type
+            // 2. Group by Fund Type (Allows multiple groups per fund)
             const types = {};
-            const typeKeywords = ["Small Cap", "Mid Cap", "Large Cap", "Flexi Cap", "Multi Cap", "ELSS", "Index", "Liquid", "Debt", "Hybrid"];
+            const typeKeywords = [
+                { name: "Small Cap", patterns: [/small\s*cap/i] },
+                { name: "Mid Cap", patterns: [/mid\s*cap/i] },
+                { name: "Large Cap", patterns: [/large\s*cap/i] },
+                { name: "Flexi Cap", patterns: [/flexi\s*cap/i] },
+                { name: "Multi Cap", patterns: [/multi\s*cap/i] },
+                { name: "ELSS", patterns: [/elss/i, /tax\s*saver/i] },
+                { name: "Index", patterns: [/index/i, /nifty/i, /sensex/i] },
+                { name: "Liquid", patterns: [/liquid/i] },
+                { name: "Debt", patterns: [/debt/i, /gilt/i, /corporate/i, /treasury/i] },
+                { name: "Hybrid", patterns: [/hybrid/i, /balanced/i, /arbitrage/i] },
+                { name: "Equity", patterns: [/equity/i, /growth/i, /opportunit/i, /focused/i, /alpha/i, /bluechip/i] }
+            ];
             
             userInvestments.forEach(inv => {
-                let foundType = inv.category && inv.category !== 'N/A' ? inv.category : null;
-                if (!foundType) {
-                    for (const kw of typeKeywords) {
-                        if (inv.schemeName.toLowerCase().includes(kw.toLowerCase())) {
-                            foundType = kw;
-                            break;
-                        }
+                let matchingTypes = new Set();
+                
+                // Add from category field if present
+                if (inv.category && inv.category !== 'N/A') {
+                    matchingTypes.add(inv.category);
+                }
+                
+                // Add all matching keywords
+                for (const typeCfg of typeKeywords) {
+                    if (typeCfg.patterns.some(p => p.test(inv.schemeName))) {
+                        matchingTypes.add(typeCfg.name);
                     }
                 }
-                if (foundType) {
-                    if (!types[foundType]) types[foundType] = [];
-                    types[foundType].push(inv.id);
+                
+                // Intelligent Inference: Cross-link sub-types to broad categories
+                const equitySubTypes = ["Small Cap", "Mid Cap", "Large Cap", "Flexi Cap", "Multi Cap", "ELSS", "Index"];
+                if ([...matchingTypes].some(t => equitySubTypes.includes(t))) {
+                    matchingTypes.add("Equity");
                 }
+                
+                if ([...matchingTypes].some(t => t.includes("Debt") || t === "Liquid")) {
+                    matchingTypes.add("Debt Funds");
+                }
+
+                // Assign fund to all identified groups
+                matchingTypes.forEach(t => {
+                    if (!types[t]) types[t] = [];
+                    types[t].push(inv.id);
+                });
             });
 
             for (const [type, ids] of Object.entries(types)) {
@@ -1783,8 +1834,11 @@
                                         </div>
                                     </div>
                                     <div class="group-fund-returns ${returns >= 0 ? 'positive' : 'negative'}" style="text-align: right;">
-                                        <div style="font-weight: 600;">${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                                        <div style="font-size: 0.7rem;">${returnsPercentage.toFixed(2)}%</div>
+                                        <div style="font-weight: 600;">
+                                            <i class="bi bi-caret-${returns >= 0 ? 'up' : 'down'}-fill" style="font-size: 0.8rem;"></i>
+                                            ${returns >= 0 ? '+' : ''}₹${returns.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                        </div>
+                                        <div style="font-size: 0.7rem;">${returnsPercentage >= 0 ? '+' : ''}${returnsPercentage.toFixed(2)}%</div>
                                     </div>
                                 </div>
                             `;
@@ -1797,6 +1851,8 @@
                             `;
                         }
                     }));
+
+                    const totalReturnsPercentage = groupStats.totalInvestment > 0 ? (groupStats.totalReturns / groupStats.totalInvestment) * 100 : 0;
 
                     return `
                         <div class="group-card">
@@ -1822,15 +1878,17 @@
                                 </div>
                                 <div class="group-stat">
                                     <div class="group-stat-value ${groupStats.totalReturns >= 0 ? 'positive' : 'negative'}">
+                                        <i class="bi bi-caret-${groupStats.totalReturns >= 0 ? 'up' : 'down'}-fill"></i>
                                         ${groupStats.totalReturns >= 0 ? '+' : ''}₹${groupStats.totalReturns.toLocaleString()}
                                     </div>
-                                    <div class="group-stat-label">Returns</div>
+                                    <div class="group-stat-label">Returns (${totalReturnsPercentage >= 0 ? '+' : ''}${totalReturnsPercentage.toFixed(2)}%)</div>
                                 </div>
                                 <div class="group-stat">
                                     <div class="group-stat-value ${groupStats.cagr >= 0 ? 'positive' : 'negative'}">
+                                        <i class="bi bi-caret-${groupStats.cagr >= 0 ? 'up' : 'down'}-fill"></i>
                                         ${groupStats.cagr >= 0 ? '+' : ''}${groupStats.cagr.toFixed(2)}%
                                     </div>
-                                    <div class="group-stat-label">CAGR</div>
+                                    <div class="group-stat-label">XIRR (Annual)</div>
                                 </div>
                             </div>
                             
