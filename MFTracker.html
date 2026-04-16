@@ -588,7 +588,7 @@
                     }
 
                     return `
-                    <div class="search-dropdown-item" data-scheme-code="${fund.schemeCode}" data-scheme-name="${schemeName}" data-nav="${fund.nav || 0}">
+                    <div class="search-dropdown-item" data-scheme-code="${fund.schemeCode}" data-scheme-name="${schemeName}" data-nav="${fund.nav || 0}" data-category="${fundType}">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div><strong>${fund.schemeName}</strong></div>
@@ -606,7 +606,8 @@
                         const schemeCode = this.getAttribute('data-scheme-code');
                         const schemeName = this.getAttribute('data-scheme-name');
                         const nav = parseFloat(this.getAttribute('data-nav'));
-                        selectFund(schemeCode, schemeName, nav);
+                        const category = this.getAttribute('data-category');
+                        selectFund(schemeCode, schemeName, nav, category);
                     });
                 });
             }
@@ -615,8 +616,8 @@
         }
 
         // Select a fund from search results
-        function selectFund(schemeCode, schemeName, nav) {
-            selectedFund = { schemeCode, schemeName, nav };
+        function selectFund(schemeCode, schemeName, nav, category) {
+            selectedFund = { schemeCode, schemeName, nav, category };
             document.getElementById('fundSearch').value = schemeName;
             document.getElementById('searchDropdown').style.display = 'none';
         }
@@ -658,6 +659,7 @@
                             investmentDate,
                             investmentAmount,
                             nav,
+                            category: selectedFund?.category || 'N/A',
                             units,
                             addedDate: userInvestments[investmentIndex].addedDate
                         };
@@ -672,6 +674,7 @@
                         investmentDate,
                         investmentAmount,
                         nav,
+                        category: selectedFund?.category || 'N/A',
                         units,
                         addedDate: new Date().toISOString()
                     };
@@ -679,6 +682,7 @@
                 }
 
                 // Sync to cloud since we're cloud-only
+                syncAutomatedGroups();
                 await saveUserInvestments();
 
                 // Reset button text
@@ -794,7 +798,14 @@
 
                 showLoading();
 
-                const fundsHTML = await Promise.all(userInvestments.map(async (investment) => {
+                // Sort investments by date descending (most recent first)
+                const sortedInvestments = [...userInvestments].sort((a, b) => {
+                    const dateA = new Date(a.investmentDate);
+                    const dateB = new Date(b.investmentDate);
+                    return dateB - dateA;
+                });
+
+                const fundsHTML = await Promise.all(sortedInvestments.map(async (investment) => {
                     try {
                         const currentNAV = await getCurrentNAV(investment.schemeCode);
                         const currentValue = investment.units * currentNAV;
@@ -1348,7 +1359,8 @@
         async function removeFund(investmentId) {
             if (confirm('Are you sure you want to remove this fund?')) {
                 userInvestments = userInvestments.filter(inv => inv.id != investmentId);
-                // Save to cloud since we're cloud-only
+                // Sync to cloud since we're cloud-only
+                syncAutomatedGroups();
                 await saveUserInvestments();
                 displayFunds();
                 updateSummary();
@@ -1428,6 +1440,68 @@
             }
         }
 
+        function syncAutomatedGroups() {
+            if (userInvestments.length === 0) {
+                fundGroups = fundGroups.filter(g => !g.isAutomated);
+                return;
+            }
+
+            let manualGroups = fundGroups.filter(g => !g.isAutomated);
+            let automatedGroups = [];
+
+            // 1. Group by Fund House
+            const houses = {};
+            userInvestments.forEach(inv => {
+                const house = inv.schemeName.split(' ')[0];
+                if (!houses[house]) houses[house] = [];
+                houses[house].push(inv.id);
+            });
+
+            for (const [house, ids] of Object.entries(houses)) {
+                automatedGroups.push({
+                    id: `house-${house}`,
+                    name: `${house} House`,
+                    description: `Automated group for ${house} Mutual Fund house`,
+                    fundIds: ids,
+                    createdDate: new Date().toISOString(),
+                    isAutomated: true
+                });
+            }
+
+            // 2. Group by Fund Type
+            const types = {};
+            const typeKeywords = ["Small Cap", "Mid Cap", "Large Cap", "Flexi Cap", "Multi Cap", "ELSS", "Index", "Liquid", "Debt", "Hybrid"];
+            
+            userInvestments.forEach(inv => {
+                let foundType = inv.category && inv.category !== 'N/A' ? inv.category : null;
+                if (!foundType) {
+                    for (const kw of typeKeywords) {
+                        if (inv.schemeName.toLowerCase().includes(kw.toLowerCase())) {
+                            foundType = kw;
+                            break;
+                        }
+                    }
+                }
+                if (foundType) {
+                    if (!types[foundType]) types[foundType] = [];
+                    types[foundType].push(inv.id);
+                }
+            });
+
+            for (const [type, ids] of Object.entries(types)) {
+                automatedGroups.push({
+                    id: `type-${type.replace(/\s+/g, '-')}`,
+                    name: `${type}`,
+                    description: `Automated group for ${type} funds`,
+                    fundIds: ids,
+                    createdDate: new Date().toISOString(),
+                    isAutomated: true
+                });
+            }
+
+            fundGroups = [...manualGroups, ...automatedGroups];
+        }
+
         async function saveFundGroups() {
             if (!isSignedIn || !currentUser) {
                 return;
@@ -1471,9 +1545,9 @@
                 return;
             }
 
-            // Check for duplicate group names
-            if (fundGroups.some(group => group.name.toLowerCase() === groupName.toLowerCase())) {
-                showError('A group with this name already exists');
+            // Check for duplicate group names (excluding internal automated ones)
+            if (fundGroups.filter(g => !g.isAutomated).some(group => group.name.toLowerCase() === groupName.toLowerCase())) {
+                showError('A manual group with this name already exists');
                 return;
             }
 
@@ -1482,7 +1556,8 @@
                 name: groupName,
                 description: groupDescription,
                 fundIds: [], // Start with empty array - funds can be added later via edit
-                createdDate: new Date().toISOString()
+                createdDate: new Date().toISOString(),
+                isAutomated: false
             };
 
 
@@ -1502,7 +1577,7 @@
             // Check for any orphaned fund IDs
             fundGroups.forEach(group => {
                 const orphanedIds = group.fundIds.filter(fundId =>
-                    !userInvestments.some(inv => parseInt(inv.id) === parseInt(fundId))
+                    !userInvestments.some(inv => String(inv.id) === String(fundId))
                 );
                 if (orphanedIds.length > 0) {
                 }
@@ -1510,7 +1585,7 @@
         }
 
         function showEditGroupModal(groupId) {
-            const group = fundGroups.find(g => g.id === groupId);
+            const group = fundGroups.find(g => String(g.id) === String(groupId));
             if (!group) return;
 
             // Force refresh userInvestments from localStorage to catch recently added funds
@@ -1547,8 +1622,8 @@
 
             const fundItemsHTML = userInvestments.map(investment => {
                 // Ensure both are numbers for proper comparison
-                const investmentId = parseInt(investment.id);
-                const isSelected = selectedFundIds.some(id => parseInt(id) === investmentId);
+                const investmentId = String(investment.id);
+                const isSelected = selectedFundIds.some(id => String(id) === investmentId);
 
 
                 return `
@@ -1571,7 +1646,7 @@
 
         async function updateGroup() {
             const groupId = window.currentEditingGroupId;
-            const group = fundGroups.find(g => g.id === groupId);
+            const group = fundGroups.find(g => String(g.id) === String(groupId));
             if (!group) return;
 
             const groupName = document.getElementById('editGroupName').value.trim();
@@ -1582,8 +1657,8 @@
                 return;
             }
 
-            // Check for duplicate names (excluding current group)
-            if (fundGroups.some(g => g.id !== groupId && g.name.toLowerCase() === groupName.toLowerCase())) {
+            // Check for duplicate names (excluding current group and automated groups)
+            if (fundGroups.some(g => !g.isAutomated && String(g.id) !== String(groupId) && g.name.toLowerCase() === groupName.toLowerCase())) {
                 showError('A group with this name already exists');
                 return;
             }
@@ -1612,14 +1687,14 @@
 
         async function deleteGroup() {
             const groupId = window.currentEditingGroupId;
-            const group = fundGroups.find(g => g.id === groupId);
+            const group = fundGroups.find(g => String(g.id) === String(groupId));
             if (!group) return;
 
             if (!confirm(`Are you sure you want to delete the group "${group.name}"? This will not delete the individual funds.`)) {
                 return;
             }
 
-            fundGroups = fundGroups.filter(g => g.id !== groupId);
+            fundGroups = fundGroups.filter(g => String(g.id) !== String(groupId));
             await saveFundGroups();
 
             // Close modal and refresh display
@@ -1631,6 +1706,8 @@
 
         async function displayGroups() {
             const container = document.getElementById('fundsContainer');
+
+            syncAutomatedGroups();
 
             if (fundGroups.length === 0) {
                 container.innerHTML = `
@@ -1655,9 +1732,10 @@
                                 <div class="group-header">
                                     <h5 class="group-title">${group.name}</h5>
                                     <div class="group-actions">
-                                        <button class="btn btn-sm btn-outline-primary btn-group-sm" onclick="showEditGroupModal(${group.id})">
+                                        ${!group.isAutomated ? `
+                                        <button class="btn btn-sm btn-outline-primary btn-group-sm" onclick="showEditGroupModal('${group.id}')">
                                             <i class="bi bi-pencil"></i> Edit
-                                        </button>
+                                        </button>` : '<span class="badge bg-light text-dark" style="font-size: 0.7rem;">Auto</span>'}
                                     </div>
                                 </div>
                                 ${group.description ? `<p class="text-muted">${group.description}</p>` : ''}
@@ -1669,8 +1747,7 @@
                     }
 
                     const groupFundsHTML = await Promise.all(group.fundIds.map(async (fundId) => {
-                        // Use parseInt for proper type comparison
-                        const investment = userInvestments.find(inv => parseInt(inv.id) === parseInt(fundId));
+                        const investment = userInvestments.find(inv => String(inv.id) === String(fundId));
                         if (!investment) {
                             return '';
                         }
@@ -1707,9 +1784,10 @@
                             <div class="group-header">
                                 <h5 class="group-title">${group.name}</h5>
                                 <div class="group-actions">
-                                    <button class="btn btn-sm btn-outline-primary btn-group-sm" onclick="showEditGroupModal(${group.id})">
+                                    ${!group.isAutomated ? `
+                                    <button class="btn btn-sm btn-outline-primary btn-group-sm" onclick="showEditGroupModal('${group.id}')">
                                         <i class="bi bi-pencil"></i> Edit
-                                    </button>
+                                    </button>` : '<span class="badge bg-light text-dark" style="font-size: 0.7rem;">Auto</span>'}
                                 </div>
                             </div>
                             ${group.description ? `<p class="text-muted">${group.description}</p>` : ''}
@@ -1762,8 +1840,7 @@
 
 
             for (const fundId of fundIds) {
-                // Use parseInt for proper type comparison
-                const investment = userInvestments.find(inv => parseInt(inv.id) === parseInt(fundId));
+                const investment = userInvestments.find(inv => String(inv.id) === String(fundId));
                 if (!investment) {
                     continue;
                 }
