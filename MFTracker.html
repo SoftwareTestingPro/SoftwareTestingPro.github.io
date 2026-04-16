@@ -718,17 +718,20 @@
                 }
 
                 // Find NAV for the specific date or closest previous date
-                const targetDate = new Date(date);
+                const [targetYear, targetMonth, targetDay] = date.split('-');
+                const targetTimestamp = new Date(targetYear, targetMonth - 1, targetDay).getTime();
                 const navData = data.data;
 
                 let closestNAV = null;
-                let closestDate = null;
+                let closestTimestamp = null;
 
                 for (const navRecord of navData) {
-                    const recordDate = new Date(navRecord.date);
-                    if (recordDate <= targetDate) {
-                        if (!closestDate || recordDate > closestDate) {
-                            closestDate = recordDate;
+                    const [d, m, y] = navRecord.date.split('-');
+                    const recordTimestamp = new Date(y, m - 1, d).getTime();
+                    
+                    if (recordTimestamp <= targetTimestamp) {
+                        if (closestTimestamp === null || recordTimestamp > closestTimestamp) {
+                            closestTimestamp = recordTimestamp;
                             closestNAV = parseFloat(navRecord.nav);
                         }
                     }
@@ -926,8 +929,10 @@
         // Calculate individual fund CAGR using the CAGR formula
         // Calculate CAGR for individual fund
         function calculateFundCAGR(investment, currentNAV) {
-            const investmentDate = new Date(investment.investmentDate);
+            const [y, m, d] = investment.investmentDate.split('-');
+            const investmentDate = new Date(y, m - 1, d);
             const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
             const daysDiff = (currentDate - investmentDate) / (1000 * 60 * 60 * 24);
             const years = daysDiff / 365.25;
 
@@ -957,6 +962,7 @@
 
             // Add terminal cash flow (final value at today's date)
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
             const allCashFlows = [
                 ...cashFlows,
                 { date: today, amount: terminalValue } // Terminal value is positive cash inflow
@@ -1063,6 +1069,7 @@
                     if (period === 'yearly') continue;
 
                     const targetDate = new Date();
+                    targetDate.setHours(0, 0, 0, 0);
                     targetDate.setDate(targetDate.getDate() - days);
 
                     // Find NAV closest to the target date
@@ -1072,8 +1079,7 @@
                     // Since data is sorted descending (newest first), we need to find the closest date <= targetDate
                     for (const navRecord of navData) {
                         const [day, month, year] = navRecord.date.split('-');
-                        const recordDateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; // Convert DD-MM-YYYY to YYYY-MM-DD
-                        const recordDate = new Date(recordDateStr);
+                        const recordDate = new Date(year, month - 1, day);
                         if (recordDate <= targetDate) {
                             if (!closestDate || recordDate > closestDate) {
                                 closestDate = recordDate;
@@ -1102,8 +1108,7 @@
                 // Find first NAV on or after Jan 1 of current year
                 for (const navRecord of navData) {
                     const [day, month, year] = navRecord.date.split('-');
-                    const recordDateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-                    const recordDate = new Date(recordDateStr);
+                    const recordDate = new Date(year, month - 1, day);
 
                     if (recordDate >= yearStartDate) {
                         if (!yearStartRecordDate || recordDate < yearStartRecordDate) {
@@ -1136,7 +1141,8 @@
 
 
                 // Calculate for each year from current year - 1 down to investment year
-                const investmentYear = new Date(investment.investmentDate).getFullYear();
+                const [invY, invM, invD] = investment.investmentDate.split('-');
+                const investmentYear = parseInt(invY);
                 for (let year = currentYear - 1; year >= investmentYear; year--) {
                     const yearStart = new Date(year, 0, 1); // January 1st of the year
                     const yearEnd = new Date(year, 11, 31); // December 31st of the year
@@ -1251,7 +1257,8 @@
                 totalCurrentValue += currentValue;
 
                 // Store investment details for XIRR calculation
-                const investmentDate = new Date(investment.investmentDate);
+                const [y, m, d] = investment.investmentDate.split('-');
+                const investmentDate = new Date(y, m - 1, d);
                 investmentDetails.push({
                     date: investmentDate,
                     amount: -investment.investmentAmount // Negative because it's a cash outflow
@@ -1769,7 +1776,8 @@
                     totalCurrentValue += currentValue;
 
                     // Store investment details for CAGR calculation
-                    const investmentDate = new Date(investment.investmentDate);
+                    const [y, m, d] = investment.investmentDate.split('-');
+                    const investmentDate = new Date(y, m - 1, d);
                     investmentDetails.push({
                         date: investmentDate,
                         amount: -investment.investmentAmount
