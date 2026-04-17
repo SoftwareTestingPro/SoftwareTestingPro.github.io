@@ -102,30 +102,25 @@ async function calculatePerformance(investment, currentNAV) {
             for (const [key, days] of Object.entries(periods)) {
                 const pastData = (key === 'daily') ? getNAVForDaysAgo(1, true) : getNAVForDaysAgo(days);
                 if (pastData) {
-                    let startNAV = pastData.nav;
-                    let startDate = pastData.date;
-                    const [pd, pm, py] = startDate.split('-').map(Number);
+                    const [pd, pm, py] = pastData.date.split('-').map(Number);
                     const pastDate = new Date(py, pm - 1, pd);
                     
-                    if (pastDate < investmentDate) {
-                        startNAV = investment.nav;
-                        const [iy, im, id] = investment.investmentDate.split('-');
-                        startDate = `${id}-${im}-${iy}`;
-                    }
+                    // Strict check: If the NAV date found is before our investment, skip this period.
+                    if (pastDate < investmentDate) continue;
 
                     performance.periodic[key] = {
-                        value: ((currentNAV - startNAV) / startNAV) * 100,
-                        startNAV, endNAV: currentNAV, startDate, endDate: latestRecord.date
+                        value: ((currentNAV - pastData.nav) / pastData.nav) * 100,
+                        startNAV: pastData.nav, endNAV: currentNAV, startDate: pastData.date, endDate: latestRecord.date
                     };
                 }
             }
         }
 
         const startYear = investmentDate.getFullYear();
-        const curYearIdx = today.getFullYear();
-        for (let year = startYear; year < curYearIdx; year++) {
+        const curYear = today.getFullYear();
+        for (let year = startYear; year <= curYear; year++) {
             const yearStart = new Date(year, 0, 1);
-            const yearEnd = new Date(year, 11, 31);
+            const yearEnd = (year === curYear) ? today : new Date(year, 11, 31);
             if (yearEnd < investmentDate) continue;
 
             const effectiveYearStart = investmentDate > yearStart ? investmentDate : yearStart;
@@ -240,18 +235,41 @@ async function calculateGroupStats(fundIds) {
         }
     });
 
+    const curYearStr = String(new Date().getFullYear());
     Object.keys(yearlyReturns).sort((a, b) => b - a).forEach(year => {
         const p = yearlyReturns[year];
         if (p.totalPast > 0) {
             periodicReturns['year_' + year] = {
-                label: p.label, percentage: (p.totalDiff / p.totalPast) * 100,
+                label: year === curYearStr ? 'Current Year' : p.label, 
+                percentage: (p.totalDiff / p.totalPast) * 100,
                 amount: p.totalDiff, startDate: p.s, endDate: p.e
             };
         }
     });
 
+    // Deduplicate identical periodic returns (usually when multiple periods fallback to purchase date)
+    const finalPeriodicReturns = {};
+    const seenCombos = new Set();
+    
+    // Sort keys to process shorter periods first (daily, weekly, etc.)
+    const sortedPeriodKeys = Object.keys(periodicReturns).sort((a, b) => {
+        const order = { daily: 1, weekly: 2, fifteenDays: 3, monthly: 4, quarterly: 5, halfYearly: 6, yearly: 7 };
+        const aOrder = order[a] || 99;
+        const bOrder = order[b] || 99;
+        return aOrder - bOrder;
+    });
+
+    sortedPeriodKeys.forEach(key => {
+        const p = periodicReturns[key];
+        const combo = `${p.startDate}_${p.percentage.toFixed(4)}_${p.amount.toFixed(2)}`;
+        if (!seenCombos.has(combo)) {
+            finalPeriodicReturns[key] = p;
+            if (!key.startsWith('year_')) seenCombos.add(combo);
+        }
+    });
+
     let latestNAVDate = 'N/A';
-    Object.values(periodicReturns).forEach(p => {
+    Object.values(finalPeriodicReturns).forEach(p => {
         if (p.endDate && p.endDate !== 'N/A') {
             let pts = p.endDate.split('-');
             let iso = (pts.length === 3 && pts[0].length === 2) ? `${pts[2]}-${pts[1]}-${pts[0]}` : p.endDate;
@@ -263,7 +281,7 @@ async function calculateGroupStats(fundIds) {
 
     return {
         totalInvestment, currentValue: totalCurrentValue, totalReturns: totalCurrentValue - totalInvestment,
-        cagr, periodicReturns, oldestDate: fmtISO(oldestDateObj), latestNAVDate
+        cagr, periodicReturns: finalPeriodicReturns, oldestDate: fmtISO(oldestDateObj), latestNAVDate
     };
 }
 

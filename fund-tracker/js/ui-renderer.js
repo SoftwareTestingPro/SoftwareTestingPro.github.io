@@ -344,6 +344,7 @@ async function updateSummary() {
         const summaryContainer = document.getElementById('summaryStats');
         summaryContainer.querySelectorAll('.dynamic-yearly-card').forEach(c => c.remove());
 
+        const seenDashCombos = new Set();
         periods.forEach(p => {
             let weightedSum = 0, totalValForPeriod = 0, totalAmt = 0, sDate = '', eDate = '';
             results.forEach(res => {
@@ -359,6 +360,15 @@ async function updateSummary() {
             const card = document.getElementById(`card${p.id}`);
             if (card && totalValForPeriod > 0) {
                 const weightedPct = weightedSum / totalValForPeriod;
+                
+                // Deduplicate logic
+                const combo = `${sDate}_${weightedPct.toFixed(4)}`;
+                if (seenDashCombos.has(combo)) {
+                    card.style.display = 'none';
+                    return;
+                }
+                seenDashCombos.add(combo);
+
                 const pSign = weightedPct >= 0 ? '+' : '-';
                 document.getElementById(`portfolio${p.id}Percentage`).textContent = `${pSign}${Math.abs(weightedPct).toFixed(2)}% (₹${pSign}${Math.abs(totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
                 document.getElementById(`portfolio${p.id}Percentage`).className = `summary-value ${weightedPct >= 0 ? 'positive' : 'negative'}`;
@@ -373,6 +383,42 @@ async function updateSummary() {
                 card.style.display = 'flex';
             } else if (card) {
                 card.style.display = 'none';
+            }
+        });
+
+        // Dynamic Yearly Breakdown Cards
+        const yearlyData = {};
+        results.forEach(res => {
+            if (res?.data?.yearlyBreakdown) {
+                Object.entries(res.data.yearlyBreakdown).forEach(([year, data]) => {
+                    if (!yearlyData[year]) yearlyData[year] = { weightedSum: 0, totalVal: 0, totalAmt: 0, sDate: '', eDate: '' };
+                    yearlyData[year].weightedSum += data.value * res.val;
+                    yearlyData[year].totalVal += res.val;
+                    yearlyData[year].totalAmt += (data.endNAV - data.startNAV) * res.inv.units;
+                    const fmt = (d) => `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
+                    if (!yearlyData[year].sDate) yearlyData[year].sDate = fmt(data.startDate);
+                    if (!yearlyData[year].eDate) yearlyData[year].eDate = fmt(data.endDate);
+                });
+            }
+        });
+
+        const curYearStr = String(new Date().getFullYear());
+        Object.keys(yearlyData).sort((a,b) => b - a).forEach(year => {
+            const data = yearlyData[year];
+            if (data.totalVal > 0) {
+                const weightedPct = data.weightedSum / data.totalVal;
+                const pSign = weightedPct >= 0 ? '+' : '-';
+                const card = document.createElement('div');
+                card.className = `summary-card dynamic-yearly-card ${weightedPct >= 0 ? 'border-positive' : 'border-negative'}`;
+                card.innerHTML = `
+                    <div class="summary-value ${weightedPct >= 0 ? 'positive' : 'negative'}">
+                        ${pSign}${Math.abs(weightedPct).toFixed(2)}% (₹${pSign}${Math.abs(data.totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})
+                    </div>
+                    <div class="summary-label">
+                        <div class="summary-label-main">${year === curYearStr ? 'Current Year' : year} (Since ${data.sDate})</div>
+                    </div>
+                `;
+                summaryContainer.appendChild(card);
             }
         });
     } finally {
