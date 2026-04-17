@@ -166,7 +166,15 @@ async function getNAVForDate(schemeCode, date) {
         }
 
         if (closestNAV) return closestNAV;
-        return parseFloat(navData[navData.length - 1].nav);
+        
+        // If no record is found before the target date, it means the target date is before inception.
+        // Return the first available NAV (oldest record) instead of the latest.
+        const sorted = navData.sort((a, b) => {
+            const [d1, m1, y1] = a.date.split('-');
+            const [d2, m2, y2] = b.date.split('-');
+            return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+        });
+        return parseFloat(sorted[0].nav);
     } catch (error) {
         console.error('Error fetching historical NAV:', error);
         throw error;

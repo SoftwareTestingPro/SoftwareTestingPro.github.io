@@ -174,12 +174,40 @@ async function displayFunds() {
         const sorted = [...userInvestments].sort((a, b) => new Date(b.investmentDate) - new Date(a.investmentDate));
         const fundsHTML = await Promise.all(sorted.map(async (investment) => {
             try {
-                const navData = await getCurrentNAV(investment.schemeCode);
-                const currentNAV = navData.nav;
-                const currentValue = investment.units * currentNAV;
+                const navDataRes = await getCurrentNAV(investment.schemeCode);
+                const currentNAV = navDataRes.nav;
+                
+                // Effective logic for pre-inception funds
+                let effectiveUnits = investment.units;
+                let effectiveNavStr = investment.nav;
+                let effectiveDateStr = investment.investmentDate;
+
+                try {
+                    const history = await NAVManager.getNAV(investment.schemeCode);
+                    if (history?.data?.length > 0) {
+                        const sortedHistory = history.data.sort((a, b) => {
+                            const [d1, m1, y1] = a.date.split('-');
+                            const [d2, m2, y2] = b.date.split('-');
+                            return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                        });
+                        const [fd, fm, fy] = sortedHistory[0].date.split('-');
+                        const firstNavDate = new Date(fy, fm - 1, fd);
+                        const invDate = new Date(investment.investmentDate);
+                        
+                        if (invDate < firstNavDate) {
+                            const inceptionNav = parseFloat(sortedHistory[0].nav);
+                            effectiveUnits = investment.investmentAmount / inceptionNav;
+                            effectiveNavStr = inceptionNav;
+                            effectiveDateStr = sortedHistory[0].date.split('-').reverse().join('-');
+                        }
+                    }
+                } catch (e) {}
+
+                const currentValue = effectiveUnits * currentNAV;
                 const returns = currentValue - investment.investmentAmount;
                 const returnsPct = (returns / investment.investmentAmount) * 100;
-                const cagr = calculateFundCAGR(investment, currentNAV);
+                
+                const cagr = await calculateFundCAGR(investment, currentNAV);
                 const performance = await calculatePerformance(investment, currentNAV);
 
                 const performanceItems = [];
@@ -229,7 +257,7 @@ async function displayFunds() {
                             ${getMiniCardHTML('Value', currentValue, { themePercentage: returnsPct })}
                             ${getMiniCardHTML('Profit', returns, { percentage: returnsPct })}
                             ${getMiniCardHTML('XIRR', undefined, { percentage: cagr })}
-                            ${performanceItems.map(item => getMiniCardHTML(item.label === 'Yesterday' ? `Last Change (As on ${navData.date})` : item.label, (item.endNAV - item.startNAV) * investment.units, { percentage: item.value })).join('')}
+                            ${performanceItems.map(item => getMiniCardHTML(item.label === 'Yesterday' ? `Last Change (As on ${navDataRes.date})` : item.label, (item.endNAV - item.startNAV) * investment.units, { percentage: item.value })).join('')}
                         </div>
                     </div>`;
             } catch (err) {
@@ -259,14 +287,33 @@ async function updateSummary() {
             } catch (err) { return { id: inv.id, nav: 0, date: 'N/A' }; }
         }));
 
-        userInvestments.forEach(inv => {
+        for (const inv of userInvestments) {
             const res = navResults.find(r => String(r.id) === String(inv.id));
             const cNav = res ? res.nav : 0;
+            
+            let effectiveUnits = inv.units;
+            try {
+                const history = await NAVManager.getNAV(inv.schemeCode);
+                if (history?.data?.length > 0) {
+                    const sorted = history.data.sort((a,b) => {
+                        const [d1,m1,y1] = a.date.split('-');
+                        const [d2,m2,y2] = b.date.split('-');
+                        return new Date(y1,m1-1,d1) - new Date(y2,m2-1,d2);
+                    });
+                    const [fd,fm,fy] = sorted[0].date.split('-');
+                    const firstDate = new Date(fy,fm-1,fd);
+                    if (new Date(inv.investmentDate) < firstDate) {
+                        effectiveUnits = inv.investmentAmount / parseFloat(sorted[0].nav);
+                    }
+                }
+            } catch(e) {}
+
             totalInv += inv.investmentAmount;
-            totalVal += inv.units * cNav;
+            totalVal += effectiveUnits * cNav;
+
             const [y, m, d] = inv.investmentDate.split('-');
             flows.push({ date: new Date(y, m - 1, d), amount: -inv.investmentAmount });
-        });
+        }
 
         const profit = totalVal - totalInv;
         const profitPct = totalInv > 0 ? (profit / totalInv) * 100 : 0;

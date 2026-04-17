@@ -75,6 +75,19 @@ async function calculatePerformance(investment, currentNAV) {
             return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
         });
 
+        const [fd, fm, fy] = navData[0].date.split('-');
+        const firstNavDate = new Date(fy, fm - 1, fd);
+        firstNavDate.setHours(0, 0, 0, 0);
+
+        let effectiveInvestmentDate = investmentDate;
+        let effectiveInvestmentNav = investment.nav;
+
+        // Auto-fix for dates before fund inception
+        if (investmentDate < firstNavDate) {
+            effectiveInvestmentDate = firstNavDate;
+            effectiveInvestmentNav = parseFloat(navData[0].nav);
+        }
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -87,7 +100,7 @@ async function calculatePerformance(investment, currentNAV) {
             target.setHours(0, 0, 0, 0);
             target.setDate(target.getDate() - days);
 
-            if (target < investmentDate) return null;
+            if (target < effectiveInvestmentDate) return null;
 
             for (let i = navData.length - 1; i >= 0; i--) {
                 if (forceStrictlyBeforeLatest && i === navData.length - 1) continue;
@@ -98,15 +111,14 @@ async function calculatePerformance(investment, currentNAV) {
             return null;
         };
 
-        if (investmentDate <= latestDataDate) {
+        if (effectiveInvestmentDate <= latestDataDate) {
             for (const [key, days] of Object.entries(periods)) {
                 const pastData = (key === 'daily') ? getNAVForDaysAgo(1, true) : getNAVForDaysAgo(days);
                 if (pastData) {
                     const [pd, pm, py] = pastData.date.split('-').map(Number);
                     const pastDate = new Date(py, pm - 1, pd);
                     
-                    // Strict check: If the NAV date found is before our investment, skip this period.
-                    if (pastDate < investmentDate) continue;
+                    if (pastDate < effectiveInvestmentDate) continue;
 
                     performance.periodic[key] = {
                         value: ((currentNAV - pastData.nav) / pastData.nav) * 100,
@@ -116,14 +128,14 @@ async function calculatePerformance(investment, currentNAV) {
             }
         }
 
-        const startYear = investmentDate.getFullYear();
+        const startYear = effectiveInvestmentDate.getFullYear();
         const curYear = today.getFullYear();
         for (let year = startYear; year <= curYear; year++) {
             const yearStart = new Date(year, 0, 1);
             const yearEnd = (year === curYear) ? today : new Date(year, 11, 31);
-            if (yearEnd < investmentDate) continue;
+            if (yearEnd < effectiveInvestmentDate) continue;
 
-            const effectiveYearStart = investmentDate > yearStart ? investmentDate : yearStart;
+            const effectiveYearStart = effectiveInvestmentDate > yearStart ? effectiveInvestmentDate : yearStart;
             let sNAV = null, eNAV = null;
 
             for (let i = 0; i < navData.length; i++) {
@@ -171,18 +183,43 @@ async function calculateGroupStats(fundIds) {
         const investment = userInvestments.find(inv => String(inv.id) === String(fundId));
         if (!investment) continue;
 
-        totalInvestment += (investment.investmentAmount || 0);
         const navResult = navResults.find(r => String(r.fundId) === String(fundId));
         const currentNAV = navResult ? navResult.nav : 0;
-        const currentValue = (investment.units || 0) * currentNAV;
+        
+        const [y, m, d] = investment.investmentDate.split('-');
+        let invDateObj = new Date(y, m - 1, d);
+        invDateObj.setHours(0, 0, 0, 0);
+        let effectiveUnits = investment.units;
+
+        // Fetch full history to find first NAV date for inception-fix
+        try {
+            const history = await NAVManager.getNAV(investment.schemeCode);
+            if (history?.data?.length > 0) {
+                const sortedHistory = history.data.sort((a, b) => {
+                    const [d1, m1, y1] = a.date.split('-');
+                    const [d2, m2, y2] = b.date.split('-');
+                    return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                });
+                const [fd, fm, fy] = sortedHistory[0].date.split('-');
+                const firstNavDate = new Date(fy, fm - 1, fd);
+                firstNavDate.setHours(0, 0, 0, 0);
+                
+                if (invDateObj < firstNavDate) {
+                    invDateObj = firstNavDate;
+                    const inceptionNav = parseFloat(sortedHistory[0].nav);
+                    effectiveUnits = (investment.investmentAmount || 0) / inceptionNav;
+                }
+            }
+        } catch (e) {}
+
+        totalInvestment += (investment.investmentAmount || 0);
+        const currentValue = effectiveUnits * currentNAV;
         totalCurrentValue += currentValue;
 
-        const [y, m, d] = investment.investmentDate.split('-');
-        const investmentDate = new Date(y, m - 1, d);
-        if (!oldestDateObj || investmentDate < oldestDateObj) oldestDateObj = investmentDate;
-        if (!newestDateObj || investmentDate > newestDateObj) newestDateObj = investmentDate;
+        if (!oldestDateObj || invDateObj < oldestDateObj) oldestDateObj = invDateObj;
+        if (!newestDateObj || invDateObj > newestDateObj) newestDateObj = invDateObj;
         
-        investmentDetails.push({ date: investmentDate, amount: -(investment.investmentAmount || 0) });
+        investmentDetails.push({ date: invDateObj, amount: -(investment.investmentAmount || 0) });
     }
 
     const cagr = calculatePortfolioXIRR(investmentDetails, totalCurrentValue);
@@ -288,12 +325,33 @@ async function calculateGroupStats(fundIds) {
 /**
  * Calculate individual fund CAGR
  */
-function calculateFundCAGR(investment, currentNAV) {
+async function calculateFundCAGR(investment, currentNAV) {
     const [y, m, d] = investment.investmentDate.split('-');
-    const invDate = new Date(y, m - 1, d);
+    let invDateObj = new Date(y, m - 1, d);
+    invDateObj.setHours(0, 0, 0, 0);
+
+    // Fetch full history to find first NAV date for inception-fix
+    try {
+        const history = await NAVManager.getNAV(investment.schemeCode);
+        if (history && history.data && history.data.length > 0) {
+            const sortedHistory = history.data.sort((a, b) => {
+                const [d1, m1, y1] = a.date.split('-');
+                const [d2, m2, y2] = b.date.split('-');
+                return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+            });
+            const [fd, fm, fy] = sortedHistory[0].date.split('-');
+            const firstNavDate = new Date(fy, fm - 1, fd);
+            firstNavDate.setHours(0, 0, 0, 0);
+            
+            if (invDateObj < firstNavDate) {
+                invDateObj = firstNavDate;
+            }
+        }
+    } catch (e) { /* Fallback to entered date if history fails */ }
+
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    const years = (now - invDate) / (1000 * 60 * 60 * 24 * 365.25);
+    const years = (now - invDateObj) / (1000 * 60 * 60 * 24 * 365.25);
 
     if (years <= 0 || investment.investmentAmount <= 0) return 0;
     const val = investment.units * currentNAV;
