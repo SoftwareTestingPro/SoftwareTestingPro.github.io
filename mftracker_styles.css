@@ -287,20 +287,21 @@
 
 
         .summary-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.4);
             border-radius: 12px;
-            padding: 15px 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Lighter, more stable shadow */
+            padding: 8px 18px; /* Approx 1.5x relative to minicard */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             border: 1px solid #f0f1f2;
             flex: 0 0 auto;
-            min-width: 160px;
+            min-width: 157px; /* 1.5 * 105px */
             width: auto;
             scroll-snap-align: start;
             display: flex;
             flex-direction: column;
             justify-content: center;
             text-align: center;
-            transform: translateZ(0); /* Hardware acceleration to fix scrolling artifacts */
+            transition: transform 0.2s, box-shadow 0.2s;
+            transform: translateZ(0);
             backface-visibility: hidden;
         }
 
@@ -320,15 +321,22 @@
         /* Specific deeper tints for top Summary Cards */
         .summary-card.border-positive {
             background: #e2f6ea !important;
+            border: 1px solid #137333 !important;
         }
+        .summary-card.border-positive .summary-value { color: #137333; }
+
         .summary-card.border-negative {
             background: #ffebeb !important;
+            border: 1px solid var(--danger-color) !important;
         }
+        .summary-card.border-negative .summary-value { color: var(--danger-color); }
 
 
         .summary-value {
-            font-size: 1.15rem;
-            font-weight: 600; /* Increased to semi-bold as requested */
+            font-size: 1.25rem; /* 1.5 * 0.85rem */
+            font-weight: 700;
+            display: block;
+            line-height: 1.2;
             color: var(--dark-color);
             word-wrap: normal;
             white-space: nowrap;
@@ -339,20 +347,25 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            margin-top: 4px;
         }
 
         .summary-label-main {
-            color: var(--dark-color);
-            font-size: 1.05rem;
-            font-weight: 700; /* Bold as requested */
+            font-size: 0.9rem; /* 1.5 * 0.6rem */
+            color: #5f6368;
+            display: block;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.3px;
             line-height: 1.2;
         }
 
         .summary-label-sub {
             color: #6c757d;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 500;
             margin-top: 2px;
+            opacity: 0.8;
         }
 
         .toast-container {

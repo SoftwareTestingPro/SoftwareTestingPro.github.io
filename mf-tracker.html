@@ -1182,22 +1182,17 @@
                                 
                                 <div class="minicard-scroller performance-grid collapsed" id="perf-${investment.id}">
                                     <!-- Standard Basis Metrics -->
-                                    ${getMiniCardHTML('Purchase Value', investment.investmentAmount, { themePercentage: returnsPercentage })}
-                                    ${getMiniCardHTML('Current Value', currentValue, { themePercentage: returnsPercentage })}
-                                    ${getMiniCardHTML('Total Returns', returns, { percentage: returnsPercentage })}
+                                    ${getMiniCardHTML('Investment', investment.investmentAmount, { themePercentage: returnsPercentage })}
+                                    ${getMiniCardHTML(`Value (As on ${navDate})`, currentValue, { themePercentage: returnsPercentage })}
+                                    ${getMiniCardHTML('Total Profit', returns, { percentage: returnsPercentage })}
                                     ${getMiniCardHTML('XIRR (Annual)', undefined, { percentage: fundCAGR })}
 
                                     <!-- Periodic Performance Scroller -->
                                     ${performanceItems.length > 0 ? performanceItems.map(item => {
                                         const amount = item.value !== null ? (item.endNAV - item.startNAV) * investment.units : undefined;
-                                        const displayLabel = item.label === 'Yesterday' ? 'Yesterday' : (!isNaN(String(item.label)) && String(item.label).length === 4 ? `Year ${item.label}` : (item.label.includes('Last') ? item.label : `Last ${item.label}`));
+                                        const displayLabel = item.label === 'Yesterday' ? `Last Change (As on ${navDate})` : (!isNaN(String(item.label)) && String(item.label).length === 4 ? `Year ${item.label}` : (item.label.includes('Last') ? item.label : `Last ${item.label}`));
                                         return getMiniCardHTML(displayLabel, amount, { percentage: item.value });
-                                    }).join('') : `
-                                        <div style="grid-column: 1 / -1; padding: 25px; text-align: center; color: #5f6368; background: #fcfcfc; border-radius: 12px; border: 1px dashed #ddd;">
-                                            <div style="font-weight: 600; font-size: 1.1rem; color: #202124;">Nurturing Investment</div>
-                                            <div style="font-size: 0.9rem; margin-top: 6px; opacity: 0.8;">Building your profit story... Performance data will unlock as your investment matures.</div>
-                                        </div>
-                                    `}
+                                    }).join('') : ''}
                                 </div>
                             </div>
                         `;
@@ -1405,7 +1400,7 @@
                 // 1. Calculate periodic returns (Daily, 7d, 15d, etc.)
                 // Rule: If the user purchased the fund on or after the latest data date, 
                 // they have no periodic performance yet.
-                if (investmentDate < latestDataDate) {
+                if (investmentDate <= latestDataDate) {
                     for (const [key, days] of Object.entries(periods)) {
                         // For "Yesterday" (Daily), we specifically want the previous record 
                         // compared to latest, regardless of how many calendar days apart (e.g. over weekend)
@@ -1413,12 +1408,27 @@
                             getNAVForDaysAgo(1, true) : getNAVForDaysAgo(days);
 
                         if (pastData) {
+                            let startNAV = pastData.nav;
+                            let startDate = pastData.date;
+                            
+                            // Convert DD-MM-YYYY to Date object for comparison
+                            const [pd, pm, py] = startDate.split('-').map(Number);
+                            const pastDate = new Date(py, pm - 1, pd);
+                            
+                            // If the periodic comparison start date is BEFORE our investment,
+                            // we cap the starting NAV to our actual purchase NAV.
+                            if (pastDate < investmentDate) {
+                                startNAV = investment.nav;
+                                const [iy, im, id] = investment.investmentDate.split('-');
+                                startDate = `${id}-${im}-${iy}`;
+                            }
+
                             performance.periodic[key] = {
-                                value: ((currentNAV - pastData.nav) / pastData.nav) * 100,
-                                startNAV: pastData.nav,
+                                value: ((currentNAV - startNAV) / startNAV) * 100,
+                                startNAV: startNAV,
                                 endNAV: currentNAV,
-                                startDate: pastData.date,
-                                endDate: latestRecord.date // Always compare to the latest available data point
+                                startDate: startDate,
+                                endDate: latestRecord.date
                             };
                         }
                     }
@@ -1476,10 +1486,10 @@
                 const navResults = await Promise.all(userInvestments.map(async (investment) => {
                     try {
                         const navData = await getCurrentNAV(investment.schemeCode);
-                        return { id: investment.id, nav: navData.nav };
+                        return { id: investment.id, nav: navData.nav, date: navData.date };
                     } catch (err) {
                         console.error('Error fetching NAV for summary:', investment.schemeCode, err);
-                        return { id: investment.id, nav: 0 };
+                        return { id: investment.id, nav: 0, date: 'N/A' };
                     }
                 }));
 
@@ -1550,25 +1560,28 @@
                 // Handle Context Dates for Summary Cards
                 const allDates = userInvestments.map(inv => new Date(inv.investmentDate)).sort((a, b) => a - b);
                 const oldestDate = allDates.length > 0 ? formatDate(allDates[0].toISOString().split('T')[0]) : 'N/A';
-                const newestDate = allDates.length > 0 ? formatDate(allDates[allDates.length - 1].toISOString().split('T')[0]) : 'N/A';
-                const todayDate = formatDate(new Date().toISOString().split('T')[0]);
+                
+                const latestNAVDateRaw = navResults.reduce((latest, res) => {
+                    if (!res.date || res.date === 'N/A') return latest;
+                    const [d, m, y] = res.date.split('-');
+                    const current = `${y}-${m}-${d}`;
+                    return (latest === 'N/A' || current > latest) ? current : latest;
+                }, 'N/A');
+                const numericLatestNAVDate = latestNAVDateRaw !== 'N/A' ? latestNAVDateRaw.split('-').reverse().join('-') : 'N/A';
 
                 // Ensure static labels are wrapped correctly
                 const staticLabels = {
-                    'totalInvestment': { main: 'Total Investment', sub: `Since ${oldestDate}` },
-                    'currentValue': { main: 'Current Value', sub: `As on ${todayDate}` },
-                    'totalReturnsPercentage': { main: 'Total Returns', sub: `Period: ${oldestDate} - ${newestDate}` },
-                    'cagrValue': { main: 'XIRR (Annual)', sub: 'Internal Rate of Return' }
+                    'totalInvestment': 'Total Investment',
+                    'currentValue': `Value (As on ${numericLatestNAVDate})`,
+                    'totalReturnsPercentage': `Profit (As on ${numericLatestNAVDate})`,
+                    'cagrValue': 'XIRR (Annual)'
                 };
 
                 Object.keys(staticLabels).forEach(id => {
                     const card = document.getElementById(id).closest('.summary-card');
-                    const label = card.querySelector('.summary-label');
-                    if (label) {
-                        label.innerHTML = `
-                        <div class="summary-label-main">${staticLabels[id].main}</div>
-                        <div class="summary-label-sub">${staticLabels[id].sub}</div>
-                    `;
+                    const labelDiv = card.querySelector('.summary-label');
+                    if (labelDiv) {
+                        labelDiv.innerHTML = `<div class="summary-label-main">${staticLabels[id]}</div>`;
                     }
                 });
 
@@ -1640,9 +1653,16 @@
                             }
                             if (amtElem) card.querySelector('.summary-subvalue').style.display = 'none';
                             if (labelElem) {
-                                const sub = (p.key === 'daily') ? `Yesterday (${eDate})` : `${labelElem.getAttribute('data-original-label') || labelElem.textContent} (Since ${sDate})`;
-                                if (!labelElem.getAttribute('data-original-label')) labelElem.setAttribute('data-original-label', labelElem.textContent);
-                                labelElem.innerHTML = `<div class="summary-label-main">${labelElem.getAttribute('data-original-label')}</div><div class="summary-label-sub">${(p.key === 'daily') ? eDate : `Since ${sDate}`}</div>`;
+                                const originalLabel = labelElem.getAttribute('data-original-label') || labelElem.textContent;
+                                if (!labelElem.getAttribute('data-original-label')) labelElem.setAttribute('data-original-label', originalLabel);
+                                
+                                let displayTitle = originalLabel;
+                                if (p.key === 'daily') {
+                                    displayTitle = `Last Change (As on ${eDate})`;
+                                } else if (sDate) {
+                                    displayTitle = `${originalLabel} (Since ${sDate})`;
+                                }
+                                labelElem.innerHTML = `<div class="summary-label-main">${displayTitle}</div>`;
                             }
                             card.classList.remove('border-positive', 'border-negative');
                             card.classList.add(weightedPct >= 0 ? 'border-positive' : 'border-negative');
@@ -1673,8 +1693,7 @@
                         });
 
                         if (found && totalVal > 0) {
-                            const sub = `(1 Jan ${year} - 31 Dec ${year})`;
-                            summaryContainer.appendChild(createCard(`Year ${year}`, sub, weightedSum / totalVal, totalAmt, true));
+                            summaryContainer.appendChild(createCard(`Year ${year}`, '', weightedSum / totalVal, totalAmt, true));
                         }
                     }
                 }
@@ -2288,14 +2307,14 @@
                                         ${agg.schemeName} ${agg.count > 1 ? `<span class="badge bg-light text-dark border" style="font-size: 0.65rem;">${agg.count} Txns</span>` : ''}
                                         <div class="minicard-scroller">
                                             <!-- Standard Detail Pattern (Standardized) -->
-                                            ${getMiniCardHTML('Purchase Value', fundSchemeStats.totalInvestment, { themePercentage: returnsPercentage })}
-                                            ${getMiniCardHTML('Current Value', fundSchemeStats.currentValue, { themePercentage: returnsPercentage })}
-                                            ${getMiniCardHTML('Total Returns', fundSchemeStats.totalReturns, { percentage: returnsPercentage })}
+                                            ${getMiniCardHTML('Investment', fundSchemeStats.totalInvestment, { themePercentage: returnsPercentage })}
+                                            ${getMiniCardHTML(`Value (As on ${navData.date})`, fundSchemeStats.currentValue, { themePercentage: returnsPercentage })}
+                                            ${getMiniCardHTML('Total Profit', fundSchemeStats.totalReturns, { percentage: returnsPercentage })}
                                             ${getMiniCardHTML('XIRR (Annual)', undefined, { percentage: fundXIRR })}
 
                                             <!-- Periodic Returns (Standardized Scroller) -->
                                             ${Object.values(fundSchemeStats.periodicReturns).map(p => {
-                                                const displayLabel = p.label === 'Yesterday' ? 'Yesterday' : (!isNaN(String(p.label)) && String(p.label).length === 4 ? `Year ${p.label}` : (p.label.includes('Last') ? p.label : `Last ${p.label}`));
+                                                const displayLabel = p.label === 'Yesterday' ? `Last Change (As on ${navData.date})` : (!isNaN(String(p.label)) && String(p.label).length === 4 ? `Year ${p.label}` : (p.label.includes('Last') ? p.label : `Last ${p.label}`));
                                                 return getMiniCardHTML(displayLabel, p.amount, { percentage: p.percentage });
                                             }).join('')}
                                         </div>
@@ -2324,21 +2343,15 @@
                             
                             <div class="group-stats">
                                 <!-- Base Totals (Standardized) -->
-                                ${getSummaryCardHTML('Total Investment', `Since ${formatDate(groupStats.oldestDate)}`, undefined, groupStats.totalInvestment, { percentage: totalReturnsPercentage, isNeutral: true })}
-                                ${getSummaryCardHTML('Current Value', `As on ${formatDate(new Date().toISOString().split('T')[0])}`, undefined, groupStats.currentValue, { percentage: totalReturnsPercentage })}
-                                ${getSummaryCardHTML('Total Returns', `Period: ${formatDate(groupStats.oldestDate)} - ${formatDate(groupStats.latestNAVDate)}`, totalReturnsPercentage, groupStats.totalReturns)}
-                                ${getSummaryCardHTML('XIRR (Annual)', 'Internal Rate of Return', groupStats.cagr)}
+                                ${getSummaryCardHTML('Total Investment', '', undefined, groupStats.totalInvestment, { percentage: totalReturnsPercentage, isNeutral: true })}
+                                ${getSummaryCardHTML(`Value (As on ${formatDate(groupStats.latestNAVDate)})`, '', undefined, groupStats.currentValue, { percentage: totalReturnsPercentage })}
+                                ${getSummaryCardHTML(`Profit (As on ${formatDate(groupStats.latestNAVDate)})`, '', totalReturnsPercentage, groupStats.totalReturns)}
+                                ${getSummaryCardHTML('XIRR (Annual)', '', groupStats.cagr)}
 
                                 <!-- Periodic Stats (Standardized) -->
                                 ${Object.values(groupStats.periodicReturns).map(p => {
-                                    const formattedStartDate = (p.startDate && p.startDate.includes('-')) ? 
-                                        (p.startDate.split('-')[0].length === 4 ? formatDate(p.startDate) : formatDate(p.startDate.split('-').reverse().join('-'))) : 
-                                        p.startDate;
-                                    const formattedEndDate = (p.endDate && p.endDate.includes('-')) ? 
-                                        (p.endDate.split('-')[0].length === 4 ? formatDate(p.endDate) : formatDate(p.endDate.split('-').reverse().join('-'))) : 
-                                        p.endDate;
-                                    
-                                    return getSummaryCardHTML(p.label, p.label === 'Yesterday' ? formattedEndDate : `Since ${formattedStartDate}`, p.percentage, p.amount);
+                                    const displayTitle = p.label === 'Yesterday' ? `Last Change (As on ${p.endDate})` : `${p.label} (Since ${p.startDate})`;
+                                    return getSummaryCardHTML(displayTitle, '', p.percentage, p.amount);
                                 }).join('')}
                             </div>
                             
@@ -2578,7 +2591,6 @@
                     <div class="summary-value ${colorClass}">${valueHTML}</div>
                     <div class="summary-label">
                         <div class="summary-label-main">${title}</div>
-                        ${subLabel ? `<div class="summary-label-sub">${subLabel}</div>` : ''}
                     </div>
                 </div>
             `;
