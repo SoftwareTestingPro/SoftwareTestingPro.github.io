@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutual Fund Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner-large"></div>
+        <div class="loading-text">Loading Mutual Fund Tracker</div>
+        <div class="loading-subtext">Preparing fund database...</div>
+    </div>
+
+    <!-- Login Content -->
+    <div class="container-fluid login-content" id="loginContent" style="display: none;">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>Mutual Fund Tracker</h1>
+                    <p>Welcome back! Sign in securely using your Google account to access and sync your unified
+                        dashboard.</p>
+                </div>
+                <div class="login-body">
+                    <button type="button" class="btn-google" onclick="signInWithGoogle()">
+                        <svg viewBox="0 0 48 48">
+                            <path fill="#EA4335"
+                                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                            <path fill="#4285F4"
+                                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                            <path fill="#FBBC05"
+                                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                            <path fill="#34A853"
+                                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                        </svg>
+                        Continue with Google
+                    </button>
+                    <div class="text-center mt-4">
+                        <small class="login-footer-info">
+                            <i class="bi bi-shield-check"></i> Automatically backed up via Google Drive
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main Content -->
+    <div class="container-fluid main-content" id="mainContent">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header-section">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1><i class="bi bi-graph-up-arrow"></i> Mutual Fund Tracker</h1>
+                        <p class="mb-0">Track your mutual fund investments across multiple time periods</p>
+                    </div>
+                    <div class="auth-section">
+                        <div id="userInfo" class="user-info" style="display: none;">
+                            <div class="sync-status-container me-2">
+                                <button id="syncBtn" class="btn btn-sm btn-outline-light" onclick="refreshAllData()"
+                                    title="Force refresh all NAVs">
+                                    <i class="bi bi-arrow-repeat" id="syncIcon"></i> Sync
+                                </button>
+                                <div id="lastSyncLabel" class="sync-time-label"></div>
+                            </div>
+                            <img id="userAvatar" src="" alt="User" class="user-avatar">
+                            <span id="userName" class="user-name"></span>
+                            <button id="logoutBtn" class="btn btn-sm btn-outline-light ms-2" onclick="signOut()">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
+                        </div>
+                        <div id="loginSection" class="login-section">
+                            <div id="mainEmailSignInBtn"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Statistics -->
+            <div class="summary-stats" id="summaryStats">
+                <div class="summary-card main-stats">
+                    <div class="summary-value" id="totalInvestment">₹0</div>
+                    <div class="summary-label">Total Investment</div>
+                </div>
+                <div class="summary-card main-stats">
+                    <div class="summary-value" id="currentValue">₹0</div>
+                    <div class="summary-label">Current Value</div>
+                </div>
+                <div class="summary-card main-stats">
+                    <div class="summary-value" id="totalReturnsPercentage">0%</div>
+                    <div class="summary-label">Total Returns</div>
+                </div>
+                <div class="summary-card main-stats">
+                    <div class="summary-value" id="cagrValue">0%</div>
+                    <div class="summary-label">XIRR (Annual)</div>
+                </div>
+
+                <!-- Periodic Performance Summary -->
+                <div class="summary-card" id="cardDaily" style="display: none;">
+                    <div class="summary-value" id="portfolioDailyPercentage">0%</div>
+                    <div class="summary-label" id="labelDaily">Yesterday</div>
+                </div>
+                <div class="summary-card" id="cardWeekly" style="display: none;">
+                    <div class="summary-value" id="portfolioWeeklyPercentage">0%</div>
+                    <div class="summary-label" id="labelWeekly">1 Week</div>
+                </div>
+                <div class="summary-card" id="cardFifteenDays" style="display: none;">
+                    <div class="summary-value" id="portfolioFifteenDaysPercentage">0%</div>
+                    <div class="summary-label" id="labelFifteenDays">15 Days</div>
+                </div>
+                <div class="summary-card" id="cardMonthly" style="display: none;">
+                    <div class="summary-value" id="portfolioMonthlyPercentage">0%</div>
+                    <div class="summary-label" id="labelMonthly">1 Month</div>
+                </div>
+                <div class="summary-card" id="cardQuarterly" style="display: none;">
+                    <div class="summary-value" id="portfolioQuarterlyPercentage">0%</div>
+                    <div class="summary-label" id="labelQuarterly">3 Months</div>
+                </div>
+                <div class="summary-card" id="cardHalfYearly" style="display: none;">
+                    <div class="summary-value" id="portfolioHalfYearlyPercentage">0%</div>
+                    <div class="summary-label" id="labelHalfYearly">6 Months</div>
+                </div>
+                <div class="summary-card" id="cardYearly" style="display: none;">
+                    <div class="summary-value" id="portfolioYearlyPercentage">0%</div>
+                    <div class="summary-label" id="labelYearly">1 Year</div>
+                </div>
+            </div>
+
+            <!-- Add Fund Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="fund-card">
+                        <h4><i class="bi bi-plus-circle"></i> Add Mutual Fund</h4>
+                        <form id="addFundForm">
+                            <div class="add-fund-grid">
+                                <div class="search-container modern-floating-label">
+                                    <input type="text" class="form-control-modern" id="fundSearch" placeholder=" "
+                                        autocomplete="off">
+                                    <label for="fundSearch">Search Mutual Fund</label>
+                                    <div class="search-dropdown" id="searchDropdown">
+                                    </div>
+                                </div>
+                                <div class="modern-floating-label">
+                                    <input type="date" class="form-control-modern" id="investmentDate" placeholder=" "
+                                        required>
+                                    <label for="investmentDate">Investment Date</label>
+                                </div>
+                                <div class="modern-floating-label">
+                                    <input type="number" class="form-control-modern" id="investmentAmount"
+                                        placeholder=" " min="1" required>
+                                    <label for="investmentAmount">Amount (₹)</label>
+                                </div>
+                                <div class="modern-form-actions">
+                                    <button type="submit" class="btn btn-primary-custom flex-grow-1" id="submitBtn">
+                                        <i class="bi bi-plus-lg"></i> Add Fund
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="clearForm"
+                                        aria-label="Clear Form" title="Clear form">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="btn btn-outline-primary active" id="individualViewBtn"
+                    onclick="switchView('individual')">
+                    <i class="bi bi-person"></i> Individual Funds
+                </button>
+                <button class="btn btn-outline-primary" id="groupsViewBtn" onclick="switchView('groups')">
+                    <i class="bi bi-collection"></i> Groups
+                </button>
+            </div>
+
+            <!-- Group Specific Controls (Lower Tier) -->
+            <div id="groupControls" class="group-controls" style="display: none;">
+                <div class="group-filter-row">
+                    <!-- Buttons generated dynamically in updateGroupFilterUI() -->
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner-border spinner-border-lg" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Fetching fund data...</p>
+            </div>
+
+            <!-- Funds List -->
+            <div id="fundsContainer">
+                <div class="empty-state" id="emptyState">
+                    <i class="bi bi-inbox"></i>
+                    <h4>No Funds Added Yet</h4>
+                    <p>Start by adding your first mutual fund investment above.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="importFile" accept=".json,.csv" style="display: none;">
+
+    <!-- Create Group Modal -->
+    <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createGroupModalLabel">
+                        <i class="bi bi-collection"></i> Create Fund Group
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createGroupForm">
+                        <div class="mb-3">
+                            <label for="groupName" class="form-label">Group Name</label>
+                            <input type="text" class="form-control" id="groupName"
+                                placeholder="e.g., Retirement Funds, My Top Picks" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Select Funds to Include</label>
+                            <div class="fund-assignment-list" id="createGroupFundList">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="createGroup()">
+                        <i class="bi bi-check-lg"></i> Create Group
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Group Modal -->
+    <div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editGroupModalLabel">
+                        <i class="bi bi-pencil"></i> Edit Fund Group
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editGroupForm">
+                        <div class="mb-3">
+                            <label for="editGroupName" class="form-label">Group Name</label>
+                            <input type="text" class="form-control" id="editGroupName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Assign Funds to Group</label>
+                            <div class="fund-assignment-list" id="fundAssignmentList">
+                                <!-- Funds will be populated here -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="deleteGroupBtn" onclick="deleteGroup()">
+                        <i class="bi bi-trash"></i> Delete Group
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="updateGroup()">
+                        <i class="bi bi-check-lg"></i> Update Group
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api-manager.js"></script>
+    <script src="js/calculations.js"></script>
+    <script src="js/ui-renderer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
