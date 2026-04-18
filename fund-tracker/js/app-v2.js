@@ -106,31 +106,59 @@ function switchMainView(targetView) {
         individual: document.getElementById('fundsContainer'),
         groups: document.getElementById('groupsContainer'),
         research: document.getElementById('researchContainer'),
-        discovery: document.getElementById('discoveryContainer'),
+        explore: document.getElementById('exploreContainer'),
         summary: document.getElementById('summaryStatsContainer'),
         addFund: document.getElementById('addFundCard'),
         addGroup: document.getElementById('addGroupCard')
     };
+    const masterGrid = document.getElementById('masterGrid');
+
+    // Update Grid Density Class (Standardized to 4 columns everywhere)
+    if (masterGrid) {
+        masterGrid.classList.remove('grid-4-col', 'grid-3-col');
+        masterGrid.classList.add('grid-4-col');
+    }
 
     // Helper to hide all
     Object.values(containers).forEach(c => { if(c) c.style.display = 'none'; });
+
+    const explorerFilters = document.getElementById('explorerFilters');
 
     if (targetView === 'individual') {
         if (containers.individual) containers.individual.style.display = 'contents';
         if (containers.summary) containers.summary.style.display = 'contents';
         if (containers.addFund) containers.addFund.style.display = 'flex';
+        
+        // Only show explorer results if there's actual content (more than the placeholder search icon/text)
+        const hasResults = document.getElementById('discoveryResults')?.children.length > 1;
+        if (containers.explore && hasResults) {
+            containers.explore.style.display = 'contents';
+            if (explorerFilters) explorerFilters.style.display = 'none';
+        }
+        
         displayFunds();
         updateSummary();
+        displayExplore(); // Ensure it's rendered at least once
     } else if (targetView === 'groups') {
         if (containers.groups) containers.groups.style.display = 'contents';
         if (containers.addGroup) containers.addGroup.style.display = 'flex';
         displayGroups();
     } else if (targetView === 'research') {
         if (containers.research) containers.research.style.display = 'contents';
-        if (containers.discovery) containers.discovery.style.display = 'block';
+        
+        const hasResults = document.getElementById('discoveryResults')?.children.length > 1;
+        if (containers.explore && hasResults) {
+            containers.explore.style.display = 'contents';
+            if (explorerFilters) explorerFilters.style.display = 'none';
+        }
+        
         displayResearch();
+        displayExplore(); 
+    } else if (targetView === 'explore') {
+        if (containers.explore) containers.explore.style.display = 'contents';
+        if (explorerFilters) explorerFilters.style.display = 'block'; // Show filters in explore view
+        displayExplore();
     } else {
-        // Explore or other modules coming soon
         showInfo(`${targetView.charAt(0).toUpperCase() + targetView.slice(1)} module coming soon!`);
     }
 }

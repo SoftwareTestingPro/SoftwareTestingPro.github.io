@@ -60,7 +60,7 @@ function calculatePortfolioXIRR(cashFlows, currentValue) {
 async function calculatePerformance(investment, currentNAV) {
     const periods = {
         daily: 1, weekly: 7, fifteenDays: 15, monthly: 30,
-        quarterly: 90, halfYearly: 180, yearly: 365
+        quarterly: 90, halfYearly: 180, nineMonths: 270, yearly: 365
     };
 
     const performance = { periodic: {}, yearlyBreakdown: {} };
@@ -243,7 +243,8 @@ async function calculateGroupStats(fundIds) {
     const cagr = calculatePortfolioXIRR(investmentDetails, totalCurrentValue);
     const periods = {
         daily: 'Yesterday', weekly: '1 Week', fifteenDays: '15 Days',
-        monthly: '1 Month', quarterly: '3 Months', halfYearly: '6 Months', yearly: '1 Year'
+        monthly: '1 Month', quarterly: '3 Months', halfYearly: '6 Months', 
+        nineMonths: '9 Months', yearly: '1 Year'
     };
 
     const perfResults = await Promise.all(fundIds.map(async (fundId) => {

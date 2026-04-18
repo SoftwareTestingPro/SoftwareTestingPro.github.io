@@ -533,7 +533,7 @@ async function updateSummary() {
         const uniqueFundCount = new Set(userInvestments.map(i => i.schemeCode)).size;
 
         const summaryHTML = `
-            <div class="playing-card ${profit >= 0 ? 'card-positive' : 'card-negative'}" style="width: 280px; margin: 0;">
+            <div class="playing-card ${profit >= 0 ? 'card-positive' : 'card-negative'}" style="margin: 0;">
                 <div class="card-content">
                     <h5 class="card-title-v2" title="Portfolio Summary">Portfolio Summary</h5>
                     <div class="card-meta-v2 text-muted-v2" style="white-space: normal; height: auto;">
@@ -796,7 +796,11 @@ async function displayResearch() {
                 currentNav: navRes.nav,
                 absoluteReturns: stats.totalReturns,
                 returnsPct: stats.totalInvestment > 0 ? (stats.totalReturns / stats.totalInvestment * 100) : 0,
+                perf1M: stats.periodicReturns.monthly?.percentage ?? null,
+                perf3M: stats.periodicReturns.quarterly?.percentage ?? null,
                 perf6M: stats.periodicReturns.halfYearly?.percentage ?? null,
+                perf9M: stats.periodicReturns.nineMonths?.percentage ?? null,
+                perf1Y: stats.periodicReturns.yearly?.percentage ?? null,
                 stats: stats
             };
         }));
@@ -866,10 +870,18 @@ async function displayResearch() {
         // Underperformer (Lowest XIRR/CAGR)
         const worstOverall = [...advancedStats].sort((a, b) => (a.stats.cagr || 0) - (b.stats.cagr || 0))[0];
 
-        // Worst in last 6 months (Filter out nulls, then pick lowest)
-        const worst6M = advancedStats
-            .filter(f => f.perf6M !== null)
-            .sort((a, b) => (a.perf6M || 0) - (b.perf6M || 0))[0];
+        // 5. Periodic Worst Performers Logic
+        const getWorstForPeriod = (periodKey) => {
+            return advancedStats
+                .filter(f => f[periodKey] !== null)
+                .sort((a,b) => (a[periodKey] || 0) - (b[periodKey] || 0))[0];
+        };
+
+        const worst1M = getWorstForPeriod('perf1M');
+        const worst3M = getWorstForPeriod('perf3M');
+        const worst6M = getWorstForPeriod('perf6M');
+        const worst9M = getWorstForPeriod('perf9M');
+        const worst1Y = getWorstForPeriod('perf1Y');
 
         let html = `<div style="width: 100%; margin-bottom: 20px; padding: 0 10px;">
             <h3 style="margin-bottom: 4px;">Portfolio Insights</h3>
@@ -884,20 +896,23 @@ async function displayResearch() {
             let mainPct = (fund.returnsPct) || 0;
             let maxXirr = (fund.stats?.cagr) || 0;
 
-            // Context Logic: For 6-month warnings, show the 6-month delta specifically
-            if (variant === 'worst6M') {
-                const p6M = fund.stats.periodicReturns?.halfYearly;
-                if (p6M) {
-                    mainAmount = p6M.absolute || 0;
-                    mainPct = p6M.percentage || 0;
-                    // Annualize the 6-month return for the XIRR badge: ((1 + r)^2 - 1)
-                    maxXirr = (Math.pow(1 + (mainPct / 100), 2) - 1) * 100;
-                }
+            // Context Logic: Adapt main display to the specific insight window
+            if (variant.startsWith('worst')) {
+                 const periodMap = { worst1M: 'monthly', worst3M: 'quarterly', worst6M: 'halfYearly', worst9M: 'nineMonths', worst1Y: 'yearly' };
+                 const pData = fund.stats.periodicReturns?.[periodMap[variant]];
+                 if (pData) {
+                     mainAmount = pData.absolute || 0;
+                     mainPct = pData.percentage || 0;
+                     
+                     // Annualize the period-specific return for a relevant XIRR badge
+                     const daysMap = { worst1M: 30, worst3M: 90, worst6M: 180, worst9M: 270, worst1Y: 365 };
+                     maxXirr = (Math.pow(1 + (mainPct / 100), 365.25 / daysMap[variant]) - 1) * 100;
+                 }
             }
 
             const isPos = mainPct >= 0;
             const cleanTitle = fund.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
-            const badgeClass = variant === 'best' ? 'success' : (variant === 'worst' || variant === 'worst6M' || variant === 'under' ? 'danger' : 'info');
+            const badgeClass = variant === 'best' ? 'success' : (variant.startsWith('worst') || variant === 'under' ? 'danger' : 'info');
             const icon = variant === 'best' ? 'bi-trophy-fill' : (variant === 'bestDefender' ? 'bi-shield-check' : (variant === 'bestClimber' ? 'bi-graph-up-arrow' : 'bi-exclamation-triangle-fill'));
 
             // High-precision currency: Show decimals if the amount is less than 1 or 2, to avoid "0"
@@ -906,7 +921,7 @@ async function displayResearch() {
                 : Math.abs(mainAmount).toLocaleString(undefined, { maximumFractionDigits: 0 });
 
             return `
-                <div class="playing-card ${variant === 'best' ? 'card-positive' : (variant === 'worst6M' || variant === 'under' ? 'card-negative' : 'card-info')}">
+                <div class="playing-card ${variant === 'best' ? 'card-positive' : (variant.startsWith('worst') || variant === 'under' ? 'card-negative' : 'card-info')}">
                     <div class="card-content">
                         <div style="margin-bottom: 15px;">
                             <span class="modern-badge-v2 ${badgeClass}" style="font-size: 0.7rem; letter-spacing: 1px;">
@@ -934,12 +949,23 @@ async function displayResearch() {
 
         html += createInsightCard(bestOverall, 'TOP PERFORMER', 'Demonstrated the highest compounded growth efficiency (XIRR), making it the strongest wealth generator in your portfolio.', 'best');
         html += createInsightCard(worstOverall, 'UNDERPERFORMER', 'Identified as having the lowest annualized returns (XIRR) across your entire asset list since the investment date.', 'under');
+        
+        const renderWarning = (fund, title, sub, variant) => {
+            if (fund && fund[variant.replace('worst', 'perf')] < 0) {
+                return createInsightCard(fund, title, sub, variant);
+            }
+            return '';
+        };
 
-        if (worst6M && worst6M.perf6M < 0) {
-            html += createInsightCard(worst6M, '6-MONTH WARNING', 'Recorded the most significant relative decline in value within your portfolio over the last 180-day tracking window.', 'worst6M', { label: 'DROPPED BY', value: Math.abs(worst6M.perf6M).toFixed(2) });
-        } else if (worst6M) {
-            // If even the "worst" is positive, show it as Moderate growth or hide
-            html += createInsightCard(worst6M, 'STABLE ASSET', 'Maintained the most resilient and conservative performance profile in your portfolio during the last 6-month period.', 'info', { label: '6M YIELD', value: worst6M.perf6M.toFixed(2) });
+        html += renderWarning(worst1M, '1-MONTH DIP', 'Recorded the sharpest decline in value over the last 30 days of market activity.', 'worst1M');
+        html += renderWarning(worst3M, 'QUARTERLY WARNING', 'This holding has shown the highest relative drop during the last 90-day tracking window.', 'worst3M');
+        html += renderWarning(worst6M, '6-MONTH WARNING', 'Recorded the most significant relative decline in value within your portfolio over the last 180-day tracking window.', 'worst6M');
+        html += renderWarning(worst9M, '9-MONTH DECLINE', 'Persistent underperformance identified over the last three quarters (270 days).', 'worst9M');
+        html += renderWarning(worst1Y, '1-YEAR TREND', 'This fund has been your weakest performer over the last full year of tracking.', 'worst1Y');
+        
+        // Final fallback: If everything is positive, show the "STABLE ASSET" in the last slot
+        if (worst6M && worst6M.perf6M >= 0) {
+            html += createInsightCard(worst6M, 'STABLE ASSET', 'Maintained the most resilient and conservative performance profile in your portfolio during the last 6-month period.', 'info');
         }
 
         container.innerHTML = html;
@@ -951,241 +977,280 @@ async function displayResearch() {
 /**
  * Market Discovery Logic - Sector Scanning
  */
-/**
- * Market Discovery Logic - Sector Scanning
- */
+const discoveryPerfCache = {}; // Local session cache for discovery performance
+
 async function runDiscovery() {
-    const sector = document.getElementById('discoverySector').value;
+    const category = document.getElementById('discoveryCategory')?.value;
+    const sector = document.getElementById('discoverySector')?.value;
+    const plan = document.getElementById('discoveryPlan')?.value;
+    const durationChecks = document.querySelectorAll('.duration-check:checked');
+
+    if (!category || !sector || !plan) {
+        showInfo('Please select a Category, Sector, and Plan to begin scanning.');
+        return;
+    }
+
+    if (durationChecks.length === 0) {
+        showInfo('Please select at least one performance horizon (Matrix).');
+        return;
+    }
+    const selectedDurations = Array.from(durationChecks).map(cb => cb.value);
+    
     const resultsContainer = document.getElementById('discoveryResults');
     const progressBlock = document.getElementById('scanProgress');
     const progressBar = document.getElementById('scanProgressBar');
     const scanStatus = document.getElementById('scanStatus');
-    const scanPercentage = document.getElementById('scanPercentage');
 
     if (!allFundsCache) {
         showError('Fund database not loaded. Please wait or refresh.');
         return;
     }
 
-    // 1. Filter candidates (Direct + Growth + Sector) and Deduplicate
-    const rawCandidates = allFundsCache.filter(f =>
-        f.schemeName.includes('Direct') &&
-        f.schemeName.includes('Growth') &&
-        f.schemeName.toLowerCase().includes(sector.toLowerCase())
-    );
-
-    // Deduplicate by normalized name
-    const seenNames = new Set();
-    const candidates = [];
-    for (const f of rawCandidates) {
-        const clean = f.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
-        if (!seenNames.has(clean)) {
-            seenNames.add(clean);
-            candidates.push(f);
-        }
-        if (candidates.length >= 40) break; // Keep safety limit
-    }
-
-    if (candidates.length === 0) {
-        resultsContainer.innerHTML = `<div style="text-align: center; width: 100%; opacity: 0.6;">No direct growth funds found for "${sector}"</div>`;
+    if (selectedDurations.length === 0) {
+        showError('Please select at least one performance horizon.');
         return;
     }
+
+    // 1. Filter candidates based on Category, Sector, and Plan
+    const rawCandidates = allFundsCache.filter(f => {
+        const name = f.schemeName;
+        // Check Plan (Direct/Regular)
+        if (plan === 'Direct' && !name.includes('Direct')) return false;
+        if (plan === 'Regular' && name.includes('Direct')) return false;
+
+        // Check Category Heuristics
+        const lowerName = name.toLowerCase();
+        if (category === 'Debt' && !(lowerName.includes('debt') || lowerName.includes('bond') || lowerName.includes('gilt') || lowerName.includes('corporate') || lowerName.includes('short term'))) return false;
+        if (category === 'Hybrid' && !(lowerName.includes('hybrid') || lowerName.includes('balanced') || lowerName.includes('arbitrage'))) return false;
+        if (category === 'Index' && !(lowerName.includes('index') || lowerName.includes('nifty') || lowerName.includes('sensex') || lowerName.includes('etf'))) return false;
+        if (category === 'Liquid' && !(lowerName.includes('liquid') || lowerName.includes('money market') || lowerName.includes('overnight'))) return false;
+        if (category === 'Equity' && (lowerName.includes('debt') || lowerName.includes('hybrid') || lowerName.includes('index') || lowerName.includes('etf') || lowerName.includes('liquid'))) return false;
+
+        // Check Sector/Sub-Category
+        if (sector && !lowerName.includes(sector.toLowerCase())) return false;
+        
+        return true;
+    });
+
+    if (rawCandidates.length === 0) {
+        resultsContainer.innerHTML = '<p style="text-align: center; width: 100%; opacity: 0.5; padding: 40px;">No funds match your specific criteria. Try loosening your sector filters.</p>';
+        return;
+    }
+
+    // For better performance, pick top matches by relevance
+    const candidates = rawCandidates.slice(0, 20);
+    
+    // Efficiency: Check if we even need to show the progress bar
+    const allCached = candidates.every(f => discoveryPerfCache[f.schemeCode]);
+    if (!allCached) {
+        progressBlock.style.display = 'block';
+    }
+    
     resultsContainer.innerHTML = '';
-    progressBlock.style.display = 'block';
-
-    let processed = 0;
-    const discoveryStats = [];
-
+    
+    const processedResults = [];
     for (let i = 0; i < candidates.length; i++) {
-        const fund = candidates[i];
-        processed++;
-        const pct = Math.round((processed / candidates.length) * 100);
-        scanPercentage.textContent = `${pct}%`;
-        progressBar.style.width = `${pct}%`;
-        scanStatus.textContent = `Analyzing ${fund.schemeName.split(' - ')[0]}...`;
-
+        const f = candidates[i];
         try {
-            const history = await NAVManager.getNAV(fund.schemeCode);
-            if (!history || !history.data || history.data.length < 10) continue;
-
-            const sorted = history.data.sort((a, b) => {
-                const [d1, m1, y1] = a.date.split('-');
-                const [d2, m2, y2] = b.date.split('-');
-                return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
-            });
-
-            const scanHorizons = [
-                { key: '1Y', months: 12 },
-                { key: '6M', months: 6 },
-                { key: '3M', months: 3 },
-                { key: '1M', months: 1 }
-            ];
-
-            const fundMetrics = {};
-
-            scanHorizons.forEach(h => {
-                const cutoff = new Date();
-                cutoff.setMonth(cutoff.getMonth() - h.months);
-
-                const recent = sorted.filter(row => {
-                    const [rd, rm, ry] = row.date.split('-');
-                    return new Date(ry, rm - 1, rd) >= cutoff;
-                });
-
-                if (recent.length >= 5) {
-                    let rises = 0, falls = 0;
-                    for (let n = 1; n < recent.length; n++) {
-                        const prevVal = parseFloat(recent[n - 1].nav);
-                        const currVal = parseFloat(recent[n].nav);
-                        if (currVal > prevVal) rises++;
-                        else if (currVal < prevVal) falls++;
-                    }
-                    const strikeRate = (rises / (rises + falls)) * 100;
-                    const cVal = parseFloat(recent[recent.length - 1].nav);
-                    const sVal = parseFloat(recent[0].nav);
-                    const growth = ((cVal - sVal) / sVal) * 100;
-
-                    fundMetrics[h.key] = { rises, falls, strikeRate, growth, currentNAV: cVal };
+            const percent = Math.round(((i + 1) / candidates.length) * 100);
+            
+            let perf;
+        
+            // Check session discovery cache first
+            if (discoveryPerfCache[f.schemeCode]) {
+                perf = discoveryPerfCache[f.schemeCode];
+            } 
+            // Check portfolio data (reusing 1Y/6M calculations already performed)
+            else if (typeof allFundsData !== 'undefined') {
+                const existing = allFundsData.find(own => own.schemeCode == f.schemeCode);
+                if (existing && existing.performance && existing.performance.periodic) {
+                    perf = existing.performance.periodic;
+                    discoveryPerfCache[f.schemeCode] = perf; 
                 }
-            });
-
-            if (Object.keys(fundMetrics).length > 0) {
-                discoveryStats.push({ ...fund, metrics: fundMetrics });
             }
-        } catch (e) { console.error('Scan failed for', fund.schemeCode); }
+
+            if (!perf) {
+                progressBar.style.width = `${percent}%`;
+                if (scanStatus) scanStatus.innerText = `Analyzing ${f.schemeName.split(' - ')[0]}...`;
+                
+                const navRes = await getCurrentNAV(f.schemeCode);
+                const dummyInv = { 
+                    schemeCode: f.schemeCode, 
+                    schemeName: f.schemeName, 
+                    units: 1, 
+                    investmentAmount: 1, 
+                    nav: 1, 
+                    investmentDate: '2010-01-01' 
+                };
+                const perfRes = await calculatePerformance(dummyInv, navRes.nav);
+                perf = perfRes.periodic;
+                discoveryPerfCache[f.schemeCode] = perf;
+            }
+            
+            processedResults.push({
+                schemeName: f.schemeName,
+                schemeCode: f.schemeCode,
+                performance: perf
+            });
+        } catch (e) { 
+            console.error(`Failed to scan ${f.schemeName}`, e); 
+        }
     }
 
     progressBlock.style.display = 'none';
 
-    if (discoveryStats.length === 0) {
-        resultsContainer.innerHTML = `<div style="text-align: center; width: 100%; opacity: 0.6;">Insufficient data found for funds in this sector.</div>`;
+    if (processedResults.length === 0) {
+        resultsContainer.innerHTML = '<p style="text-align: center; width: 100%;">Scanner could not reach the data server. Please try again.</p>';
         return;
     }
 
-    // 3. Find Winners & Generate HTML
+    // Render exactly one champion for each selected duration
+    const labelMap = { weekly: '7 Days', fifteenDays: '15 Days', monthly: '1 Month', quarterly: '3 Months', halfYearly: '6 Months', nineMonths: '9 Months', yearly: '1 Year' };
+    const daysMap = { weekly: 7, fifteenDays: 15, monthly: 30, quarterly: 90, halfYearly: 180, nineMonths: 270, yearly: 365.25 };
     let finalHtml = '';
-    const displayHorizons = ['1Y', '6M', '3M', '1M'];
-    const timeLabels = { '1Y': '1 Year', '6M': '6 Months', '3M': '3 Months', '1M': '1 Month' };
+    
+    selectedDurations.forEach(durKey => {
+        const topFund = [...processedResults]
+            .filter(r => r.performance[durKey])
+            .sort((a,b) => b.performance[durKey].value - a.performance[durKey].value)[0];
 
-    const categories = [
-        { key: 'stability', title: 'Consistency King', sub: 'Best strike rate (Rises vs Falls)' },
-        { key: 'growth', title: 'Sector Alpha', sub: 'Highest absolute growth' }
-    ];
-
-    categories.forEach(cat => {
-        // Find Category Winner (Highest Average across all horizons)
-        const catStats = discoveryStats.map(f => {
-            const mValues = Object.values(f.metrics);
-            const avg = mValues.reduce((acc, m) => acc + (cat.key === 'stability' ? m.strikeRate : m.growth), 0) / mValues.length;
-            return { ...f, catAvg: avg };
-        }).sort((a, b) => b.catAvg - a.catAvg);
-
-        const catWinner = catStats[0];
-        const cleanWinnerName = catWinner.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
-
-        finalHtml += `
-            <div style="width: 100%; margin-top: 30px; margin-bottom: 25px; padding: 0 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid rgba(255,255,255,0.05); padding-bottom: 12px; margin-bottom: 20px;">
-                    <div>
-                        <h4 style="margin: 0; display: flex; align-items: center; gap: 10px; color: ${cat.key === 'stability' ? 'var(--success-color)' : 'var(--brand-primary)'};">
-                            <i class="bi ${cat.key === 'stability' ? 'bi-shield-check' : 'bi-rocket-takeoff'}"></i> ${cat.title}
-                        </h4>
-                        <p style="color: var(--text-secondary); margin: 4px 0 0; font-size: 0.85rem;">${cat.sub}</p>
-                    </div>
-                </div>
-
-                <!-- Category Champion Banner -->
-                <div style="background: linear-gradient(90deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%); border-radius: 16px; border-left: 4px solid ${cat.key === 'stability' ? 'var(--success-color)' : 'var(--brand-primary)'}; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 20px; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="width: 45px; height: 45px; background: ${cat.key === 'stability' ? 'var(--success-color)' : 'var(--brand-primary)'}; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white;">
-                            <i class="bi bi-award"></i>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Category AI Pick</div>
-                            <div style="font-size: 1.1rem; font-weight: 700; color: white;">${cleanWinnerName}</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 24px;">
-                        <div style="text-align: right;">
-                            <div style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase;">Overall Score</div>
-                            <div style="font-size: 1.2rem; font-weight: 800; color: white;">${catWinner.catAvg.toFixed(1)}${cat.key === 'stability' ? '%' : '%'}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%;">
-        `;
-
-        displayHorizons.forEach(h => {
-            const statsForPeriod = discoveryStats.filter(f => f.metrics[h]);
-            if (statsForPeriod.length === 0) return;
-
-            // Pick Top 10 for this category and horizon
-            const ranked = [...statsForPeriod].sort((a, b) => {
-                if (cat.key === 'stability') return b.metrics[h].strikeRate - a.metrics[h].strikeRate;
-                return b.metrics[h].growth - a.metrics[h].growth;
-            }).slice(0, 10);
-
-            const winner = ranked[0];
-            const runnersUp = ranked.slice(1);
-
-            const m = winner.metrics[h];
-            const cleanName = winner.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
-
+        if (topFund) {
+            const val = topFund.performance[durKey].value;
+            const cleanTitle = topFund.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
+            const annYield = (Math.pow(1 + (val / 100), 365.25 / daysMap[durKey]) - 1) * 100;
+            
             finalHtml += `
-                <div class="playing-card ${m.growth >= 0 ? 'card-positive' : 'card-negative'}" style="width: 100%; height: auto; min-height: auto; flex: none; display: block; padding-bottom: 20px;">
-                    <div class="card-content" style="text-align: left; padding: 16px;">
+                <div class="playing-card" style="flex: 0 0 320px; border-top: 3px solid var(--brand-primary);">
+                    <div class="card-content" style="padding: 18px;">
                         <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                            <span class="modern-badge-v2" style="font-size: 0.65rem; background: rgba(255,255,255,0.08);">${timeLabels[h]} Leader</span>
+                            <span class="modern-badge-v2 success" style="font-size: 0.65rem; letter-spacing: 1px;"><i class="bi bi-award-fill"></i> ${labelMap[durKey]} CHAMPION</span>
                         </div>
-                        <h4 class="card-title-v2" title="${winner.schemeName}" style="white-space: normal; height: auto; min-height: 2.4em; font-size: 1.05rem; margin-bottom: 15px; text-align: left;">${cleanName}</h4>
+                        <h4 class="card-title-v2" style="font-size: 1.05rem; height: 2.4em; overflow: hidden; margin-bottom: 20px;">${cleanTitle}</h4>
                         
-                        <div class="card-stats-grid" style="margin-bottom: 15px;">
-                            <div class="stat-box">
-                                <span class="stat-label">Stability</span>
-                                <span class="stat-value text-success"><i class="bi bi-arrow-up-short"></i>${m.rises} Rises</span>
+                        <div class="card-main-stat" style="margin-bottom: 20px;">
+                            <div class="profit-amount text-success" style="font-size: 1.8rem;">
+                                +${val.toFixed(2)}%
                             </div>
-                            <div class="stat-box">
-                                <span class="stat-label">Volatility</span>
-                                <span class="stat-value text-danger"><i class="bi bi-arrow-down-short"></i>${m.falls} Falls</span>
-                            </div>
-                        </div>
-
-                        <div class="card-main-stat" style="margin-bottom: 20px; text-align: left;">
-                            <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: nowrap; overflow: hidden;">
-                                <span style="font-size: 0.8rem; font-weight: 800; color: var(--brand-primary); text-transform: uppercase; white-space: nowrap;">Rank #1</span>
-                                <span class="profit-amount" style="font-size: 1.5rem; margin: 0; line-height: 1; white-space: nowrap; color: ${cat.key === 'stability' ? 'var(--success-color)' : (m.growth >= 0 ? 'var(--success-color)' : 'var(--danger-color)')};">
-                                    ${cat.key === 'stability' ? `${m.strikeRate.toFixed(1)}% SR` : `${m.growth >= 0 ? '+' : ''}${m.growth.toFixed(2)}% Growth`}
-                                </span>
+                            <div class="profit-badges">
+                                <span class="modern-badge-v2 success">MOMENTUM</span>
+                                <span class="modern-badge-v2 info">XIRR ${annYield.toFixed(2)}%</span>
                             </div>
                         </div>
 
-                        <div class="card-periodic-list" style="margin-top: 10px; max-height: none; overflow: visible; background: rgba(0,0,0,0.15); padding: 12px; height: auto;">
-                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">Top 10 Rankings</div>
-                            ${runnersUp.map((r, i) => {
-                const rm = r.metrics[h];
-                const rName = r.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
-                const rVal = cat.key === 'stability' ? `${rm.strikeRate.toFixed(1)}% SR` : `${rm.growth >= 0 ? '+' : ''}${rm.growth.toFixed(2)}%`;
-                return `
-                                    <div class="periodic-row-v2" style="font-size: 0.68rem; padding: 6px 0; border-color: rgba(255,255,255,0.03);">
-                                        <div style="display: flex; gap: 8px; align-items: center; overflow: hidden; flex: 1;">
-                                            <span style="font-weight: 800; color: var(--text-secondary); min-width: 20px;">#${i + 2}</span>
-                                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgba(255,255,255,0.8);">${rName}</span>
-                                        </div>
-                                        <span class="period-val ${cat.key === 'stability' ? 'pos' : (rm.growth >= 0 ? 'pos' : 'neg')}" style="margin-left: 10px; font-weight: 700;">${rVal}</span>
-                                    </div>
-                                `;
-            }).join('')}
+                        <div class="card-periodic-list" style="margin-bottom: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                            <div style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 5px; font-weight: 700;">Performance Details</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+                                <span style="color: rgba(255,255,255,0.6);">Growth in ${labelMap[durKey]}</span>
+                                <span class="text-success" style="font-weight: 700;">+${val.toFixed(2)}%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                                <span style="color: rgba(255,255,255,0.6);">Ann. Projected Yield</span>
+                                <span style="color: white; font-weight: 700;">${annYield.toFixed(2)}%</span>
+                            </div>
                         </div>
+
+                        <button class="btn-action-v2 view" onclick="quickAddFund('${topFund.schemeCode}', '${topFund.schemeName}')" style="width: 100%; justify-content: center; height: 38px;">
+                            <i class="bi bi-plus-circle"></i> Quick Add to Tracker
+                        </button>
                     </div>
                 </div>
             `;
-        }); // End of displayHorizons loop
+        }
+    });
 
-        finalHtml += `</div>`; // Close grid container for this category
-    }); // End of categories loop
-
-    resultsContainer.innerHTML = finalHtml;
+    resultsContainer.innerHTML = finalHtml || '<p style="text-align: center; width: 100%; opacity: 0.5; padding: 40px;">No performance leaders identified. Select more check-boxes to expand the search.</p>';
 }
 
+function displayExplore() {
+    const container = document.getElementById('exploreContainer');
+    if (!container) return;
 
+    // Persist results: only render the filter UI if it's empty
+    if (container.innerHTML.trim() !== "") return;
+
+    // Filter bar + Progress placeholder + Results grid
+    container.innerHTML = `
+        <div id="explorerFilters" style="width: 100%; margin-top: 40px; padding: 30px; background: rgba(30, 41, 59, 0.4); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
+                <div>
+                    <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                        <i class="bi bi-globe" style="color: var(--brand-primary);"></i> Market Explorer
+                    </h3>
+                    <p style="color: var(--text-secondary); margin: 5px 0 0; font-size: 0.95rem;">Scan & Discover the most consistent funds</p>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; width: 100%; margin-top: 15px;">
+                    <div class="filter-group">
+                        <label style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; display: block; text-transform: uppercase;">Category</label>
+                        <select id="discoveryCategory" class="form-control-modern" style="width: 140px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); color: white;">
+                            <option value="">Select</option>
+                            <option value="Equity">Equity</option>
+                            <option value="Debt">Debt</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Index">Index/ETF</option>
+                            <option value="Liquid">Liquid</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; display: block; text-transform: uppercase;">Sector/Theme</label>
+                        <select id="discoverySector" class="form-control-modern" style="width: 160px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); color: white;">
+                            <option value="">Select</option>
+                            <option value="Small Cap">Small Cap</option>
+                            <option value="Mid Cap">Mid Cap</option>
+                            <option value="Large Cap">Large Cap</option>
+                            <option value="Flexi Cap">Flexi Cap</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; display: block; text-transform: uppercase;">Matrix</label>
+                        <div class="btn-group" style="width: 200px;">
+                            <button type="button" class="form-control-modern dropdown-toggle" data-bs-toggle="dropdown" onclick="event.stopPropagation()">Horizons</button>
+                            <ul class="dropdown-menu dropdown-menu-dark" style="padding: 10px; min-width: 250px;" onclick="event.stopPropagation()">
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="weekly"> 7 Days</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="fifteenDays"> 15 Days</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="monthly"> 1 Month</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="quarterly"> 3 Months</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="halfYearly"> 6 Months</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="nineMonths"> 9 Months</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="yearly"> 1 Year</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; display: block; text-transform: uppercase;">Plan</label>
+                        <select id="discoveryPlan" class="form-control-modern" style="width: 100px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); color: white;">
+                            <option value="">Select</option>
+                            <option value="Direct">Direct</option>
+                            <option value="Regular">Regular</option>
+                        </select>
+                    </div>
+                    <div style="margin-left: auto; align-self: flex-end;">
+                        <button onclick="runDiscovery()" class="btn-action-v2 view" style="padding: 10px 24px;">
+                            <i class="bi bi-radar"></i> Start Discovery
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="scanProgress" style="display: none; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px;">
+                    <span id="scanStatus">Analyzing sector...</span>
+                    <span id="scanPercentage">0%</span>
+                </div>
+                <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                    <div id="scanProgressBar" style="width: 0%; height: 100%; background: var(--brand-primary);"></div>
+                </div>
+            </div>
+        </div>
+        <div id="discoveryResults" style="display: contents;">
+            <div style="opacity: 0.4; text-align: center; width: 100%; padding: 40px;">
+                <p>Select your criteria and click Start Discovery</p>
+            </div>
+        </div>
+    `;
+}
+
+function quickAddFund(code, name) {
+    switchMainView('individual');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    alert(`To add "${name}", use the search box on the left!`);
+    setTimeout(() => { document.getElementById('fundHouseInput')?.focus(); }, 500);
+}

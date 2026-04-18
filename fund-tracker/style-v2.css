@@ -284,6 +284,19 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
+/* Dynamic Grid Column Overrides (Universal for perfect alignment) */
+.grid-4-col .playing-card {
+    width: 280px;
+    flex: 0 0 280px;
+    margin: 0;
+}
+
+.grid-3-col .playing-card {
+    width: 320px;
+    flex: 0 0 320px;
+    margin: 0;
+}
+
 .playing-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(59, 130, 246, 0.1);

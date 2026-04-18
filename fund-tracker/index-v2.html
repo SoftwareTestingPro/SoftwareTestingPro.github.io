@@ -210,58 +210,8 @@
                 <!-- 6. Research Insights -->
                 <div id="researchContainer" style="display: contents;"></div>
 
-                <!-- 7. Global Discovery Explorer -->
-                <div id="discoveryContainer"
-                    style="display: none; width: 100%; margin-top: 40px; padding: 30px; background: rgba(30, 41, 59, 0.4); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05);">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
-                        <div>
-                            <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;">
-                                <i class="bi bi-globe" style="color: var(--brand-primary);"></i> Market Explorer
-                            </h3>
-                            <p style="color: var(--text-secondary); margin: 5px 0 0; font-size: 0.95rem;">Scan &
-                                Discover the most consistent direct equity funds</p>
-                        </div>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <select id="discoverySector" class="form-control-modern"
-                                style="width: 200px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); color: white;">
-                                <option value="Small Cap">Small Cap</option>
-                                <option value="Mid Cap">Mid Cap</option>
-                                <option value="Large Cap">Large Cap</option>
-                                <option value="Flexi Cap">Flexi Cap</option>
-                                <option value="Multi Cap">Multi Cap</option>
-                                <option value="ELSS">Tax Saver (ELSS)</option>
-                                <option value="Bluechip">Bluechip</option>
-                            </select>
-                            <button id="startScanBtn" onclick="runDiscovery()" class="btn-action-v2 view"
-                                style="padding: 10px 24px; min-width: 140px;">
-                                <i class="bi bi-radar"></i> Scan Sector
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="scanProgress" style="display: none; margin-bottom: 20px;">
-                        <div
-                            style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px;">
-                            <span id="scanStatus">Analyzing sector...</span>
-                            <span id="scanPercentage">0%</span>
-                        </div>
-                        <div
-                            style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
-                            <div id="scanProgressBar"
-                                style="width: 0%; height: 100%; background: var(--brand-primary); transition: width 0.3s ease;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="discoveryResults"
-                        style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; min-height: 100px;">
-                        <div style="opacity: 0.4; text-align: center; width: 100%; padding: 40px;">
-                            <i class="bi bi-search" style="font-size: 2.5rem; margin-bottom: 12px; display: block;"></i>
-                            <p>Select a sector and click Scan to discover market leaders</p>
-                        </div>
-                    </div>
-                </div>
+                <!-- 7. Market Explorer -->
+                <div id="exploreContainer" style="display: contents;"></div>
 
             </div>
         </div>
@@ -368,10 +318,10 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/api-manager.js?v=3"></script>
     <script src="js/calculations.js?v=3"></script>
     <script src="js/ui-renderer-v2.js?v=3"></script>
     <script src="js/app-v2.js?v=3"></script>
 </body>
-
 </html>
