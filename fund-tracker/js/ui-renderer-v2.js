@@ -333,7 +333,10 @@ async function updateSummary() {
     isSummaryUpdating = true;
 
     try {
-        let totalInv = 0, totalVal = 0, flows = [];
+        let totalInv = 0, totalVal = 0, totalYTDStart = 0, flows = [];
+        const curYear = new Date().getFullYear();
+        const jan1 = new Date(curYear, 0, 1);
+
         const navResults = await Promise.all(userInvestments.map(async (inv) => {
             try {
                 const navData = await getCurrentNAV(inv.schemeCode);
@@ -346,10 +349,12 @@ async function updateSummary() {
             const cNav = res ? res.nav : 0;
 
             let effectiveUnits = inv.units;
+            let historyData = null;
             try {
                 const history = await NAVManager.getNAV(inv.schemeCode);
-                if (history?.data?.length > 0) {
-                    const sorted = history.data.sort((a, b) => {
+                historyData = history?.data || [];
+                if (historyData.length > 0) {
+                    const sorted = [...historyData].sort((a, b) => {
                         const [d1, m1, y1] = a.date.split('-');
                         const [d2, m2, y2] = b.date.split('-');
                         return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
@@ -364,6 +369,28 @@ async function updateSummary() {
 
             totalInv += inv.investmentAmount;
             totalVal += effectiveUnits * cNav;
+
+            // Global YTD Calculation - Ensures Parity
+            const invDate = new Date(inv.investmentDate);
+            if (invDate >= jan1) {
+                totalYTDStart += inv.investmentAmount;
+            } else if (historyData) {
+                // Find NAV on or before Jan 1
+                let jan1Nav = 0;
+                const sorted = [...historyData].sort((a, b) => {
+                    const [d1, m1, y1] = a.date.split('-');
+                    const [d2, m2, y2] = b.date.split('-');
+                    return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                });
+                for (const h of sorted) {
+                    const [d, m, y] = h.date.split('-');
+                    if (new Date(y, m - 1, d) <= jan1) jan1Nav = parseFloat(h.nav);
+                }
+                if (jan1Nav === 0 && sorted.length > 0) jan1Nav = parseFloat(sorted[0].nav);
+                totalYTDStart += jan1Nav * effectiveUnits;
+            } else {
+                totalYTDStart += inv.investmentAmount;
+            }
 
             const [y, m, d] = inv.investmentDate.split('-');
             flows.push({ date: new Date(y, m - 1, d), amount: -inv.investmentAmount });
@@ -385,7 +412,26 @@ async function updateSummary() {
         // Periodic Portfolio Performance
         const results = await Promise.all(userInvestments.map(async (inv) => {
             const navRes = navResults.find(r => String(r.id) === String(inv.id));
-            if (navRes && navRes.nav > 0) return { inv, val: inv.units * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
+            if (navRes && navRes.nav > 0) {
+                let eUnits = inv.units;
+                try {
+                    const history = await NAVManager.getNAV(inv.schemeCode);
+                    if (history?.data?.length > 0) {
+                        const sorted = history.data.sort((a, b) => {
+                            const [d1, m1, y1] = a.date.split('-');
+                            const [d2, m2, y2] = b.date.split('-');
+                            return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                        });
+                        const [fd, fm, fy] = sorted[0].date.split('-');
+                        const fDate = new Date(fy, fm - 1, fd);
+                        if (new Date(inv.investmentDate) < fDate) {
+                            eUnits = inv.investmentAmount / parseFloat(sorted[0].nav);
+                        }
+                    }
+                } catch (e) { }
+
+                return { inv, eUnits, val: eUnits * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
+            }
             return null;
         }));
 
@@ -422,17 +468,17 @@ async function updateSummary() {
 
         const generatedPills = [];
         periods.forEach(p => {
-            let weightedSum = 0, totalValForPeriod = 0;
+            let totalDiff = 0, totalStartVal = 0;
             results.forEach(res => {
-                if (res?.data?.periodic?.[p.key]) {
-                    const item = res.data.periodic[p.key];
-                    weightedSum += item.value * res.val;
-                    totalValForPeriod += res.val;
+                const item = res?.data?.periodic?.[p.key];
+                if (item) {
+                    totalDiff += (item.endNAV - item.startNAV) * res.eUnits;
+                    totalStartVal += item.startNAV * res.eUnits;
                 }
             });
 
-            if (totalValForPeriod > 0) {
-                const weightedPct = weightedSum / totalValForPeriod;
+            if (totalStartVal > 0) {
+                const weightedPct = (totalDiff / totalStartVal) * 100;
                 generatedPills.push(`
                     <div class="periodic-row-v2">
                         <span class="period-lbl">${p.id}</span>
@@ -442,26 +488,35 @@ async function updateSummary() {
             }
         });
 
-        // Dynamic Yearly Breakdown
+        // Unified Yearly Breakdown (Current Year handled separately for 100% parity)
         const yearlyData = {};
         results.forEach(res => {
             if (res?.data?.yearlyBreakdown) {
                 Object.entries(res.data.yearlyBreakdown).forEach(([year, data]) => {
-                    if (!yearlyData[year]) yearlyData[year] = { weightedSum: 0, totalVal: 0 };
-                    yearlyData[year].weightedSum += data.value * res.val;
-                    yearlyData[year].totalVal += res.val;
+                    if (year === String(curYear)) return; // Skip current year, we have it already
+                    if (!yearlyData[year]) yearlyData[year] = { totalDiff: 0, totalStartVal: 0 };
+                    yearlyData[year].totalDiff += (data.endNAV - data.startNAV) * res.eUnits;
+                    yearlyData[year].totalStartVal += data.startNAV * res.eUnits;
                 });
             }
         });
 
-        const curYearStr = String(new Date().getFullYear());
+        // Add Current Year separately using global logic
+        const ytdReturnPct = totalYTDStart > 0 ? ((totalVal - totalYTDStart) / totalYTDStart) * 100 : 0;
+        generatedPills.push(`
+            <div class="periodic-row-v2">
+                <span class="period-lbl">Current Year</span>
+                <span class="period-val ${ytdReturnPct >= 0 ? 'pos' : 'neg'}">${ytdReturnPct > 0 ? '+' : ''}${ytdReturnPct.toFixed(2)}%</span>
+            </div>
+        `);
+
         Object.keys(yearlyData).sort((a, b) => b - a).forEach(year => {
             const data = yearlyData[year];
-            if (data.totalVal > 0) {
-                const weightedPct = data.weightedSum / data.totalVal;
+            if (data.totalStartVal > 0) {
+                const weightedPct = (data.totalDiff / data.totalStartVal) * 100;
                 generatedPills.push(`
                     <div class="periodic-row-v2">
-                        <span class="period-lbl">${year === curYearStr ? 'Current Year' : year}</span>
+                        <span class="period-lbl">${year}</span>
                         <span class="period-val ${weightedPct >= 0 ? 'pos' : 'neg'}">${weightedPct > 0 ? '+' : ''}${weightedPct.toFixed(2)}%</span>
                     </div>
                 `);
@@ -704,7 +759,7 @@ function updateGroupFilterUI() {
 async function displayResearch() {
     const container = document.getElementById('researchContainer');
     if (!container) return;
-    
+
     if (userInvestments.length === 0) {
         container.innerHTML = `<div class="empty-state" style="width: 100%; text-align: center; padding: 40px; opacity: 0.6;">
             <i class="bi bi-search" style="font-size: 3rem; margin-bottom: 16px; display: block;"></i>
@@ -720,12 +775,12 @@ async function displayResearch() {
         const uniqueFundsMap = {};
         userInvestments.forEach(inv => {
             if (!uniqueFundsMap[inv.schemeCode]) {
-                uniqueFundsMap[inv.schemeCode] = { 
-                    schemeCode: inv.schemeCode, 
-                    schemeName: inv.schemeName, 
-                    totalInv: 0, 
-                    totalUnits: 0, 
-                    ids: [] 
+                uniqueFundsMap[inv.schemeCode] = {
+                    schemeCode: inv.schemeCode,
+                    schemeName: inv.schemeName,
+                    totalInv: 0,
+                    totalUnits: 0,
+                    ids: []
                 };
             }
             uniqueFundsMap[inv.schemeCode].totalInv += inv.investmentAmount;
@@ -763,10 +818,10 @@ async function displayResearch() {
             const recentHist = histData.filter(h => {
                 const [d, m, y] = h.date.split('-');
                 return new Date(y, m - 1, d) >= oneYearAgo;
-            }).sort((a,b) => {
+            }).sort((a, b) => {
                 const [d1, m1, y1] = a.date.split('-');
                 const [d2, m2, y2] = b.date.split('-');
-                return new Date(y1, m1-1, d1) - new Date(y2, m2-1, d2);
+                return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
             });
 
             if (recentHist.length === 0) return { ...f, maxDrawdown: 0, maxSwing: 0 };
@@ -779,7 +834,7 @@ async function displayResearch() {
             recentHist.forEach(h => {
                 const val = parseFloat(h.nav);
                 if (isNaN(val)) return;
-                
+
                 if (val > peak) {
                     peak = val;
                 } else {
@@ -800,34 +855,58 @@ async function displayResearch() {
 
         // Best Defender (Lowest Drawdown in bear phase)
         // We pick the fund with the absolute lowest drawdown, even if it's 0 (best possible resilience)
-        const bestDefender = [...advancedStats].sort((a,b) => a.maxDrawdown - b.maxDrawdown)[0];
+        const bestDefender = [...advancedStats].sort((a, b) => a.maxDrawdown - b.maxDrawdown)[0];
 
         // Best Climber (Highest Up-swing in bull phase)
-        const bestClimber = [...advancedStats].sort((a,b) => b.maxSwing - a.maxSwing)[0];
+        const bestClimber = [...advancedStats].sort((a, b) => b.maxSwing - a.maxSwing)[0];
 
-        // Best Overall (Highest Absolute Returns)
-        const bestOverall = [...advancedStats].sort((a,b) => b.absoluteReturns - a.absoluteReturns)[0];
-        
-        // Worst Overall (Lowest Absolute Returns)
-        const worstOverall = [...advancedStats].sort((a,b) => a.absoluteReturns - b.absoluteReturns)[0];
-        
-        // Worst in last 6 months
-        const worst6M = [...advancedStats].sort((a,b) => (a.perf6M || 0) - (b.perf6M || 0))[0];
+        // Top Performer (Highest XIRR/CAGR)
+        const bestOverall = [...advancedStats].sort((a, b) => (b.stats.cagr || 0) - (a.stats.cagr || 0))[0];
+
+        // Underperformer (Lowest XIRR/CAGR)
+        const worstOverall = [...advancedStats].sort((a, b) => (a.stats.cagr || 0) - (b.stats.cagr || 0))[0];
+
+        // Worst in last 6 months (Filter out nulls, then pick lowest)
+        const worst6M = advancedStats
+            .filter(f => f.perf6M !== null)
+            .sort((a, b) => (a.perf6M || 0) - (b.perf6M || 0))[0];
 
         let html = `<div style="width: 100%; margin-bottom: 20px; padding: 0 10px;">
             <h3 style="margin-bottom: 4px;">Portfolio Insights</h3>
             <p style="color: var(--text-secondary); font-size: 0.9rem;">Advanced performance analysis based on historical cycles</p>
         </div>`;
-        
+
         const createInsightCard = (fund, title, sub, variant, extraVal = null) => {
             if (!fund) return '';
-            const isPos = fund.absoluteReturns >= 0;
+
+            // Default to overall stats
+            let mainAmount = (fund.absoluteReturns) || 0;
+            let mainPct = (fund.returnsPct) || 0;
+            let maxXirr = (fund.stats?.cagr) || 0;
+
+            // Context Logic: For 6-month warnings, show the 6-month delta specifically
+            if (variant === 'worst6M') {
+                const p6M = fund.stats.periodicReturns?.halfYearly;
+                if (p6M) {
+                    mainAmount = p6M.absolute || 0;
+                    mainPct = p6M.percentage || 0;
+                    // Annualize the 6-month return for the XIRR badge: ((1 + r)^2 - 1)
+                    maxXirr = (Math.pow(1 + (mainPct / 100), 2) - 1) * 100;
+                }
+            }
+
+            const isPos = mainPct >= 0;
             const cleanTitle = fund.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
             const badgeClass = variant === 'best' ? 'success' : (variant === 'worst' || variant === 'worst6M' || variant === 'under' ? 'danger' : 'info');
             const icon = variant === 'best' ? 'bi-trophy-fill' : (variant === 'bestDefender' ? 'bi-shield-check' : (variant === 'bestClimber' ? 'bi-graph-up-arrow' : 'bi-exclamation-triangle-fill'));
 
+            // High-precision currency: Show decimals if the amount is less than 1 or 2, to avoid "0"
+            const formattedAmount = Math.abs(mainAmount) < 2 && Math.abs(mainAmount) > 0
+                ? Math.abs(mainAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                : Math.abs(mainAmount).toLocaleString(undefined, { maximumFractionDigits: 0 });
+
             return `
-                <div class="playing-card ${variant === 'best' ? 'card-positive' : 'card-negative'}">
+                <div class="playing-card ${variant === 'best' ? 'card-positive' : (variant === 'worst6M' || variant === 'under' ? 'card-negative' : 'card-info')}">
                     <div class="card-content">
                         <div style="margin-bottom: 15px;">
                             <span class="modern-badge-v2 ${badgeClass}" style="font-size: 0.7rem; letter-spacing: 1px;">
@@ -839,28 +918,29 @@ async function displayResearch() {
                         
                         <div class="card-main-stat">
                             <div class="profit-amount ${isPos ? 'text-success' : 'text-danger'}" style="font-size: 2rem;">
-                                ${isPos ? '+' : ''}₹${Math.abs(fund.absoluteReturns).toLocaleString(undefined, {maximumFractionDigits:0})}
+                                ${isPos ? '+' : '-'}₹${formattedAmount}
                             </div>
                             <div class="profit-badges">
-                                <span class="modern-badge-v2 ${isPos ? 'success' : 'danger'}">${isPos ? '+' : ''}${fund.returnsPct.toFixed(2)}%</span>
-                                <span class="modern-badge-v2 info">XIRR ${fund.stats.cagr.toFixed(2)}%</span>
+                                <span class="modern-badge-v2 ${isPos ? 'success' : 'danger'}">${isPos ? '+' : ''}${Number(mainPct || 0).toFixed(2)}%</span>
+                                <span class="modern-badge-v2 ${maxXirr >= 0 ? 'success' : 'danger'}">XIRR ${Number(maxXirr || 0).toFixed(2)}%</span>
                             </div>
                         </div>
 
-                        ${extraVal ? `
-                            <div style="margin-top: 20px; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                                <div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 700;">${extraVal.label}</div>
-                                <div style="font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">${extraVal.value}%</div>
-                            </div>
-                        ` : ''}
+                        </div>
                     </div>
                 </div>
             `;
         };
 
-        html += createInsightCard(bestOverall, 'TOP PERFORMER', 'Highest absolute profit in your portfolio', 'best');
-        html += createInsightCard(worstOverall, 'UNDERPERFORMER', 'Lowest absolute profit in your portfolio', 'under');
-        html += createInsightCard(worst6M, '6-MONTH WARNING', 'Worst returns in the last 180 days', 'worst6M', { label: 'DROPPED BY', value: Math.abs(worst6M?.perf6M || 0).toFixed(2) });
+        html += createInsightCard(bestOverall, 'TOP PERFORMER', 'Demonstrated the highest compounded growth efficiency (XIRR), making it the strongest wealth generator in your portfolio.', 'best');
+        html += createInsightCard(worstOverall, 'UNDERPERFORMER', 'Identified as having the lowest annualized returns (XIRR) across your entire asset list since the investment date.', 'under');
+
+        if (worst6M && worst6M.perf6M < 0) {
+            html += createInsightCard(worst6M, '6-MONTH WARNING', 'Recorded the most significant relative decline in value within your portfolio over the last 180-day tracking window.', 'worst6M', { label: 'DROPPED BY', value: Math.abs(worst6M.perf6M).toFixed(2) });
+        } else if (worst6M) {
+            // If even the "worst" is positive, show it as Moderate growth or hide
+            html += createInsightCard(worst6M, 'STABLE ASSET', 'Maintained the most resilient and conservative performance profile in your portfolio during the last 6-month period.', 'info', { label: '6M YIELD', value: worst6M.perf6M.toFixed(2) });
+        }
 
         container.innerHTML = html;
     } finally {
@@ -888,9 +968,9 @@ async function runDiscovery() {
     }
 
     // 1. Filter candidates (Direct + Growth + Sector) and Deduplicate
-    const rawCandidates = allFundsCache.filter(f => 
-        f.schemeName.includes('Direct') && 
-        f.schemeName.includes('Growth') && 
+    const rawCandidates = allFundsCache.filter(f =>
+        f.schemeName.includes('Direct') &&
+        f.schemeName.includes('Growth') &&
         f.schemeName.toLowerCase().includes(sector.toLowerCase())
     );
 
@@ -912,7 +992,7 @@ async function runDiscovery() {
     }
     resultsContainer.innerHTML = '';
     progressBlock.style.display = 'block';
-    
+
     let processed = 0;
     const discoveryStats = [];
 
@@ -928,10 +1008,10 @@ async function runDiscovery() {
             const history = await NAVManager.getNAV(fund.schemeCode);
             if (!history || !history.data || history.data.length < 10) continue;
 
-            const sorted = history.data.sort((a,b) => {
+            const sorted = history.data.sort((a, b) => {
                 const [d1, m1, y1] = a.date.split('-');
                 const [d2, m2, y2] = b.date.split('-');
-                return new Date(y1, m1-1, d1) - new Date(y2, m2-1, d2);
+                return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
             });
 
             const scanHorizons = [
@@ -942,26 +1022,26 @@ async function runDiscovery() {
             ];
 
             const fundMetrics = {};
-            
+
             scanHorizons.forEach(h => {
                 const cutoff = new Date();
                 cutoff.setMonth(cutoff.getMonth() - h.months);
-                
+
                 const recent = sorted.filter(row => {
                     const [rd, rm, ry] = row.date.split('-');
-                    return new Date(ry, rm-1, rd) >= cutoff;
+                    return new Date(ry, rm - 1, rd) >= cutoff;
                 });
 
                 if (recent.length >= 5) {
                     let rises = 0, falls = 0;
                     for (let n = 1; n < recent.length; n++) {
-                        const prevVal = parseFloat(recent[n-1].nav);
+                        const prevVal = parseFloat(recent[n - 1].nav);
                         const currVal = parseFloat(recent[n].nav);
                         if (currVal > prevVal) rises++;
                         else if (currVal < prevVal) falls++;
                     }
                     const strikeRate = (rises / (rises + falls)) * 100;
-                    const cVal = parseFloat(recent[recent.length-1].nav);
+                    const cVal = parseFloat(recent[recent.length - 1].nav);
                     const sVal = parseFloat(recent[0].nav);
                     const growth = ((cVal - sVal) / sVal) * 100;
 
@@ -998,7 +1078,7 @@ async function runDiscovery() {
             const mValues = Object.values(f.metrics);
             const avg = mValues.reduce((acc, m) => acc + (cat.key === 'stability' ? m.strikeRate : m.growth), 0) / mValues.length;
             return { ...f, catAvg: avg };
-        }).sort((a,b) => b.catAvg - a.catAvg);
+        }).sort((a, b) => b.catAvg - a.catAvg);
 
         const catWinner = catStats[0];
         const cleanWinnerName = catWinner.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
@@ -1041,7 +1121,7 @@ async function runDiscovery() {
             if (statsForPeriod.length === 0) return;
 
             // Pick Top 10 for this category and horizon
-            const ranked = [...statsForPeriod].sort((a,b) => {
+            const ranked = [...statsForPeriod].sort((a, b) => {
                 if (cat.key === 'stability') return b.metrics[h].strikeRate - a.metrics[h].strikeRate;
                 return b.metrics[h].growth - a.metrics[h].growth;
             }).slice(0, 10);
@@ -1051,7 +1131,7 @@ async function runDiscovery() {
 
             const m = winner.metrics[h];
             const cleanName = winner.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
-            
+
             finalHtml += `
                 <div class="playing-card ${m.growth >= 0 ? 'card-positive' : 'card-negative'}" style="width: 100%; height: auto; min-height: auto; flex: none; display: block; padding-bottom: 20px;">
                     <div class="card-content" style="text-align: left; padding: 16px;">
@@ -1083,19 +1163,19 @@ async function runDiscovery() {
                         <div class="card-periodic-list" style="margin-top: 10px; max-height: none; overflow: visible; background: rgba(0,0,0,0.15); padding: 12px; height: auto;">
                             <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">Top 10 Rankings</div>
                             ${runnersUp.map((r, i) => {
-                                const rm = r.metrics[h];
-                                const rName = r.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
-                                const rVal = cat.key === 'stability' ? `${rm.strikeRate.toFixed(1)}% SR` : `${rm.growth >= 0 ? '+' : ''}${rm.growth.toFixed(2)}%`;
-                                return `
+                const rm = r.metrics[h];
+                const rName = r.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
+                const rVal = cat.key === 'stability' ? `${rm.strikeRate.toFixed(1)}% SR` : `${rm.growth >= 0 ? '+' : ''}${rm.growth.toFixed(2)}%`;
+                return `
                                     <div class="periodic-row-v2" style="font-size: 0.68rem; padding: 6px 0; border-color: rgba(255,255,255,0.03);">
                                         <div style="display: flex; gap: 8px; align-items: center; overflow: hidden; flex: 1;">
-                                            <span style="font-weight: 800; color: var(--text-secondary); min-width: 20px;">#${i+2}</span>
+                                            <span style="font-weight: 800; color: var(--text-secondary); min-width: 20px;">#${i + 2}</span>
                                             <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgba(255,255,255,0.8);">${rName}</span>
                                         </div>
                                         <span class="period-val ${cat.key === 'stability' ? 'pos' : (rm.growth >= 0 ? 'pos' : 'neg')}" style="margin-left: 10px; font-weight: 700;">${rVal}</span>
                                     </div>
                                 `;
-                            }).join('')}
+            }).join('')}
                         </div>
                     </div>
                 </div>

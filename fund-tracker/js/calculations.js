@@ -100,7 +100,10 @@ async function calculatePerformance(investment, currentNAV) {
             target.setHours(0, 0, 0, 0);
             target.setDate(target.getDate() - days);
 
-            if (target < effectiveInvestmentDate) return null;
+            // If target is exactly purchase date or before, use purchase NAV
+            if (target.getTime() <= effectiveInvestmentDate.getTime()) {
+                return { nav: effectiveInvestmentNav, date: investment.investmentDate, isUserNav: true };
+            }
 
             for (let i = navData.length - 1; i >= 0; i--) {
                 if (forceStrictlyBeforeLatest && i === navData.length - 1) continue;
@@ -122,6 +125,7 @@ async function calculatePerformance(investment, currentNAV) {
 
                     performance.periodic[key] = {
                         value: ((currentNAV - pastData.nav) / pastData.nav) * 100,
+                        absolute: (currentNAV - pastData.nav) * (investment.units || 0),
                         startNAV: pastData.nav, endNAV: currentNAV, startDate: pastData.date, endDate: latestRecord.date
                     };
                 }
@@ -142,7 +146,15 @@ async function calculatePerformance(investment, currentNAV) {
             for (let i = 0; i < navData.length; i++) {
                 const [d, m, y] = navData[i].date.split('-');
                 const dDate = new Date(y, m - 1, d);
-                if (!sNAV && dDate >= effectiveYearStart) sNAV = parseFloat(navData[i].nav);
+                
+                if (!sNAV && dDate >= effectiveYearStart) {
+                    // Use user's exact NAV if the year starts on/after purchase
+                    if (dDate.getTime() >= effectiveInvestmentDate.getTime() && effectiveYearStart.getTime() === effectiveInvestmentDate.getTime()) {
+                        sNAV = effectiveInvestmentNav;
+                    } else {
+                        sNAV = parseFloat(navData[i].nav);
+                    }
+                }
                 if (dDate <= yearEnd) eNAV = parseFloat(navData[i].nav);
             }
 
@@ -258,7 +270,7 @@ async function calculateGroupStats(fundIds) {
         if (hasData && totalPastValue > 0) {
             periodicReturns[key] = {
                 label: periods[key], percentage: (totalDiffAmount / totalPastValue) * 100,
-                amount: totalDiffAmount, startDate: sDate, endDate: eDate
+                absolute: totalDiffAmount, startDate: sDate, endDate: eDate
             };
         }
     });
@@ -304,7 +316,8 @@ async function calculateGroupStats(fundIds) {
 
     sortedPeriodKeys.forEach(key => {
         const p = periodicReturns[key];
-        const combo = `${p.startDate}_${p.percentage.toFixed(4)}_${p.amount.toFixed(2)}`;
+        if (!p) return;
+        const combo = `${p.startDate}_${(p.percentage || 0).toFixed(4)}_${(p.absolute || 0).toFixed(2)}`;
         if (!seenCombos.has(combo)) {
             finalPeriodicReturns[key] = p;
             if (!key.startsWith('year_')) seenCombos.add(combo);

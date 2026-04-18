@@ -118,6 +118,37 @@ h1, h2, h3, h4, h5, h6 {
     border-color: rgba(59, 130, 246, 0.4);
 }
 
+/* Custom Modal Animations */
+.modal.fade {
+    transition: opacity 0.3s linear;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex !important;
+    opacity: 1;
+}
+
+.modal-dialog {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.95);
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
+
+.modal-content.glass-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+}
+
 .login-header {
     margin-bottom: 20px;
     flex: 1;
@@ -237,7 +268,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .playing-card {
     width: 280px;
-    height: 410px; /* Reduced for more compact density */
+    height: 410px; 
     flex: 0 0 280px;
     background: var(--card-bg);
     backdrop-filter: blur(20px);

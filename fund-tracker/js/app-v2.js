@@ -11,6 +11,8 @@ var selectedFund = null;
 var allFundsCache = null;
 var isFundsLoading = false;
 var editingInvestmentId = null;
+var pendingDeleteId = null;
+var pendingDeleteType = 'fund'; // 'fund' or 'group'
 let currentView = 'individual';
 let currentGroupFilter = 'all';
 let currentUser = null;
@@ -480,15 +482,49 @@ async function editFund(id) {
 }
 
 async function removeFund(id) {
-    if (!confirm('Remove this investment?')) return;
-    userInvestments = userInvestments.filter(i => String(i.id) !== String(id));
-    fundGroups = fundGroups.map(g => ({ ...g, fundIds: g.fundIds.filter(fid => String(fid) !== String(id)) }));
-    syncAutomatedGroups();
-    await saveToCloud(userInvestments);
-    await saveToCloudFundGroups(fundGroups);
-    displayFunds();
-    displayGroups();
-    updateSummary();
+    const inv = userInvestments.find(i => String(i.id) === String(id));
+    if (!inv) return;
+    
+    pendingDeleteId = id;
+    pendingDeleteType = 'fund';
+    const nameEl = document.getElementById('deleteFundName');
+    if (nameEl) nameEl.textContent = inv.schemeName;
+    
+    document.getElementById('deleteConfirmModal').classList.add('show');
+}
+
+async function confirmDeleteFund() {
+    if (!pendingDeleteId) return;
+    
+    // Hide confirmation modal
+    document.getElementById('deleteConfirmModal').classList.remove('show');
+    
+    // Show global processing spinner
+    showLoading();
+    
+    try {
+        const id = pendingDeleteId;
+        if (pendingDeleteType === 'fund') {
+            userInvestments = userInvestments.filter(i => String(i.id) !== String(id));
+            fundGroups = fundGroups.map(g => ({ ...g, fundIds: g.fundIds.filter(fid => String(fid) !== String(id)) }));
+            syncAutomatedGroups();
+            await saveToCloud(userInvestments);
+            await saveToCloudFundGroups(fundGroups);
+        } else {
+            fundGroups = fundGroups.filter(g => String(g.id) !== String(id));
+            await saveToCloudFundGroups(fundGroups);
+        }
+        
+        displayFunds();
+        displayGroups();
+        updateSummary();
+        showSuccess(pendingDeleteType === 'fund' ? 'Fund removed' : 'Group deleted');
+    } catch (err) {
+        showError('Failed: ' + err.message);
+    } finally {
+        pendingDeleteId = null;
+        hideLoading();
+    }
 }
 
 
@@ -574,13 +610,16 @@ async function deleteGroup() {
     const group = fundGroups.find(g => String(g.id) === String(currentEditingGroupId));
     if (!group) return;
 
-    if (confirm(`Delete group "${group.name}"?`)) {
-        fundGroups = fundGroups.filter(g => String(g.id) !== String(currentEditingGroupId));
-        await saveToCloudFundGroups(fundGroups);
-        document.getElementById('editGroupModal').classList.remove('show');
-        displayGroups();
-        showSuccess('Group deleted');
-    }
+    // Hide edit modal
+    document.getElementById('editGroupModal').classList.remove('show');
+
+    // Show custom confirm modal
+    pendingDeleteId = currentEditingGroupId;
+    pendingDeleteType = 'group';
+    const nameEl = document.getElementById('deleteFundName');
+    if (nameEl) nameEl.textContent = `Group: ${group.name}`;
+    
+    document.getElementById('deleteConfirmModal').classList.add('show');
 }
 
 /**
