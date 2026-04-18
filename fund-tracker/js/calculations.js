@@ -128,6 +128,7 @@ async function calculatePerformance(investment, currentNAV) {
             }
         }
 
+        // Finalize yearly breakdown with more robust fallbacks
         const startYear = effectiveInvestmentDate.getFullYear();
         const curYear = today.getFullYear();
         for (let year = startYear; year <= curYear; year++) {
@@ -144,6 +145,11 @@ async function calculatePerformance(investment, currentNAV) {
                 if (!sNAV && dDate >= effectiveYearStart) sNAV = parseFloat(navData[i].nav);
                 if (dDate <= yearEnd) eNAV = parseFloat(navData[i].nav);
             }
+
+            // Forced fallbacks for newest entries
+            if (!sNAV && year === startYear) sNAV = effectiveInvestmentNav;
+            if (!eNAV && year === curYear) eNAV = currentNAV;
+            if (sNAV && !eNAV) eNAV = currentNAV;
 
             if (sNAV && eNAV) {
                 performance.yearlyBreakdown[year] = {

@@ -18,14 +18,38 @@ function formatDate(dateString) {
 }
 
 /**
+ * Unified Card Template Generator
+ * Handles both summary-card and minicard visuals
+ */
+function generateCardHTML(title, valueHTML, options = {}) {
+    const { 
+        status = 'neutral', // 'positive', 'negative', 'neutral'
+        id = '',
+        valueId = '',
+        extraClass = ''
+    } = options;
+
+    const statusClass = `status-${status}`;
+    const borderClass = (status === 'positive' || status === 'neutral') ? 'border-positive' : (status === 'negative' ? 'border-negative' : '');
+    
+    return `
+        <div class="minicard ${statusClass} ${borderClass} ${extraClass}" ${id ? `id="${id}"` : ''}>
+            <div class="minicard-value" ${valueId ? `id="${valueId}"` : ''}>${valueHTML}</div>
+            <div class="minicard-label">${title}</div>
+        </div>
+    `;
+}
+
+
+
+/**
  * Standardized Summary Card Template
  */
 function getSummaryCardHTML(title, subLabel, percentage, amount, options = {}) {
-    const { isDynamic = false, isNeutral = false } = options;
+    const { isNeutral = false, id = '', valueId = '', extraClass = '' } = options;
     const effectivePct = options.percentage !== undefined ? options.percentage : percentage;
     const isPositive = effectivePct >= 0 || (effectivePct === undefined && (amount >= 0 || amount === undefined));
-    const colorClass = isNeutral ? '' : (isPositive ? 'positive' : 'negative');
-    const borderClass = isPositive ? 'border-positive' : 'border-negative';
+    const status = isNeutral ? 'neutral' : (isPositive ? 'positive' : 'negative');
     
     let valueHTML = '';
     const displaySign = isPositive ? '+' : '-';
@@ -40,24 +64,19 @@ function getSummaryCardHTML(title, subLabel, percentage, amount, options = {}) {
         valueHTML = `${displaySign}${absPct}%`;
     }
 
-    return `
-        <div class="summary-card ${isDynamic ? 'dynamic-yearly-card' : ''} ${borderClass}">
-            <div class="summary-value ${colorClass}">${valueHTML}</div>
-            <div class="summary-label">
-                <div class="summary-label-main">${title}</div>
-            </div>
-        </div>
-    `;
+    return generateCardHTML(title, valueHTML, { status, id, valueId, extraClass });
 }
+
+
 
 /**
  * Standardized Mini-Card Template (for Fund Details)
  */
 function getMiniCardHTML(title, amount, options = {}) {
-    const { percentage, themePercentage, isNeutral = false } = options;
+    const { percentage, themePercentage } = options;
     const statePct = themePercentage !== undefined ? themePercentage : (percentage !== undefined ? percentage : 0);
     const isPositive = statePct >= 0;
-    const stateClass = isPositive ? 'positive' : 'negative';
+    const status = isPositive ? 'positive' : 'negative';
     const displaySign = isPositive ? '+' : '-';
     
     const absAmt = amount !== undefined ? Math.abs(amount).toLocaleString(undefined, { maximumFractionDigits: 0 }) : '';
@@ -72,13 +91,9 @@ function getMiniCardHTML(title, amount, options = {}) {
         valueHTML = `${displaySign}${absPct}%`;
     }
 
-    return `
-        <div class="minicard ${stateClass}">
-            <span class="minicard-value">${valueHTML}</span>
-            <span class="minicard-label">${title}</span>
-        </div>
-    `;
+    return generateCardHTML(title, valueHTML, { type: 'minicard', status });
 }
+
 
 // Global UI Helpers
 function showLoading() { document.getElementById('loadingSpinner').style.display = 'block'; }
@@ -225,8 +240,10 @@ async function displayFunds() {
                 }
                 
                 if (performance?.yearlyBreakdown) {
+                    const curYearStr = String(new Date().getFullYear());
                     Object.entries(performance.yearlyBreakdown).sort((a, b) => b[0] - a[0]).forEach(([year, data]) => {
-                        performanceItems.push({ label: year, subLabel: `(${formatDate(data.startDate)} - ${formatDate(data.endDate)})`, value: data.value, startNAV: data.startNAV, endNAV: data.endNAV });
+                        const label = year === curYearStr ? 'Current Year' : year;
+                        performanceItems.push({ label: label, subLabel: `(${formatDate(data.startDate)} - ${formatDate(data.endDate)})`, value: data.value, startNAV: data.startNAV, endNAV: data.endNAV });
                     });
                 }
 
@@ -252,7 +269,7 @@ async function displayFunds() {
                             <span class="modern-badge ${returns >= 0 ? 'success' : 'danger'}">₹${Math.abs(returns).toFixed(2)} (${returnsPct.toFixed(2)}%)</span>
                             <span class="modern-badge info">XIRR: ${cagr.toFixed(2)}%</span>
                         </div>
-                        <div class="minicard-scroller performance-grid collapsed" id="perf-${investment.id}">
+                        <div class="minicard-scroller collapsed" id="perf-${investment.id}">
                             ${getMiniCardHTML('Investment', investment.investmentAmount, { themePercentage: returnsPct })}
                             ${getMiniCardHTML('Value', currentValue, { themePercentage: returnsPct })}
                             ${getMiniCardHTML('Profit', returns, { percentage: returnsPct })}
@@ -328,33 +345,26 @@ async function updateSummary() {
         document.getElementById('cagrValue').textContent = `${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%`;
 
         // Update Colors/Borders
-        const stateClass = profit >= 0 ? 'positive' : 'negative';
         ['totalInvestment', 'currentValue', 'totalReturnsPercentage', 'cagrValue'].forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                // Apply color class to the value itself
-                if (id === 'totalInvestment') {
-                    el.className = 'summary-value'; // Neutral for investment
-                } else if (id === 'cagrValue') {
-                    el.className = `summary-value ${xirr >= 0 ? 'positive' : 'negative'}`;
-                } else {
-                    el.className = `summary-value ${stateClass}`;
-                }
-
-                // Apply border and background class to the card
-                const card = el.closest('.summary-card');
+                const card = el.closest('.minicard');
                 if (card) {
-                    card.classList.remove('border-positive', 'border-negative');
-                    if (id === 'totalInvestment') {
-                        card.classList.add('border-positive'); // Standard green tint for info
-                    } else if (id === 'cagrValue') {
-                        card.classList.add(xirr >= 0 ? 'border-positive' : 'border-negative');
-                    } else {
-                        card.classList.add(profit >= 0 ? 'border-positive' : 'border-negative');
+                    card.classList.remove('status-positive', 'status-negative', 'status-neutral', 'border-positive', 'border-negative');
+                    
+                    let status = 'neutral';
+                    if (id !== 'totalInvestment') {
+                        const val = (id === 'cagrValue') ? xirr : profit;
+                        status = val >= 0 ? 'positive' : 'negative';
                     }
+                    
+                    card.classList.add(`status-${status}`);
+                    card.classList.add(status === 'negative' ? 'border-negative' : 'border-positive');
                 }
             }
         });
+
+
 
         // Contextual Dates
         const latestNAVDateRaw = navResults.reduce((latest, res) => {
@@ -374,10 +384,11 @@ async function updateSummary() {
         Object.entries(labels).forEach(([id, text]) => {
             const el = document.getElementById(id);
             if (!el) return;
-            const card = el.closest('.summary-card');
-            const label = card.querySelector('.summary-label');
-            if (label) label.innerHTML = `<div class="summary-label-main">${text}</div>`;
+            const card = el.closest('.minicard');
+            const label = card ? card.querySelector('.minicard-label') : null;
+            if (label) label.textContent = text;
         });
+
 
         // Periodic Portfolio Performance
         const results = await Promise.all(userInvestments.map(async (inv) => {
@@ -408,26 +419,36 @@ async function updateSummary() {
             if (card && totalValForPeriod > 0) {
                 const weightedPct = weightedSum / totalValForPeriod;
                 
-                // Deduplicate logic
-                const combo = `${sDate}_${weightedPct.toFixed(4)}`;
-                if (seenDashCombos.has(combo)) {
-                    card.style.display = 'none';
-                    return;
+                // Deduplicate logic - Skip for Daily to ensure visibility
+                if (p.key !== 'daily') {
+                    const combo = `${sDate}_${weightedPct.toFixed(4)}`;
+                    if (seenDashCombos.has(combo)) {
+                        card.style.display = 'none';
+                        return;
+                    }
+                    seenDashCombos.add(combo);
                 }
-                seenDashCombos.add(combo);
+
 
                 const pSign = weightedPct >= 0 ? '+' : '-';
-                document.getElementById(`portfolio${p.id}Percentage`).textContent = `${pSign}${Math.abs(weightedPct).toFixed(2)}% (₹${pSign}${Math.abs(totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
-                document.getElementById(`portfolio${p.id}Percentage`).className = `summary-value ${weightedPct >= 0 ? 'positive' : 'negative'}`;
+                const portfolioValEl = document.getElementById(`portfolio${p.id}Percentage`);
+                if (portfolioValEl) {
+                    portfolioValEl.textContent = `${pSign}${Math.abs(weightedPct).toFixed(2)}% (₹${pSign}${Math.abs(totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
+                    portfolioValEl.className = `minicard-value`;
+                }
+
+
                 
                 const label = document.getElementById(`label${p.id}`);
                 const original = label.getAttribute('data-original-label') || label.textContent;
                 if (!label.getAttribute('data-original-label')) label.setAttribute('data-original-label', original);
-                label.innerHTML = `<div class="summary-label-main">${p.key === 'daily' ? `Last Change (As on ${eDate})` : `${original} (Since ${sDate})`}</div>`;
+                label.innerHTML = `${p.key === 'daily' ? `Last Change (As on ${eDate})` : `${original} (Since ${sDate})`}`;
                 
-                card.classList.remove('border-positive', 'border-negative');
+                card.classList.remove('status-positive', 'status-negative', 'border-positive', 'border-negative');
+                card.classList.add(weightedPct >= 0 ? 'status-positive' : 'status-negative');
                 card.classList.add(weightedPct >= 0 ? 'border-positive' : 'border-negative');
                 card.style.display = 'flex';
+
             } else if (card) {
                 card.style.display = 'none';
             }
@@ -455,17 +476,17 @@ async function updateSummary() {
             if (data.totalVal > 0) {
                 const weightedPct = data.weightedSum / data.totalVal;
                 const pSign = weightedPct >= 0 ? '+' : '-';
-                const card = document.createElement('div');
-                card.className = `summary-card dynamic-yearly-card ${weightedPct >= 0 ? 'border-positive' : 'border-negative'}`;
-                card.innerHTML = `
-                    <div class="summary-value ${weightedPct >= 0 ? 'positive' : 'negative'}">
-                        ${pSign}${Math.abs(weightedPct).toFixed(2)}% (₹${pSign}${Math.abs(data.totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})
-                    </div>
-                    <div class="summary-label">
-                        <div class="summary-label-main">${year === curYearStr ? 'Current Year' : year} (Since ${data.sDate})</div>
-                    </div>
-                `;
-                summaryContainer.appendChild(card);
+                const cardHTML = getSummaryCardHTML(
+                    `${year === curYearStr ? 'Current Year' : year} (Since ${data.sDate})`,
+                    '',
+                    weightedPct,
+                    data.totalAmt,
+                    { extraClass: 'dynamic-yearly-card' }
+                );
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = cardHTML;
+                summaryContainer.appendChild(tempDiv.firstElementChild);
+
             }
         });
     } finally {
@@ -562,7 +583,7 @@ async function displayGroups() {
                         </div>
                     </div>
                     
-                    <div class="group-stats">
+                    <div class="minicard-scroller">
                         ${getSummaryCardHTML('Total Investment', '', undefined, stats.totalInvestment, { isNeutral: true })}
                         ${getSummaryCardHTML(`Value (As on ${formatDate(stats.latestNAVDate)})`, '', undefined, stats.currentValue)}
                         ${getSummaryCardHTML(`Profit (As on ${formatDate(stats.latestNAVDate)})`, '', (stats.totalReturns / stats.totalInvestment * 100), stats.totalReturns)}

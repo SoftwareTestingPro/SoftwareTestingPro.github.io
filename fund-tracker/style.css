@@ -119,15 +119,15 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
-        /* Unified Scroller System */
-        .summary-stats, .performance-grid, .group-stats {
+        /* Unified Scroller System - Compact */
+        .minicard-scroller {
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
-            gap: 12px;
-            margin-top: 10px;
-            margin-bottom: 0px;
-            padding: 2px 2px 4px 2px;
+            gap: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            padding: 2px 2px 8px 2px;
             scroll-snap-type: x mandatory;
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) #f0f0f0;
@@ -135,7 +135,7 @@
             transition: max-height 0.4s ease, opacity 0.3s ease;
         }
 
-        .performance-grid.collapsed {
+        .minicard-scroller.collapsed {
             max-height: 0;
             opacity: 0;
             margin-top: 0;
@@ -144,23 +144,17 @@
             padding: 0;
         }
 
-        /* Standardized Scrollbar Styles */
-        .summary-stats::-webkit-scrollbar,
-        .performance-grid::-webkit-scrollbar,
-        .group-stats::-webkit-scrollbar {
-            height: 6px;
+        /* Standardized Scrollbar Styles - Even More Compact */
+        .minicard-scroller::-webkit-scrollbar {
+            height: 4px;
         }
 
-        .summary-stats::-webkit-scrollbar-track,
-        .performance-grid::-webkit-scrollbar-track,
-        .group-stats::-webkit-scrollbar-track {
+        .minicard-scroller::-webkit-scrollbar-track {
             background: #f1f3f4;
             border-radius: 10px;
         }
 
-        .summary-stats::-webkit-scrollbar-thumb,
-        .performance-grid::-webkit-scrollbar-thumb,
-        .group-stats::-webkit-scrollbar-thumb {
+        .minicard-scroller::-webkit-scrollbar-thumb {
             background: var(--primary-color);
             border-radius: 10px;
         }
@@ -174,38 +168,8 @@
             transform: rotate(-180deg);
         }
 
-        .performance-card {
-            background: white;
-            border: 1px solid #f0f1f2;
-            color: #333;
-            padding: 10px 15px;
-            border-radius: 12px;
-            text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            flex: 0 0 auto;
-            min-width: 140px;
-            width: auto;
-            scroll-snap-align: start;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        }
+        /* Legacy performance-card removed */
 
-        .performance-card .small {
-            white-space: nowrap;
-        }
-
-        .performance-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .performance-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
 
         .positive {
             color: #137333;
@@ -270,95 +234,81 @@
             border-radius: 8px 8px 0 0;
         }
 
-        .summary-stats {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 5px 2px 5px 2px;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) #f0f0f0;
-            -webkit-overflow-scrolling: touch;
-        }
+        /* Duplicate removed */
 
 
 
 
-        .summary-card {
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 12px;
-            padding: 8px 18px; /* Approx 1.5x relative to minicard */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            border: 1px solid #f0f1f2;
+
+        /* Unified Minicard Component - More Compact */
+        .minicard {
             flex: 0 0 auto;
-            min-width: 157px; /* 1.5 * 105px */
-            width: auto;
-            scroll-snap-align: start;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 1px solid #f0f1f2;
+            min-width: 105px;
+            text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
-            transform: translateZ(0);
-            backface-visibility: hidden;
+            scroll-snap-align: start;
         }
 
-        .summary-card.main-stats {
-            /* Handled via performance borders */
-        }
-        
-        .border-positive { 
-            border: 1.5px solid #137333 !important; 
-            background: #f8fff9 !important; /* Light for large group/fund containers */
-        }
-        .border-negative { 
-            border: 1.5px solid var(--danger-color) !important; 
-            background: #fffafa !important; /* Light for large group/fund containers */
+        .minicard:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        /* Specific deeper tints for top Summary Cards */
-        .summary-card.border-positive {
-            background: #e2f6ea !important;
-            border: 1px solid #137333 !important;
-        }
-        .summary-card.border-positive .summary-value { color: #137333; }
-
-        .summary-card.border-negative {
-            background: #ffebeb !important;
-            border: 1px solid var(--danger-color) !important;
-        }
-        .summary-card.border-negative .summary-value { color: var(--danger-color); }
-
-
-        .summary-value {
-            font-size: 1.25rem; /* 1.5 * 0.85rem */
+        /* Minicard Internal Elements - Reduced Sizes */
+        .minicard-value {
+            font-size: 0.85rem;
             font-weight: 700;
             display: block;
             line-height: 1.2;
-            color: var(--dark-color);
-            word-wrap: normal;
             white-space: nowrap;
         }
 
-        .summary-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 4px;
-        }
-
-        .summary-label-main {
-            font-size: 0.9rem; /* 1.5 * 0.6rem */
+        .minicard-label {
+            font-size: 0.6rem;
             color: #5f6368;
             display: block;
             text-transform: uppercase;
             font-weight: 700;
-            letter-spacing: 0.3px;
-            line-height: 1.2;
+            letter-spacing: 0.2px;
+            margin-top: 3px;
         }
+
+
+        /* State Modifiers */
+        .status-positive, .border-positive { 
+            border: 1.5px solid #137333 !important; 
+            background: #e2f6ea !important; 
+        }
+        .status-positive .minicard-value, .border-positive .minicard-value { 
+            color: #137333 !important; 
+        }
+
+        .status-negative, .border-negative { 
+            border: 1.5px solid var(--danger-color) !important; 
+            background: #ffebeb !important; 
+        }
+        .status-negative .minicard-value, .border-negative .minicard-value { 
+            color: var(--danger-color) !important; 
+        }
+
+        .status-neutral {
+            border: 1.5px solid #bdc1c6 !important;
+            background: #f8f9fa !important;
+        }
+        .status-neutral .minicard-value {
+            color: #202124 !important;
+        }
+
+
+        /* Legacy summary-card related styles removed */
+
 
         .toast-container {
             position: fixed;
@@ -591,11 +541,8 @@
             margin: 0;
         }
 
-        .group-stats {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 0px;
-        }
+        /* Handled via Unified Scroller System */
+
 
         .group-fund-list {
             margin: 0;
@@ -633,26 +580,7 @@
             gap: 4px;
         }
 
-        .group-stat {
-            text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            border: 1px solid #f0f1f2;
-        }
 
-        .group-stat-value {
-            font-size: 1.15rem;
-            font-weight: 600; /* Reduced from 800 for better aesthetics */
-            color: var(--dark-color);
-        }
-
-        .group-stat-label {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-top: 4px;
-            font-weight: 500;
-        }
 
         .group-funds {
             margin-top: 5px;
@@ -735,76 +663,12 @@
             width: 100%;
         }
 
-        .minicard-scroller {
-            display: flex;
-            overflow-x: auto;
-            gap: 6px;
-            margin-top: 8px;
-            padding-bottom: 8px; /* Added space for scrollbar */
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) #f0f0f0;
-            -webkit-overflow-scrolling: touch;
-        }
+        /* Handled via Unified Scroller System */
 
-        .minicard-scroller::-webkit-scrollbar {
-            height: 4px;
-        }
-        
-        .minicard-scroller::-webkit-scrollbar-track {
-            background: #f0f0f0;
-            border-radius: 10px;
-        }
-        
-        .minicard-scroller::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 10px;
-        }
 
-        .minicard {
-            flex: 0 0 auto;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 5px 12px;
-            border-radius: 8px;
-            border: 1px solid #f0f1f2;
-            min-width: 105px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .minicard-value {
-            font-size: 0.85rem;
-            font-weight: 700;
-            display: block;
-            line-height: 1.2;
-        }
-
-        .minicard-label {
-            font-size: 0.6rem;
-            color: #5f6368;
-            display: block;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.2px;
-            margin-top: 3px;
-        }
-
-        /* Themed Mini-Cards */
-        .minicard.positive { 
-            border: 1px solid #137333 !important; 
-            background: #e2f6ea !important; /* Slightly darker than parent group-fund-item */
-        }
-        .minicard.positive .minicard-value { color: #137333; }
-
-        .minicard.negative { 
-            border: 1px solid var(--danger-color) !important; 
-            background: #ffebeb !important; /* Slightly darker than parent group-fund-item */
-        }
-        .minicard.negative .minicard-value { color: var(--danger-color); }
-
+        /* Legacy overrides removal */
         .minicard.neutral { 
-            border: 1px solid #bdc1c6; 
+            border: 1.5px solid #bdc1c6; 
         }
         .minicard.neutral .minicard-value { color: #202124; }
 
@@ -1412,9 +1276,6 @@
             }
         }
         @media (max-width: 1024px) {
-            .summary-stats {
-                grid-template-columns: repeat(3, 1fr);
-            }
             .add-fund-grid {
                 grid-template-columns: 1fr 1fr;
             }
@@ -1436,17 +1297,6 @@
                 flex-direction: column;
                 gap: 15px;
             }
-            .summary-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            .summary-card {
-                padding: 15px 10px;
-                min-height: 85px;
-            }
-            .summary-value {
-                font-size: 1.1rem;
-            }
             .add-fund-grid {
                 grid-template-columns: 1fr;
             }
@@ -1455,9 +1305,7 @@
             }
         }
         @media (max-width: 480px) {
-            .summary-card {
-                flex: 1 1 100%;
-            }
+
             .fund-title {
                 font-size: 1.05rem;
             }
@@ -1679,29 +1527,31 @@
 
 /* Media Queries for Mobile Responsiveness */
 @media (max-width: 768px) {
-    .summary-stats, .performance-grid {
-        gap: 10px;
-        padding-bottom: 10px;
+    .minicard-scroller {
+        gap: 6px;
+        padding-bottom: 8px;
     }
     
-    .summary-card, .performance-card {
-        min-width: 130px;
-        padding: 8px 12px;
+    .minicard {
+        min-width: 95px;
+        padding: 4px 8px;
     }
     
-    .summary-value, .performance-value {
-        font-size: 1.05rem;
+    .minicard-value {
+        font-size: 0.75rem;
     }
     
     .header-section h1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 }
 
+
 @media (max-width: 480px) {
-    .summary-card, .performance-card {
-        min-width: 120px;
+    .minicard {
+        min-width: 85px;
     }
+
     
     .main-container {
         padding: 10px;
@@ -1732,19 +1582,6 @@
 
 /* Group scroller styles handled globally above */
 
-.group-stat {
-    /* Inherits from summary-card by being visually identical */
-    background: white;
-    border: 1px solid #f0f1f2;
-    padding: 15px 20px;
-    border-radius: 12px;
-    text-align: center;
-    flex: 0 0 auto;
-    min-width: 160px;
-    scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
+/* Group stat legacy removed */
+
 

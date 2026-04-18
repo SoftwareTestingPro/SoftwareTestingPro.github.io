@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mutual Fund Tracker</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.0">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
@@ -86,54 +86,56 @@
             </div>
 
             <!-- Summary Statistics -->
-            <div class="summary-stats" id="summaryStats">
-                <div class="summary-card main-stats">
-                    <div class="summary-value" id="totalInvestment">₹0</div>
-                    <div class="summary-label">Total Investment</div>
+            <div class="minicard-scroller" id="summaryStats">
+                <div class="minicard status-neutral border-positive">
+                    <div class="minicard-value" id="totalInvestment">₹0</div>
+                    <div class="minicard-label">Total Investment</div>
                 </div>
-                <div class="summary-card main-stats">
-                    <div class="summary-value" id="currentValue">₹0</div>
-                    <div class="summary-label">Current Value</div>
+                <div class="minicard status-neutral border-positive">
+                    <div class="minicard-value" id="currentValue">₹0</div>
+                    <div class="minicard-label">Current Value</div>
                 </div>
-                <div class="summary-card main-stats">
-                    <div class="summary-value" id="totalReturnsPercentage">0%</div>
-                    <div class="summary-label">Total Returns</div>
+                <div class="minicard status-neutral border-positive">
+                    <div class="minicard-value" id="totalReturnsPercentage">0%</div>
+                    <div class="minicard-label">Total Returns</div>
                 </div>
-                <div class="summary-card main-stats">
-                    <div class="summary-value" id="cagrValue">0%</div>
-                    <div class="summary-label">XIRR (Annual)</div>
+                <div class="minicard status-neutral border-positive">
+                    <div class="minicard-value" id="cagrValue">0%</div>
+                    <div class="minicard-label">XIRR (Annual)</div>
                 </div>
 
                 <!-- Periodic Performance Summary -->
-                <div class="summary-card" id="cardDaily" style="display: none;">
-                    <div class="summary-value" id="portfolioDailyPercentage">0%</div>
-                    <div class="summary-label" id="labelDaily">Yesterday</div>
+                <div class="minicard" id="cardDaily" style="display: none;">
+                    <div class="minicard-value" id="portfolioDailyPercentage">0%</div>
+                    <div class="minicard-label" id="labelDaily">Yesterday</div>
                 </div>
-                <div class="summary-card" id="cardWeekly" style="display: none;">
-                    <div class="summary-value" id="portfolioWeeklyPercentage">0%</div>
-                    <div class="summary-label" id="labelWeekly">1 Week</div>
+                <div class="minicard" id="cardWeekly" style="display: none;">
+                    <div class="minicard-value" id="portfolioWeeklyPercentage">0%</div>
+                    <div class="minicard-label" id="labelWeekly">1 Week</div>
                 </div>
-                <div class="summary-card" id="cardFifteenDays" style="display: none;">
-                    <div class="summary-value" id="portfolioFifteenDaysPercentage">0%</div>
-                    <div class="summary-label" id="labelFifteenDays">15 Days</div>
+                <div class="minicard" id="cardFifteenDays" style="display: none;">
+                    <div class="minicard-value" id="portfolioFifteenDaysPercentage">0%</div>
+                    <div class="minicard-label" id="labelFifteenDays">15 Days</div>
                 </div>
-                <div class="summary-card" id="cardMonthly" style="display: none;">
-                    <div class="summary-value" id="portfolioMonthlyPercentage">0%</div>
-                    <div class="summary-label" id="labelMonthly">1 Month</div>
+                <div class="minicard" id="cardMonthly" style="display: none;">
+                    <div class="minicard-value" id="portfolioMonthlyPercentage">0%</div>
+                    <div class="minicard-label" id="labelMonthly">1 Month</div>
                 </div>
-                <div class="summary-card" id="cardQuarterly" style="display: none;">
-                    <div class="summary-value" id="portfolioQuarterlyPercentage">0%</div>
-                    <div class="summary-label" id="labelQuarterly">3 Months</div>
+                <div class="minicard" id="cardQuarterly" style="display: none;">
+                    <div class="minicard-value" id="portfolioQuarterlyPercentage">0%</div>
+                    <div class="minicard-label" id="labelQuarterly">3 Months</div>
                 </div>
-                <div class="summary-card" id="cardHalfYearly" style="display: none;">
-                    <div class="summary-value" id="portfolioHalfYearlyPercentage">0%</div>
-                    <div class="summary-label" id="labelHalfYearly">6 Months</div>
+                <div class="minicard" id="cardHalfYearly" style="display: none;">
+                    <div class="minicard-value" id="portfolioHalfYearlyPercentage">0%</div>
+                    <div class="minicard-label" id="labelHalfYearly">6 Months</div>
                 </div>
-                <div class="summary-card" id="cardYearly" style="display: none;">
-                    <div class="summary-value" id="portfolioYearlyPercentage">0%</div>
-                    <div class="summary-label" id="labelYearly">1 Year</div>
+                <div class="minicard" id="cardYearly" style="display: none;">
+                    <div class="minicard-value" id="portfolioYearlyPercentage">0%</div>
+                    <div class="minicard-label" id="labelYearly">1 Year</div>
                 </div>
             </div>
+
+
 
             <!-- Add Fund Section -->
             <div class="row mb-4">
@@ -287,10 +289,10 @@
         </div>
     </div>
 
-    <script src="js/api-manager.js"></script>
-    <script src="js/calculations.js"></script>
-    <script src="js/ui-renderer.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/api-manager.js?v=2.1"></script>
+    <script src="js/calculations.js?v=2.1"></script>
+    <script src="js/ui-renderer.js?v=2.1"></script>
+    <script src="js/app.js?v=2.1"></script>
 </body>
 
 </html>

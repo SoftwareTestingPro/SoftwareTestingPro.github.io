@@ -72,6 +72,9 @@ async function getFromDB(key, storeName = STORE_NAME) {
 const NAVManager = {
     promises: new Map(),
     sessionCache: new Map(),
+    queue: [],
+    activeCount: 0,
+    MAX_CONCURRENCY: 2, // Safe concurrency limit
     
     async getNAV(schemeCode, forceRefresh = false) {
         // 1. Session Memory Cache (Fastest) - 1 hour freshness
@@ -94,28 +97,8 @@ const NAVManager = {
                     }
                 }
 
-                // 4. API Fetching
-                const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), 10000);
-                const response = await fetch(`https://api.mfapi.in/mf/${schemeCode}`, { signal: controller.signal });
-                clearTimeout(timer);
-                
-                if (!response.ok) throw new Error('API Request Failed');
-                const rawData = await response.json();
-                
-                if (!rawData.data || rawData.data.length === 0) throw new Error('Empty API Response');
-
-                const result = {
-                    nav: parseFloat(rawData.data[0].nav),
-                    date: rawData.data[0].date,
-                    data: rawData.data
-                };
-
-                const payload = { data: result, timestamp: Date.now() };
-                this.sessionCache.set(schemeCode, payload);
-                await saveToDB(schemeCode, payload, NAV_STORE_NAME);
-                
-                return result;
+                // 4. Concurrency Controlled Network Fetch
+                return await this.enqueueRequest(schemeCode);
             } catch (err) {
                 console.warn(`NAVManager: Using stale/fallback for ${schemeCode}`, err);
                 const fallback = await getFromDB(schemeCode, NAV_STORE_NAME);
@@ -128,6 +111,51 @@ const NAVManager = {
 
         this.promises.set(schemeCode, fetchPromise);
         return fetchPromise;
+    },
+
+    async enqueueRequest(schemeCode) {
+        return new Promise((resolve, reject) => {
+            this.queue.push({ schemeCode, resolve, reject });
+            this.processQueue();
+        });
+    },
+
+    async processQueue() {
+        if (this.activeCount >= this.MAX_CONCURRENCY || this.queue.length === 0) return;
+
+        const { schemeCode, resolve, reject } = this.queue.shift();
+        this.activeCount++;
+
+        try {
+            // Safety delay between requests
+            await new Promise(r => setTimeout(r, 350));
+
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 12000);
+            const response = await fetch(`https://api.mfapi.in/mf/${schemeCode}`, { signal: controller.signal });
+            clearTimeout(timer);
+
+            if (!response.ok) throw new Error(`API Error: ${response.status}`);
+            const rawData = await response.json();
+            
+            if (!rawData.data || rawData.data.length === 0) throw new Error('Empty API Response');
+
+            const result = {
+                nav: parseFloat(rawData.data[0].nav),
+                date: rawData.data[0].date,
+                data: rawData.data
+            };
+
+            const payload = { data: result, timestamp: Date.now() };
+            await saveToDB(schemeCode, payload, NAV_STORE_NAME);
+            this.sessionCache.set(schemeCode, payload);
+            resolve(result);
+        } catch (err) {
+            reject(err);
+        } finally {
+            this.activeCount--;
+            this.processQueue();
+        }
     }
 };
 
