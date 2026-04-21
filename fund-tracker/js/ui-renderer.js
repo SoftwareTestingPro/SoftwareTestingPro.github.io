@@ -22,7 +22,7 @@ function formatDate(dateString) {
  * Handles both summary-card and minicard visuals
  */
 function generateCardHTML(title, valueHTML, options = {}) {
-    const { 
+    const {
         status = 'neutral', // 'positive', 'negative', 'neutral'
         id = '',
         valueId = '',
@@ -31,7 +31,7 @@ function generateCardHTML(title, valueHTML, options = {}) {
 
     const statusClass = `status-${status}`;
     const borderClass = (status === 'positive' || status === 'neutral') ? 'border-positive' : (status === 'negative' ? 'border-negative' : '');
-    
+
     return `
         <div class="minicard ${statusClass} ${borderClass} ${extraClass}" ${id ? `id="${id}"` : ''}>
             <div class="minicard-value" ${valueId ? `id="${valueId}"` : ''}>${valueHTML}</div>
@@ -50,7 +50,7 @@ function getSummaryCardHTML(title, subLabel, percentage, amount, options = {}) {
     const effectivePct = options.percentage !== undefined ? options.percentage : percentage;
     const isPositive = effectivePct >= 0 || (effectivePct === undefined && (amount >= 0 || amount === undefined));
     const status = isNeutral ? 'neutral' : (isPositive ? 'positive' : 'negative');
-    
+
     let valueHTML = '';
     const displaySign = isPositive ? '+' : '-';
     const absAmt = amount !== undefined ? Math.abs(amount).toLocaleString(undefined, { maximumFractionDigits: 0 }) : '';
@@ -78,10 +78,10 @@ function getMiniCardHTML(title, amount, options = {}) {
     const isPositive = statePct >= 0;
     const status = isPositive ? 'positive' : 'negative';
     const displaySign = isPositive ? '+' : '-';
-    
+
     const absAmt = amount !== undefined ? Math.abs(amount).toLocaleString(undefined, { maximumFractionDigits: 0 }) : '';
     const absPct = percentage !== undefined ? Math.abs(percentage).toFixed(2) : '';
-    
+
     let valueHTML = '';
     if (percentage !== undefined && amount !== undefined) {
         valueHTML = `${displaySign}${absPct}% (₹${displaySign}${absAmt})`;
@@ -96,8 +96,8 @@ function getMiniCardHTML(title, amount, options = {}) {
 
 
 // Global UI Helpers
-function showLoading() { document.getElementById('loadingSpinner').style.display = 'block'; }
-function hideLoading() { document.getElementById('loadingSpinner').style.display = 'none'; }
+function showLoading() { const el = document.getElementById('loadingSpinner'); if (el) el.style.display = 'block'; }
+function hideLoading() { const el = document.getElementById('loadingSpinner'); if (el) el.style.display = 'none'; }
 
 function showToast(message, type = 'info') {
     const toastContainer = document.getElementById('toastContainer');
@@ -165,7 +165,7 @@ function updateLoadingText(text) {
 function togglePerformanceGrid(id) {
     const grid = document.getElementById(id);
     const trigger = event.currentTarget || document.querySelector(`[onclick*="${id}"]`);
-    
+
     if (grid) grid.classList.toggle('collapsed');
     if (trigger) {
         trigger.classList.toggle('collapsed');
@@ -180,7 +180,12 @@ function togglePerformanceGrid(id) {
 async function displayFunds() {
     const container = document.getElementById('fundsContainer');
     if (userInvestments.length === 0) {
-        container.innerHTML = `<div class="empty-state"><h4>No Funds Added Yet</h4></div>`;
+        container.innerHTML = `
+            <div class="empty-state" style="width: 100%; text-align: center; padding: 40px; opacity: 0.6;">
+                <i class="bi bi-inbox" style="font-size: 3rem; margin-bottom: 16px; display: block;"></i>
+                <h4>No Funds Added Yet</h4>
+                <p>Add your first investment above to start tracking performance.</p>
+            </div>`;
         return;
     }
 
@@ -191,7 +196,7 @@ async function displayFunds() {
             try {
                 const navDataRes = await getCurrentNAV(investment.schemeCode);
                 const currentNAV = navDataRes.nav;
-                
+
                 // Effective logic for pre-inception funds
                 let effectiveUnits = investment.units;
                 let effectiveNavStr = investment.nav;
@@ -208,7 +213,7 @@ async function displayFunds() {
                         const [fd, fm, fy] = sortedHistory[0].date.split('-');
                         const firstNavDate = new Date(fy, fm - 1, fd);
                         const invDate = new Date(investment.investmentDate);
-                        
+
                         if (invDate < firstNavDate) {
                             const inceptionNav = parseFloat(sortedHistory[0].nav);
                             effectiveUnits = investment.investmentAmount / inceptionNav;
@@ -216,29 +221,35 @@ async function displayFunds() {
                             effectiveDateStr = sortedHistory[0].date.split('-').reverse().join('-');
                         }
                     }
-                } catch (e) {}
+                } catch (e) { }
 
                 const currentValue = effectiveUnits * currentNAV;
                 const returns = currentValue - investment.investmentAmount;
                 const returnsPct = (returns / investment.investmentAmount) * 100;
-                
+
                 const cagr = await calculateFundCAGR(investment, currentNAV);
                 const performance = await calculatePerformance(investment, currentNAV);
 
                 const performanceItems = [];
                 const labels = { daily: 'Yesterday', weekly: 'Last 7 Days', fifteenDays: 'Last 15 Days', monthly: 'Last 1 Month', quarterly: 'Last 3 Months', halfYearly: 'Last 6 Months', yearly: 'Last 1 Year' };
-                
+
                 if (performance?.periodic) {
                     Object.entries(labels).forEach(([key, label]) => {
                         const data = performance.periodic[key];
                         if (data) {
                             const startD = formatDate(data.startDate.split('-').reverse().join('-'));
                             const endD = formatDate(data.endDate.split('-').reverse().join('-'));
-                            performanceItems.push({ label, subLabel: key === 'daily' ? `(${endD})` : `(Since ${startD})`, value: data.value, startNAV: data.startNAV, endNAV: data.endNAV });
+                            let finalLabel = label;
+                            if (key === 'daily') {
+                                const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                const eParts = data.endDate.split('-');
+                                finalLabel = `Last change(${eParts[0]} ${monthsShort[parseInt(eParts[1], 10) - 1]})`;
+                            }
+                            performanceItems.push({ label: finalLabel, subLabel: key === 'daily' ? `(${endD})` : `(Since ${startD})`, value: data.value, startNAV: data.startNAV, endNAV: data.endNAV });
                         }
                     });
                 }
-                
+
                 if (performance?.yearlyBreakdown) {
                     const curYearStr = String(new Date().getFullYear());
                     Object.entries(performance.yearlyBreakdown).sort((a, b) => b[0] - a[0]).forEach(([year, data]) => {
@@ -247,34 +258,60 @@ async function displayFunds() {
                     });
                 }
 
+                const nameLower = investment.schemeName.toLowerCase();
+                let planType = nameLower.includes('direct') ? 'Direct' : 'Regular';
+                let planOption = 'Growth';
+                if (nameLower.includes('idcw')) planOption = 'IDCW';
+                else if (nameLower.includes('dividend')) planOption = 'Dividend';
+                else if (nameLower.includes('payout')) planOption = 'Payout';
+
+                const planInfo = `${planType} - ${planOption}`;
+                const cleanTitle = investment.schemeName
+                    .replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '')
+                    .trim();
+
                 return `
-                    <div class="fund-card modern-added-fund ${returns >= 0 ? 'border-positive' : 'border-negative'}">
-                        <div class="fund-header">
-                            <div class="fund-info-main">
-                                <h5 class="fund-title">${investment.schemeName}</h5>
-                                <div class="fund-meta">
-                                    <span><i class="bi bi-calendar"></i> ${formatDate(investment.investmentDate)}</span>
-                                    <span><i class="bi bi-currency-rupee"></i> ${investment.investmentAmount.toLocaleString()}</span>
-                                    <span><i class="bi bi-layers"></i> ${investment.units.toFixed(3)} Units</span>
+                    <div class="playing-card ${returns >= 0 ? 'card-positive' : 'card-negative'}">
+                        <div class="card-content">
+                            <h5 class="card-title-v2" title="${investment.schemeName}">${cleanTitle}</h5>
+                            <div class="card-meta-v2 text-muted-v2">
+                                ${formatDate(investment.investmentDate)} • ${investment.units.toFixed(2)} Units • ${planInfo}
+                            </div>
+                            
+                            <div class="card-stats-grid">
+                                <div class="stat-box">
+                                    <span class="stat-label">Invested</span>
+                                    <span class="stat-value">₹${investment.investmentAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Value</span>
+                                    <span class="stat-value text-primary">₹${currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                                 </div>
                             </div>
-                            <div class="fund-actions">
-                                <button class="btn-icon" onclick="editFund('${investment.id}')"><i class="bi bi-pencil"></i></button>
-                                <button class="btn-icon" onclick="removeFund('${investment.id}')"><i class="bi bi-trash"></i></button>
-                                <button class="btn-icon expand-toggle-btn collapsed" onclick="togglePerformanceGrid('perf-${investment.id}')"><i class="bi bi-chevron-up"></i></button>
+                            
+                            <div class="card-main-stat">
+                                <div class="profit-amount ${returns >= 0 ? 'text-success' : 'text-danger'}">
+                                    ${returns >= 0 ? '+' : '-'}₹${Math.abs(returns).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                                </div>
+                                <div class="profit-badges">
+                                    <span class="modern-badge-v2 ${returns >= 0 ? 'success' : 'danger'}">${returns >= 0 ? '+' : ''}${returnsPct.toFixed(2)}%</span>
+                                    <span class="modern-badge-v2 info">XIRR ${cagr.toFixed(2)}%</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="fund-badges">
-                            <span class="modern-badge neutral">NAV: ₹${currentNAV.toFixed(2)}</span>
-                            <span class="modern-badge ${returns >= 0 ? 'success' : 'danger'}">₹${Math.abs(returns).toFixed(2)} (${returnsPct.toFixed(2)}%)</span>
-                            <span class="modern-badge info">XIRR: ${cagr.toFixed(2)}%</span>
-                        </div>
-                        <div class="minicard-scroller collapsed" id="perf-${investment.id}">
-                            ${getMiniCardHTML('Investment', investment.investmentAmount, { themePercentage: returnsPct })}
-                            ${getMiniCardHTML('Value', currentValue, { themePercentage: returnsPct })}
-                            ${getMiniCardHTML('Profit', returns, { percentage: returnsPct })}
-                            ${getMiniCardHTML('XIRR', undefined, { percentage: cagr })}
-                            ${performanceItems.map(item => getMiniCardHTML(item.label === 'Yesterday' ? `Last Change (As on ${navDataRes.date})` : item.label, (item.endNAV - item.startNAV) * investment.units, { percentage: item.value })).join('')}
+                            
+                            <div class="card-periodic-list">
+                                ${performanceItems.map(item => `
+                                    <div class="periodic-row-v2">
+                                        <span class="period-lbl">${item.label}</span>
+                                        <span class="period-val ${item.value >= 0 ? 'pos' : 'neg'}">${item.value > 0 ? '+' : ''}${item.value.toFixed(2)}%</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="card-actions-v2">
+                                <button class="btn-action-v2 view" onclick="editFund('${investment.id}')">Edit</button>
+                                <button class="btn-action-v2 delete" onclick="removeFund('${investment.id}')">Delete</button>
+                            </div>
                         </div>
                     </div>`;
             } catch (err) {
@@ -296,7 +333,10 @@ async function updateSummary() {
     isSummaryUpdating = true;
 
     try {
-        let totalInv = 0, totalVal = 0, flows = [];
+        let totalInv = 0, totalVal = 0, totalYTDStart = 0, flows = [];
+        const curYear = new Date().getFullYear();
+        const jan1 = new Date(curYear, 0, 1);
+
         const navResults = await Promise.all(userInvestments.map(async (inv) => {
             try {
                 const navData = await getCurrentNAV(inv.schemeCode);
@@ -307,26 +347,50 @@ async function updateSummary() {
         for (const inv of userInvestments) {
             const res = navResults.find(r => String(r.id) === String(inv.id));
             const cNav = res ? res.nav : 0;
-            
+
             let effectiveUnits = inv.units;
+            let historyData = null;
             try {
                 const history = await NAVManager.getNAV(inv.schemeCode);
-                if (history?.data?.length > 0) {
-                    const sorted = history.data.sort((a,b) => {
-                        const [d1,m1,y1] = a.date.split('-');
-                        const [d2,m2,y2] = b.date.split('-');
-                        return new Date(y1,m1-1,d1) - new Date(y2,m2-1,d2);
+                historyData = history?.data || [];
+                if (historyData.length > 0) {
+                    const sorted = [...historyData].sort((a, b) => {
+                        const [d1, m1, y1] = a.date.split('-');
+                        const [d2, m2, y2] = b.date.split('-');
+                        return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
                     });
-                    const [fd,fm,fy] = sorted[0].date.split('-');
-                    const firstDate = new Date(fy,fm-1,fd);
+                    const [fd, fm, fy] = sorted[0].date.split('-');
+                    const firstDate = new Date(fy, fm - 1, fd);
                     if (new Date(inv.investmentDate) < firstDate) {
                         effectiveUnits = inv.investmentAmount / parseFloat(sorted[0].nav);
                     }
                 }
-            } catch(e) {}
+            } catch (e) { }
 
             totalInv += inv.investmentAmount;
             totalVal += effectiveUnits * cNav;
+
+            // Global YTD Calculation - Ensures Parity
+            const invDate = new Date(inv.investmentDate);
+            if (invDate >= jan1) {
+                totalYTDStart += inv.investmentAmount;
+            } else if (historyData) {
+                // Find NAV on or before Jan 1
+                let jan1Nav = 0;
+                const sorted = [...historyData].sort((a, b) => {
+                    const [d1, m1, y1] = a.date.split('-');
+                    const [d2, m2, y2] = b.date.split('-');
+                    return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                });
+                for (const h of sorted) {
+                    const [d, m, y] = h.date.split('-');
+                    if (new Date(y, m - 1, d) <= jan1) jan1Nav = parseFloat(h.nav);
+                }
+                if (jan1Nav === 0 && sorted.length > 0) jan1Nav = parseFloat(sorted[0].nav);
+                totalYTDStart += jan1Nav * effectiveUnits;
+            } else {
+                totalYTDStart += inv.investmentAmount;
+            }
 
             const [y, m, d] = inv.investmentDate.split('-');
             flows.push({ date: new Date(y, m - 1, d), amount: -inv.investmentAmount });
@@ -335,36 +399,6 @@ async function updateSummary() {
         const profit = totalVal - totalInv;
         const profitPct = totalInv > 0 ? (profit / totalInv) * 100 : 0;
         const xirr = calculatePortfolioXIRR(flows, totalVal);
-
-        // Update Main Cards
-        document.getElementById('totalInvestment').textContent = `₹${totalInv.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-        document.getElementById('currentValue').textContent = `₹${totalVal.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-        
-        const sign = profit >= 0 ? '+' : '-';
-        document.getElementById('totalReturnsPercentage').textContent = `${sign}${Math.abs(profitPct).toFixed(2)}% (₹${sign}${Math.abs(profit).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
-        document.getElementById('cagrValue').textContent = `${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%`;
-
-        // Update Colors/Borders
-        ['totalInvestment', 'currentValue', 'totalReturnsPercentage', 'cagrValue'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                const card = el.closest('.minicard');
-                if (card) {
-                    card.classList.remove('status-positive', 'status-negative', 'status-neutral', 'border-positive', 'border-negative');
-                    
-                    let status = 'neutral';
-                    if (id !== 'totalInvestment') {
-                        const val = (id === 'cagrValue') ? xirr : profit;
-                        status = val >= 0 ? 'positive' : 'negative';
-                    }
-                    
-                    card.classList.add(`status-${status}`);
-                    card.classList.add(status === 'negative' ? 'border-negative' : 'border-positive');
-                }
-            }
-        });
-
-
 
         // Contextual Dates
         const latestNAVDateRaw = navResults.reduce((latest, res) => {
@@ -375,120 +409,169 @@ async function updateSummary() {
         }, 'N/A');
         const numDate = latestNAVDateRaw !== 'N/A' ? latestNAVDateRaw.split('-').reverse().join('-') : 'N/A';
 
-        const labels = { 
-            'totalInvestment': 'Total Investment',
-            'currentValue': `Value (As on ${numDate})`, 
-            'totalReturnsPercentage': `Profit (As on ${numDate})`, 
-            'cagrValue': 'XIRR (Annual)' 
-        };
-        Object.entries(labels).forEach(([id, text]) => {
-            const el = document.getElementById(id);
-            if (!el) return;
-            const card = el.closest('.minicard');
-            const label = card ? card.querySelector('.minicard-label') : null;
-            if (label) label.textContent = text;
-        });
-
-
         // Periodic Portfolio Performance
         const results = await Promise.all(userInvestments.map(async (inv) => {
             const navRes = navResults.find(r => String(r.id) === String(inv.id));
-            if (navRes && navRes.nav > 0) return { inv, val: inv.units * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
+            if (navRes && navRes.nav > 0) {
+                let eUnits = inv.units;
+                try {
+                    const history = await NAVManager.getNAV(inv.schemeCode);
+                    if (history?.data?.length > 0) {
+                        const sorted = history.data.sort((a, b) => {
+                            const [d1, m1, y1] = a.date.split('-');
+                            const [d2, m2, y2] = b.date.split('-');
+                            return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                        });
+                        const [fd, fm, fy] = sorted[0].date.split('-');
+                        const fDate = new Date(fy, fm - 1, fd);
+                        if (new Date(inv.investmentDate) < fDate) {
+                            eUnits = inv.investmentAmount / parseFloat(sorted[0].nav);
+                        }
+                    }
+                } catch (e) { }
+
+                return { inv, eUnits, val: eUnits * navRes.nav, data: await calculatePerformance(inv, navRes.nav) };
+            }
             return null;
         }));
 
-        const periods = [{ key: 'daily', id: 'Daily' }, { key: 'weekly', id: 'Weekly' }, { key: 'fifteenDays', id: 'FifteenDays' }, { key: 'monthly', id: 'Monthly' }, { key: 'quarterly', id: 'Quarterly' }, { key: 'halfYearly', id: 'HalfYearly' }, { key: 'yearly', id: 'Yearly' }];
-        
-        const summaryContainer = document.getElementById('summaryStats');
-        summaryContainer.querySelectorAll('.dynamic-yearly-card').forEach(c => c.remove());
-
-        const seenDashCombos = new Set();
-        periods.forEach(p => {
-            let weightedSum = 0, totalValForPeriod = 0, totalAmt = 0, sDate = '', eDate = '';
-            results.forEach(res => {
-                if (res?.data?.periodic?.[p.key]) {
-                    const item = res.data.periodic[p.key];
-                    weightedSum += item.value * res.val;
-                    totalValForPeriod += res.val;
-                    totalAmt += (item.endNAV - item.startNAV) * res.inv.units;
-                    sDate = item.startDate; eDate = item.endDate;
+        // Find absolute latest NAV date across all results
+        let globalLatestDate = null;
+        let globalLatestDateStr = 'N/A';
+        results.forEach(res => {
+            if (res?.data?.periodic?.daily?.endDate) {
+                const [d, m, y] = res.data.periodic.daily.endDate.split('-');
+                const dt = new Date(y, m - 1, d);
+                if (!globalLatestDate || dt > globalLatestDate) {
+                    globalLatestDate = dt;
+                    globalLatestDateStr = res.data.periodic.daily.endDate;
                 }
-            });
-
-            const card = document.getElementById(`card${p.id}`);
-            if (card && totalValForPeriod > 0) {
-                const weightedPct = weightedSum / totalValForPeriod;
-                
-                // Deduplicate logic - Skip for Daily to ensure visibility
-                if (p.key !== 'daily') {
-                    const combo = `${sDate}_${weightedPct.toFixed(4)}`;
-                    if (seenDashCombos.has(combo)) {
-                        card.style.display = 'none';
-                        return;
-                    }
-                    seenDashCombos.add(combo);
-                }
-
-
-                const pSign = weightedPct >= 0 ? '+' : '-';
-                const portfolioValEl = document.getElementById(`portfolio${p.id}Percentage`);
-                if (portfolioValEl) {
-                    portfolioValEl.textContent = `${pSign}${Math.abs(weightedPct).toFixed(2)}% (₹${pSign}${Math.abs(totalAmt).toLocaleString(undefined, { maximumFractionDigits: 0 })})`;
-                    portfolioValEl.className = `minicard-value`;
-                }
-
-
-                
-                const label = document.getElementById(`label${p.id}`);
-                const original = label.getAttribute('data-original-label') || label.textContent;
-                if (!label.getAttribute('data-original-label')) label.setAttribute('data-original-label', original);
-                label.innerHTML = `${p.key === 'daily' ? `Last Change (As on ${eDate})` : `${original} (Since ${sDate})`}`;
-                
-                card.classList.remove('status-positive', 'status-negative', 'border-positive', 'border-negative');
-                card.classList.add(weightedPct >= 0 ? 'status-positive' : 'status-negative');
-                card.classList.add(weightedPct >= 0 ? 'border-positive' : 'border-negative');
-                card.style.display = 'flex';
-
-            } else if (card) {
-                card.style.display = 'none';
             }
         });
 
-        // Dynamic Yearly Breakdown Cards
+        const monthsS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        let lastChangeLabel = 'N/A';
+        if (globalLatestDateStr !== 'N/A') {
+            const parts = globalLatestDateStr.split('-');
+            lastChangeLabel = `${parts[0]} ${monthsS[parseInt(parts[1], 10) - 1]}`;
+        }
+
+        const periods = [
+            { key: 'daily', id: `Last change(${lastChangeLabel})` },
+            { key: 'weekly', id: 'Last 7 Days' },
+            { key: 'fifteenDays', id: 'Last 15 Days' },
+            { key: 'monthly', id: 'Last 1 Month' },
+            { key: 'quarterly', id: 'Last 3 Months' },
+            { key: 'halfYearly', id: 'Last 6 Months' },
+            { key: 'yearly', id: 'Last 1 Year' }
+        ];
+
+        const generatedPills = [];
+        periods.forEach(p => {
+            let totalDiff = 0, totalStartVal = 0;
+            results.forEach(res => {
+                const item = res?.data?.periodic?.[p.key];
+                if (item) {
+                    totalDiff += (item.endNAV - item.startNAV) * res.eUnits;
+                    totalStartVal += item.startNAV * res.eUnits;
+                }
+            });
+
+            if (totalStartVal > 0) {
+                const weightedPct = (totalDiff / totalStartVal) * 100;
+                generatedPills.push(`
+                    <div class="periodic-row-v2">
+                        <span class="period-lbl">${p.id}</span>
+                        <span class="period-val ${weightedPct >= 0 ? 'pos' : 'neg'}">${weightedPct > 0 ? '+' : ''}${weightedPct.toFixed(2)}%</span>
+                    </div>
+                `);
+            }
+        });
+
+        // Unified Yearly Breakdown (Current Year handled separately for 100% parity)
         const yearlyData = {};
         results.forEach(res => {
             if (res?.data?.yearlyBreakdown) {
                 Object.entries(res.data.yearlyBreakdown).forEach(([year, data]) => {
-                    if (!yearlyData[year]) yearlyData[year] = { weightedSum: 0, totalVal: 0, totalAmt: 0, sDate: '', eDate: '' };
-                    yearlyData[year].weightedSum += data.value * res.val;
-                    yearlyData[year].totalVal += res.val;
-                    yearlyData[year].totalAmt += (data.endNAV - data.startNAV) * res.inv.units;
-                    const fmt = (d) => `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
-                    if (!yearlyData[year].sDate) yearlyData[year].sDate = fmt(data.startDate);
-                    if (!yearlyData[year].eDate) yearlyData[year].eDate = fmt(data.endDate);
+                    if (year === String(curYear)) return; // Skip current year, we have it already
+                    if (!yearlyData[year]) yearlyData[year] = { totalDiff: 0, totalStartVal: 0 };
+                    yearlyData[year].totalDiff += (data.endNAV - data.startNAV) * res.eUnits;
+                    yearlyData[year].totalStartVal += data.startNAV * res.eUnits;
                 });
             }
         });
 
-        const curYearStr = String(new Date().getFullYear());
-        Object.keys(yearlyData).sort((a,b) => b - a).forEach(year => {
-            const data = yearlyData[year];
-            if (data.totalVal > 0) {
-                const weightedPct = data.weightedSum / data.totalVal;
-                const pSign = weightedPct >= 0 ? '+' : '-';
-                const cardHTML = getSummaryCardHTML(
-                    `${year === curYearStr ? 'Current Year' : year} (Since ${data.sDate})`,
-                    '',
-                    weightedPct,
-                    data.totalAmt,
-                    { extraClass: 'dynamic-yearly-card' }
-                );
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = cardHTML;
-                summaryContainer.appendChild(tempDiv.firstElementChild);
+        // Add Current Year separately using global logic
+        const ytdReturnPct = totalYTDStart > 0 ? ((totalVal - totalYTDStart) / totalYTDStart) * 100 : 0;
+        generatedPills.push(`
+            <div class="periodic-row-v2">
+                <span class="period-lbl">Current Year</span>
+                <span class="period-val ${ytdReturnPct >= 0 ? 'pos' : 'neg'}">${ytdReturnPct > 0 ? '+' : ''}${ytdReturnPct.toFixed(2)}%</span>
+            </div>
+        `);
 
+        Object.keys(yearlyData).sort((a, b) => b - a).forEach(year => {
+            const data = yearlyData[year];
+            if (data.totalStartVal > 0) {
+                const weightedPct = (data.totalDiff / data.totalStartVal) * 100;
+                generatedPills.push(`
+                    <div class="periodic-row-v2">
+                        <span class="period-lbl">${year}</span>
+                        <span class="period-val ${weightedPct >= 0 ? 'pos' : 'neg'}">${weightedPct > 0 ? '+' : ''}${weightedPct.toFixed(2)}%</span>
+                    </div>
+                `);
             }
         });
+
+        const oldestDate = userInvestments.reduce((min, inv) => {
+            const d = new Date(inv.investmentDate);
+            return d < min ? d : min;
+        }, new Date());
+        const monthsL = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const oldestDateStr = `${oldestDate.getDate()} ${monthsL[oldestDate.getMonth()]} ${oldestDate.getFullYear()}`;
+
+        const uniqueFundCount = new Set(userInvestments.map(i => i.schemeCode)).size;
+
+        const summaryHTML = `
+            <div class="playing-card ${profit >= 0 ? 'card-positive' : 'card-negative'}" style="margin: 0;">
+                <div class="card-content">
+                    <h5 class="card-title-v2" title="Portfolio Summary">Portfolio Summary</h5>
+                    <div class="card-meta-v2 text-muted-v2" style="white-space: normal; height: auto;">
+                        Investment Since: ${oldestDateStr} • ${uniqueFundCount} Funds
+                    </div>
+                    
+                    <div class="card-stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">Invested</span>
+                            <span class="stat-value">₹${totalInv.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Value</span>
+                            <span class="stat-value text-primary">₹${totalVal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-main-stat">
+                        <div class="profit-amount ${profit >= 0 ? 'text-success' : 'text-danger'}">
+                            ${profit >= 0 ? '+' : '-'}₹${Math.abs(profit).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        </div>
+                        <div class="profit-badges">
+                            <span class="modern-badge-v2 ${profit >= 0 ? 'success' : 'danger'}">${profit >= 0 ? '+' : ''}${profitPct.toFixed(2)}%</span>
+                            <span class="modern-badge-v2 info">XIRR ${xirr.toFixed(2)}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-periodic-list">
+                        ${generatedPills.join('')}
+                    </div>
+                </div>
+            </div>`;
+
+
+        const summaryContainer = document.getElementById('summaryStatsContainer');
+        if (summaryContainer) {
+            summaryContainer.innerHTML = summaryHTML;
+        }
     } finally {
         isSummaryUpdating = false;
     }
@@ -498,28 +581,21 @@ async function updateSummary() {
  * Render groups view
  */
 async function displayGroups() {
-    const container = document.getElementById('fundsContainer');
+    const container = document.getElementById('groupsContainer');
     if (fundGroups.length === 0) {
-        container.innerHTML = '<div class="empty-state">No Groups Found</div>';
+        container.innerHTML = '';
         return;
     }
 
     try {
         showLoading();
-        let filteredGroups = currentGroupFilter === 'all' ? [...fundGroups] : fundGroups.filter(g => g.autoType === currentGroupFilter || (currentGroupFilter === 'custom' && !g.isAutomated));
-        
-        if (currentGroupFilter === 'all') {
-            const custom = filteredGroups.filter(g => !g.isAutomated).sort((a, b) => a.name.localeCompare(b.name));
-            const automated = filteredGroups.filter(g => g.isAutomated).sort((a, b) => a.name.localeCompare(b.name));
-            filteredGroups = [...custom, ...automated];
-        } else {
-            filteredGroups.sort((a, b) => a.name.localeCompare(b.name));
-        }
-        
+        let filteredGroups = [...fundGroups].sort((a, b) => a.name.localeCompare(b.name));
+
+
         const groupsHTML = await Promise.all(filteredGroups.map(async (group) => {
             const stats = await calculateGroupStats(group.fundIds);
             const displayName = group.name.charAt(0).toUpperCase() + group.name.slice(1);
-            
+
             // Aggregate funds by schemeCode for the group view
             const aggregatedFunds = {};
             group.fundIds.forEach(fundId => {
@@ -545,59 +621,88 @@ async function displayGroups() {
                     const returns = fundStats.totalReturns;
                     const returnsPct = fundStats.totalInvestment > 0 ? (returns / fundStats.totalInvestment * 100) : 0;
 
+                    const nameLower = agg.schemeName.toLowerCase();
+                    let pType = nameLower.includes('direct') ? 'Direct' : 'Regular';
+                    let pOption = 'Growth';
+                    if (nameLower.includes('idcw')) pOption = 'IDCW';
+                    else if (nameLower.includes('dividend')) pOption = 'Dividend';
+                    else if (nameLower.includes('payout')) pOption = 'Payout';
+
+                    const cleanT = agg.schemeName
+                        .replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '')
+                        .trim();
+
                     return `
-                        <div class="group-fund-item ${returns >= 0 ? 'positive' : 'negative'}">
-                            <div class="group-fund-name-row d-flex align-items-center justify-content-between mb-2">
-                                <div class="d-flex align-items-center flex-grow-1">
-                                    <span style="font-weight: 500; color: #000; font-size: 0.95rem;">${agg.schemeName}</span>
-                                    ${agg.count >= 1 ? `<span class="modern-badge neutral small ms-2" style="white-space: nowrap;">${agg.count} Purchase Transaction${agg.count > 1 ? 's' : ''}</span>` : ''}
-                                </div>
-                                ${fundStats.cagr !== 0 ? `<span class="modern-badge ${fundStats.cagr >= 0 ? 'success' : 'danger'} small py-1" style="font-weight: 700; font-size: 0.8rem;">XIRR: ${fundStats.cagr.toFixed(2)}%</span>` : ''}
-                            </div>
-                            <div class="minicard-scroller">
-                                ${getMiniCardHTML('Investment', fundStats.totalInvestment, { themePercentage: returnsPct })}
-                                ${getMiniCardHTML('Value', fundStats.currentValue, { themePercentage: returnsPct })}
-                                ${getMiniCardHTML('Profit', returns, { percentage: returnsPct })}
-                                ${Object.values(fundStats.periodicReturns).map(p => getMiniCardHTML(p.label === 'Yesterday' ? `Last Change (As on ${p.endDate})` : `${p.label}`, p.amount, { percentage: p.percentage })).join('')}
+                        <div class="group-fund-mini" style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size: 0.8rem; font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${agg.schemeName}">${cleanT}</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 2px;">
+                                <span class="text-muted-v2">${agg.units.toFixed(2)} Units • ${pType} - ${pOption}</span>
+                                <span class="${returns >= 0 ? 'text-success' : 'text-danger'}">${returns >= 0 ? '+' : ''}${returnsPct.toFixed(2)}%</span>
                             </div>
                         </div>`;
-                } catch (e) { return `<div class="group-fund-item text-muted">Data unavailable</div>`; }
+                } catch (e) { return `<div class="group-fund-mini text-muted-v2" style="font-size: 0.8rem;">Data unavailable</div>`; }
             }));
 
+            const pctReturns = stats.totalInvestment > 0 ? (stats.totalReturns / stats.totalInvestment * 100) : 0;
             return `
-                <div class="fund-card group-container-card">
-                    <div class="group-header d-flex align-items-center justify-content-between flex-wrap">
-                        <div class="group-title-area d-flex align-items-center gap-2 flex-grow-1">
-                            <h4 class="group-title mb-0">${displayName}</h4>
-                            ${group.isAutomated ? '<span class="modern-badge neutral small"><i class="bi bi-robot"></i> Default</span>' : '<span class="modern-badge neutral small"><i class="bi bi-person"></i> Custom</span>'}
-                            <span class="modern-badge info small">${Object.keys(aggregatedFunds).length} Funds</span>
+                <div class="playing-card ${stats.totalReturns >= 0 ? 'card-positive' : 'card-negative'}">
+                    <div class="card-content">
+                        <h5 class="card-title-v2" title="${displayName}">${displayName}</h5>
+                        <div class="card-meta-v2 text-muted-v2">
+                            ${Object.keys(aggregatedFunds).length} Funds • ${group.isAutomated ? 'Auto' : 'Custom'}
                         </div>
-                        <div class="group-stats-badges d-flex align-items-center gap-2 mt-sm-0 mt-2">
-                            ${stats.cagr !== 0 ? `<span class="modern-badge ${stats.cagr >= 0 ? 'success' : 'danger'} group-xirr-badge">XIRR: ${stats.cagr.toFixed(2)}%</span>` : ''}
-                            <div class="group-actions ms-2">
-                                ${!group.isAutomated ? `
-                                    <button class="btn-icon" onclick="editGroupModal('${group.id}')"><i class="bi bi-pencil"></i></button>
-                                    <button class="btn-icon" onclick="deleteGroup('${group.id}')"><i class="bi bi-trash"></i></button>
-                                ` : ''}
+                        
+                        <div class="card-stats-grid">
+                            <div class="stat-box">
+                                <span class="stat-label">Invested</span>
+                                <span class="stat-value">₹${stats.totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Value</span>
+                                <span class="stat-value text-primary">₹${stats.currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="minicard-scroller">
-                        ${getSummaryCardHTML('Total Investment', '', undefined, stats.totalInvestment, { isNeutral: true })}
-                        ${getSummaryCardHTML(`Value (As on ${formatDate(stats.latestNAVDate)})`, '', undefined, stats.currentValue)}
-                        ${getSummaryCardHTML(`Profit (As on ${formatDate(stats.latestNAVDate)})`, '', (stats.totalReturns / stats.totalInvestment * 100), stats.totalReturns)}
-                        ${Object.values(stats.periodicReturns).map(p => getSummaryCardHTML(p.label === 'Yesterday' ? `Last Change (As on ${p.endDate})` : `${p.label} (Since ${p.startDate})`, '', p.percentage, p.amount)).join('')}
-                    </div>
-                    
-                    <div class="group-funds-header" onclick="togglePerformanceGrid('funds-${group.id}')">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h6 class="group-funds-title">Funds in this group (${Object.keys(aggregatedFunds).length})</h6>
-                            <i class="bi bi-chevron-up expand-toggle-btn collapsed"></i>
+                        
+                        <div class="card-main-stat">
+                            <div class="profit-amount ${stats.totalReturns >= 0 ? 'text-success' : 'text-danger'}">
+                                ${stats.totalReturns >= 0 ? '+' : '-'}₹${Math.abs(stats.totalReturns).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                            </div>
+                            <div class="profit-badges">
+                                <span class="modern-badge-v2 ${stats.totalReturns >= 0 ? 'success' : 'danger'}">${stats.totalReturns >= 0 ? '+' : ''}${pctReturns.toFixed(2)}%</span>
+                                <span class="modern-badge-v2 info">XIRR ${stats.cagr.toFixed(2)}%</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="group-funds collapsed" id="funds-${group.id}">
-                        ${groupFundsHTML.join('')}
+                        
+                        <div class="card-periodic-list">
+                            ${Object.values(stats.periodicReturns).map(p => {
+                let fLabel = p.label;
+                if (p.label === 'Yesterday') {
+                    const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    const dateSrc = p.endDate || stats.latestNAVDate;
+                    if (dateSrc) {
+                        const eParts = dateSrc.split('-');
+                        fLabel = `Last change(${eParts[0]} ${monthsShort[parseInt(eParts[1], 10) - 1]})`;
+                    }
+                }
+                return `
+                                <div class="periodic-row-v2">
+                                    <span class="period-lbl">${fLabel}</span>
+                                    <span class="period-val ${p.percentage >= 0 ? 'pos' : 'neg'}">${p.percentage > 0 ? '+' : ''}${p.percentage.toFixed(2)}%</span>
+                                </div>`;
+            }).join('')}
+                        </div>
+                        
+                        <div class="card-actions-v2">
+                            ${!group.isAutomated ? `
+                                <button class="btn-action-v2" onclick="editGroupModal('${group.id}')"><i class="bi bi-pencil"></i></button>
+                                <button class="btn-action-v2 delete" onclick="deleteGroup('${group.id}')"><i class="bi bi-trash"></i></button>
+                            ` : ''}
+                            <button class="btn-action-v2 view" onclick="togglePerformanceGrid('funds-${group.id}')"><i class="bi bi-collection"></i> Funds</button>
+                        </div>
+                        
+                        <div class="group-funds collapsed mt-3" id="funds-${group.id}" style="text-align: left; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px; max-height: 180px; overflow-y: auto;">
+                            ${groupFundsHTML.join('')}
+                        </div>
                     </div>
                 </div>`;
         }));
@@ -647,4 +752,505 @@ function updateGroupFilterUI() {
     `;
 
     filterRow.innerHTML = html;
+}
+/**
+ * Render research view with best/worst performers
+ */
+async function displayResearch() {
+    const container = document.getElementById('researchContainer');
+    if (!container) return;
+
+    if (userInvestments.length === 0) {
+        container.innerHTML = `<div class="empty-state" style="width: 100%; text-align: center; padding: 40px; opacity: 0.6;">
+            <i class="bi bi-search" style="font-size: 3rem; margin-bottom: 16px; display: block;"></i>
+            <h4>No Data for Research</h4>
+            <p>Add some funds first to see performance insights.</p>
+        </div>`;
+        return;
+    }
+
+    showLoading();
+    try {
+        // Aggregate multi-SIP investments into unique funds for research
+        const uniqueFundsMap = {};
+        userInvestments.forEach(inv => {
+            if (!uniqueFundsMap[inv.schemeCode]) {
+                uniqueFundsMap[inv.schemeCode] = {
+                    schemeCode: inv.schemeCode,
+                    schemeName: inv.schemeName,
+                    totalInv: 0,
+                    totalUnits: 0,
+                    ids: []
+                };
+            }
+            uniqueFundsMap[inv.schemeCode].totalInv += inv.investmentAmount;
+            uniqueFundsMap[inv.schemeCode].totalUnits += inv.units;
+            uniqueFundsMap[inv.schemeCode].ids.push(inv.id);
+        });
+
+        const fundStats = await Promise.all(Object.values(uniqueFundsMap).map(async f => {
+            const navRes = await getCurrentNAV(f.schemeCode);
+            const stats = await calculateGroupStats(f.ids);
+            return {
+                ...f,
+                currentNav: navRes.nav,
+                absoluteReturns: stats.totalReturns,
+                returnsPct: stats.totalInvestment > 0 ? (stats.totalReturns / stats.totalInvestment * 100) : 0,
+                perf1M: stats.periodicReturns.monthly?.percentage ?? null,
+                perf3M: stats.periodicReturns.quarterly?.percentage ?? null,
+                perf6M: stats.periodicReturns.halfYearly?.percentage ?? null,
+                perf9M: stats.periodicReturns.nineMonths?.percentage ?? null,
+                perf1Y: stats.periodicReturns.yearly?.percentage ?? null,
+                stats: stats
+            };
+        }));
+
+        // 4. Advanced Analytics (Last 1 Year)
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+        const advancedStats = await Promise.all(fundStats.map(async f => {
+            let histData = [];
+            try {
+                const historyRes = await NAVManager.getNAV(f.schemeCode);
+                histData = historyRes?.data || [];
+            } catch (e) { console.error('History fetch failed', e); }
+
+            if (histData.length < 2) return { ...f, maxDrawdown: 0, maxSwing: 0 };
+
+            // Filter history for last 1 year
+            const recentHist = histData.filter(h => {
+                const [d, m, y] = h.date.split('-');
+                return new Date(y, m - 1, d) >= oneYearAgo;
+            }).sort((a, b) => {
+                const [d1, m1, y1] = a.date.split('-');
+                const [d2, m2, y2] = b.date.split('-');
+                return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+            });
+
+            if (recentHist.length === 0) return { ...f, maxDrawdown: 0, maxSwing: 0 };
+
+            let peak = -Infinity;
+            let trough = Infinity;
+            let maxDD = 0;
+            let maxUp = 0;
+
+            recentHist.forEach(h => {
+                const val = parseFloat(h.nav);
+                if (isNaN(val)) return;
+
+                if (val > peak) {
+                    peak = val;
+                } else {
+                    const dd = ((peak - val) / peak) * 100;
+                    if (dd > maxDD) maxDD = dd;
+                }
+
+                if (val < trough) {
+                    trough = val;
+                } else {
+                    const up = ((val - trough) / trough) * 100;
+                    if (up > maxUp) maxUp = up;
+                }
+            });
+
+            return { ...f, maxDrawdown: maxDD, maxSwing: maxUp };
+        }));
+
+        // Best Defender (Lowest Drawdown in bear phase)
+        // We pick the fund with the absolute lowest drawdown, even if it's 0 (best possible resilience)
+        const bestDefender = [...advancedStats].sort((a, b) => a.maxDrawdown - b.maxDrawdown)[0];
+
+        // Best Climber (Highest Up-swing in bull phase)
+        const bestClimber = [...advancedStats].sort((a, b) => b.maxSwing - a.maxSwing)[0];
+
+        // Top Performer (Highest XIRR/CAGR)
+        const bestOverall = [...advancedStats].sort((a, b) => (b.stats.cagr || 0) - (a.stats.cagr || 0))[0];
+
+        // Underperformer (Lowest XIRR/CAGR)
+        const worstOverall = [...advancedStats].sort((a, b) => (a.stats.cagr || 0) - (b.stats.cagr || 0))[0];
+
+        // 5. Periodic Worst Performers Logic
+        const getWorstForPeriod = (periodKey) => {
+            return advancedStats
+                .filter(f => f[periodKey] !== null)
+                .sort((a,b) => (a[periodKey] || 0) - (b[periodKey] || 0))[0];
+        };
+
+        const worst1M = getWorstForPeriod('perf1M');
+        const worst3M = getWorstForPeriod('perf3M');
+        const worst6M = getWorstForPeriod('perf6M');
+        const worst9M = getWorstForPeriod('perf9M');
+        const worst1Y = getWorstForPeriod('perf1Y');
+
+        let html = `<div style="width: 100%; margin-bottom: 20px; padding: 0 10px;">
+            <h3 style="margin-bottom: 4px;">Portfolio Insights</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Advanced performance analysis based on historical cycles</p>
+        </div>`;
+
+        const createInsightCard = (fund, title, sub, variant, extraVal = null) => {
+            if (!fund) return '';
+
+            // Default to overall stats
+            let mainAmount = (fund.absoluteReturns) || 0;
+            let mainPct = (fund.returnsPct) || 0;
+            let maxXirr = (fund.stats?.cagr) || 0;
+
+            // Context Logic: Adapt main display to the specific insight window
+            if (variant.startsWith('worst')) {
+                 const periodMap = { worst1M: 'monthly', worst3M: 'quarterly', worst6M: 'halfYearly', worst9M: 'nineMonths', worst1Y: 'yearly' };
+                 const pData = fund.stats.periodicReturns?.[periodMap[variant]];
+                 if (pData) {
+                     mainAmount = pData.absolute || 0;
+                     mainPct = pData.percentage || 0;
+                     
+                     // Annualize the period-specific return for a relevant XIRR badge
+                     const daysMap = { worst1M: 30, worst3M: 90, worst6M: 180, worst9M: 270, worst1Y: 365 };
+                     maxXirr = (Math.pow(1 + (mainPct / 100), 365.25 / daysMap[variant]) - 1) * 100;
+                 }
+            }
+
+            const isPos = mainPct >= 0;
+            const cleanTitle = fund.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
+            const badgeClass = variant === 'best' ? 'success' : (variant.startsWith('worst') || variant === 'under' ? 'danger' : 'info');
+            const icon = variant === 'best' ? 'bi-trophy-fill' : (variant === 'bestDefender' ? 'bi-shield-check' : (variant === 'bestClimber' ? 'bi-graph-up-arrow' : 'bi-exclamation-triangle-fill'));
+
+            // High-precision currency: Show decimals if the amount is less than 1 or 2, to avoid "0"
+            const formattedAmount = Math.abs(mainAmount) < 2 && Math.abs(mainAmount) > 0
+                ? Math.abs(mainAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                : Math.abs(mainAmount).toLocaleString(undefined, { maximumFractionDigits: 0 });
+
+            return `
+                <div class="playing-card ${variant === 'best' ? 'card-positive' : (variant.startsWith('worst') || variant === 'under' ? 'card-negative' : 'card-info')}">
+                    <div class="card-content">
+                        <div style="margin-bottom: 15px;">
+                            <span class="modern-badge-v2 ${badgeClass}" style="font-size: 0.7rem; letter-spacing: 1px;">
+                                <i class="bi ${icon}"></i> ${title}
+                            </span>
+                        </div>
+                        <h4 class="card-title-v2" style="font-size: 1.1rem; min-height: 2.4em;">${cleanTitle}</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px;">${sub}</p>
+                        
+                        <div class="card-main-stat">
+                            <div class="profit-amount ${isPos ? 'text-success' : 'text-danger'}" style="font-size: 2rem;">
+                                ${isPos ? '+' : '-'}₹${formattedAmount}
+                            </div>
+                            <div class="profit-badges">
+                                <span class="modern-badge-v2 ${isPos ? 'success' : 'danger'}">${isPos ? '+' : ''}${Number(mainPct || 0).toFixed(2)}%</span>
+                                <span class="modern-badge-v2 ${maxXirr >= 0 ? 'success' : 'danger'}">XIRR ${Number(maxXirr || 0).toFixed(2)}%</span>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        html += createInsightCard(bestOverall, 'TOP PERFORMER', 'Demonstrated the highest compounded growth efficiency (XIRR), making it the strongest wealth generator in your portfolio.', 'best');
+        html += createInsightCard(worstOverall, 'UNDERPERFORMER', 'Identified as having the lowest annualized returns (XIRR) across your entire asset list since the investment date.', 'under');
+        
+        const renderWarning = (fund, title, sub, variant) => {
+            if (fund && fund[variant.replace('worst', 'perf')] < 0) {
+                return createInsightCard(fund, title, sub, variant);
+            }
+            return '';
+        };
+
+        html += renderWarning(worst1M, '1-MONTH DIP', 'Recorded the sharpest decline in value over the last 30 days of market activity.', 'worst1M');
+        html += renderWarning(worst3M, 'QUARTERLY WARNING', 'This holding has shown the highest relative drop during the last 90-day tracking window.', 'worst3M');
+        html += renderWarning(worst6M, '6-MONTH WARNING', 'Recorded the most significant relative decline in value within your portfolio over the last 180-day tracking window.', 'worst6M');
+        html += renderWarning(worst9M, '9-MONTH DECLINE', 'Persistent underperformance identified over the last three quarters (270 days).', 'worst9M');
+        html += renderWarning(worst1Y, '1-YEAR TREND', 'This fund has been your weakest performer over the last full year of tracking.', 'worst1Y');
+        
+        // Final fallback: If everything is positive, show the "STABLE ASSET" in the last slot
+        if (worst6M && worst6M.perf6M >= 0) {
+            html += createInsightCard(worst6M, 'STABLE ASSET', 'Maintained the most resilient and conservative performance profile in your portfolio during the last 6-month period.', 'info');
+        }
+
+        container.innerHTML = html;
+    } finally {
+        hideLoading();
+    }
+}
+
+/**
+ * Market Discovery Logic - Sector Scanning
+ */
+const discoveryPerfCache = {}; // Local session cache for discovery performance
+
+async function runDiscovery() {
+    const category = document.getElementById('discoveryCategory')?.value;
+    const sector = document.getElementById('discoverySector')?.value;
+    const plan = document.getElementById('discoveryPlan')?.value;
+    const durationChecks = document.querySelectorAll('.duration-check:checked');
+
+    if (!category || !sector || !plan) {
+        showInfo('Please select a Category, Sector, and Plan to begin scanning.');
+        return;
+    }
+
+    if (durationChecks.length === 0) {
+        showInfo('Please select at least one performance horizon (Matrix).');
+        return;
+    }
+    const selectedDurations = Array.from(durationChecks).map(cb => cb.value);
+    
+    const resultsContainer = document.getElementById('discoveryResults');
+    const progressBlock = document.getElementById('scanProgress');
+    const progressBar = document.getElementById('scanProgressBar');
+    const scanStatus = document.getElementById('scanStatus');
+
+    if (!allFundsCache) {
+        showError('Fund database not loaded. Please wait or refresh.');
+        return;
+    }
+
+    if (selectedDurations.length === 0) {
+        showError('Please select at least one performance horizon.');
+        return;
+    }
+
+    // 1. Filter candidates based on Category, Sector, and Plan
+    const rawCandidates = allFundsCache.filter(f => {
+        const name = f.schemeName;
+        // Check Plan (Direct/Regular)
+        if (plan === 'Direct' && !name.includes('Direct')) return false;
+        if (plan === 'Regular' && name.includes('Direct')) return false;
+
+        // Check Category Heuristics
+        const lowerName = name.toLowerCase();
+        if (category === 'Debt' && !(lowerName.includes('debt') || lowerName.includes('bond') || lowerName.includes('gilt') || lowerName.includes('corporate') || lowerName.includes('short term'))) return false;
+        if (category === 'Hybrid' && !(lowerName.includes('hybrid') || lowerName.includes('balanced') || lowerName.includes('arbitrage'))) return false;
+        if (category === 'Index' && !(lowerName.includes('index') || lowerName.includes('nifty') || lowerName.includes('sensex') || lowerName.includes('etf'))) return false;
+        if (category === 'Liquid' && !(lowerName.includes('liquid') || lowerName.includes('money market') || lowerName.includes('overnight'))) return false;
+        if (category === 'Equity' && (lowerName.includes('debt') || lowerName.includes('hybrid') || lowerName.includes('index') || lowerName.includes('etf') || lowerName.includes('liquid'))) return false;
+
+        // Check Sector/Sub-Category
+        if (sector && !lowerName.includes(sector.toLowerCase())) return false;
+        
+        return true;
+    });
+
+    if (rawCandidates.length === 0) {
+        resultsContainer.innerHTML = '<p style="text-align: center; width: 100%; opacity: 0.5; padding: 40px;">No funds match your specific criteria. Try loosening your sector filters.</p>';
+        return;
+    }
+
+    // For better performance, pick top matches by relevance
+    const candidates = rawCandidates.slice(0, 20);
+    
+    // Efficiency: Check if we even need to show the progress bar
+    const allCached = candidates.every(f => discoveryPerfCache[f.schemeCode]);
+    if (!allCached) {
+        progressBlock.style.display = 'block';
+    }
+    
+    resultsContainer.innerHTML = '';
+    
+    const processedResults = [];
+    for (let i = 0; i < candidates.length; i++) {
+        const f = candidates[i];
+        try {
+            const percent = Math.round(((i + 1) / candidates.length) * 100);
+            
+            let perf;
+        
+            // Check session discovery cache first
+            if (discoveryPerfCache[f.schemeCode]) {
+                perf = discoveryPerfCache[f.schemeCode];
+            } 
+            // Check portfolio data (reusing 1Y/6M calculations already performed)
+            else if (typeof allFundsData !== 'undefined') {
+                const existing = allFundsData.find(own => own.schemeCode == f.schemeCode);
+                if (existing && existing.performance && existing.performance.periodic) {
+                    perf = existing.performance.periodic;
+                    discoveryPerfCache[f.schemeCode] = perf; 
+                }
+            }
+
+            if (!perf) {
+                progressBar.style.width = `${percent}%`;
+                if (scanStatus) scanStatus.innerText = `Analyzing ${f.schemeName.split(' - ')[0]}...`;
+                
+                const navRes = await getCurrentNAV(f.schemeCode);
+                const dummyInv = { 
+                    schemeCode: f.schemeCode, 
+                    schemeName: f.schemeName, 
+                    units: 1, 
+                    investmentAmount: 1, 
+                    nav: 1, 
+                    investmentDate: '2010-01-01' 
+                };
+                const perfRes = await calculatePerformance(dummyInv, navRes.nav);
+                perf = perfRes.periodic;
+                discoveryPerfCache[f.schemeCode] = perf;
+            }
+            
+            processedResults.push({
+                schemeName: f.schemeName,
+                schemeCode: f.schemeCode,
+                performance: perf
+            });
+        } catch (e) { 
+            console.error(`Failed to scan ${f.schemeName}`, e); 
+        }
+    }
+
+    progressBlock.style.display = 'none';
+
+    if (processedResults.length === 0) {
+        resultsContainer.innerHTML = '<p style="text-align: center; width: 100%;">Scanner could not reach the data server. Please try again.</p>';
+        return;
+    }
+
+    // Render exactly one champion for each selected duration
+    const labelMap = { weekly: '7 Days', fifteenDays: '15 Days', monthly: '1 Month', quarterly: '3 Months', halfYearly: '6 Months', nineMonths: '9 Months', yearly: '1 Year' };
+    const daysMap = { weekly: 7, fifteenDays: 15, monthly: 30, quarterly: 90, halfYearly: 180, nineMonths: 270, yearly: 365.25 };
+    let finalHtml = '';
+    
+    selectedDurations.forEach(durKey => {
+        const topFund = [...processedResults]
+            .filter(r => r.performance[durKey])
+            .sort((a,b) => b.performance[durKey].value - a.performance[durKey].value)[0];
+
+        if (topFund) {
+            const val = topFund.performance[durKey].value;
+            const cleanTitle = topFund.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
+            const annYield = (Math.pow(1 + (val / 100), 365.25 / daysMap[durKey]) - 1) * 100;
+            
+            finalHtml += `
+                <div class="playing-card" style="flex: 0 0 320px; border-top: 3px solid var(--brand-primary);">
+                    <div class="card-content" style="padding: 18px;">
+                        <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                            <span class="modern-badge-v2 success" style="font-size: 0.65rem; letter-spacing: 1px;"><i class="bi bi-award-fill"></i> ${labelMap[durKey]} CHAMPION</span>
+                        </div>
+                        <h4 class="card-title-v2" style="font-size: 1.05rem; height: 2.4em; overflow: hidden; margin-bottom: 20px;">${cleanTitle}</h4>
+                        
+                        <div class="card-main-stat" style="margin-bottom: 20px;">
+                            <div class="profit-amount text-success" style="font-size: 1.8rem;">
+                                +${val.toFixed(2)}%
+                            </div>
+                            <div class="profit-badges">
+                                <span class="modern-badge-v2 success">MOMENTUM</span>
+                                <span class="modern-badge-v2 info">XIRR ${annYield.toFixed(2)}%</span>
+                            </div>
+                        </div>
+
+                        <div class="card-periodic-list" style="margin-bottom: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                            <div style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 5px; font-weight: 700;">Performance Details</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+                                <span style="color: rgba(255,255,255,0.6);">Growth in ${labelMap[durKey]}</span>
+                                <span class="text-success" style="font-weight: 700;">+${val.toFixed(2)}%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                                <span style="color: rgba(255,255,255,0.6);">Ann. Projected Yield</span>
+                                <span style="color: white; font-weight: 700;">${annYield.toFixed(2)}%</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-action-v2 view" onclick="quickAddFund('${topFund.schemeCode}', '${topFund.schemeName}')" style="width: 100%; justify-content: center; height: 38px;">
+                            <i class="bi bi-plus-circle"></i> Quick Add to Tracker
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+    });
+
+    resultsContainer.innerHTML = finalHtml || '<p style="text-align: center; width: 100%; opacity: 0.5; padding: 40px;">No performance leaders identified. Select more check-boxes to expand the search.</p>';
+}
+
+function displayExplore() {
+    const container = document.getElementById('exploreContainer');
+    if (!container) return;
+
+    // Persist results: only render the filter UI if it's empty
+    if (container.innerHTML.trim() !== "") return;
+
+    // Filter bar + Progress placeholder + Results grid
+    container.innerHTML = `
+        <div id="explorerFilters" style="width: 100%; margin-top: 40px; padding: 30px; background: rgba(30, 41, 59, 0.4); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
+                <div>
+                    <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                        <i class="bi bi-globe" style="color: var(--brand-primary);"></i> Market Explorer
+                    </h3>
+                    <p style="color: var(--text-secondary); margin: 5px 0 0; font-size: 0.95rem;">Scan & Discover the most consistent funds</p>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; width: 100%; margin-top: 15px;">
+                    <div class="filter-group">
+                        <label style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; display: block; text-transform: uppercase;">Category</label>
+                        <select id="discoveryCategory" class="form-control-modern" style="width: 140px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); color: white;">
+                            <option value="">Select</option>
+                            <option value="Equity">Equity</option>
+                            <option value="Debt">Debt</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Index">Index/ETF</option>
+                            <option value="Liquid">Liquid</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; display: block; text-transform: uppercase;">Sector/Theme</label>
+                        <select id="discoverySector" class="form-control-modern" style="width: 160px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); color: white;">
+                            <option value="">Select</option>
+                            <option value="Small Cap">Small Cap</option>
+                            <option value="Mid Cap">Mid Cap</option>
+                            <option value="Large Cap">Large Cap</option>
+                            <option value="Flexi Cap">Flexi Cap</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; display: block; text-transform: uppercase;">Matrix</label>
+                        <div class="btn-group" style="width: 200px;">
+                            <button type="button" class="form-control-modern dropdown-toggle" data-bs-toggle="dropdown" onclick="event.stopPropagation()">Horizons</button>
+                            <ul class="dropdown-menu dropdown-menu-dark" style="padding: 10px; min-width: 250px;" onclick="event.stopPropagation()">
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="weekly"> 7 Days</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="fifteenDays"> 15 Days</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="monthly"> 1 Month</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="quarterly"> 3 Months</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="halfYearly"> 6 Months</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="nineMonths"> 9 Months</label></li>
+                                <li><label class="dropdown-item"><input type="checkbox" class="duration-check" value="yearly"> 1 Year</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; display: block; text-transform: uppercase;">Plan</label>
+                        <select id="discoveryPlan" class="form-control-modern" style="width: 100px; background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); color: white;">
+                            <option value="">Select</option>
+                            <option value="Direct">Direct</option>
+                            <option value="Regular">Regular</option>
+                        </select>
+                    </div>
+                    <div style="margin-left: auto; align-self: flex-end;">
+                        <button onclick="runDiscovery()" class="btn-action-v2 view" style="padding: 10px 24px;">
+                            <i class="bi bi-radar"></i> Start Discovery
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="scanProgress" style="display: none; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px;">
+                    <span id="scanStatus">Analyzing sector...</span>
+                    <span id="scanPercentage">0%</span>
+                </div>
+                <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                    <div id="scanProgressBar" style="width: 0%; height: 100%; background: var(--brand-primary);"></div>
+                </div>
+            </div>
+        </div>
+        <div id="discoveryResults" style="display: contents;">
+            <div style="opacity: 0.4; text-align: center; width: 100%; padding: 40px;">
+                <p>Select your criteria and click Start Discovery</p>
+            </div>
+        </div>
+    `;
+}
+
+function quickAddFund(code, name) {
+    switchMainView('individual');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    alert(`To add "${name}", use the search box on the left!`);
+    setTimeout(() => { document.getElementById('fundHouseInput')?.focus(); }, 500);
 }

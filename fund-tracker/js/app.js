@@ -4,13 +4,15 @@
  */
 
 // Global State
-let allFunds = [];
-let userInvestments = [];
-let fundGroups = [];
-let selectedFund = null;
-let allFundsCache = null;
-let isFundsLoading = false;
-let editingInvestmentId = null;
+var allFunds = [];
+var userInvestments = [];
+var fundGroups = [];
+var selectedFund = null;
+var allFundsCache = null;
+var isFundsLoading = false;
+var editingInvestmentId = null;
+var pendingDeleteId = null;
+var pendingDeleteType = 'fund'; // 'fund' or 'group'
 let currentView = 'individual';
 let currentGroupFilter = 'all';
 let currentUser = null;
@@ -36,6 +38,7 @@ async function initApp() {
         userInvestments = await getCloudInvestments();
         updateLoadingText('Verifying fund database...');
         await loadAllFundsCache();
+        populateFundHouses();
 
         syncAutomatedGroups(); // Apply heuristic grouping
         showMainContent();
@@ -78,11 +81,85 @@ function showMainContent() {
     if (isSignedIn) {
         if (mainContent) mainContent.style.display = 'block';
         if (loginContent) loginContent.style.display = 'none';
-        displayFunds();
-        updateSummary();
+        
+        // Default View State
+        switchMainView('individual');
     } else {
         if (mainContent) mainContent.style.display = 'none';
         if (loginContent) loginContent.style.display = 'flex';
+    }
+}
+
+/**
+ * Handle Tab Switching in Navigation Hub
+ */
+function switchMainView(targetView) {
+    currentView = targetView;
+    
+    // Update active pill UI
+    document.querySelectorAll('.nav-v2-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-view') === targetView);
+    });
+
+    // Toggle Content Containers
+    const containers = {
+        individual: document.getElementById('fundsContainer'),
+        groups: document.getElementById('groupsContainer'),
+        research: document.getElementById('researchContainer'),
+        explore: document.getElementById('exploreContainer'),
+        summary: document.getElementById('summaryStatsContainer'),
+        addFund: document.getElementById('addFundCard'),
+        addGroup: document.getElementById('addGroupCard')
+    };
+    const masterGrid = document.getElementById('masterGrid');
+
+    // Update Grid Density Class (Standardized to 4 columns everywhere)
+    if (masterGrid) {
+        masterGrid.classList.remove('grid-4-col', 'grid-3-col');
+        masterGrid.classList.add('grid-4-col');
+    }
+
+    // Helper to hide all
+    Object.values(containers).forEach(c => { if(c) c.style.display = 'none'; });
+
+    const explorerFilters = document.getElementById('explorerFilters');
+
+    if (targetView === 'individual') {
+        if (containers.individual) containers.individual.style.display = 'contents';
+        if (containers.summary) containers.summary.style.display = 'contents';
+        if (containers.addFund) containers.addFund.style.display = 'flex';
+        
+        // Only show explorer results if there's actual content (more than the placeholder search icon/text)
+        const hasResults = document.getElementById('discoveryResults')?.children.length > 1;
+        if (containers.explore && hasResults) {
+            containers.explore.style.display = 'contents';
+            if (explorerFilters) explorerFilters.style.display = 'none';
+        }
+        
+        displayFunds();
+        updateSummary();
+        displayExplore(); // Ensure it's rendered at least once
+    } else if (targetView === 'groups') {
+        if (containers.groups) containers.groups.style.display = 'contents';
+        if (containers.addGroup) containers.addGroup.style.display = 'flex';
+        displayGroups();
+    } else if (targetView === 'research') {
+        if (containers.research) containers.research.style.display = 'contents';
+        
+        const hasResults = document.getElementById('discoveryResults')?.children.length > 1;
+        if (containers.explore && hasResults) {
+            containers.explore.style.display = 'contents';
+            if (explorerFilters) explorerFilters.style.display = 'none';
+        }
+        
+        displayResearch();
+        displayExplore(); 
+    } else if (targetView === 'explore') {
+        if (containers.explore) containers.explore.style.display = 'contents';
+        if (explorerFilters) explorerFilters.style.display = 'block'; // Show filters in explore view
+        displayExplore();
+    } else {
+        showInfo(`${targetView.charAt(0).toUpperCase() + targetView.slice(1)} module coming soon!`);
     }
 }
 
@@ -155,11 +232,23 @@ function setupEventListeners() {
         searchInput.addEventListener('input', debounce(handleSearch, 300));
         searchInput.addEventListener('focus', () => { if (searchInput.value.length > 2) handleSearch(); });
     }
+    
+    const houseSelect = document.getElementById('fundHouseSelect');
+    if (houseSelect) {
+        houseSelect.addEventListener('change', () => {
+            document.getElementById('fundSearchContainer').style.display = 'block';
+            document.getElementById('fundSearch').value = '';
+            document.getElementById('fundRadioContainer').style.display = 'none';
+            selectedFund = null;
+        });
+    }
 
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.search-container')) {
-            const dropdown = document.getElementById('searchDropdown');
-            if (dropdown) dropdown.style.display = 'none';
+            const sd = document.getElementById('searchDropdown');
+            if (sd) sd.style.display = 'none';
+            const hd = document.getElementById('houseDropdown');
+            if (hd) hd.style.display = 'none';
         }
     });
 
@@ -173,44 +262,182 @@ function setupEventListeners() {
 }
 
 /**
+ * Helpers
+ */
+function getBaseMFName(name) {
+    let n = name;
+    const lower = n.toLowerCase();
+    const markers = [' - direct', ' - regular', ' direct', ' regular'];
+    let minIdx = n.length;
+    markers.forEach(m => {
+        const idx = lower.indexOf(m);
+        if (idx !== -1 && idx < minIdx) minIdx = idx;
+    });
+    const sub = n.substring(0, minIdx).trim();
+    return sub.length > 0 ? sub : n;
+}
+
+async function populateFundHouses() {
+    const dropdown = document.getElementById('houseDropdown');
+    if (!dropdown || !allFundsCache) return;
+
+    const houses = new Map();
+    const knownMultiWords = {
+        "aditya": "Aditya Birla", "icici": "ICICI Prudential", "kotak": "Kotak Mahindra",
+        "canara": "Canara Robeco", "mirae": "Mirae Asset", "motilal": "Motilal Oswal",
+        "nippon": "Nippon India", "parag": "Parag Parikh", "pgim": "PGIM India",
+        "franklin": "Franklin Templeton", "whiteoak": "WhiteOak", "baroda": "Baroda BNP Paribas",
+        "jioblackrock": "JioBlackrock", "jio": "JioBlackrock", "bandhan": "Bandhan"
+    };
+
+    allFundsCache.forEach(f => {
+        try {
+            if (!f || !f.schemeName) return;
+            let fw = f.schemeName.trim().split(/\s+/)[0].replace(/[^a-zA-Z]/g, '').toLowerCase();
+            if (!fw || fw.length < 2) return;
+            let dName = knownMultiWords[fw] || (fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase());
+            houses.set(dName, (houses.get(dName) || 0) + 1);
+        } catch(e) {}
+    });
+
+    const houseList = Array.from(houses.entries())
+        .filter(([n, c]) => c > 5 && n !== 'The' && n !== 'Fund')
+        .map(([n]) => n)
+        .sort((a,b) => a.localeCompare(b));
+
+    dropdown.innerHTML = houseList.map(h => `
+        <div class="search-dropdown-item" onclick="selectHouse('${h.replace(/'/g, "\\'")}', '${h.split(' ')[0]}')">
+            ${h}
+        </div>
+    `).join('');
+}
+
+function selectHouse(displayName, searchKey) {
+    document.getElementById('fundHouseInput').value = displayName;
+    document.getElementById('houseDropdown').style.display = 'none';
+    
+    // Setup next step
+    document.getElementById('fundSearch').value = '';
+    document.getElementById('fundSearch').setAttribute('data-house', searchKey);
+    document.getElementById('fundSearchContainer').style.display = 'block';
+    document.getElementById('fundRadioContainer').style.display = 'none';
+    
+    setTimeout(() => document.getElementById('fundSearch').focus(), 100);
+}
+
+function filterHouses() {
+    const query = document.getElementById('fundHouseInput').value.toLowerCase();
+    const dropdown = document.getElementById('houseDropdown');
+    const items = dropdown.querySelectorAll('.search-dropdown-item');
+    
+    let visibleCount = 0;
+    items.forEach(it => {
+        const txt = it.textContent.toLowerCase();
+        const matches = query === '' || txt.includes(query);
+        it.style.display = matches ? 'block' : 'none';
+        if (matches) visibleCount++;
+    });
+    
+    // Always show if there are items and the field is focused
+    dropdown.style.display = visibleCount > 0 ? 'block' : 'none';
+}
+
+/**
  * Search Logic
  */
 async function handleSearch() {
-    const query = document.getElementById('fundSearch').value.trim();
+    const searchInput = document.getElementById('fundSearch');
+    const query = searchInput.value.trim();
     const dropdown = document.getElementById('searchDropdown');
-    if (query.length < 2) { dropdown.style.display = 'none'; return; }
+    const houseKey = searchInput.getAttribute('data-house');
+    
+    if (query.length < 2 || !houseKey) { 
+        dropdown.style.display = 'none'; 
+        return; 
+    }
 
     showLoading();
     try {
-        const funds = await searchMutualFunds(query);
-        dropdown.innerHTML = funds.map(f => `
-            <div class="search-dropdown-item" onclick="selectFund('${f.schemeCode}', '${f.schemeName.replace(/'/g, "\\'")}', '${f.fundType || f.category || 'N/A'}')">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <div><strong>${f.schemeName}</strong></div>
-                        <small class="text-muted">Code: ${f.schemeCode} | ${f.fundType || f.category || 'N/A'}</small>
-                    </div>
-                    <span class="badge ${f.schemeName.toLowerCase().includes('direct') ? 'bg-primary' : 'bg-success'} ms-2">
-                        ${f.schemeName.toLowerCase().includes('direct') ? 'Direct' : 'Regular'}
-                    </span>
-                </div>
+        if (!allFundsCache) await loadAllFundsCache();
+        
+        let funds = allFundsCache.filter(f => 
+            f.schemeName.toLowerCase().includes(houseKey.toLowerCase()) && 
+            f.schemeName.toLowerCase().includes(query.toLowerCase())
+        );
+
+        const grouped = {};
+        funds.forEach(f => {
+            const base = getBaseMFName(f.schemeName);
+            if (!grouped[base]) grouped[base] = [];
+            grouped[base].push(f);
+        });
+
+        const topGroups = Object.keys(grouped).slice(0, 10);
+        
+        dropdown.innerHTML = topGroups.map(gName => `
+            <div class="search-dropdown-item" onclick="selectFundBase('${gName.replace(/'/g, "\\'")}', '${houseKey}')">
+                <strong>${gName}</strong>
             </div>`).join('');
+            
         dropdown.style.display = 'block';
     } finally { hideLoading(); }
 }
 
-function selectFund(code, name, cat) {
-    selectedFund = { schemeCode: code, schemeName: name, category: cat };
-    document.getElementById('fundSearch').value = name;
+function selectFundBase(baseName, houseStr) {
+    document.getElementById('fundSearch').value = baseName;
     document.getElementById('searchDropdown').style.display = 'none';
+    
+    selectedFund = null;
+    
+    const funds = allFundsCache.filter(f => f.schemeName.toLowerCase().includes(houseStr.toLowerCase()) && getBaseMFName(f.schemeName) === baseName);
+    
+    const optsContainer = document.getElementById('fundRadioContainer');
+    const radiosObj = document.getElementById('fundRadioOptions');
+    
+    radiosObj.innerHTML = funds.map((f, idx) => {
+        const nameLower = f.schemeName.toLowerCase();
+        
+        let planType = nameLower.includes('direct') ? 'Direct' : 'Regular';
+        let planOption = 'Growth';
+        
+        if (nameLower.includes('idcw')) planOption = 'IDCW';
+        else if (nameLower.includes('dividend')) planOption = 'Dividend';
+        else if (nameLower.includes('payout')) planOption = 'Payout';
+        
+        const shortName = `${planType} - ${planOption}`;
+        
+        return `
+        <div style="display: flex; align-items: center; gap: 5px; white-space: nowrap; overflow: hidden;">
+            <input type="radio" id="f_opt_${f.schemeCode}" name="selectedSchemeCode" value="${f.schemeCode}" 
+                   data-name="${f.schemeName.replace(/'/g, "\\'")}" ${idx === 0 ? 'checked' : ''} 
+                   style="margin: 0; width: 14px; height: 14px; cursor: pointer;">
+            <label for="f_opt_${f.schemeCode}" title="${f.schemeName}" 
+                   style="font-size: 11px; cursor: pointer; color: rgba(255,255,255,0.9); margin: 0; line-height: 1.2; text-overflow: ellipsis; overflow: hidden;">
+                ${shortName}
+            </label>
+        </div>`;
+    }).join('');
+    
+    optsContainer.style.display = 'block';
 }
 
 /**
  * Fund Management
  */
+/**
+ * Fund Management
+ */
 async function handleAddFund(e) {
     e.preventDefault();
-    const code = selectedFund?.schemeCode;
+    
+    const selectedRadio = document.querySelector('input[name="selectedSchemeCode"]:checked');
+    if (!selectedRadio && !selectedFund) {
+        return showError('Please select a specific fund option.');
+    }
+    
+    const code = selectedRadio ? selectedRadio.value : selectedFund?.schemeCode;
+    const finalName = selectedRadio ? selectedRadio.getAttribute('data-name') : selectedFund?.schemeName;
+    
     const date = document.getElementById('investmentDate').value;
     const amount = parseFloat(document.getElementById('investmentAmount').value);
 
@@ -221,7 +448,7 @@ async function handleAddFund(e) {
         const nav = await getNAVForDate(code, date);
         const units = amount / nav;
 
-        const investment = { id: editingInvestmentId || Date.now(), schemeCode: code, schemeName: selectedFund.schemeName, investmentDate: date, investmentAmount: amount, nav, category: selectedFund.category, units, addedDate: new Date().toISOString() };
+        const investment = { id: editingInvestmentId || Date.now(), schemeCode: code, schemeName: finalName, investmentDate: date, investmentAmount: amount, nav, category: 'N/A', units, addedDate: new Date().toISOString() };
 
         if (editingInvestmentId) {
             const idx = userInvestments.findIndex(i => String(i.id) === String(editingInvestmentId));
@@ -233,7 +460,8 @@ async function handleAddFund(e) {
         syncAutomatedGroups();
         await saveToCloud(userInvestments);
         clearForm();
-        currentView === 'individual' ? displayFunds() : displayGroups();
+        displayFunds();
+        displayGroups();
         updateSummary();
         showSuccess(editingInvestmentId ? 'Fund updated' : 'Fund added');
         editingInvestmentId = null;
@@ -245,176 +473,102 @@ function clearForm() {
     document.getElementById('addFundForm').reset();
     selectedFund = null;
     editingInvestmentId = null;
-    document.getElementById('submitBtn').innerHTML = '<i class="bi bi-plus-lg"></i> Add Fund';
+    document.getElementById('fundHouseInput').value = '';
+    document.getElementById('fundSearch').value = '';
+    document.getElementById('fundSearchContainer').style.display = 'none';
+    document.getElementById('fundRadioContainer').style.display = 'none';
+    document.getElementById('submitBtn').innerHTML = '<i class="bi bi-plus-lg"></i> Add';
+}
+
+async function editFund(id) {
+    const inv = userInvestments.find(i => String(i.id) === String(id));
+    if (!inv) return;
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    editingInvestmentId = inv.id;
+    document.getElementById('submitBtn').innerHTML = '<i class="bi bi-check-lg"></i> Update';
+
+    // 1. Populate House
+    const houseName = inv.schemeName.trim().split(/\s+/)[0];
+    document.getElementById('fundHouseInput').value = houseName;
+    selectHouse(houseName, houseName); // Trigger dropdown logic
+
+    // 2. Populate Fund Base Name
+    const baseName = getBaseMFName(inv.schemeName);
+    document.getElementById('fundSearch').value = baseName;
+    selectFundBase(baseName, houseName); // Populate radios
+
+    // 3. Select correct radio
+    setTimeout(() => {
+        const radio = document.querySelector(`input[name="selectedSchemeCode"][value="${inv.schemeCode}"]`);
+        if (radio) radio.checked = true;
+    }, 100);
+
+    // 4. Populate Date & Amount
+    document.getElementById('investmentDate').value = inv.investmentDate;
+    document.getElementById('investmentAmount').value = inv.investmentAmount;
 }
 
 async function removeFund(id) {
-    if (!confirm('Remove this investment?')) return;
-    userInvestments = userInvestments.filter(i => String(i.id) !== String(id));
-    fundGroups = fundGroups.map(g => ({ ...g, fundIds: g.fundIds.filter(fid => String(fid) !== String(id)) }));
-    syncAutomatedGroups();
-    await saveToCloud(userInvestments);
-    await saveToCloudFundGroups(fundGroups);
-    currentView === 'individual' ? displayFunds() : displayGroups();
-    updateSummary();
-}
-
-function editFund(id) {
     const inv = userInvestments.find(i => String(i.id) === String(id));
     if (!inv) return;
-    editingInvestmentId = id;
-    selectedFund = { schemeCode: inv.schemeCode, schemeName: inv.schemeName, category: inv.category };
-    document.getElementById('fundSearch').value = inv.schemeName;
-    document.getElementById('investmentDate').value = inv.investmentDate;
-    document.getElementById('investmentAmount').value = inv.investmentAmount;
-    document.getElementById('submitBtn').innerHTML = '<i class="bi bi-check-lg"></i> Update Fund';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    pendingDeleteId = id;
+    pendingDeleteType = 'fund';
+    const nameEl = document.getElementById('deleteFundName');
+    if (nameEl) nameEl.textContent = inv.schemeName;
+    
+    document.getElementById('deleteConfirmModal').classList.add('show');
 }
 
-/**
- * View Management
- */
-function switchView(view) {
-    currentView = view;
-    document.getElementById('individualViewBtn').classList.toggle('active', view === 'individual');
-    document.getElementById('groupsViewBtn').classList.toggle('active', view === 'groups');
-    document.getElementById('groupControls').style.display = view === 'groups' ? 'block' : 'none';
-    if (view === 'groups') updateGroupFilterUI();
-    view === 'individual' ? displayFunds() : displayGroups();
+async function confirmDeleteFund() {
+    if (!pendingDeleteId) return;
+    
+    // Hide confirmation modal
+    document.getElementById('deleteConfirmModal').classList.remove('show');
+    
+    // Show global processing spinner
+    showLoading();
+    
+    try {
+        const id = pendingDeleteId;
+        if (pendingDeleteType === 'fund') {
+            userInvestments = userInvestments.filter(i => String(i.id) !== String(id));
+            fundGroups = fundGroups.map(g => ({ ...g, fundIds: g.fundIds.filter(fid => String(fid) !== String(id)) }));
+            syncAutomatedGroups();
+            await saveToCloud(userInvestments);
+            await saveToCloudFundGroups(fundGroups);
+        } else {
+            fundGroups = fundGroups.filter(g => String(g.id) !== String(id));
+            await saveToCloudFundGroups(fundGroups);
+        }
+        
+        displayFunds();
+        displayGroups();
+        updateSummary();
+        showSuccess(pendingDeleteType === 'fund' ? 'Fund removed' : 'Group deleted');
+    } catch (err) {
+        showError('Failed: ' + err.message);
+    } finally {
+        pendingDeleteId = null;
+        hideLoading();
+    }
 }
 
-function switchGroupFilter(filter) {
-    currentGroupFilter = filter;
-    updateGroupFilterUI();
-    displayGroups();
-}
+
 
 /**
  * Group Logic
  */
 function syncAutomatedGroups() {
-    if (userInvestments.length === 0) {
-        fundGroups = fundGroups.filter(g => !g.isAutomated);
-        return;
-    }
+    // Strip automated groups - user requested purely manual control
+    fundGroups = fundGroups.filter(g => !g.isAutomated);
 
-    // Filter and clean manual groups: remove stale fund IDs and delete empty groups
-    const manualGroups = fundGroups.filter(g => !g.isAutomated).map(g => {
-        // Only keep IDs that still exist in userInvestments
+    // Clean manual groups: remove stale fund IDs and delete empty groups
+    fundGroups = fundGroups.map(g => {
         g.fundIds = g.fundIds.filter(fid => userInvestments.some(inv => String(inv.id) === String(fid)));
         return g;
     }).filter(g => g.fundIds.length > 0);
-
-    const automatedGroups = [];
-
-    // Base System Groups: Only add if funds exist
-    const directFids = userInvestments.filter(i => i.schemeName.toLowerCase().includes('direct')).map(i => String(i.id));
-    const regularFids = userInvestments.filter(i => !i.schemeName.toLowerCase().includes('direct')).map(i => String(i.id));
-
-    if (directFids.length > 0) {
-        automatedGroups.push({ id: 'auto-direct', name: 'Direct Funds', autoType: 'direct', isAutomated: true, fundIds: directFids });
-    }
-    if (regularFids.length > 0) {
-        automatedGroups.push({ id: 'auto-regular', name: 'Regular Funds', autoType: 'regular', isAutomated: true, fundIds: regularFids });
-    }
-
-    // Heuristic Grouping: Fund Houses
-    const houses = {};
-    const houseStopWords = ["Small", "Mid", "Large", "Flexi", "Multi", "Index", "Nifty", "ELSS", "Tax", "Equity", "Liquid", "Debt", "Hybrid", "Fund", "Balanced", "Opportunities", "Emerging", "Contra", "Value", "Focused", "Bluechip", "Aggressive", "Conservative", "Dynamic", "Arbitrage"];
-
-    userInvestments.forEach(inv => {
-        const words = inv.schemeName.split(' ');
-        let stopIndex = words.length;
-        for (let i = 0; i < words.length; i++) {
-            const cleanWord = words[i].toLowerCase().replace(/[^a-z]/g, '');
-            if (houseStopWords.some(sw => cleanWord.includes(sw.toLowerCase()))) {
-                stopIndex = i; break;
-            }
-        }
-        let house = words.slice(0, Math.max(1, stopIndex)).join(' ');
-        house = house.replace(/\s+(Mutual|AMC|MF|Asset|Management)$/i, '').trim() + " Funds";
-        if (!houses[house]) houses[house] = [];
-        houses[house].push(String(inv.id));
-    });
-
-    for (const [house, ids] of Object.entries(houses)) {
-        if (ids.length > 0) {
-            automatedGroups.push({ id: `house-${house.replace(/\s+/g, '-')}`, name: house, autoType: 'house', isAutomated: true, fundIds: ids });
-        }
-    }
-
-    // Heuristic Grouping: Categories/Types/Sectors (Industry Standard)
-    const typeKeywords = [
-        // Market Cap
-        { name: "Small Cap Funds", patterns: [/small\s*cap/i], cat: 'cap' },
-        { name: "Mid Cap Funds", patterns: [/mid\s*cap/i], cat: 'cap' },
-        { name: "Large Cap Funds", patterns: [/large\s*cap/i], cat: 'cap' },
-        { name: "Flexi Cap Funds", patterns: [/flexi\s*cap/i], cat: 'cap' },
-        { name: "Multi Cap Funds", patterns: [/multi\s*cap/i], cat: 'cap' },
-
-        // Asset Class & Solution
-        { name: "ELSS Funds", patterns: [/elss/i, /tax\s*saver/i], cat: 'strategy' },
-        { name: "Index Funds", patterns: [/index/i, /nifty/i, /sensex/i, /etf/i, /passive/i], cat: 'strategy' },
-        { name: "Liquid Funds", patterns: [/liquid/i, /overnight/i, /money\s*market/i], cat: 'asset' },
-        { name: "Debt Funds", patterns: [/debt/i, /gilt/i, /corporate/i, /treasury/i, /short\s*term/i, /duration/i], cat: 'asset' },
-        { name: "Hybrid Funds", patterns: [/hybrid/i, /balanced/i, /arbitrage/i, /multi\s*asset/i, /equity\s*savings/i], cat: 'asset' },
-        { name: "Equity Funds", patterns: [/equity/i, /growth/i, /opportunit/i, /focused/i, /alpha/i, /bluechip/i], cat: 'asset' },
-        { name: "Gold & Silver Funds", patterns: [/gold/i, /silver/i, /commodity/i], cat: 'asset' },
-        { name: "International Funds", patterns: [/international/i, /global/i, /us\s*equity/i, /nasdaq/i, /world/i, /greater\s*china/i, /emerging\s*markets/i], cat: 'asset' },
-
-        // Sectoral & Thematic
-        { name: "Banking & Financial Funds", patterns: [/bank/i, /psu/i, /financial/i, /fsi/i], cat: 'sector' },
-        { name: "IT & Tech Funds", patterns: [/it/i, /tech/i, /digital/i], cat: 'sector' },
-        { name: "Healthcare & Pharma Funds", patterns: [/pharma/i, /health/i], cat: 'sector' },
-        { name: "Infrastructure Funds", patterns: [/infra/i, /energy/i, /power/i, /realestate/i], cat: 'sector' },
-        { name: "Consumption Funds", patterns: [/consum/i, /fmcg/i, /retail/i], cat: 'sector' },
-
-        // Strategy & Style
-        { name: "Value & Contra Funds", patterns: [/value/i, /contra/i, /dividend/i, /yield/i], cat: 'strategy' },
-        { name: "Focused Funds", patterns: [/focused/i, /top\s*\d+/i], cat: 'strategy' },
-        { name: "Momentum & Quant Funds", patterns: [/momentum/i, /quant/i, /factor/i, /alpha/i], cat: 'strategy' },
-        { name: "Opportunity Funds", patterns: [/opportunit/i, /special/i, /thematic/i, /tactical/i], cat: 'strategy' },
-        { name: "ESG & Sustainability Funds", patterns: [/esg/i, /responsible/i, /sustainable/i], cat: 'strategy' },
-        { name: "Retirement & Children Funds", patterns: [/retirement/i, /pension/i, /children/i, /solution/i], cat: 'strategy' }
-    ];
-
-    const typedFunds = {};
-    userInvestments.forEach(inv => {
-        let matches = new Set();
-        typeKeywords.forEach(cfg => {
-            if (cfg.patterns.some(p => p.test(inv.schemeName))) {
-                matches.add(JSON.stringify({ name: cfg.name, cat: cfg.cat }));
-            }
-        });
-
-        // Logical inference remains for core asset classes
-        const matchesArr = [...matches].map(m => JSON.parse(m));
-        const isEquity = matchesArr.some(m => m.cat === 'cap' || m.cat === 'sector' || ['ELSS Funds', 'Index Funds', 'Equity Funds'].includes(m.name));
-        const isHybrid = matchesArr.some(m => m.name === "Hybrid Funds");
-        
-        if (isEquity) matches.add(JSON.stringify({ name: "Equity Funds", cat: 'asset' }));
-        if (matchesArr.some(m => m.name.includes("Debt Funds") || m.name === "Liquid Funds")) matches.add(JSON.stringify({ name: "Debt Funds", cat: 'asset' }));
-
-        // Ensure every Equity/Hybrid fund has a Strategy group (Catch-all for Diversified funds)
-        const hasStrategy = matchesArr.some(m => m.cat === 'strategy');
-        if (!hasStrategy && (isEquity || isHybrid)) {
-            matches.add(JSON.stringify({ name: "Core & Diversified Funds", cat: 'strategy' }));
-        }
-
-        matches.forEach(mJson => {
-            const m = JSON.parse(mJson);
-            if (!typedFunds[m.name]) typedFunds[m.name] = { ids: [], cat: m.cat };
-            typedFunds[m.name].ids.push(String(inv.id));
-        });
-    });
-
-    for (const [name, data] of Object.entries(typedFunds)) {
-        if (data.ids.length > 0) {
-            automatedGroups.push({ id: `type-${name.replace(/\s+/g, '-')}`, name, autoType: data.cat, isAutomated: true, fundIds: data.ids });
-        }
-    }
-
-    fundGroups = [...manualGroups, ...automatedGroups];
 }
 
 let currentEditingGroupId = null;
@@ -484,13 +638,16 @@ async function deleteGroup() {
     const group = fundGroups.find(g => String(g.id) === String(currentEditingGroupId));
     if (!group) return;
 
-    if (confirm(`Delete group "${group.name}"?`)) {
-        fundGroups = fundGroups.filter(g => String(g.id) !== String(currentEditingGroupId));
-        await saveToCloudFundGroups(fundGroups);
-        document.getElementById('editGroupModal').classList.remove('show');
-        displayGroups();
-        showSuccess('Group deleted');
-    }
+    // Hide edit modal
+    document.getElementById('editGroupModal').classList.remove('show');
+
+    // Show custom confirm modal
+    pendingDeleteId = currentEditingGroupId;
+    pendingDeleteType = 'group';
+    const nameEl = document.getElementById('deleteFundName');
+    if (nameEl) nameEl.textContent = `Group: ${group.name}`;
+    
+    document.getElementById('deleteConfirmModal').classList.add('show');
 }
 
 /**
@@ -498,20 +655,36 @@ async function deleteGroup() {
  */
 async function refreshAllData() {
     const btn = document.getElementById('syncBtn');
+    const label = document.getElementById('lastSyncLabel');
     if (btn.classList.contains('sync-btn-disabled')) return;
 
     btn.classList.add('sync-btn-disabled');
     try {
         NAVManager.sessionCache.clear();
         const codes = [...new Set(userInvestments.map(i => i.schemeCode))];
-        await Promise.all(codes.map(c => NAVManager.getNAV(c, true)));
+        
+        // Batch Processing (Safe Queueing)
+        const BATCH_SIZE = 3;
+        for (let i = 0; i < codes.length; i += BATCH_SIZE) {
+            const batch = codes.slice(i, i + BATCH_SIZE);
+            if (label) label.textContent = `Syncing ${i + batch.length}/${codes.length}...`;
+            await Promise.all(batch.map(c => NAVManager.getNAV(c, true)));
+            
+            // Tiny rest between batches
+            if (i + BATCH_SIZE < codes.length) await new Promise(r => setTimeout(r, 200));
+        }
+
         localStorage.setItem('last_global_sync', Date.now().toString());
         updateSyncUI();
-        syncAutomatedGroups(); // Force refresh automated groups
-        currentView === 'individual' ? displayFunds() : displayGroups();
+        syncAutomatedGroups(); 
+        displayFunds();
+        displayGroups();
         updateSummary();
-        showSuccess('Data refreshed');
-    } catch (err) { showError('Sync failed'); }
+        showSuccess('Portfolio Synced Successfully');
+    } catch (err) { 
+        showError('Sync partially failed'); 
+        updateSyncUI();
+    }
     finally { btn.classList.remove('sync-btn-disabled'); }
 }
 
@@ -564,4 +737,34 @@ function updateAuthUI() {
 function debounce(fn, ms) {
     let t;
     return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+
+/**
+ * Global Loader Management
+ */
+async function showGlobalLoader(title = 'Loading', subtext = 'Please wait...') {
+    const loader = document.getElementById('loadingScreen');
+    if (!loader) return;
+    
+    loader.querySelector('.loading-text').textContent = title;
+    loader.querySelector('.loading-subtext').textContent = subtext;
+    loader.style.display = 'flex';
+    document.body.classList.add('loading-lock');
+}
+
+function updateLoadingText(subtext) {
+    const sub = document.querySelector('#loadingScreen .loading-subtext');
+    if (sub) sub.textContent = subtext;
+}
+
+function hideGlobalLoader() {
+    const loader = document.getElementById('loadingScreen');
+    if (!loader) return;
+    
+    loader.style.opacity = '0';
+    setTimeout(() => {
+        loader.style.display = 'none';
+        loader.style.opacity = '1';
+        document.body.classList.remove('loading-lock');
+    }, 400);
 }
