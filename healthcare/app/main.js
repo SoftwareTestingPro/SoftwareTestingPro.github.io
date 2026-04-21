@@ -66,8 +66,17 @@ function switchTab(tabId) {
 
 // 3. SQL Engine
 function runQuery() {
-    const query = editor.value;
+    const query = editor.value.trim();
+    const isDML = /^(UPDATE|INSERT|DELETE|CREATE|DROP|ALTER)/i.test(query);
+
     try {
+        if (isDML) {
+            db.run(query);
+            resultContainer.innerHTML = `<div class="empty-state" style="color: var(--success)">Query executed successfully. Changes applied to the database.</div>`;
+            updateDashboard(); // Live update of Dashboard KPIs
+            return;
+        }
+
         const res = db.exec(query);
         if (res.length === 0) {
             resultContainer.innerHTML = '<div class="empty-state">No records found.</div>';
