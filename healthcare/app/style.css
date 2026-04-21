@@ -67,7 +67,14 @@ body.dark-theme { background-color: var(--sidebar-bg); color: var(--text-primary
 #total-rows-info { font-size: 12px; color: var(--text-secondary); }
 
 /* Main Content Area */
-.content-view { flex: 1; background: var(--bg-dark); padding: 32px; overflow-y: auto; }
+.content-view { flex: 1; background: var(--bg-dark); padding: 32px; overflow-y: auto; height: 100vh; position: relative; }
+
+/* Custom Scrollbar for Premium Look */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #374151; }
+
 .view-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
 .view-header h2 { font-size: 28px; font-weight: 600; }
 
