@@ -48,6 +48,20 @@ body.dark-theme { background-color: var(--sidebar-bg); color: var(--text-primary
 .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: var(--text-primary); }
 .nav-item.active { background: var(--accent-blue); color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
 
+.sidebar-section { margin-top: 32px; }
+.nav-item-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    transition: 0.2s;
+}
+.nav-item-link:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+
 .sidebar-footer { border-top: 1px solid var(--border-color); padding-top: 24px; }
 .status-indicator { display: flex; align-items: center; font-size: 13px; margin-bottom: 8px; }
 #total-rows-info { font-size: 12px; color: var(--text-secondary); }

@@ -1,4 +1,16 @@
-const SEED_DATA = `
+CREATE DATABASE IF NOT EXISTS shukla_healthcare;
+USE shukla_healthcare;
+
+-- Schema for External MySQL Workbench
+
+CREATE TABLE IF NOT EXISTS dim_employers (employer_id INT PRIMARY KEY, employer_name VARCHAR(255), industry VARCHAR(100), hq_country VARCHAR(50), onboarding_date DATE);
+CREATE TABLE IF NOT EXISTS dim_products (product_id INT PRIMARY KEY, product_name VARCHAR(100), line_of_business VARCHAR(50), risk_profile VARCHAR(20));
+CREATE TABLE IF NOT EXISTS dim_employees (employee_id INT PRIMARY KEY, employer_id INT, full_name VARCHAR(255), birth_date DATE, enrollment_status VARCHAR(20), monthly_salary DECIMAL(18,2));
+CREATE TABLE IF NOT EXISTS dim_providers (provider_id INT PRIMARY KEY, provider_name VARCHAR(255), specialty VARCHAR(100), network_status VARCHAR(50));
+CREATE TABLE IF NOT EXISTS fact_enrollments (enrollment_id INT PRIMARY KEY, employee_id INT, product_id INT, enrollment_date DATE, status VARCHAR(20));
+CREATE TABLE IF NOT EXISTS fact_claims (claim_id INT PRIMARY KEY, employee_id INT, product_id INT, provider_id INT, service_date DATE, claim_amount DECIMAL(18,2), paid_amount DECIMAL(18,2), claim_status VARCHAR(20));
+CREATE TABLE IF NOT EXISTS fact_claim_status_history (history_id INT PRIMARY KEY, claim_id INT, old_status VARCHAR(20), new_status VARCHAR(20), updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
 -- Providers
 INSERT INTO dim_providers (provider_id, provider_name, specialty, network_status) VALUES
 (1, 'Global Pharma 1', 'General Practitioner', 'IN-NETWORK'),
@@ -3397,4 +3409,3 @@ INSERT INTO fact_claim_status_history (history_id, claim_id, old_status, new_sta
 (297, 167, 'PENDING', 'APPROVED', '2024-03-18 00:11:04'),
 (298, 524, 'PENDING', 'APPROVED', '2024-08-31 02:02:23'),
 (299, 595, 'PENDING', 'APPROVED', '2024-08-01 07:23:54');
-`;

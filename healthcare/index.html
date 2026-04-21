@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shukla Healthcare | Analytics Platform</title>
+    <style>
+        :root { --bg: #0a0e14; --text: #f3f4f6; --accent: #3b82f6; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        .card { padding: 40px; border: 1px solid #1f2937; border-radius: 24px; background: #111827; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 500px; }
+        h1 { margin: 0 0 10px; font-size: 32px; background: linear-gradient(to right, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: #9ca3af; margin-bottom: 30px; line-height: 1.6; }
+        .btn { display: inline-block; padding: 12px 32px; background: var(--accent); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: 0.2s; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+        .links { margin-top: 20px; display: flex; gap: 15px; justify-content: center; }
+        .links a { color: #6b7280; text-decoration: none; font-size: 14px; }
+        .links a:hover { color: var(--text); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>💠 Shukla Healthcare</h1>
+        <p>Enterprise SQL Practice Environment. Explore 7 detailed tables, 1,250+ records, and an interactive Executive Dashboard.</p>
+        <a href="app/index.html" class="btn">Launch Practice Studio</a>
+        <div class="links">
+            <a href="docs/erd.md">ER Diagram</a>
+            <a href="docs/sql_compatibility.md">SQL Differences</a>
+            <a href="docs/business_scenarios.md">Case Studies</a>
+            <a href="README.md">Setup Guide</a>
+        </div>
+    </div>
+</body>
+</html>
