@@ -16,25 +16,39 @@
     <div class="app-container">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="logo">
-                <span class="logo-icon">💠</span>
-                <div class="logo-text">
-                    <h1>Shukla</h1>
-                    <p>Healthcare Systems</p>
+            <div class="sidebar-content">
+                <div class="logo">
+                    <span class="logo-icon">💠</span>
+                    <div class="logo-text">
+                        <h1>Shukla</h1>
+                        <p>Healthcare Systems</p>
+                    </div>
                 </div>
-            </div>
-            
-            <nav class="main-nav">
-                <div class="nav-item active" onclick="switchTab('dashboard')"><span>📈</span> Executive Dashboard</div>
-                <div class="nav-item" onclick="switchTab('sql-lab')"><span>💻</span> SQL Analytics Lab</div>
-                <div class="nav-item" onclick="switchTab('explorer')"><span>🔍</span> Entity Explorer</div>
-            </nav>
+                
+                <nav class="main-nav">
+                    <div class="nav-item active" onclick="switchTab('dashboard')"><span>📈</span> Executive Dashboard</div>
+                    <div class="nav-item" onclick="switchTab('sql-lab')"><span>💻</span> SQL Analytics Lab</div>
+                    <div class="nav-item" onclick="switchTab('explorer')"><span>🔍</span> Entity Explorer</div>
+                </nav>
 
-            <div class="sidebar-section">
-                <h3>Learning Center</h3>
-                <a href="../README.md" target="_blank" class="nav-item-link">📖 Project Documentation</a>
-                <a href="../docs/sql_compatibility.md" target="_blank" class="nav-item-link">📚 SQL Best Practices</a>
-                <a href="../docs/erd.md" target="_blank" class="nav-item-link">📐 Data Architecture</a>
+                <div class="sidebar-section">
+                    <h3>Challenge Lab</h3>
+                    <div class="challenge-box">
+                        <p id="challenge-text">Ready to test your skills?</p>
+                        <div class="challenge-btns">
+                            <button class="btn-sm" onclick="getNewChallenge()">New Task</button>
+                            <button class="btn-sm btn-ghost" id="btn-solution" style="display:none" onclick="showSolution()">Answer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Learning Center</h3>
+                    <a href="../README.md" target="_blank" class="nav-item-link">📖 Project Documentation</a>
+                    <a href="../docs/business_scenarios.md" target="_blank" class="nav-item-link">💡 Business Scenarios</a>
+                    <a href="../docs/sql_compatibility.md" target="_blank" class="nav-item-link">📚 SQL Best Practices</a>
+                    <a href="../docs/erd.md" target="_blank" class="nav-item-link">📐 Data Architecture</a>
+                </div>
             </div>
 
             <div class="sidebar-footer">
@@ -133,6 +147,7 @@ SELECT * FROM fact_claims LIMIT 10;</textarea>
             </section>
         </main>
     </div>
+    <script src="challenges.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
