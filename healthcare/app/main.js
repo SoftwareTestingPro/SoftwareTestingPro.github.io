@@ -37,11 +37,13 @@ async function bootstrapDB() {
         dbStatus.innerText = "Loading Enterprise Data...";
         
         // Use the SEED_DATA variable defined in ../sql/data.js
-        if (typeof SEED_DATA !== 'undefined') {
+        if (typeof SEED_DATA !== 'undefined' && SEED_DATA.length > 100) {
             db.run(SEED_DATA);
-            dbStatus.innerText = "1,250+ Records Loaded";
+            console.log("SQL Bootstrap: Data loaded successfully. Chars:", SEED_DATA.length);
+            dbStatus.innerText = "1,500+ Records Live";
         } else {
-            throw new Error("SEED_DATA not found");
+            console.error("SEED_DATA is empty or missing.");
+            dbStatus.innerText = "Data Load Failed - Please Refresh";
         }
     } catch (e) {
         console.error("Data Load Error:", e);
