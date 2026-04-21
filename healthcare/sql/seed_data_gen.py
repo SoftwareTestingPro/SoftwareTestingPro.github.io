@@ -83,9 +83,12 @@ sql_statements.append(",\n".join(employee_rows) + ";\n")
 # 5. Enrollments
 sql_statements.append("INSERT INTO fact_enrollments (enrollment_id, employee_id, product_id, enrollment_date, status) VALUES")
 enrollment_rows = []
+prod_ids = [1, 2, 3, 4, 5]
+prod_weights = [0.40, 0.30, 0.15, 0.10, 0.05] # Life & Accident are dominant
 for i in range(1, NUM_ENROLLMENTS + 1):
     emp_id = random.randint(10001, 10000 + NUM_EMPLOYEES)
-    enrollment_rows.append(f"({5000 + i}, {emp_id}, {random.randint(1, 5)}, '{random_date(2022).strftime('%Y-%m-%d')}', 'ACTIVE')")
+    p_id = random.choices(prod_ids, weights=prod_weights)[0]
+    enrollment_rows.append(f"({5000 + i}, {emp_id}, {p_id}, '{random_date(2022).strftime('%Y-%m-%d')}', 'ACTIVE')")
 sql_statements.append(",\n".join(enrollment_rows) + ";\n")
 
 # 6. Claims
@@ -94,7 +97,8 @@ claim_rows = []
 for i in range(1, NUM_CLAIMS + 1):
     amt = round(random.uniform(80, 7500), 2)
     paid = round(amt * random.uniform(0.65, 0.98), 2) if random.random() > 0.18 else 0
-    claim_rows.append(f"({i + 9000}, {random.randint(10001, 10000 + NUM_EMPLOYEES)}, {random.randint(1, 5)}, {random.randint(501, 500 + NUM_PROVIDERS)}, '{random_date(2023).strftime('%Y-%m-%d')}', {amt}, {paid}, '{'DENIED' if paid == 0 else 'APPROVED'}')")
+    p_id = random.choices(prod_ids, weights=prod_weights)[0]
+    claim_rows.append(f"({i + 9000}, {random.randint(10001, 10000 + NUM_EMPLOYEES)}, {p_id}, {random.randint(501, 500 + NUM_PROVIDERS)}, '{random_date(2023).strftime('%Y-%m-%d')}', {amt}, {paid}, '{'DENIED' if paid == 0 else 'APPROVED'}')")
 sql_statements.append(",\n".join(claim_rows) + ";\n")
 
 # 7. Audit History

@@ -121,8 +121,20 @@ function updateDashboard() {
         document.getElementById('kpi-denial-rate').innerText = `${((denials/totalCount)*100).toFixed(1)}%`;
 
         // Active Members
-        const members = db.exec("SELECT COUNT(*) FROM dim_employees")[0].values[0][0];
+        const members = db.exec("SELECT COUNT(*) FROM dim_employees WHERE enrollment_status = 'ACTIVE'")[0].values[0][0];
         document.getElementById('kpi-active-employees').innerText = members.toLocaleString();
+
+        // New KPIs
+        const avgPaid = db.exec("SELECT AVG(paid_amount) FROM fact_claims WHERE paid_amount > 0")[0].values[0][0];
+        document.getElementById('kpi-avg-payout').innerText = `$${Math.round(avgPaid).toLocaleString()}`;
+
+        const networkStats = db.exec("SELECT COUNT(*) FROM dim_providers WHERE network_status = 'IN-NETWORK'")[0].values[0][0];
+        const totalProviders = db.exec("SELECT COUNT(*) FROM dim_providers")[0].values[0][0];
+        document.getElementById('kpi-network-index').innerText = `${((networkStats/totalProviders)*100).toFixed(0)}%`;
+
+        const products = db.exec("SELECT COUNT(*) FROM dim_products")[0].values[0][0];
+        document.getElementById('kpi-product-count').innerText = products;
+
     } catch (e) {
         console.warn("Dashboard update failed", e);
     }
