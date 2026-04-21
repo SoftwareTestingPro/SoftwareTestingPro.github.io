@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shukla Healthcare | Enterprise Data Suite</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../sql/data.js"></script>
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">💠</span>
+                <div class="logo-text">
+                    <h1>Shukla</h1>
+                    <p>Healthcare Systems</p>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <div class="nav-item active" onclick="switchTab('dashboard')"><span>📈</span> Executive Dashboard</div>
+                <div class="nav-item" onclick="switchTab('sql-lab')"><span>💻</span> SQL Analytics Lab</div>
+                <div class="nav-item" onclick="switchTab('explorer')"><span>🔍</span> Entity Explorer</div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="dot pulse"></span>
+                    <span id="db-status">Loading Data...</span>
+                </div>
+                <p id="total-rows-info">1,200+ records active</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-view">
+            <!-- 1. Dashboard Tab -->
+            <section id="tab-dashboard" class="tab-content active">
+                <header class="view-header">
+                    <h2>Enterprise Dashboard</h2>
+                    <div class="date-filter">Real-time Analytics | Q2 2026</div>
+                </header>
+                
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <label>Total Claims Volume</label>
+                        <div class="value" id="kpi-total-claims">$0</div>
+                        <div class="trend up">+12.4% vs last mo</div>
+                    </div>
+                    <div class="kpi-card">
+                        <label>Claim Denials Rate</label>
+                        <div class="value" id="kpi-denial-rate">0%</div>
+                        <div class="trend down">-2.1% improvement</div>
+                    </div>
+                    <div class="kpi-card">
+                        <label>Active Members</label>
+                        <div class="value" id="kpi-active-employees">0</div>
+                        <div class="trend up">Global coverage</div>
+                    </div>
+                    <div class="kpi-card">
+                        <label>Avg. Premium Retention</label>
+                        <div class="value" id="kpi-retention">88%</div>
+                        <div class="trend">Healthy Ratio</div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3>Claims by Line of Business</h3>
+                        <canvas id="lobChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Monthly Claim Trends</h3>
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. SQL Lab Tab (Previously index content) -->
+            <section id="tab-sql-lab" class="tab-content">
+                <header class="view-header">
+                    <h2>SQL Analytics Lab</h2>
+                    <div class="actions">
+                        <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
+                        <button class="btn btn-primary" onclick="runQuery()">Run Query</button>
+                    </div>
+                </header>
+                <div class="sql-container">
+                    <div class="editor-pane">
+                        <textarea id="sql-editor" spellcheck="false">-- Practice SQL here
+SELECT * FROM fact_claims LIMIT 10;</textarea>
+                    </div>
+                    <div class="results-pane">
+                        <div class="table-wrapper" id="result-container">
+                            <div class="empty-state">Execute a query to see results...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Explorer Tab -->
+            <section id="tab-explorer" class="tab-content">
+                <header class="view-header">
+                    <h2>Entity Explorer</h2>
+                    <p>Direct view of master data tables</p>
+                </header>
+                <div class="explorer-grid">
+                    <div class="explorer-menu" id="explorer-menu">
+                        <div class="menu-item active" onclick="loadTable('dim_employers')">📊 dim_employers</div>
+                        <div class="menu-item" onclick="loadTable('dim_products')">📦 dim_products</div>
+                        <div class="menu-item" onclick="loadTable('dim_employees')">👥 dim_employees</div>
+                        <div class="menu-item" onclick="loadTable('dim_providers')">🏥 dim_providers</div>
+                        <div class="menu-item" onclick="loadTable('fact_enrollments')">📝 fact_enrollments</div>
+                        <div class="menu-item" onclick="loadTable('fact_claims')">💸 fact_claims</div>
+                        <div class="menu-item" onclick="loadTable('fact_claim_status_history')">📜 fact_claim_history</div>
+                    </div>
+                    <div class="explorer-data" id="explorer-table-container"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
