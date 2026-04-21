@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | Shukla Healthcare</title>
+    <style>
+        :root {
+            --bg: #0a0e14;
+            --card-bg: #111827;
+            --border: #1f2937;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent: #3b82f6;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Outfit', -apple-system, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        .nav-back {
+            margin-bottom: 40px;
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .doc-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 48px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 { font-size: 36px; margin-top: 0; color: white; }
+        h2 { font-size: 24px; margin-top: 40px; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--accent); }
+        pre, code {
+            background: #000;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #e5e7eb;
+        }
+        pre { padding: 20px; overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { color: var(--text-secondary); font-size: 13px; text-transform: uppercase; }
+        .mermaid { background: white; padding: 20px; border-radius: 12px; margin: 20px 0; overflow: hidden; }
+    </style>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="nav-back">← Back to Platform</a>
+        <div class="doc-card">
+            <h1>Entity Relationship Diagram</h1>
+            <p>The core schema of Shukla Healthcare Systems. Use this to understand the links between Employees, Claims, and Providers.</p>
+            
+            <div class="mermaid">
+                erDiagram
+                    EMPLOYER ||--o{ EMPLOYEE : employs
+                    EMPLOYER ||--o{ GROUP_POLICY : contracts
+                    PRODUCT ||--o{ GROUP_POLICY : defines
+                    GROUP_POLICY ||--o{ ENROLLMENT : allows
+                    EMPLOYEE ||--o{ ENROLLMENT : chooses
+                    ENROLLMENT ||--o{ CLAIM : generates
+                    EMPLOYEE ||--o{ CLAIM : submits
+                    PROVIDER ||--o{ CLAIM : performs
+
+                    EMPLOYER {
+                        int employer_id PK
+                        string name
+                        string industry
+                    }
+                    EMPLOYEE {
+                        int employee_id PK
+                        int employer_id FK
+                        string full_name
+                        decimal monthly_salary
+                    }
+                    CLAIM {
+                        int claim_id PK
+                        int employee_id FK
+                        int provider_id FK
+                        decimal claim_amount
+                        string status
+                    }
+            </div>
+
+            <h2>Business Flow</h2>
+            <p>1. <strong>Onboarding</strong>: Employers sign up with insurance products.<br>
+               2. <strong>Enrollment</strong>: Employees choose which products to subscribe to.<br>
+               3. <strong>Claims</strong>: When a service is performed, a claim is generated against an active enrollment.</p>
+        </div>
+    </div>
+</body>
+</html>

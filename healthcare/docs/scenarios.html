@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Scenarios | Shukla Healthcare</title>
+    <style>
+        :root { --bg: #0a0e14; --card-bg: #111827; --border: #1f2937; --text-primary: #f3f4f6; --text-secondary: #9ca3af; --accent: #3b82f6; --success: #10b981; }
+        body { background-color: var(--bg); color: var(--text-primary); font-family: 'Outfit', sans-serif; line-height: 1.6; margin: 0; padding: 40px; display: flex; justify-content: center; }
+        .container { max-width: 900px; width: 100%; }
+        .nav-back { margin-bottom: 40px; display: inline-block; color: var(--accent); text-decoration: none; font-weight: 600; }
+        .doc-card { background: var(--card-bg); border: 1px solid var(--border); padding: 48px; border-radius: 24px; }
+        h1 { font-size: 36px; margin-top: 0; color: white; }
+        .scenario-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 24px; border-radius: 16px; margin-bottom: 32px; }
+        h2 { font-size: 20px; color: var(--accent); margin-top: 0; }
+        .sq-block { background: #000; padding: 20px; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--success); margin-top: 15px; position: relative; overflow-x: auto; }
+        .badge { background: var(--accent); color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="nav-back">← Back to Platform</a>
+        <div class="doc-card">
+            <h1>Business Case Studies</h1>
+            <p>Solve these real-world insurance scenarios to gain mastery in SQL Analysis.</p>
+
+            <div class="scenario-box">
+                <div class="badge">Intermediate</div>
+                <h2>Case 6: Provider Performance</h2>
+                <p>Which clinic specialties are most expensive? Calculate average payout per specialty.</p>
+                <div class="sq-block">
+SELECT p.specialty, AVG(c.paid_amount) <br>
+FROM dim_providers p <br>
+JOIN fact_claims c ON p.provider_id = c.provider_id <br>
+GROUP BY 1 ORDER BY 2 DESC;
+                </div>
+            </div>
+
+            <div class="scenario-box">
+                <div class="badge">Advanced</div>
+                <h2>Case 7: Audit History Trail</h2>
+                <p>Identify claims that have undergone status changes. Perfect for practicing CTEs.</p>
+                <div class="sq-block">
+WITH history_counts AS (<br>
+&nbsp;&nbsp;SELECT claim_id, COUNT(*) as changes <br>
+&nbsp;&nbsp;FROM fact_claim_status_history <br>
+&nbsp;&nbsp;GROUP BY 1<br>
+)<br>
+SELECT * FROM history_counts WHERE changes > 0;
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

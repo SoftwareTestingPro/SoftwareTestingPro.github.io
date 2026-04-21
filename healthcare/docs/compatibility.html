@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Compatibility | Shukla Healthcare</title>
+    <style>
+        :root { --bg: #0a0e14; --card-bg: #111827; --border: #1f2937; --text-primary: #f3f4f6; --text-secondary: #9ca3af; --accent: #3b82f6; }
+        body { background-color: var(--bg); color: var(--text-primary); font-family: system-ui, sans-serif; line-height: 1.6; margin: 0; padding: 40px; display: flex; justify-content: center; }
+        .container { max-width: 900px; width: 100%; }
+        .nav-back { margin-bottom: 40px; display: inline-block; color: var(--accent); text-decoration: none; font-weight: 600; }
+        .doc-card { background: var(--card-bg); border: 1px solid var(--border); padding: 48px; border-radius: 24px; }
+        h1 { font-size: 36px; margin-top: 0; color: white; }
+        h2 { font-size: 24px; margin-top: 40px; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--accent); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { color: var(--text-secondary); font-size: 13px; text-transform: uppercase; }
+        code { background: #000; padding: 4px 8px; border-radius: 6px; font-family: monospace; color: #e5e7eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="nav-back">← Back to Platform</a>
+        <div class="doc-card">
+            <h1>SQL Compatibility Guide</h1>
+            <p>Mastering the differences between the Browser Playground (SQLite) and Enterprise MySQL.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Web Studio (SQLite)</th>
+                        <th>External (MySQL)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Current Date</td>
+                        <td><code>date('now')</code></td>
+                        <td><code>CURDATE()</code></td>
+                    </tr>
+                    <tr>
+                        <td>Concatenation</td>
+                        <td><code>||</code></td>
+                        <td><code>CONCAT()</code></td>
+                    </tr>
+                    <tr>
+                        <td>Limit Rows</td>
+                        <td><code>LIMIT X</code></td>
+                        <td><code>LIMIT X</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Common Queries</h2>
+            <p>Example of a query that works in both:</p>
+            <code>SELECT * FROM fact_claims WHERE claim_amount > 1000 ORDER BY service_date DESC;</code>
+        </div>
+    </div>
+</body>
+</html>
