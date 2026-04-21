@@ -29,7 +29,7 @@ async function bootstrapDB() {
         CREATE TABLE dim_providers (provider_id INT, provider_name TEXT, specialty TEXT, network_status TEXT);
         CREATE TABLE fact_enrollments (enrollment_id INT, employee_id INT, product_id INT, enrollment_date DATE, status TEXT);
         CREATE TABLE fact_claims (claim_id INT, employee_id INT, product_id INT, provider_id INT, service_date DATE, claim_amount DECIMAL, paid_amount DECIMAL, claim_status TEXT);
-        CREATE TABLE fact_claim_status_history (history_id INT, claim_id INT, old_status TEXT, new_status TEXT, updated_at TIMESTAMP);
+        CREATE TABLE fact_claim_history (history_id INT, claim_id INT, old_status TEXT, new_status TEXT, updated_at TIMESTAMP);
     `;
     db.run(ddl);
 
@@ -174,12 +174,26 @@ function initCharts() {
 }
 
 // 5. Explorer
-function loadTable(tableName) {
+function loadTable(tableName, element) {
+    // UI Cleanup
     document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    if(element) element.classList.add('active');
     
-    const res = db.exec(`SELECT * FROM ${tableName} LIMIT 1000`);
-    renderTable(res[0], 'explorer-table-container');
+    const container = document.getElementById('explorer-table-container');
+    container.innerHTML = '<div class="empty-state">Loading data...</div>';
+
+    setTimeout(() => {
+        try {
+            const res = db.exec(`SELECT * FROM ${tableName} LIMIT 1000`);
+            if (res.length > 0) {
+                renderTable(res[0], 'explorer-table-container');
+            } else {
+                container.innerHTML = '<div class="empty-state">No records in this table.</div>';
+            }
+        } catch (e) {
+            container.innerHTML = `<div class="empty-state" style="color: var(--danger)">Table error: ${e.message}</div>`;
+        }
+    }, 50);
 }
 
 function exportCSV() {

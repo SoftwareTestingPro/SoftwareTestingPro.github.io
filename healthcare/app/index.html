@@ -120,13 +120,13 @@ SELECT * FROM fact_claims LIMIT 10;</textarea>
                 </header>
                 <div class="explorer-grid">
                     <div class="explorer-menu" id="explorer-menu">
-                        <div class="menu-item active" onclick="loadTable('dim_employers')">📊 dim_employers</div>
-                        <div class="menu-item" onclick="loadTable('dim_products')">📦 dim_products</div>
-                        <div class="menu-item" onclick="loadTable('dim_employees')">👥 dim_employees</div>
-                        <div class="menu-item" onclick="loadTable('dim_providers')">🏥 dim_providers</div>
-                        <div class="menu-item" onclick="loadTable('fact_enrollments')">📝 fact_enrollments</div>
-                        <div class="menu-item" onclick="loadTable('fact_claims')">💸 fact_claims</div>
-                        <div class="menu-item" onclick="loadTable('fact_claim_status_history')">📜 fact_claim_history</div>
+                        <div class="menu-item active" onclick="loadTable('dim_employers', this)">📊 dim_employers</div>
+                        <div class="menu-item" onclick="loadTable('dim_products', this)">📦 dim_products</div>
+                        <div class="menu-item" onclick="loadTable('dim_employees', this)">👥 dim_employees</div>
+                        <div class="menu-item" onclick="loadTable('dim_providers', this)">🏥 dim_providers</div>
+                        <div class="menu-item" onclick="loadTable('fact_enrollments', this)">📝 fact_enrollments</div>
+                        <div class="menu-item" onclick="loadTable('fact_claims', this)">💸 fact_claims</div>
+                        <div class="menu-item" onclick="loadTable('fact_claim_history', this)">📜 fact_claim_history</div>
                     </div>
                     <div class="explorer-data" id="explorer-table-container"></div>
                 </div>
