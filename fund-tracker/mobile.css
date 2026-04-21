@@ -1,0 +1,146 @@
+/* 
+ * MUTUAL FUND TRACKER - MOBILE OVERRIDES
+ * Only active on screens < 768px
+ */
+
+:root {
+    --mobile-padding: 16px;
+}
+
+body {
+    background-attachment: scroll; /* Smooth scrolling on mobile */
+    overflow-x: hidden;
+}
+
+.main-container {
+    padding: var(--mobile-padding);
+    padding-bottom: 120px; /* More space for the high-floating mobile nav */
+}
+
+/* 1. Compact Header */
+.header-section {
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.mobile-only-auth {
+    display: flex !important;
+}
+
+/* 2. Mobile Bottom Nav Overlay */
+.desktop-sidebar {
+    display: none !important;
+}
+
+.mobile-bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 8px;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10000;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.mobile-nav-item {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-item i { font-size: 1.2rem; }
+.mobile-nav-item small { font-size: 10px; font-weight: 600; opacity: 0.7; }
+
+.mobile-nav-item.active {
+    color: var(--brand-primary);
+}
+
+.mobile-nav-item.active small { opacity: 1; }
+
+/* 3. Horizontal Swipeable Card Deck */
+#masterGrid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    padding: 10px 0 30px 0;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding: 20px;
+}
+
+/* Hide scrollbar but keep functionality */
+#masterGrid::-webkit-scrollbar {
+    display: none;
+}
+
+.playing-card, 
+#masterGrid .playing-card,
+.skeleton-card {
+    min-width: 85vw !important;
+    max-width: 85vw !important;
+    flex: 0 0 85vw !important;
+    scroll-snap-align: center !important;
+    height: auto !important;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Add specialized padding for the first and last card so they center correctly */
+#masterGrid::before, #masterGrid::after {
+    content: '';
+    flex: 0 0 5vw;
+}
+
+/* 4. Optimized Card Layout for Mobile */
+.mobile-compact .card-title-v2 {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mobile-compact .card-meta-v2 {
+    font-size: 0.75rem;
+    margin-bottom: 12px;
+}
+
+.mobile-compact .card-stats-grid {
+    margin-bottom: 12px;
+}
+
+.card-periodic-list {
+    max-height: none; /* Allow full height on mobile if desired */
+    overflow-y: visible;
+}
+
+/* 5. Add Fund Form - Single Column */
+.add-fund-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 6. Improved Accessibility */
+.btn-action-v2, .nav-v2-pill {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

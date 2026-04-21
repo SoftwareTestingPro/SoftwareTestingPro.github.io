@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="style.css?v=4">
+    <!-- Mobile Specific Overrides -->
+    <link rel="stylesheet" href="mobile.css?v=1" media="screen and (max-width: 768px)">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
@@ -71,39 +73,82 @@
                         <h1><i class="bi bi-graph-up-arrow"></i> Mutual Fund Tracker</h1>
                         <p class="mb-0">Track your mutual fund investments across multiple time periods</p>
                     </div>
-                    <div class="auth-section">
-                        <div id="userInfo" class="user-info" style="display: none;">
-                            <div class="sync-status-container me-2">
-                                <button id="syncBtn" class="btn btn-sm btn-outline-light" onclick="refreshAllData()"
-                                    title="Force refresh all NAVs">
-                                    <i class="bi bi-arrow-repeat" id="syncIcon"></i> Sync
-                                </button>
-                                <div id="lastSyncLabel" class="sync-time-label"></div>
-                            </div>
-                            <img id="userAvatar" src="" alt="User" class="user-avatar">
-                            <span id="userName" class="user-name"></span>
-                            <button id="logoutBtn" class="btn btn-sm btn-outline-light ms-2" onclick="signOut()">
-                                <i class="bi bi-box-arrow-right"></i> Logout
-                            </button>
-                        </div>
-                        <div id="loginSection" class="login-section">
-                            <div id="mainEmailSignInBtn"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            <!-- Navigation Hub -->
-            <div class="nav-v2-container">
-                <div class="nav-v2-pills">
-                    <button class="nav-v2-pill active" data-view="individual" onclick="switchMainView('individual')">My
-                        Funds</button>
-                    <button class="nav-v2-pill" data-view="groups" onclick="switchMainView('groups')">Groups</button>
-                    <button class="nav-v2-pill" data-view="explore" onclick="switchMainView('explore')">Explore
-                        Funds</button>
-                    <button class="nav-v2-pill" data-view="research"
-                        onclick="switchMainView('research')">Research</button>
-                </div>
+            <!-- Main Navigation Wrapper -->
+            <div class="navigation-hub-v2">
+                <!-- Desktop Sidebar -->
+                <aside class="desktop-sidebar">
+                    <div class="sidebar-nav-v2">
+                        <button class="sidebar-item active" data-view="individual" onclick="switchMainView('individual')">
+                            <i class="bi bi-graph-up"></i>
+                            <span>My Funds</span>
+                        </button>
+                        <button class="sidebar-item" data-view="groups" onclick="switchMainView('groups')">
+                            <i class="bi bi-collection"></i>
+                            <span>Groups</span>
+                        </button>
+                        <button class="sidebar-item" data-view="explore" onclick="switchMainView('explore')">
+                            <i class="bi bi-compass"></i>
+                            <span>Explore</span>
+                        </button>
+                        <button class="sidebar-item" data-view="research" onclick="switchMainView('research')">
+                            <i class="bi bi-search"></i>
+                            <span>Research</span>
+                        </button>
+                    </div>
+
+                    <!-- Sidebar Auth Section -->
+                    <div class="sidebar-auth-v2">
+                        <div id="userInfoSidebar" class="user-info-sidebar dropdown-auth" style="display: none;" onclick="toggleLogoutMenu(this)">
+                            <div class="sync-status-container-sidebar">
+                                <button id="syncBtnSidebar" class="btn-sidebar-action" onclick="event.stopPropagation(); refreshAllData()" title="Force refresh all NAVs">
+                                    <i class="bi bi-arrow-repeat" id="syncIconSidebar"></i>
+                                    <span>Sync</span>
+                                </button>
+                                <div id="lastSyncLabelSidebar" class="sync-time-label-sidebar"></div>
+                            </div>
+                            
+                            <div class="user-profile-sidebar profile-trigger">
+                                <img id="userAvatarSidebar" src="" alt="User" class="user-avatar-sidebar">
+                                <span id="userNameSidebar" class="user-name-sidebar"></span>
+                            </div>
+
+                            <button id="logoutBtnSidebar" class="btn-sidebar-action logout logout-btn-hidden" onclick="event.stopPropagation(); signOut()">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                        <div id="loginSectionSidebar" class="login-section-sidebar">
+                            <div id="mainEmailSignInBtnSidebar"></div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Mobile Bottom Tab Bar -->
+                <nav class="mobile-bottom-nav">
+                    <button class="mobile-nav-item active" data-view="individual" onclick="switchMainView('individual')">
+                        <i class="bi bi-graph-up"></i>
+                        <small>My Funds</small>
+                    </button>
+                    <button class="mobile-nav-item" data-view="groups" onclick="switchMainView('groups')">
+                        <i class="bi bi-collection"></i>
+                        <small>Groups</small>
+                    </button>
+                    <button class="mobile-nav-item" data-view="explore" onclick="switchMainView('explore')">
+                        <i class="bi bi-compass"></i>
+                        <small>Explore</small>
+                    </button>
+                    <button class="mobile-nav-item" data-view="research" onclick="switchMainView('research')">
+                        <i class="bi bi-search"></i>
+                        <small>Research</small>
+                    </button>
+                    <button class="mobile-nav-item" data-view="profile" onclick="switchMainView('profile')">
+                        <i class="bi bi-person-circle"></i>
+                        <small>Profile</small>
+                    </button>
+                </nav>
             </div>
 
             <div id="loadingSpinner"
@@ -119,9 +164,23 @@
                 style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; align-items: stretch; margin-bottom: 60px;">
 
                 <!-- 1. Portfolio Card -->
-                <div id="summaryStatsContainer" style="display: contents;"></div>
+                <div id="summaryStatsContainer" style="display: contents;">
+                    <!-- Placeholder skeleton while computing -->
+                    <div class="playing-card skeleton-card">
+                        <div class="card-content">
+                            <h4 style="opacity: 0.5;">Portfolio Summary</h4>
+                            <div style="height: 48px; background: rgba(255,255,255,0.05); border-radius: 8px; margin: 12px 0;"></div>
+                            <div style="height: 20px; background: rgba(255,255,255,0.03); border-radius: 4px; width: 60%;"></div>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- 2. Add Fund Card -->
+                <!-- 2. Dynamic Funds -->
+                <div id="fundsContainer" style="display: contents;">
+                    <!-- Initial Loader managed by initApp -->
+                </div>
+
+                <!-- 3. Add Fund Card -->
                 <div class="playing-card" id="addFundCard" style="overflow: visible; height: auto; min-height: 410px;">
                     <div class="card-content"
                         style="padding: 14px 18px; flex: 1; display: flex; flex-direction: column;">
@@ -186,11 +245,6 @@
                     </div>
                 </div>
 
-                <!-- 3. Dynamic Funds -->
-                <div id="fundsContainer" style="display: contents;">
-                    <!-- Initial Loader managed by initApp -->
-                </div>
-
                 <!-- 4. Dynamic Groups -->
                 <div id="groupsContainer" style="display: contents;"></div>
 
@@ -212,6 +266,35 @@
 
                 <!-- 7. Market Explorer -->
                 <div id="exploreContainer" style="display: contents;"></div>
+
+                <!-- 8. Mobile Profile View -->
+                <div id="profileContainer" class="profile-view-mobile" style="display: none; width: 100%; max-width: 400px; margin: 0 auto; padding-top: 20px;">
+                    <div class="glass-card text-center">
+                        <div class="user-profile-mobile">
+                            <img id="userAvatarMobile" src="" alt="User" class="user-avatar-mobile" 
+                                 style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--brand-primary); margin-bottom: 12px;">
+                            <h3 id="userNameMobile" style="margin-bottom: 4px;"></h3>
+                            <p class="text-muted-v2" id="userEmailMobile"></p>
+                        </div>
+                        
+                        <hr style="border-color: rgba(255,255,255,0.05); margin: 24px 0;">
+                        
+                        <div class="mobile-action-list">
+                            <button class="btn-sidebar-action" onclick="refreshAllData()" style="flex-direction: row; gap: 12px; padding: 16px; margin-bottom: 12px;">
+                                <i class="bi bi-arrow-repeat"></i>
+                                <div style="text-align: left;">
+                                    <strong>Refresh Performance</strong>
+                                    <div id="lastSyncLabelMobile" style="font-size: 0.65rem; opacity: 0.6;">Never synced</div>
+                                </div>
+                            </button>
+                            
+                            <button class="btn-sidebar-action logout" onclick="signOut()" style="flex-direction: row; gap: 12px; padding: 16px;">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <strong>Logout from Tracker</strong>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>

@@ -169,10 +169,15 @@ function togglePerformanceGrid(id) {
     if (grid) grid.classList.toggle('collapsed');
     if (trigger) {
         trigger.classList.toggle('collapsed');
-        const icon = trigger.querySelector('.expand-toggle-btn');
-        if (icon) icon.classList.toggle('collapsed');
+        const icon = trigger.querySelector('.expand-toggle-btn') || trigger.querySelector('.bi');
+        if (icon && icon.classList) icon.classList.toggle('collapsed');
     }
 }
+
+/**
+ * Device detection helper
+ */
+const isMobile = () => window.innerWidth < 768;
 
 /**
  * Render all individual fund cards
@@ -191,7 +196,11 @@ async function displayFunds() {
 
     showLoading();
     try {
-        const sorted = [...userInvestments].sort((a, b) => new Date(b.investmentDate) - new Date(a.investmentDate));
+        const sorted = [...userInvestments].sort((a, b) => {
+            const dateDiff = new Date(b.investmentDate) - new Date(a.investmentDate);
+            if (dateDiff !== 0) return dateDiff;
+            return (b.id || 0) - (a.id || 0); // Recent ID first if dates are equal
+        });
         const fundsHTML = await Promise.all(sorted.map(async (investment) => {
             try {
                 const navDataRes = await getCurrentNAV(investment.schemeCode);
@@ -270,12 +279,14 @@ async function displayFunds() {
                     .replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '')
                     .trim();
 
+                const isMob = isMobile();
+
                 return `
-                    <div class="playing-card ${returns >= 0 ? 'card-positive' : 'card-negative'}">
+                    <div class="playing-card ${returns >= 0 ? 'card-positive' : 'card-negative'} ${isMob ? 'mobile-compact' : ''}">
                         <div class="card-content">
                             <h5 class="card-title-v2" title="${investment.schemeName}">${cleanTitle}</h5>
                             <div class="card-meta-v2 text-muted-v2">
-                                ${formatDate(investment.investmentDate)} • ${investment.units.toFixed(2)} Units • ${planInfo}
+                                ${isMob ? formatDate(investment.investmentDate) : formatDate(investment.investmentDate) + ' • ' + investment.units.toFixed(2) + ' Units • ' + planInfo}
                             </div>
                             
                             <div class="card-stats-grid">
@@ -315,7 +326,18 @@ async function displayFunds() {
                         </div>
                     </div>`;
             } catch (err) {
-                return `<div class="fund-card"><h5>${investment.schemeName}</h5><div class="error-badge">Error: ${err.message}</div></div>`;
+                return `
+                    <div class="playing-card card-negative mobile-compact">
+                        <div class="card-content">
+                            <h5 class="card-title-v2">${investment.schemeName}</h5>
+                            <div class="alert alert-danger" style="font-size: 0.8rem; background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.2); color: #ef4444;">
+                                <i class="bi bi-exclamation-triangle"></i> Data Error: ${err.message}
+                            </div>
+                            <div class="card-actions-v2">
+                                <button class="btn-action-v2 delete" onclick="removeFund('${investment.id}')">Remove</button>
+                            </div>
+                        </div>
+                    </div>`;
             }
         }));
         container.innerHTML = fundsHTML.join('');
@@ -532,12 +554,13 @@ async function updateSummary() {
 
         const uniqueFundCount = new Set(userInvestments.map(i => i.schemeCode)).size;
 
+        const isMob = isMobile();
         const summaryHTML = `
-            <div class="playing-card ${profit >= 0 ? 'card-positive' : 'card-negative'}" style="margin: 0;">
+            <div class="playing-card ${profit >= 0 ? 'card-positive' : 'card-negative'} ${isMob ? 'mobile-compact' : ''}" style="margin: 0;">
                 <div class="card-content">
                     <h5 class="card-title-v2" title="Portfolio Summary">Portfolio Summary</h5>
                     <div class="card-meta-v2 text-muted-v2" style="white-space: normal; height: auto;">
-                        Investment Since: ${oldestDateStr} • ${uniqueFundCount} Funds
+                        ${isMob ? uniqueFundCount + ' Funds' : 'Investment Since: ' + oldestDateStr + ' • ' + uniqueFundCount + ' Funds'}
                     </div>
                     
                     <div class="card-stats-grid">

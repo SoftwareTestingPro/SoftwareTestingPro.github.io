@@ -96,8 +96,8 @@ function showMainContent() {
 function switchMainView(targetView) {
     currentView = targetView;
     
-    // Update active pill UI
-    document.querySelectorAll('.nav-v2-pill').forEach(btn => {
+    // Update active UI (Sidebar & Mobile Nav)
+    document.querySelectorAll('.sidebar-item, .mobile-nav-item').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-view') === targetView);
     });
 
@@ -129,61 +129,53 @@ function switchMainView(targetView) {
         if (containers.summary) containers.summary.style.display = 'contents';
         if (containers.addFund) containers.addFund.style.display = 'flex';
         
-        // Only show explorer results if there's actual content (more than the placeholder search icon/text)
-        const hasResults = document.getElementById('discoveryResults')?.children.length > 1;
-        if (containers.explore && hasResults) {
-            containers.explore.style.display = 'contents';
-            if (explorerFilters) explorerFilters.style.display = 'none';
-        }
-        
         displayFunds();
         updateSummary();
-        displayExplore(); // Ensure it's rendered at least once
+        
+        // Ensure mobile carousel starts at the first card (Summary)
+        const masterGrid = document.getElementById('masterGrid');
+        if (masterGrid && window.innerWidth < 768) {
+            setTimeout(() => { masterGrid.scrollLeft = 0; }, 100);
+        }
     } else if (targetView === 'groups') {
         if (containers.groups) containers.groups.style.display = 'contents';
         if (containers.addGroup) containers.addGroup.style.display = 'flex';
         displayGroups();
+    } else if (targetView === 'profile') {
+        const profileContainer = document.getElementById('profileContainer');
+        if (profileContainer) profileContainer.style.display = 'block';
     } else if (targetView === 'research') {
         if (containers.research) containers.research.style.display = 'contents';
-        
-        const hasResults = document.getElementById('discoveryResults')?.children.length > 1;
-        if (containers.explore && hasResults) {
-            containers.explore.style.display = 'contents';
-            if (explorerFilters) explorerFilters.style.display = 'none';
-        }
-        
         displayResearch();
-        displayExplore(); 
     } else if (targetView === 'explore') {
         if (containers.explore) containers.explore.style.display = 'contents';
-        if (explorerFilters) explorerFilters.style.display = 'block'; // Show filters in explore view
+        if (explorerFilters) explorerFilters.style.display = 'block';
         displayExplore();
-    } else {
-        showInfo(`${targetView.charAt(0).toUpperCase() + targetView.slice(1)} module coming soon!`);
     }
 }
 
-/**
- * Sync UI Logic
- */
 function updateSyncUI() {
-    const label = document.getElementById('lastSyncLabel');
-    const syncBtn = document.getElementById('syncBtn');
-    if (!label || !syncBtn) return;
-
+    const labels = [document.getElementById('lastSyncLabel'), document.getElementById('lastSyncLabelSidebar'), document.getElementById('lastSyncLabelMobile')];
+    const syncBtns = [document.getElementById('syncBtn'), document.getElementById('syncBtnSidebar')];
+    
     const lastSync = localStorage.getItem('last_global_sync');
-    if (lastSync) {
-        label.textContent = `Synced at ${new Date(parseInt(lastSync)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-    }
+    const syncTimeStr = lastSync ? `Synced at ${new Date(parseInt(lastSync)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : '';
+
+    labels.forEach(label => { if(label) label.textContent = syncTimeStr; });
 
     const now = Date.now();
-    if (lastSync && (now - parseInt(lastSync)) < SYNC_COOLDOWN_MS) {
-        syncBtn.classList.add('sync-btn-disabled');
-        syncBtn.title = 'Data is fresh. Cooldown in progress.';
-    } else {
-        syncBtn.classList.remove('sync-btn-disabled');
-        syncBtn.title = 'Refresh all NAVs';
-    }
+    const isDisabled = lastSync && (now - parseInt(lastSync)) < SYNC_COOLDOWN_MS;
+
+    syncBtns.forEach(btn => {
+        if (!btn) return;
+        if (isDisabled) {
+            btn.classList.add('sync-btn-disabled');
+            btn.title = 'Data is fresh. Cooldown in progress.';
+        } else {
+            btn.classList.remove('sync-btn-disabled');
+            btn.title = 'Refresh all NAVs';
+        }
+    });
 }
 
 /**
@@ -654,11 +646,13 @@ async function deleteGroup() {
  * Data Refresh
  */
 async function refreshAllData() {
-    const btn = document.getElementById('syncBtn');
-    const label = document.getElementById('lastSyncLabel');
-    if (btn.classList.contains('sync-btn-disabled')) return;
+    // Find any available sync button
+    const btn = document.getElementById('syncBtnSidebar') || document.querySelector('.btn-sidebar-action[onclick*="refreshAllData"]');
+    const label = document.getElementById('lastSyncLabelSidebar') || document.getElementById('lastSyncLabelMobile');
+    
+    if (btn && btn.classList.contains('sync-btn-disabled')) return;
 
-    btn.classList.add('sync-btn-disabled');
+    if (btn) btn.classList.add('sync-btn-disabled');
     try {
         NAVManager.sessionCache.clear();
         const codes = [...new Set(userInvestments.map(i => i.schemeCode))];
@@ -719,17 +713,37 @@ function signOut() {
 }
 
 function updateAuthUI() {
-    const userInfo = document.getElementById('userInfo');
+    const userInfoSidebar = document.getElementById('userInfoSidebar');
+    const loginContent = document.getElementById('loginContent');
+
     if (isSignedIn && currentUser) {
-        userInfo.style.display = 'flex';
-        document.getElementById('userName').textContent = currentUser.name;
-        document.getElementById('userAvatar').src = currentUser.avatar;
-        document.getElementById('loginContent').style.display = 'none';
+        // Update Sidebar
+        if (userInfoSidebar) {
+            userInfoSidebar.style.display = 'flex';
+            const nameEl = document.getElementById('userNameSidebar');
+            const avatarEl = document.getElementById('userAvatarSidebar');
+            if (nameEl) nameEl.textContent = currentUser.name;
+            if (avatarEl) {
+                avatarEl.src = currentUser.avatar;
+                avatarEl.style.display = 'block';
+            }
+        }
+
+        // Update Mobile Profile View
+        const nameMob = document.getElementById('userNameMobile');
+        const emailMob = document.getElementById('userEmailMobile');
+        const avatarMob = document.getElementById('userAvatarMobile');
+        if (nameMob) nameMob.textContent = currentUser.name;
+        if (emailMob) emailMob.textContent = currentUser.email;
+        if (avatarMob) avatarMob.src = currentUser.avatar;
+
+        if (loginContent) loginContent.style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
     } else {
-        userInfo.style.display = 'none';
-        document.getElementById('loginContent').style.display = 'flex';
-        document.getElementById('mainContent').style.display = 'none';
+        if (userInfoSidebar) userInfoSidebar.style.display = 'none';
+        if (loginContent) loginContent.style.display = 'flex';
+        const mc = document.getElementById('mainContent');
+        if (mc) mc.style.display = 'none';
     }
 }
 
@@ -767,4 +781,11 @@ function hideGlobalLoader() {
         loader.style.opacity = '1';
         document.body.classList.remove('loading-lock');
     }, 400);
+}
+
+/**
+ * Toggle Profile Logout Menu
+ */
+function toggleLogoutMenu(container) {
+    container.classList.toggle('active');
 }
