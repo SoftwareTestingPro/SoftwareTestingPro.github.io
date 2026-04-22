@@ -171,171 +171,170 @@ const isMobile = () => window.innerWidth < 768;
  */
 async function displayFunds() {
     const container = document.getElementById('fundsContainer');
+    const redeemContainer = document.getElementById('redemptionContainer');
     const header = document.getElementById('historyHeader');
+    const redeemHeader = document.getElementById('redemptionHeader');
     
     if (userInvestments.length === 0) {
         if (header) header.style.display = 'none';
+        if (redeemHeader) redeemHeader.style.display = 'none';
         container.innerHTML = `
             <div class="empty-state" style="width: 100%; text-align: center; padding: 40px; opacity: 0.6;">
                 <i class="bi bi-inbox" style="font-size: 3rem; margin-bottom: 16px; display: block;"></i>
                 <h4>No Funds Added Yet</h4>
                 <p>Add your first investment above to start tracking performance.</p>
             </div>`;
+        if (redeemContainer) redeemContainer.innerHTML = '';
         return;
     }
     
-    // Ensure header is shown if there's data (assuming we are in a view that wants it)
-    if (header && (document.getElementById('fundsContainer').style.display !== 'none')) {
-        header.style.display = 'block';
-    }
-
     showLoading();
     try {
         const sorted = [...userInvestments].sort((a, b) => {
             const dateDiff = new Date(b.investmentDate) - new Date(a.investmentDate);
             if (dateDiff !== 0) return dateDiff;
-            return (b.id || 0) - (a.id || 0); // Recent ID first if dates are equal
+            return (b.id || 0) - (a.id || 0);
         });
-        const fundsHTML = await Promise.all(sorted.map(async (investment) => {
-            try {
-                const navDataRes = await getCurrentNAV(investment.schemeCode);
-                const currentNAV = navDataRes.nav;
 
-                // Effective logic for pre-inception funds
-                let effectiveUnits = investment.units;
-                let effectiveNavStr = investment.nav;
-                let effectiveDateStr = investment.investmentDate;
+        const purchases = sorted.filter(inv => (inv.type || 'purchase') === 'purchase');
+        const redemptions = sorted.filter(inv => inv.type === 'redeem');
 
-                try {
-                    const history = await NAVManager.getNAV(investment.schemeCode);
-                    if (history?.data?.length > 0) {
-                        const sortedHistory = history.data.sort((a, b) => {
-                            const [d1, m1, y1] = a.date.split('-');
-                            const [d2, m2, y2] = b.date.split('-');
-                            return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
-                        });
-                        const [fd, fm, fy] = sortedHistory[0].date.split('-');
-                        const firstNavDate = new Date(fy, fm - 1, fd);
-                        const invDate = new Date(investment.investmentDate);
+        // Update Headers Visibility
+        const isHistoryView = document.getElementById('detailsWrapper').style.display !== 'none';
+        if (header) header.style.display = (isHistoryView && purchases.length > 0) ? 'block' : 'none';
+        if (redeemHeader) redeemHeader.style.display = (isHistoryView && redemptions.length > 0) ? 'block' : 'none';
 
-                        if (invDate < firstNavDate) {
-                            const inceptionNav = parseFloat(sortedHistory[0].nav);
-                            effectiveUnits = investment.investmentAmount / inceptionNav;
-                            effectiveNavStr = inceptionNav;
-                            effectiveDateStr = sortedHistory[0].date.split('-').reverse().join('-');
-                        }
-                    }
-                } catch (e) { }
-
-                const currentValue = effectiveUnits * currentNAV;
-                const returns = currentValue - investment.investmentAmount;
-                const returnsPct = (returns / investment.investmentAmount) * 100;
-
-                const cagr = await calculateFundCAGR(investment, currentNAV);
-                const performance = await calculatePerformance(investment, currentNAV);
-
-                const performanceItems = [];
-                const labels = { daily: 'Yesterday', weekly: 'Last 7 Days', fifteenDays: 'Last 15 Days', monthly: 'Last 1 Month', quarterly: 'Last 3 Months', halfYearly: 'Last 6 Months', yearly: 'Last 1 Year' };
-
-                if (performance?.periodic) {
-                    Object.entries(labels).forEach(([key, label]) => {
-                        const data = performance.periodic[key];
-                        if (data) {
-                            const startD = formatDate(data.startDate.split('-').reverse().join('-'));
-                            const endD = formatDate(data.endDate.split('-').reverse().join('-'));
-                            let finalLabel = label;
-                            if (key === 'daily') {
-                                const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                                const eParts = data.endDate.split('-');
-                                finalLabel = `Last change(${eParts[0]} ${monthsShort[parseInt(eParts[1], 10) - 1]})`;
-                            }
-                            performanceItems.push({ label: finalLabel, subLabel: key === 'daily' ? `(${endD})` : `(Since ${startD})`, value: data.value, startNAV: data.startNAV, endNAV: data.endNAV });
-                        }
-                    });
-                }
-
-                if (performance?.yearlyBreakdown) {
-                    const curYearStr = String(new Date().getFullYear());
-                    Object.entries(performance.yearlyBreakdown).sort((a, b) => b[0] - a[0]).forEach(([year, data]) => {
-                        const label = year === curYearStr ? 'Current Year' : year;
-                        performanceItems.push({ label: label, subLabel: `(${formatDate(data.startDate)} - ${formatDate(data.endDate)})`, value: data.value, startNAV: data.startNAV, endNAV: data.endNAV });
-                    });
-                }
-
-                const nameLower = investment.schemeName.toLowerCase();
-                let planType = nameLower.includes('direct') ? 'Direct' : 'Regular';
-                let planOption = 'Growth';
-                if (nameLower.includes('idcw')) planOption = 'IDCW';
-                else if (nameLower.includes('dividend')) planOption = 'Dividend';
-                else if (nameLower.includes('payout')) planOption = 'Payout';
-
-                const planInfo = `${planType} - ${planOption}`;
-                const cleanTitle = investment.schemeName
-                    .replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '')
-                    .trim();
-
-                const isMob = isMobile();
-
-                return `
-                    <div class="playing-card ${returns >= 0 ? 'card-positive' : 'card-negative'} ${isMob ? 'mobile-compact' : ''}">
-                        <div class="card-content">
-                            <h5 class="card-title-v2" title="${investment.schemeName}">${cleanTitle}</h5>
-                            <div class="card-meta-v2 text-muted-v2">
-                                ${isMob ? formatDate(investment.investmentDate) : formatDate(investment.investmentDate) + ' • ' + investment.units.toFixed(2) + ' Units • ' + planInfo}
-                            </div>
-                            
-                            <div class="card-stats-grid">
-                                <div class="stat-box">
-                                    <span class="stat-label">Invested</span>
-                                    <span class="stat-value">₹${investment.investmentAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                                </div>
-                                <div class="stat-box">
-                                    <span class="stat-label">Value</span>
-                                    <span class="stat-value text-primary">₹${currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="card-main-stat">
-                                <div class="profit-amount ${returns >= 0 ? 'text-success' : 'text-danger'}">
-                                    ${returns >= 0 ? '+' : '-'}₹${Math.abs(returns).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                                </div>
-                                <div class="profit-badges">
-                                    <span class="modern-badge-v2 ${returns >= 0 ? 'success' : 'danger'}">${returns >= 0 ? '+' : ''}${returnsPct.toFixed(2)}%</span>
-                                    <span class="modern-badge-v2 info">XIRR ${cagr.toFixed(2)}%</span>
-                                </div>
-                            </div>
-                            
-                            <div class="card-periodic-list">
-                                ${performanceItems.map(item => `
-                                    <div class="periodic-row-v2">
-                                        <span class="period-lbl">${item.label}</span>
-                                        <span class="period-val ${item.value >= 0 ? 'pos' : 'neg'}">${item.value > 0 ? '+' : ''}${item.value.toFixed(2)}%</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            
-                            <div class="card-actions-v2">
-                                <button class="btn-action-v2 view" onclick="editFund('${investment.id}')">Edit</button>
-                                <button class="btn-action-v2 delete" onclick="removeFund('${investment.id}')">Delete</button>
-                            </div>
-                        </div>
-                    </div>`;
-            } catch (err) {
-                return `
-                    <div class="playing-card card-negative mobile-compact">
-                        <div class="card-content">
-                            <h5 class="card-title-v2">${investment.schemeName}</h5>
-                            <div class="alert alert-danger" style="font-size: 0.8rem; background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.2); color: #ef4444;">
-                                <i class="bi bi-exclamation-triangle"></i> Data Error: ${err.message}
-                            </div>
-                            <div class="card-actions-v2">
-                                <button class="btn-action-v2 delete" onclick="removeFund('${investment.id}')">Remove</button>
-                            </div>
-                        </div>
-                    </div>`;
+        const renderBatch = async (items, targetContainer) => {
+            if (items.length === 0) {
+                targetContainer.innerHTML = '';
+                return;
             }
-        }));
-        container.innerHTML = fundsHTML.join('');
+            
+            const html = await Promise.all(items.map(async (investment) => {
+                try {
+                    const navDataRes = await getCurrentNAV(investment.schemeCode);
+                    const currentNAV = navDataRes.nav;
+                    const isRedeem = investment.type === 'redeem';
+
+                    // Effective logic for pre-inception funds
+                    let effectiveUnits = investment.units;
+                    let effectiveNavStr = investment.nav;
+                    let effectiveDateStr = investment.investmentDate;
+
+                    try {
+                        const history = await NAVManager.getNAV(investment.schemeCode);
+                        if (history?.data?.length > 0) {
+                            const sortedHistory = history.data.sort((a, b) => {
+                                const [d1, m1, y1] = a.date.split('-');
+                                const [d2, m2, y2] = b.date.split('-');
+                                return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                            });
+                            const [fd, fm, fy] = sortedHistory[0].date.split('-');
+                            const firstNavDate = new Date(fy, fm - 1, fd);
+                            const invDate = new Date(investment.investmentDate);
+
+                            if (invDate < firstNavDate) {
+                                const inceptionNav = parseFloat(sortedHistory[0].nav);
+                                if (!isRedeem) {
+                                    effectiveUnits = investment.investmentAmount / inceptionNav;
+                                    effectiveNavStr = inceptionNav;
+                                    effectiveDateStr = sortedHistory[0].date.split('-').reverse().join('-');
+                                }
+                            }
+                        }
+                    } catch (e) { }
+
+                    const currentValue = effectiveUnits * currentNAV;
+                    const returns = isRedeem ? 0 : (currentValue - investment.investmentAmount);
+                    const returnsPct = (isRedeem || investment.investmentAmount === 0) ? 0 : (returns / investment.investmentAmount) * 100;
+
+                    const cagr = isRedeem ? null : await calculateFundCAGR(investment, currentNAV);
+                    const performance = isRedeem ? null : await calculatePerformance(investment, currentNAV);
+
+                    const performanceItems = [];
+                    const labels = { daily: 'Yesterday', weekly: 'Last 7 Days', monthly: 'Last 1 Month', quarterly: 'Last 3 Months', yearly: 'Last 1 Year' };
+
+                    if (performance?.periodic) {
+                        Object.entries(labels).forEach(([key, label]) => {
+                            const data = performance.periodic[key];
+                            if (data) {
+                                const val = data.value;
+                                performanceItems.push(`
+                                    <div class="periodic-row-v2">
+                                        <span class="period-lbl">${label}</span>
+                                        <span class="period-val ${val >= 0 ? 'pos' : 'neg'}">${val >= 0 ? '+' : ''}${val.toFixed(2)}%</span>
+                                    </div>
+                                `);
+                            }
+                        });
+                    }
+
+                    const isMob = isMobile();
+                    return `
+                        <div class="playing-card ${isRedeem ? 'card-negative' : (returns >= 0 ? 'card-positive' : 'card-negative')} ${isMob ? 'mobile-compact' : ''}">
+                            <div class="card-content">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <h5 class="card-title-v2" title="${investment.schemeName}">${investment.schemeName.split(' - ')[0]}</h5>
+                                    <div class="dropdown">
+                                        <button class="btn-sidebar-action" type="button" data-bs-toggle="dropdown" style="padding: 4px 8px; background: transparent;">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(30,41,59,0.98); backdrop-filter: blur(10px); border-radius: 12px; padding: 8px;">
+                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="editFund('${investment.id}')" style="border-radius: 8px;"><i class="bi bi-pencil-square text-primary"></i> Edit Transaction</a></li>
+                                            <li><hr class="dropdown-divider" style="background: rgba(255,255,255,0.1);"></li>
+                                            <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" href="javascript:void(0)" onclick="removeFund('${investment.id}')" style="border-radius: 8px;"><i class="bi bi-trash3"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-meta-v2 text-muted-v2">
+                                    <i class="bi ${isRedeem ? 'bi-dash-circle' : 'bi-calendar3'} me-1"></i> ${isRedeem ? 'Redeemed' : 'Purchased'}: ${formatDate(investment.investmentDate)}
+                                </div>
+                                
+                                <div class="card-stats-grid">
+                                    <div class="stat-box">
+                                        <span class="stat-label">${isRedeem ? 'Realized Value' : 'Invested'}</span>
+                                        <span class="stat-value">₹${Math.abs(investment.investmentAmount).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                                    </div>
+                                    <div class="stat-box">
+                                        <span class="stat-label">${isRedeem ? 'Redeemed Units' : 'Current Value'}</span>
+                                        <span class="stat-value text-primary">${isRedeem ? Math.abs(investment.units).toFixed(4) : '₹' + currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                                    </div>
+                                </div>
+                                
+                                ${!isRedeem ? `
+                                <div class="card-main-stat">
+                                    <div class="profit-amount ${returns >= 0 ? 'text-success' : 'text-danger'}">
+                                        ${returns >= 0 ? '+' : '-'}₹${Math.abs(returns).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                                    </div>
+                                    <div class="profit-badges">
+                                        <span class="modern-badge-v2 ${returns >= 0 ? 'success' : 'danger'}">${returns >= 0 ? '+' : ''}${returnsPct.toFixed(2)}%</span>
+                                        ${cagr ? `<span class="modern-badge-v2 info">XIRR ${cagr.toFixed(2)}%</span>` : ''}
+                                    </div>
+                                </div>
+                                
+                                <div class="card-periodic-list">
+                                    ${performanceItems.join('')}
+                                </div>` : `
+                                <div style="margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px;">Redemption Price (NAV)</div>
+                                    <div style="font-size: 1.1rem; font-weight: 600;">₹${investment.nav.toFixed(4)}</div>
+                                </div>
+                                `}
+                            </div>
+                        </div>`;
+                } catch (err) {
+                    console.error("Error rendering investment card:", err, investment);
+                    return '';
+                }
+            }));
+            targetContainer.innerHTML = html.join('');
+        };
+
+        await Promise.all([
+            renderBatch(purchases, container),
+            renderBatch(redemptions, redeemContainer)
+        ]);
+
     } finally {
         hideLoading();
     }

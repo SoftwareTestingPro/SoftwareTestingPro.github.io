@@ -98,8 +98,8 @@
                             <span>Research</span>
                         </button>
                         <button class="sidebar-item" data-view="history" onclick="switchMainView('history')">
-                            <i class="bi bi-cart-check"></i>
-                            <span>Purchases</span>
+                            <i class="bi bi-clock-history"></i>
+                            <span>Transactions</span>
                         </button>
                     </div>
 
@@ -205,10 +205,18 @@
                     <div class="playing-card" id="addFundCard" style="overflow: visible; height: auto; min-height: 410px; display: none;">
                         <div class="card-content"
                             style="padding: 14px 18px; flex: 1; display: flex; flex-direction: column;">
-                            <h4
-                                style="margin-top: 0; font-size: 1rem; font-weight: 700; margin-bottom: 8px; text-align: center;">
-                                <i class="bi bi-plus-circle"></i> Add Fund
-                            </h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <h4 style="margin: 0; font-size: 1rem; font-weight: 700;">
+                                    <i class="bi bi-plus-circle"></i> <span id="addFundTitle">Add Fund</span>
+                                </h4>
+                                <div class="btn-group btn-group-sm" role="group" style="background: rgba(255,255,255,0.05); padding: 2px; border-radius: 8px;">
+                                    <input type="radio" class="btn-check" name="txType" id="txPurchase" value="purchase" checked onchange="toggleTxType()">
+                                    <label class="btn btn-outline-primary border-0" for="txPurchase" style="border-radius: 6px; font-size: 0.7rem; padding: 4px 10px;">Purchase</label>
+                                    
+                                    <input type="radio" class="btn-check" name="txType" id="txRedeem" value="redeem" onchange="toggleTxType()">
+                                    <label class="btn btn-outline-danger border-0" for="txRedeem" style="border-radius: 6px; font-size: 0.7rem; padding: 4px 10px;">Redeem</label>
+                                </div>
+                            </div>
                             <form id="addFundForm" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
                                 <div class="search-container modern-floating-label" id="houseSearchContainer">
                                     <input type="text" class="form-control-modern" id="fundHouseInput" placeholder=" "
@@ -242,14 +250,23 @@
                                     <input type="date" class="form-control-modern" id="investmentDate" placeholder=" "
                                         required
                                         style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px; color-scheme: dark;">
-                                    <label for="investmentDate" style="color: rgba(255,255,255,0.6);">Investment
-                                        Date</label>
+                                    <label for="investmentDate" id="dateLabel" style="color: rgba(255,255,255,0.6);">Investment Date</label>
                                 </div>
+                                <div id="redemptionModeContainer" style="display: none; margin-bottom: 8px;">
+                                    <div class="btn-group btn-group-sm w-100" role="group" style="background: rgba(255,255,255,0.05); padding: 2px; border-radius: 8px;">
+                                        <input type="radio" class="btn-check" name="redeemMode" id="redeemAmount" value="amount" checked onchange="toggleRedeemMode()">
+                                        <label class="btn btn-outline-info border-0" for="redeemAmount" style="border-radius: 6px; font-size: 0.75rem;">By Amount</label>
+                                        
+                                        <input type="radio" class="btn-check" name="redeemMode" id="redeemUnits" value="units" onchange="toggleRedeemMode()">
+                                        <label class="btn btn-outline-info border-0" for="redeemUnits" style="border-radius: 6px; font-size: 0.75rem;">By Units</label>
+                                    </div>
+                                </div>
+
                                 <div class="modern-floating-label mb-2">
                                     <input type="number" class="form-control-modern" id="investmentAmount" placeholder=" "
-                                        min="1" required
+                                        step="any" required
                                         style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px;">
-                                    <label for="investmentAmount" style="color: rgba(255,255,255,0.6);">Amount (₹)</label>
+                                    <label for="investmentAmount" id="amountLabel" style="color: rgba(255,255,255,0.6);">Investment Amount</label>
                                 </div>
                                 <div class="card-actions-v2" style="margin-top: auto; display: flex; gap: 8px;">
                                     <button type="submit" class="btn-action-v2 view" id="submitBtn"
@@ -266,6 +283,13 @@
                         </div>
                     </div>
                     <div id="fundsContainer" style="display: contents;"></div>
+
+                    <!-- 6. Redemption History Section -->
+                    <header id="redemptionHeader" class="group-section-header" style="width: 100%; margin-top: 40px; margin-bottom: 20px; display: none;">
+                        <h4><i class="bi bi-dash-circle me-2"></i> Redemption History</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; margin-left: 32px;">Individual fund divestments sorted by redemption date</p>
+                    </header>
+                    <div id="redemptionContainer" style="display: contents;"></div>
                 </div>
 
                 <!-- 6. Segmented Groups View -->

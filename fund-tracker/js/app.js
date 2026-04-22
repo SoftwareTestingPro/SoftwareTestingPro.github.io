@@ -114,7 +114,9 @@ function switchMainView(targetView) {
         historyHeader: document.getElementById('historyHeader'),
         detailsWrapper: document.getElementById('detailsWrapper'),
         uniqueHeader: document.getElementById('uniqueFundsHeader'),
-        uniqueContainer: document.getElementById('uniqueFundsContainer')
+        uniqueContainer: document.getElementById('uniqueFundsContainer'),
+        redemptionHeader: document.getElementById('redemptionHeader'),
+        redemptionContainer: document.getElementById('redemptionContainer')
     };
     const masterGrid = document.getElementById('masterGrid');
 
@@ -158,7 +160,9 @@ function switchMainView(targetView) {
         if (containers.detailsWrapper) containers.detailsWrapper.style.display = 'contents';
         if (containers.addFund) containers.addFund.style.display = 'flex';
         if (containers.historyHeader) containers.historyHeader.style.display = 'block';
+        if (containers.redemptionHeader) containers.redemptionHeader.style.display = 'block';
         if (containers.individual) containers.individual.style.display = 'contents';
+        if (containers.redemptionContainer) containers.redemptionContainer.style.display = 'contents';
         
         displayFunds();
     } else if (targetView === 'explore') {
@@ -449,15 +453,71 @@ async function handleAddFund(e) {
 
     if (!code || !date || isNaN(amount)) return showError('Please fill all fields correctly.');
 
-    showGlobalLoader(editingInvestmentId ? 'Updating Fund' : 'Adding Fund', 'Processing transactions and fetching latest NAV...');
+    const txType = document.querySelector('input[name="txType"]:checked').value;
+    const isRedeem = txType === 'redeem';
+    
+    let loaderTitle = 'Processing...';
+    if (editingInvestmentId) {
+        loaderTitle = 'Updating Transaction';
+    } else {
+        loaderTitle = isRedeem ? 'Redeeming Fund' : 'Adding Fund';
+    }
+
+    showGlobalLoader(loaderTitle, 'Processing transactions and fetching latest NAV...');
     try {
         const nav = await getNAVForDate(code, date);
+        const redeemMode = document.querySelector('input[name="redeemMode"]:checked').value;
+        const isRedeem = txType === 'redeem';
+        
+        let finalUnits, finalAmount;
         const STAMP_DUTY_RATE = 0.00005; // 0.005%
-        const netAmount = amount * (1 - STAMP_DUTY_RATE);
-        const units = netAmount / nav;
 
-        const investment = { id: editingInvestmentId || Date.now(), schemeCode: code, schemeName: finalName, investmentDate: date, investmentAmount: amount, nav, category: 'N/A', units, addedDate: new Date().toISOString() };
+        if (isRedeem) {
+            // Check current balance (excluding the current transaction if editing)
+            const currentUnits = userInvestments
+                .filter(inv => inv.schemeCode == code && String(inv.id) !== String(editingInvestmentId))
+                .reduce((sum, inv) => sum + inv.units, 0);
 
+            if (currentUnits <= 0) {
+                throw new Error('Transaction denied: You do not have any units of this fund in your portfolio.');
+            }
+
+            let unitsToRedeem;
+            if (redeemMode === 'units') {
+                unitsToRedeem = amount;
+                finalUnits = -amount;
+                finalAmount = -(amount * nav);
+            } else {
+                finalUnits = -(amount / nav);
+                finalAmount = -amount;
+                unitsToRedeem = Math.abs(finalUnits);
+            }
+
+            // Validate if user has enough units (with small epsilon for float precision)
+            if (unitsToRedeem > (currentUnits + 0.00001)) {
+                throw new Error(`Insufficient Balance: You only own ${currentUnits.toFixed(4)} units. You are trying to redeem ${unitsToRedeem.toFixed(4)} units.`);
+            }
+        } else {
+            const netAmount = amount * (1 - STAMP_DUTY_RATE);
+            finalAmount = amount;
+            finalUnits = netAmount / nav;
+        }
+
+        const investment = { 
+            id: editingInvestmentId || Date.now(), 
+            schemeCode: code, 
+            schemeName: finalName, 
+            investmentDate: date, 
+            investmentAmount: finalAmount, 
+            nav, 
+            category: 'N/A', 
+            units: finalUnits, 
+            type: txType,
+            redeemMode: isRedeem ? redeemMode : null,
+            addedDate: new Date().toISOString() 
+        };
+
+        const isEditing = !!editingInvestmentId;
         if (editingInvestmentId) {
             const idx = userInvestments.findIndex(i => String(i.id) === String(editingInvestmentId));
             if (idx !== -1) userInvestments[idx] = investment;
@@ -465,7 +525,6 @@ async function handleAddFund(e) {
             userInvestments.push(investment);
         }
 
-        const isEditing = !!editingInvestmentId;
         syncAutomatedGroups();
         await saveToCloud(userInvestments);
         clearForm();
@@ -477,9 +536,47 @@ async function handleAddFund(e) {
             updateSummary()
         ]);
         
-        showSuccess(isEditing ? 'Fund updated successfully' : 'Fund added successfully');
-    } catch (err) { showError('Failed to add fund: ' + err.message); }
+        showSuccess(isEditing ? 'Transaction updated successfully' : 'Transaction recorded successfully');
+    } catch (err) { showError('Failed to process transaction: ' + err.message); }
     finally { hideGlobalLoader(); }
+}
+
+function toggleTxType() {
+    const txType = document.querySelector('input[name="txType"]:checked').value;
+    const isRedeem = txType === 'redeem';
+    const title = document.getElementById('addFundTitle');
+    const amountLabel = document.getElementById('amountLabel');
+    const dateLabel = document.getElementById('dateLabel');
+    const submitBtn = document.getElementById('submitBtn');
+    const redeemModeContainer = document.getElementById('redemptionModeContainer');
+    
+    if (isRedeem) {
+        title.innerText = 'Redeem Fund';
+        dateLabel.innerText = 'Redemption Date';
+        if (!editingInvestmentId) {
+            submitBtn.innerHTML = '<i class="bi bi-dash-circle"></i> Redeem';
+        }
+        redeemModeContainer.style.display = 'block';
+        toggleRedeemMode();
+    } else {
+        title.innerText = 'Add Fund';
+        dateLabel.innerText = 'Investment Date';
+        amountLabel.innerText = 'Investment Amount';
+        if (!editingInvestmentId) {
+            submitBtn.innerHTML = '<i class="bi bi-plus-lg"></i> Add';
+        }
+        redeemModeContainer.style.display = 'none';
+    }
+}
+
+function toggleRedeemMode() {
+    const mode = document.querySelector('input[name="redeemMode"]:checked').value;
+    const amountLabel = document.getElementById('amountLabel');
+    if (mode === 'units') {
+        amountLabel.innerText = 'Units to Redeem';
+    } else {
+        amountLabel.innerText = 'Amount to Redeem (₹)';
+    }
 }
 
 function clearForm() {
@@ -490,6 +587,8 @@ function clearForm() {
     document.getElementById('fundSearch').value = '';
     document.getElementById('fundSearchContainer').style.display = 'none';
     document.getElementById('fundRadioContainer').style.display = 'none';
+    document.getElementById('txPurchase').checked = true;
+    toggleTxType();
     document.getElementById('submitBtn').innerHTML = '<i class="bi bi-plus-lg"></i> Add';
 }
 
@@ -519,7 +618,23 @@ async function editFund(id) {
 
     // 4. Populate Date & Amount
     document.getElementById('investmentDate').value = inv.investmentDate;
-    document.getElementById('investmentAmount').value = inv.investmentAmount;
+    
+    if (inv.type === 'redeem') {
+        document.getElementById('txRedeem').checked = true;
+        toggleTxType();
+        if (inv.redeemMode === 'units') {
+            document.getElementById('redeemUnits').checked = true;
+            document.getElementById('investmentAmount').value = Math.abs(inv.units);
+        } else {
+            document.getElementById('redeemAmount').checked = true;
+            document.getElementById('investmentAmount').value = Math.abs(inv.investmentAmount);
+        }
+        toggleRedeemMode();
+    } else {
+        document.getElementById('txPurchase').checked = true;
+        toggleTxType();
+        document.getElementById('investmentAmount').value = inv.investmentAmount;
+    }
 }
 
 async function removeFund(id) {
