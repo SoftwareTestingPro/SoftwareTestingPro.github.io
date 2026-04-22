@@ -465,6 +465,7 @@ async function handleAddFund(e) {
             userInvestments.push(investment);
         }
 
+        const isEditing = !!editingInvestmentId;
         syncAutomatedGroups();
         await saveToCloud(userInvestments);
         clearForm();
@@ -476,8 +477,7 @@ async function handleAddFund(e) {
             updateSummary()
         ]);
         
-        showSuccess(editingInvestmentId ? 'Fund updated' : 'Fund added');
-        editingInvestmentId = null;
+        showSuccess(isEditing ? 'Fund updated successfully' : 'Fund added successfully');
     } catch (err) { showError('Failed to add fund: ' + err.message); }
     finally { hideGlobalLoader(); }
 }
