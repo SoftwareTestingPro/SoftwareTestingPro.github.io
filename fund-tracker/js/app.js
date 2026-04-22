@@ -452,7 +452,9 @@ async function handleAddFund(e) {
     showGlobalLoader(editingInvestmentId ? 'Updating Fund' : 'Adding Fund', 'Processing transactions and fetching latest NAV...');
     try {
         const nav = await getNAVForDate(code, date);
-        const units = amount / nav;
+        const STAMP_DUTY_RATE = 0.00005; // 0.005%
+        const netAmount = amount * (1 - STAMP_DUTY_RATE);
+        const units = netAmount / nav;
 
         const investment = { id: editingInvestmentId || Date.now(), schemeCode: code, schemeName: finalName, investmentDate: date, investmentAmount: amount, nav, category: 'N/A', units, addedDate: new Date().toISOString() };
 
