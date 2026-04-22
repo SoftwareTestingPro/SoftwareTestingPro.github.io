@@ -1103,6 +1103,8 @@ async function runDiscovery() {
 
             if (!perf) {
                 progressBar.style.width = `${percent}%`;
+                const percentEl = document.getElementById('scanPercentage');
+                if (percentEl) percentEl.innerText = `${percent}%`;
                 if (scanStatus) scanStatus.innerText = `Analyzing ${f.schemeName.split(' - ')[0]}...`;
                 
                 const navRes = await getCurrentNAV(f.schemeCode);
@@ -1415,9 +1417,36 @@ async function displayUniqueFunds() {
     }
 }
 
-function quickAddFund(code, name) {
-    switchMainView('individual');
+async function quickAddFund(code, name) {
+    // 1. Switch to Purchases view
+    switchMainView('history');
+    
+    // 2. Ensure Add Fund card is visible
+    const addCard = document.getElementById('addFundCard');
+    if (addCard) addCard.style.display = 'block';
+    
+    // 3. Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    alert(`To add "${name}", use the search box on the left!`);
-    setTimeout(() => { document.getElementById('fundHouseInput')?.focus(); }, 500);
+
+    // 4. Extract House Name (Heuristic: First word)
+    const houseName = name.split(' ')[0];
+    const fundInput = document.getElementById('fundHouseInput');
+    const searchInput = document.getElementById('fundSearch');
+    
+    if (fundInput && searchInput) {
+        fundInput.value = houseName;
+        // Trigger house selection logic
+        selectHouse(houseName, houseName);
+        
+        // 5. Populate search with specific fund fragment
+        // Remove the house name from the beginning for better search matching
+        const query = name.replace(houseName, '').trim().split(' - ')[0]; 
+        searchInput.value = query;
+        
+        // 6. Trigger fund search
+        await handleSearch();
+        
+        // 7. Show success toast
+        showSuccess(`Ready to add ${name.split(' - ')[0]}!`);
+    }
 }

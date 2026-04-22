@@ -865,6 +865,7 @@ function updateAuthUI() {
     if (isSignedIn && currentUser) {
         // Update Sidebar
         if (userInfoSidebar) {
+            userInfoSidebar.classList.remove('active');
             userInfoSidebar.style.display = 'flex';
             const nameEl = document.getElementById('userNameSidebar');
             const avatarEl = document.getElementById('userAvatarSidebar');
