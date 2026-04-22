@@ -159,20 +159,7 @@ function updateLoadingText(text) {
     }
 }
 
-/**
- * Handle card expansion
- */
-function togglePerformanceGrid(id) {
-    const grid = document.getElementById(id);
-    const trigger = event.currentTarget || document.querySelector(`[onclick*="${id}"]`);
 
-    if (grid) grid.classList.toggle('collapsed');
-    if (trigger) {
-        trigger.classList.toggle('collapsed');
-        const icon = trigger.querySelector('.expand-toggle-btn') || trigger.querySelector('.bi');
-        if (icon && icon.classList) icon.classList.toggle('collapsed');
-    }
-}
 
 /**
  * Device detection helper
@@ -184,7 +171,10 @@ const isMobile = () => window.innerWidth < 768;
  */
 async function displayFunds() {
     const container = document.getElementById('fundsContainer');
+    const header = document.getElementById('historyHeader');
+    
     if (userInvestments.length === 0) {
+        if (header) header.style.display = 'none';
         container.innerHTML = `
             <div class="empty-state" style="width: 100%; text-align: center; padding: 40px; opacity: 0.6;">
                 <i class="bi bi-inbox" style="font-size: 3rem; margin-bottom: 16px; display: block;"></i>
@@ -192,6 +182,11 @@ async function displayFunds() {
                 <p>Add your first investment above to start tracking performance.</p>
             </div>`;
         return;
+    }
+    
+    // Ensure header is shown if there's data (assuming we are in a view that wants it)
+    if (header && (document.getElementById('fundsContainer').style.display !== 'none')) {
+        header.style.display = 'block';
     }
 
     showLoading();
@@ -604,76 +599,38 @@ async function updateSummary() {
  * Render groups view
  */
 async function displayGroups() {
-    const container = document.getElementById('groupsContainer');
-    if (fundGroups.length === 0) {
-        container.innerHTML = '';
-        return;
-    }
+    const amcContainer = document.getElementById('amcGroupsContainer');
+    const catContainer = document.getElementById('catGroupsContainer');
+    const customContainer = document.getElementById('customGroupsContainer');
+
+    if (!amcContainer || !catContainer || !customContainer) return;
+
+    // Reset containers
+    amcContainer.innerHTML = '';
+    catContainer.innerHTML = '';
+    customContainer.innerHTML = '';
 
     try {
         showLoading();
-        let filteredGroups = [...fundGroups].sort((a, b) => a.name.localeCompare(b.name));
+        const isMob = isMobile();
 
-
-        const groupsHTML = await Promise.all(filteredGroups.map(async (group) => {
+        const renderGroup = async (group) => {
             const stats = await calculateGroupStats(group.fundIds);
-            const displayName = group.name.charAt(0).toUpperCase() + group.name.slice(1);
+            const rawName = group.name;
+            const displayName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+            const subLabel = group.subName || (group.isAutomated ? 'Auto Intelligence' : 'Personal Group');
+            
+            const groupIcon = group.id.includes('amc') ? 'bi-bank' : (group.id.includes('cat') ? 'bi-tags' : 'bi-folder2-open');
 
-            // Aggregate funds by schemeCode for the group view
-            const aggregatedFunds = {};
-            group.fundIds.forEach(fundId => {
-                const investment = userInvestments.find(inv => String(inv.id) === String(fundId));
-                if (investment) {
-                    if (!aggregatedFunds[investment.schemeCode]) {
-                        aggregatedFunds[investment.schemeCode] = {
-                            schemeCode: investment.schemeCode, schemeName: investment.schemeName,
-                            investmentAmount: 0, units: 0, count: 0, ids: []
-                        };
-                    }
-                    aggregatedFunds[investment.schemeCode].investmentAmount += investment.investmentAmount;
-                    aggregatedFunds[investment.schemeCode].units += investment.units;
-                    aggregatedFunds[investment.schemeCode].count++;
-                    aggregatedFunds[investment.schemeCode].ids.push(investment.id);
-                }
-            });
-
-            const groupFundsHTML = await Promise.all(Object.values(aggregatedFunds).map(async (agg) => {
-                try {
-                    const navData = await getCurrentNAV(agg.schemeCode);
-                    const fundStats = await calculateGroupStats(agg.ids);
-                    const returns = fundStats.totalReturns;
-                    const returnsPct = fundStats.totalInvestment > 0 ? (returns / fundStats.totalInvestment * 100) : 0;
-
-                    const nameLower = agg.schemeName.toLowerCase();
-                    let pType = nameLower.includes('direct') ? 'Direct' : 'Regular';
-                    let pOption = 'Growth';
-                    if (nameLower.includes('idcw')) pOption = 'IDCW';
-                    else if (nameLower.includes('dividend')) pOption = 'Dividend';
-                    else if (nameLower.includes('payout')) pOption = 'Payout';
-
-                    const cleanT = agg.schemeName
-                        .replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '')
-                        .trim();
-
-                    return `
-                        <div class="group-fund-mini" style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <div style="font-size: 0.8rem; font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${agg.schemeName}">${cleanT}</div>
-                            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 2px;">
-                                <span class="text-muted-v2">${agg.units.toFixed(2)} Units • ${pType} - ${pOption}</span>
-                                <span class="${returns >= 0 ? 'text-success' : 'text-danger'}">${returns >= 0 ? '+' : ''}${returnsPct.toFixed(2)}%</span>
-                            </div>
-                        </div>`;
-                } catch (e) { return `<div class="group-fund-mini text-muted-v2" style="font-size: 0.8rem;">Data unavailable</div>`; }
-            }));
+            const uniqueCodes = new Set(group.fundIds.map(fid => userInvestments.find(inv => String(inv.id) === String(fid))?.schemeCode).filter(Boolean));
+            const fundCount = uniqueCodes.size;
 
             const pctReturns = stats.totalInvestment > 0 ? (stats.totalReturns / stats.totalInvestment * 100) : 0;
             return `
-                <div class="playing-card ${stats.totalReturns >= 0 ? 'card-positive' : 'card-negative'}">
+                <div class="playing-card ${stats.totalReturns >= 0 ? 'card-positive' : 'card-negative'} ${isMob ? 'mobile-compact' : ''}">
                     <div class="card-content">
-                        <h5 class="card-title-v2" title="${displayName}">${displayName}</h5>
-                        <div class="card-meta-v2 text-muted-v2">
-                            ${Object.keys(aggregatedFunds).length} Funds • ${group.isAutomated ? 'Auto' : 'Custom'}
-                        </div>
+                        <h5 class="card-title-v2" title="${displayName}"><i class="bi ${groupIcon} me-2" style="opacity:0.7"></i>${displayName}</h5>
+                        <div class="card-meta-v2 text-muted-v2">${subLabel} • ${fundCount} Unique Fund${fundCount !== 1 ? 's' : ''}</div>
                         
                         <div class="card-stats-grid">
                             <div class="stat-box">
@@ -698,21 +655,21 @@ async function displayGroups() {
                         
                         <div class="card-periodic-list">
                             ${Object.values(stats.periodicReturns).map(p => {
-                let fLabel = p.label;
-                if (p.label === 'Yesterday') {
-                    const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    const dateSrc = p.endDate || stats.latestNAVDate;
-                    if (dateSrc) {
-                        const eParts = dateSrc.split('-');
-                        fLabel = `Last change(${eParts[0]} ${monthsShort[parseInt(eParts[1], 10) - 1]})`;
-                    }
-                }
-                return `
-                                <div class="periodic-row-v2">
-                                    <span class="period-lbl">${fLabel}</span>
-                                    <span class="period-val ${p.percentage >= 0 ? 'pos' : 'neg'}">${p.percentage > 0 ? '+' : ''}${p.percentage.toFixed(2)}%</span>
-                                </div>`;
-            }).join('')}
+                                let fLabel = p.label;
+                                if (p.label === 'Yesterday') {
+                                    const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                    const dateSrc = p.endDate || stats.latestNAVDate;
+                                    if (dateSrc) {
+                                        const eParts = dateSrc.split('-');
+                                        fLabel = `Last change(${parseInt(eParts[0], 10)} ${monthsShort[parseInt(eParts[1], 10) - 1]})`;
+                                    }
+                                }
+                                return `
+                                    <div class="periodic-row-v2">
+                                        <span class="period-lbl">${fLabel}</span>
+                                        <span class="period-val ${p.percentage >= 0 ? 'pos' : 'neg'}">${p.percentage > 0 ? '+' : ''}${p.percentage.toFixed(2)}%</span>
+                                    </div>`;
+                            }).join('')}
                         </div>
                         
                         <div class="card-actions-v2">
@@ -720,16 +677,39 @@ async function displayGroups() {
                                 <button class="btn-action-v2" onclick="editGroupModal('${group.id}')"><i class="bi bi-pencil"></i></button>
                                 <button class="btn-action-v2 delete" onclick="deleteGroup('${group.id}')"><i class="bi bi-trash"></i></button>
                             ` : ''}
-                            <button class="btn-action-v2 view" onclick="togglePerformanceGrid('funds-${group.id}')"><i class="bi bi-collection"></i> Funds</button>
-                        </div>
-                        
-                        <div class="group-funds collapsed mt-3" id="funds-${group.id}" style="text-align: left; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px; max-height: 180px; overflow-y: auto;">
-                            ${groupFundsHTML.join('')}
                         </div>
                     </div>
                 </div>`;
-        }));
-        container.innerHTML = groupsHTML.join('');
+        };
+
+        const amcGroups = fundGroups.filter(g => g.id.includes('auto-amc')).sort((a,b) => a.name.localeCompare(b.name));
+        const catGroups = fundGroups.filter(g => g.id.includes('auto-cat')).sort((a,b) => a.name.localeCompare(b.name));
+        const customGroups = fundGroups.filter(g => !g.isAutomated).sort((a,b) => a.name.localeCompare(b.name));
+
+        amcContainer.innerHTML = (await Promise.all(amcGroups.map(renderGroup))).join('');
+        catContainer.innerHTML = (await Promise.all(catGroups.map(renderGroup))).join('');
+        
+        if (customGroups.length === 0) {
+            customContainer.innerHTML = `
+                <div class="empty-state-v2" style="width: 100%; grid-column: 1 / -1; padding: 40px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px dashed rgba(255,255,255,0.1); margin-bottom: 30px;">
+                    <i class="bi bi-folder-plus" style="font-size: 2.5rem; color: rgba(255,255,255,0.2); margin-bottom: 12px; display: block;"></i>
+                    <p style="color: var(--text-secondary); margin: 0;">No custom collections created yet.</p>
+                </div>
+            `;
+        } else {
+            customContainer.innerHTML = (await Promise.all(customGroups.map(renderGroup))).join('');
+        }
+
+        // Always append the Add Group card at the end of custom collections
+        const addCardTemplate = document.getElementById('addGroupTemplate');
+        if (addCardTemplate && customContainer) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = addCardTemplate.innerHTML;
+            const card = tempDiv.firstElementChild;
+            if (isMob) card.classList.add('mobile-compact');
+            customContainer.appendChild(card);
+        }
+
     } finally {
         hideLoading();
     }
@@ -781,15 +761,21 @@ function updateGroupFilterUI() {
  */
 async function displayResearch() {
     const container = document.getElementById('researchContainer');
+    const header = document.getElementById('researchHeader');
     if (!container) return;
 
     if (userInvestments.length === 0) {
+        if (header) header.style.display = 'none';
         container.innerHTML = `<div class="empty-state" style="width: 100%; text-align: center; padding: 40px; opacity: 0.6;">
             <i class="bi bi-search" style="font-size: 3rem; margin-bottom: 16px; display: block;"></i>
             <h4>No Data for Research</h4>
             <p>Add some funds first to see performance insights.</p>
         </div>`;
         return;
+    }
+
+    if (header && (container.style.display !== 'none')) {
+        header.style.display = 'block';
     }
 
     showLoading();
@@ -906,10 +892,7 @@ async function displayResearch() {
         const worst9M = getWorstForPeriod('perf9M');
         const worst1Y = getWorstForPeriod('perf1Y');
 
-        let html = `<div style="width: 100%; margin-bottom: 20px; padding: 0 10px;">
-            <h3 style="margin-bottom: 4px;">Portfolio Insights</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">Advanced performance analysis based on historical cycles</p>
-        </div>`;
+        let html = '';
 
         const createInsightCard = (fund, title, sub, variant, extraVal = null) => {
             if (!fund) return '';
@@ -1269,6 +1252,141 @@ function displayExplore() {
             </div>
         </div>
     `;
+}
+
+async function displayUniqueFunds() {
+    const container = document.getElementById('uniqueFundsContainer');
+    const header = document.getElementById('uniqueFundsHeader');
+    if (!container) return;
+
+    if (userInvestments.length === 0) {
+        if (header) header.style.display = 'none';
+        container.innerHTML = '';
+        return;
+    }
+
+    if (header) header.style.display = 'block';
+
+    showLoading();
+    try {
+        // Group by schemeCode
+        const groups = {};
+        userInvestments.forEach(inv => {
+            if (!groups[inv.schemeCode]) {
+                groups[inv.schemeCode] = {
+                    schemeCode: inv.schemeCode,
+                    schemeName: inv.schemeName,
+                    totalInvestment: 0,
+                    totalUnits: 0,
+                    earliestDate: inv.investmentDate,
+                    txCount: 0
+                };
+            }
+            groups[inv.schemeCode].totalInvestment += inv.investmentAmount;
+            groups[inv.schemeCode].totalUnits += inv.units;
+            groups[inv.schemeCode].txCount++;
+            if (new Date(inv.investmentDate) < new Date(groups[inv.schemeCode].earliestDate)) {
+                groups[inv.schemeCode].earliestDate = inv.investmentDate;
+            }
+        });
+
+        const sortedGroups = Object.values(groups).sort((a, b) => b.totalInvestment - a.totalInvestment);
+
+        const cardsHTML = await Promise.all(sortedGroups.map(async (group) => {
+            try {
+                const navDataRes = await getCurrentNAV(group.schemeCode);
+                const currentNAV = navDataRes.nav;
+                
+                const currentValue = group.totalUnits * currentNAV;
+                const returns = currentValue - group.totalInvestment;
+                const returnsPct = group.totalInvestment > 0 ? (returns / group.totalInvestment) * 100 : 0;
+                
+                // Synthetic investment for calculations
+                const synth = {
+                    schemeCode: group.schemeCode,
+                    schemeName: group.schemeName,
+                    investmentAmount: group.totalInvestment,
+                    units: group.totalUnits,
+                    investmentDate: group.earliestDate,
+                    nav: group.totalInvestment / group.totalUnits
+                };
+
+                const cagr = await calculateFundCAGR(synth, currentNAV);
+                const perf = await calculatePerformance(synth, currentNAV);
+
+                const perfItems = [];
+                if (perf?.periodic) {
+                    const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    
+                    const p = perf.periodic;
+                    if (p.daily) {
+                        const eParts = p.daily.endDate.split('-'); // dd-mm-yyyy
+                        const dateLabel = `${parseInt(eParts[0], 10)} ${monthsShort[parseInt(eParts[1], 10) - 1]}`;
+                        perfItems.push({ label: `Last change(${dateLabel})`, value: p.daily.value });
+                    }
+                    if (p.weekly) perfItems.push({ label: 'Last 7 Days', value: p.weekly.value });
+                    if (p.monthly) perfItems.push({ label: 'Last 1 Month', value: p.monthly.value });
+                    if (p.yearly) perfItems.push({ label: 'Last 1 Year', value: p.yearly.value });
+                }
+
+                const nameLower = group.schemeName.toLowerCase();
+                const planType = nameLower.includes('direct') ? 'Direct' : 'Regular';
+                const cleanTitle = group.schemeName.replace(/([-\s]+(Direct|Regular|Growth|IDCW|Dividend|Payout|Plan|Option))+.*/gi, '').trim();
+
+                const isMob = isMobile();
+
+                return `
+                    <div class="playing-card ${returns >= 0 ? 'card-positive' : 'card-negative'} ${isMob ? 'mobile-compact' : ''}">
+                        <div class="card-content">
+                            <h5 class="card-title-v2" title="${group.schemeName}">${cleanTitle}</h5>
+                            <div class="card-meta-v2 text-muted-v2">
+                                ${planType} • ${group.totalUnits.toFixed(2)} Units • ${group.txCount} Purchase${group.txCount > 1 ? 's' : ''}
+                            </div>
+                            
+                            <div class="card-stats-grid">
+                                <div class="stat-box">
+                                    <span class="stat-label">Total Invested</span>
+                                    <span class="stat-value">₹${group.totalInvestment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Current Value</span>
+                                    <span class="stat-value text-primary">₹${currentValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="card-main-stat">
+                                <div class="profit-amount ${returns >= 0 ? 'text-success' : 'text-danger'}">
+                                    ${returns >= 0 ? '+' : '-'}₹${Math.abs(returns).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                                </div>
+                                <div class="profit-badges">
+                                    <span class="modern-badge-v2 ${returns >= 0 ? 'success' : 'danger'}">${returns >= 0 ? '+' : ''}${returnsPct.toFixed(2)}%</span>
+                                    <span class="modern-badge-v2 info">XIRR ${cagr.toFixed(2)}%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="card-periodic-list">
+                                ${perfItems.map(item => `
+                                    <div class="periodic-row-v2">
+                                        <span class="period-lbl">${item.label}</span>
+                                        <span class="period-val ${item.value >= 0 ? 'pos' : 'neg'}">${item.value > 0 ? '+' : ''}${item.value.toFixed(2)}%</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="card-actions-v2">
+                                <button class="btn-action-v2 view" onclick="switchMainView('history')">View Details</button>
+                            </div>
+                        </div>
+                    </div>`;
+            } catch (e) {
+                return `<div class="playing-card card-negative"><div class="card-content"><h5>${group.schemeName}</h5><p class="text-muted small">Loading error...</p></div></div>`;
+            }
+        }));
+
+        container.innerHTML = cardsHTML.join('');
+    } finally {
+        hideLoading();
+    }
 }
 
 function quickAddFund(code, name) {

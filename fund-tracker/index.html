@@ -13,9 +13,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
     <!-- Mobile Specific Overrides -->
-    <link rel="stylesheet" href="mobile.css?v=1" media="screen and (max-width: 768px)">
+    <link rel="stylesheet" href="mobile.css?v=2" media="screen and (max-width: 768px)">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
@@ -97,6 +97,10 @@
                             <i class="bi bi-search"></i>
                             <span>Research</span>
                         </button>
+                        <button class="sidebar-item" data-view="history" onclick="switchMainView('history')">
+                            <i class="bi bi-clock-history"></i>
+                            <span>History</span>
+                        </button>
                     </div>
 
                     <!-- Sidebar Auth Section -->
@@ -163,7 +167,7 @@
             <div id="masterGrid"
                 style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; align-items: stretch; margin-bottom: 60px;">
 
-                <!-- 1. Portfolio Card -->
+                <!-- 2. Dynamic Funds -->
                 <div id="summaryStatsContainer" style="display: contents;">
                     <!-- Placeholder skeleton while computing -->
                     <div class="playing-card skeleton-card">
@@ -175,94 +179,132 @@
                     </div>
                 </div>
 
-                <!-- 2. Dynamic Funds -->
-                <div id="fundsContainer" style="display: contents;">
-                    <!-- Initial Loader managed by initApp -->
-                </div>
+                <!-- 2b. Unique Funds Section -->
+                <header id="uniqueFundsHeader" class="group-section-header" style="width: 100%; margin-top: 40px; margin-bottom: 20px; display: none;">
+                    <h4><i class="bi bi-wallet2 me-2"></i> My Mutual Funds</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; margin-left: 32px;">Consolidated unique fund holdings</p>
+                </header>
+                <div id="uniqueFundsContainer" style="display: contents;"></div>
 
-                <!-- 3. Add Fund Card -->
-                <div class="playing-card" id="addFundCard" style="overflow: visible; height: auto; min-height: 410px;">
-                    <div class="card-content"
-                        style="padding: 14px 18px; flex: 1; display: flex; flex-direction: column;">
-                        <h4
-                            style="margin-top: 0; font-size: 1rem; font-weight: 700; margin-bottom: 8px; text-align: center;">
-                            <i class="bi bi-plus-circle"></i> Add Fund
-                        </h4>
-                        <form id="addFundForm" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
-                            <div class="search-container modern-floating-label" id="houseSearchContainer">
-                                <input type="text" class="form-control-modern" id="fundHouseInput" placeholder=" "
-                                    autocomplete="off" oninput="filterHouses()" onfocus="filterHouses()"
-                                    onclick="filterHouses()"
-                                    style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px; padding-right: 40px !important;">
-                                <label for="fundHouseInput" style="color: rgba(255,255,255,0.6);">Select Fund
-                                    House</label>
-                                <i class="bi bi-chevron-down dropdown-chevron"
-                                    style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3); pointer-events: none;"></i>
-                                <div class="search-dropdown" id="houseDropdown"></div>
-                            </div>
-                            <div class="search-container modern-floating-label" id="fundSearchContainer"
-                                style="display: none;">
-                                <input type="text" class="form-control-modern" id="fundSearch" placeholder=" "
-                                    autocomplete="off"
-                                    style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px;">
-                                <label for="fundSearch" style="color: rgba(255,255,255,0.6);">Search Fund Name</label>
-                                <div class="search-dropdown" id="searchDropdown"></div>
-                            </div>
-                            <div id="fundRadioContainer" style="display: none; text-align: left; padding: 0 4px;">
-                                <label
-                                    style="font-size: 0.7rem; color: rgba(255,255,255,0.6); margin-bottom: 4px; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Select
-                                    Plan</label>
-                                <div id="fundRadioOptions"
-                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 2px 0;">
-                                    <!-- Filled dynamically -->
+                <!-- 3. Details Wrapper (Add Fund, Research, History) -->
+                <div id="detailsWrapper" style="display: contents;">
+                    <!-- 4. Research Section -->
+                    <header id="researchHeader" class="group-section-header" style="width: 100%; margin-top: 40px; margin-bottom: 20px; display: none;">
+                        <h4><i class="bi bi-search me-2"></i> Portfolio Insights</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; margin-left: 32px;">Advanced performance analysis based on historical cycles</p>
+                    </header>
+                    <div id="researchContainer" style="display: contents;"></div>
+
+                    <!-- 5. Purchase History Section -->
+                    <header id="historyHeader" class="group-section-header" style="width: 100%; margin-top: 40px; margin-bottom: 20px; display: none;">
+                        <h4><i class="bi bi-clock-history me-2"></i> Purchase History</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; margin-left: 32px;">Individual fund investments sorted by purchase date</p>
+                    </header>
+                    
+                    <!-- Add Fund Card (Placed as first card in history) -->
+                    <div class="playing-card" id="addFundCard" style="overflow: visible; height: auto; min-height: 410px; display: none;">
+                        <div class="card-content"
+                            style="padding: 14px 18px; flex: 1; display: flex; flex-direction: column;">
+                            <h4
+                                style="margin-top: 0; font-size: 1rem; font-weight: 700; margin-bottom: 8px; text-align: center;">
+                                <i class="bi bi-plus-circle"></i> Add Fund
+                            </h4>
+                            <form id="addFundForm" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                                <div class="search-container modern-floating-label" id="houseSearchContainer">
+                                    <input type="text" class="form-control-modern" id="fundHouseInput" placeholder=" "
+                                        autocomplete="off" oninput="filterHouses()" onfocus="filterHouses()"
+                                        onclick="filterHouses()"
+                                        style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px; padding-right: 40px !important;">
+                                    <label for="fundHouseInput" style="color: rgba(255,255,255,0.6);">Select Fund
+                                        House</label>
+                                    <i class="bi bi-chevron-down dropdown-chevron"
+                                        style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3); pointer-events: none;"></i>
+                                    <div class="search-dropdown" id="houseDropdown"></div>
                                 </div>
-                            </div>
-                            <div class="modern-floating-label">
-                                <input type="date" class="form-control-modern" id="investmentDate" placeholder=" "
-                                    required
-                                    style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px; color-scheme: dark;">
-                                <label for="investmentDate" style="color: rgba(255,255,255,0.6);">Investment
-                                    Date</label>
-                            </div>
-                            <div class="modern-floating-label mb-2">
-                                <input type="number" class="form-control-modern" id="investmentAmount" placeholder=" "
-                                    min="1" required
-                                    style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px;">
-                                <label for="investmentAmount" style="color: rgba(255,255,255,0.6);">Amount (₹)</label>
-                            </div>
-                            <div class="card-actions-v2" style="margin-top: auto; display: flex; gap: 8px;">
-                                <button type="submit" class="btn-action-v2 view" id="submitBtn"
-                                    style="flex: 1; justify-content: center; background: rgba(59, 130, 246, 0.2); color: var(--brand-primary);">
-                                    <i class="bi bi-plus-lg"></i> Add
-                                </button>
-                                <button type="button" class="btn-action-v2 delete" id="clearForm"
-                                    aria-label="Clear Form" title="Clear form"
-                                    style="flex: 0 0 45px; justify-content: center;">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </div>
-                        </form>
+                                <div class="search-container modern-floating-label" id="fundSearchContainer"
+                                    style="display: none;">
+                                    <input type="text" class="form-control-modern" id="fundSearch" placeholder=" "
+                                        autocomplete="off"
+                                        style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px;">
+                                    <label for="fundSearch" style="color: rgba(255,255,255,0.6);">Search Fund Name</label>
+                                    <div class="search-dropdown" id="searchDropdown"></div>
+                                </div>
+                                <div id="fundRadioContainer" style="display: none; text-align: left; padding: 0 4px;">
+                                    <label
+                                        style="font-size: 0.7rem; color: rgba(255,255,255,0.6); margin-bottom: 4px; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Select
+                                        Plan</label>
+                                    <div id="fundRadioOptions"
+                                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 2px 0;">
+                                        <!-- Filled dynamically -->
+                                    </div>
+                                </div>
+                                <div class="modern-floating-label">
+                                    <input type="date" class="form-control-modern" id="investmentDate" placeholder=" "
+                                        required
+                                        style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px; color-scheme: dark;">
+                                    <label for="investmentDate" style="color: rgba(255,255,255,0.6);">Investment
+                                        Date</label>
+                                </div>
+                                <div class="modern-floating-label mb-2">
+                                    <input type="number" class="form-control-modern" id="investmentAmount" placeholder=" "
+                                        min="1" required
+                                        style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px;">
+                                    <label for="investmentAmount" style="color: rgba(255,255,255,0.6);">Amount (₹)</label>
+                                </div>
+                                <div class="card-actions-v2" style="margin-top: auto; display: flex; gap: 8px;">
+                                    <button type="submit" class="btn-action-v2 view" id="submitBtn"
+                                        style="flex: 1; justify-content: center; background: rgba(59, 130, 246, 0.2); color: var(--brand-primary);">
+                                        <i class="bi bi-plus-lg"></i> Add
+                                    </button>
+                                    <button type="button" class="btn-action-v2 delete" id="clearForm"
+                                        aria-label="Clear Form" title="Clear form"
+                                        style="flex: 0 0 45px; justify-content: center;">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+                    <div id="fundsContainer" style="display: contents;"></div>
                 </div>
 
-                <!-- 4. Dynamic Groups -->
-                <div id="groupsContainer" style="display: contents;"></div>
+                <!-- 6. Segmented Groups View -->
+                <div id="groupsViewWrapper" style="display: none; width: 100%;">
+                    <!-- AMC Groups -->
+                    <div class="group-section-header">
+                        <h4><i class="bi bi-bank me-2"></i> By Fund House</h4>
+                    </div>
+                    <div id="amcGroupsContainer" class="master-grid mb-5"></div>
 
-                <!-- 5. Create Group Action Card -->
-                <div class="playing-card group-action-card" id="addGroupCard" onclick="openCreateGroupModal()"
-                    style="display: none;">
-                    <div style="text-align: center; padding: 40px 20px;">
-                        <i class="bi bi-collection"
-                            style="font-size: 2.5rem; color: rgba(255,255,255,0.4); margin-bottom: 12px; display: block;"></i>
-                        <h4 style="margin: 0; color: rgba(255,255,255,0.8); font-size: 1.1rem; font-weight: 700;">Group
-                            Funds</h4>
-                        <p style="margin: 8px 0 0; font-size: 0.8rem; color: rgba(255,255,255,0.4);">Combine funds to
-                            track aggregated performance</p>
+                    <!-- Category Groups -->
+                    <div class="group-section-header">
+                        <h4><i class="bi bi-tags me-2"></i> By Asset Category</h4>
+                    </div>
+                    <div id="catGroupsContainer" class="master-grid mb-5"></div>
+
+
+
+                    <!-- Custom Groups -->
+                    <div class="group-section-header">
+                        <h4><i class="bi bi-folder2-open me-2"></i> My Collections</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; margin-left: 32px;">Manually organized fund groups</p>
+                    </div>
+                    
+                    <div id="customGroupsContainer" class="master-grid mb-5">
+                        <!-- Custom groups and Add Group card will be rendered here -->
+                    </div>
+                    
+                    <!-- Hidden reference to Add Group card template -->
+                    <div id="addGroupTemplate" style="display: none;">
+                        <div class="playing-card group-action-card" id="addGroupCard" onclick="openCreateGroupModal()">
+                            <div style="text-align: center; padding: 40px 20px;">
+                                <i class="bi bi-plus-circle" style="font-size: 2.5rem; color: rgba(255,255,255,0.4); margin-bottom: 12px; display: block;"></i>
+                                <h4 style="margin: 0; color: rgba(255,255,255,0.8); font-size: 1.1rem; font-weight: 700;">New Collection</h4>
+                                <p style="margin: 8px 0 0; font-size: 0.8rem; color: rgba(255,255,255,0.4);">Combine funds manually</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- 6. Research Insights -->
-                <div id="researchContainer" style="display: contents;"></div>
 
                 <!-- 7. Market Explorer -->
                 <div id="exploreContainer" style="display: contents;"></div>
@@ -402,9 +444,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/api-manager.js?v=3"></script>
-    <script src="js/calculations.js?v=3"></script>
-    <script src="js/ui-renderer.js?v=4"></script>
-    <script src="js/app.js?v=4"></script>
+    <script src="js/api-manager.js?v=4"></script>
+    <script src="js/calculations.js?v=4"></script>
+    <script src="js/ui-renderer.js?v=5"></script>
+    <script src="js/app.js?v=6"></script>
 </body>
 </html>

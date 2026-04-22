@@ -109,7 +109,12 @@ function switchMainView(targetView) {
         explore: document.getElementById('exploreContainer'),
         summary: document.getElementById('summaryStatsContainer'),
         addFund: document.getElementById('addFundCard'),
-        addGroup: document.getElementById('addGroupCard')
+        groupsWrapper: document.getElementById('groupsViewWrapper'),
+        researchHeader: document.getElementById('researchHeader'),
+        historyHeader: document.getElementById('historyHeader'),
+        detailsWrapper: document.getElementById('detailsWrapper'),
+        uniqueHeader: document.getElementById('uniqueFundsHeader'),
+        uniqueContainer: document.getElementById('uniqueFundsContainer')
     };
     const masterGrid = document.getElementById('masterGrid');
 
@@ -125,12 +130,13 @@ function switchMainView(targetView) {
     const explorerFilters = document.getElementById('explorerFilters');
 
     if (targetView === 'individual') {
-        if (containers.individual) containers.individual.style.display = 'contents';
         if (containers.summary) containers.summary.style.display = 'contents';
-        if (containers.addFund) containers.addFund.style.display = 'flex';
+        if (containers.detailsWrapper) containers.detailsWrapper.style.display = 'none';
+        if (containers.uniqueHeader) containers.uniqueHeader.style.display = 'block';
+        if (containers.uniqueContainer) containers.uniqueContainer.style.display = 'contents';
         
-        displayFunds();
         updateSummary();
+        displayUniqueFunds();
         
         // Ensure mobile carousel starts at the first card (Summary)
         const masterGrid = document.getElementById('masterGrid');
@@ -138,15 +144,23 @@ function switchMainView(targetView) {
             setTimeout(() => { masterGrid.scrollLeft = 0; }, 100);
         }
     } else if (targetView === 'groups') {
-        if (containers.groups) containers.groups.style.display = 'contents';
-        if (containers.addGroup) containers.addGroup.style.display = 'flex';
+        if (containers.groupsWrapper) containers.groupsWrapper.style.display = 'block';
         displayGroups();
     } else if (targetView === 'profile') {
         const profileContainer = document.getElementById('profileContainer');
         if (profileContainer) profileContainer.style.display = 'block';
     } else if (targetView === 'research') {
+        if (containers.detailsWrapper) containers.detailsWrapper.style.display = 'contents';
+        if (containers.researchHeader) containers.researchHeader.style.display = 'block';
         if (containers.research) containers.research.style.display = 'contents';
         displayResearch();
+    } else if (targetView === 'history') {
+        if (containers.detailsWrapper) containers.detailsWrapper.style.display = 'contents';
+        if (containers.addFund) containers.addFund.style.display = 'flex';
+        if (containers.historyHeader) containers.historyHeader.style.display = 'block';
+        if (containers.individual) containers.individual.style.display = 'contents';
+        
+        displayFunds();
     } else if (targetView === 'explore') {
         if (containers.explore) containers.explore.style.display = 'contents';
         if (explorerFilters) explorerFilters.style.display = 'block';
@@ -435,7 +449,7 @@ async function handleAddFund(e) {
 
     if (!code || !date || isNaN(amount)) return showError('Please fill all fields correctly.');
 
-    showLoading();
+    showGlobalLoader(editingInvestmentId ? 'Updating Fund' : 'Adding Fund', 'Processing transactions and fetching latest NAV...');
     try {
         const nav = await getNAVForDate(code, date);
         const units = amount / nav;
@@ -452,13 +466,18 @@ async function handleAddFund(e) {
         syncAutomatedGroups();
         await saveToCloud(userInvestments);
         clearForm();
-        displayFunds();
-        displayGroups();
-        updateSummary();
+        
+        await Promise.all([
+            displayFunds(),
+            displayUniqueFunds(),
+            displayGroups(),
+            updateSummary()
+        ]);
+        
         showSuccess(editingInvestmentId ? 'Fund updated' : 'Fund added');
         editingInvestmentId = null;
     } catch (err) { showError('Failed to add fund: ' + err.message); }
-    finally { hideLoading(); }
+    finally { hideGlobalLoader(); }
 }
 
 function clearForm() {
@@ -517,10 +536,13 @@ async function confirmDeleteFund() {
     if (!pendingDeleteId) return;
     
     // Hide confirmation modal
-    document.getElementById('deleteConfirmModal').classList.remove('show');
+    const modalEl = document.getElementById('deleteConfirmModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+    else modalEl.classList.remove('show'); // Fallback
     
     // Show global processing spinner
-    showLoading();
+    showGlobalLoader('Deleting', 'Permanently removing data and updating portfolio...');
     
     try {
         const id = pendingDeleteId;
@@ -535,15 +557,19 @@ async function confirmDeleteFund() {
             await saveToCloudFundGroups(fundGroups);
         }
         
-        displayFunds();
-        displayGroups();
-        updateSummary();
+        await Promise.all([
+            displayFunds(),
+            displayUniqueFunds(),
+            displayGroups(),
+            updateSummary()
+        ]);
+        
         showSuccess(pendingDeleteType === 'fund' ? 'Fund removed' : 'Group deleted');
     } catch (err) {
         showError('Failed: ' + err.message);
     } finally {
         pendingDeleteId = null;
-        hideLoading();
+        hideGlobalLoader();
     }
 }
 
@@ -553,38 +579,127 @@ async function confirmDeleteFund() {
  * Group Logic
  */
 function syncAutomatedGroups() {
-    // Strip automated groups - user requested purely manual control
-    fundGroups = fundGroups.filter(g => !g.isAutomated);
+    // Keep only manual custom groups
+    let manualGroups = fundGroups.filter(g => !g.isAutomated);
 
-    // Clean manual groups: remove stale fund IDs and delete empty groups
-    fundGroups = fundGroups.map(g => {
-        g.fundIds = g.fundIds.filter(fid => userInvestments.some(inv => String(inv.id) === String(fid)));
-        return g;
-    }).filter(g => g.fundIds.length > 0);
+    const autoGroups = [];
+    
+    // Group by AMC (Fund House)
+    const amcList = [
+        'ICICI Prudential', 'Nippon India', 'Aditya Birla Sun Life', 'Parag Parikh',
+        'Mirae Asset', 'Canara Robeco', 'Franklin Templeton', 'Nippon', 'WhiteOak Capital',
+        'UTI', 'SBI', 'HDFC', 'Axis', 'Quant', 'Tata', 'Kotak', 'DSP', 'Edelweiss',
+        'Invesco', 'L&T', 'Navi', 'Bandhan', 'IDFC', 'Sundaram', 'Motilal Oswal'
+    ];
+
+    const amcMap = {};
+    userInvestments.forEach(inv => {
+        const name = inv.schemeName;
+        let house = amcList.find(amc => name.toLowerCase().includes(amc.toLowerCase()));
+        
+        // Fallback: If not in master list, just take the first word
+        if (!house) house = name.split(' ')[0];
+        
+        if (!amcMap[house]) amcMap[house] = [];
+        amcMap[house].push(inv.id);
+    });
+
+    Object.entries(amcMap).forEach(([house, fids]) => {
+        autoGroups.push({ id: `auto-amc-${house}`, name: house, fundIds: fids, isAutomated: true, type: 'AMC' });
+    });
+
+    // Group by Category (Heuristic)
+    const categories = [
+        { name: 'Small Cap', keywords: ['small cap', 'smallcap', 'micro'] },
+        { name: 'Mid Cap', keywords: ['midcap', 'mid cap'] },
+        { name: 'Large Cap / Bluechip', keywords: ['large cap', 'bluechip', 'top 100', 'focused'] },
+        { name: 'Flexi Cap', keywords: ['flexi cap', 'flexicap'] },
+        { name: 'Multi Cap', keywords: ['multi cap', 'multicap'] },
+        { name: 'Tax Saver (ELSS)', keywords: ['elss', 'tax saver', 'tax saving', '80c'] },
+        { name: 'Liquid & Overnight', keywords: ['liquid', 'overnight', 'cash', 'money market'] },
+        { name: 'Debt & Hybrid', keywords: ['debt', 'bond', 'gilt', 'hybrid', 'balanced', 'equity savings'] }
+    ];
+
+    categories.forEach(cat => {
+        const fids = userInvestments
+            .filter(inv => {
+                const name = inv.schemeName.toLowerCase();
+                return cat.keywords.some(k => name.includes(k));
+            })
+            .map(inv => inv.id);
+        
+        if (fids.length > 0) {
+            autoGroups.push({ id: `auto-cat-${cat.name}`, name: cat.name, fundIds: fids, isAutomated: true, type: 'Category' });
+        }
+    });
+
+    fundGroups = [...autoGroups, ...manualGroups];
 }
 
 let currentEditingGroupId = null;
 
+function getUniqueFundsList() {
+    const uniqueMap = new Map();
+    userInvestments.forEach(inv => {
+        if (!uniqueMap.has(inv.schemeCode)) {
+            uniqueMap.set(inv.schemeCode, {
+                schemeCode: inv.schemeCode,
+                schemeName: inv.schemeName,
+                ids: []
+            });
+        }
+        uniqueMap.get(inv.schemeCode).ids.push(inv.id);
+    });
+    return Array.from(uniqueMap.values()).sort((a, b) => a.schemeName.localeCompare(b.schemeName));
+}
+
+
 function openCreateGroupModal() {
     const container = document.getElementById('createGroupFundList');
-    container.innerHTML = userInvestments.map(inv => `
-        <div class="fund-assignment-item">
-            <input type="checkbox" class="form-check-input" id="create-fund-${inv.id}" value="${inv.id}">
-            <label class="form-check-label" for="create-fund-${inv.id}">${inv.schemeName}</label>
-        </div>`).join('');
-    document.getElementById('createGroupModal').classList.add('show');
+    const uniqueFunds = getUniqueFundsList();
+    
+    if (uniqueFunds.length === 0) {
+        container.innerHTML = '<p class="text-muted small">No funds available. Add funds first.</p>';
+    } else {
+        container.innerHTML = uniqueFunds.map(fund => `
+            <div class="fund-assignment-item">
+                <input type="checkbox" class="form-check-input" id="create-fund-${fund.schemeCode}" value="${fund.ids.join(',')}">
+                <label class="form-check-label" for="create-fund-${fund.schemeCode}">${fund.schemeName}</label>
+            </div>`).join('');
+    }
+    
+    document.getElementById('groupName').value = '';
+    const modal = new bootstrap.Modal(document.getElementById('createGroupModal'));
+    modal.show();
 }
+
 
 async function createGroup() {
     const name = document.getElementById('groupName').value.trim();
-    const fids = Array.from(document.querySelectorAll('#createGroupFundList input:checked')).map(cb => cb.value);
+    const selectedOptions = Array.from(document.querySelectorAll('#createGroupFundList input:checked'));
+    const fids = selectedOptions.flatMap(cb => cb.value.split(','));
+    
     if (!name || fids.length === 0) return showError('Enter name and select funds');
 
-    fundGroups.push({ id: 'custom-' + Date.now(), name, fundIds: fids, isAutomated: false });
-    await saveToCloudFundGroups(fundGroups);
-    document.getElementById('createGroupModal').classList.remove('show');
-    displayGroups();
+    showGlobalLoader('Creating Collection', 'Initializing your new fund group...');
+    try {
+        fundGroups.push({ id: 'custom-' + Date.now(), name, fundIds: fids, isAutomated: false });
+        await saveToCloudFundGroups(fundGroups);
+        
+        const modalEl = document.getElementById('createGroupModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+        
+        await displayGroups();
+        showSuccess('Collection created');
+    } catch (err) {
+        showError('Failed to create collection');
+    } finally {
+        hideGlobalLoader();
+    }
 }
+
+
 
 /**
  * Group Management Logic
@@ -597,50 +712,74 @@ function editGroupModal(groupId) {
     document.getElementById('editGroupName').value = group.name;
 
     const assignmentList = document.getElementById('fundAssignmentList');
-    assignmentList.innerHTML = userInvestments.map(inv => {
-        const isSelected = group.fundIds.some(id => String(id) === String(inv.id));
+    const uniqueFunds = getUniqueFundsList();
+    
+    assignmentList.innerHTML = uniqueFunds.map(fund => {
+        // Check if all IDs of this fund are in the group
+        const allInGroup = fund.ids.every(id => group.fundIds.some(gid => String(gid) === String(id)));
         return `
             <div class="fund-assignment-item">
-                <input type="checkbox" class="form-check-input" id="edit-fund-${inv.id}" value="${inv.id}" ${isSelected ? 'checked' : ''}>
-                <label class="form-check-label" for="edit-fund-${inv.id}">${inv.schemeName}</label>
+                <input type="checkbox" class="form-check-input" id="edit-fund-${fund.schemeCode}" value="${fund.ids.join(',')}" ${allInGroup ? 'checked' : ''}>
+                <label class="form-check-label" for="edit-fund-${fund.schemeCode}">${fund.schemeName}</label>
             </div>`;
     }).join('');
 
-    document.getElementById('editGroupModal').classList.add('show');
+    const modal = new bootstrap.Modal(document.getElementById('editGroupModal'));
+    modal.show();
 }
+
 
 async function updateGroup() {
     const groupName = document.getElementById('editGroupName').value.trim();
-    const fids = Array.from(document.querySelectorAll('#fundAssignmentList input:checked')).map(cb => cb.value);
+    const selectedOptions = Array.from(document.querySelectorAll('#fundAssignmentList input:checked'));
+    const fids = selectedOptions.flatMap(cb => cb.value.split(','));
 
     if (!groupName || fids.length === 0) return showError('Enter name and select funds');
 
-    const group = fundGroups.find(g => String(g.id) === String(currentEditingGroupId));
-    if (group) {
-        group.name = groupName;
-        group.fundIds = fids;
-        await saveToCloudFundGroups(fundGroups);
-        document.getElementById('editGroupModal').classList.remove('show');
-        displayGroups();
-        showSuccess('Group updated');
+    showGlobalLoader('Updating Collection', 'Saving changes and recalculating stats...');
+    try {
+        const group = fundGroups.find(g => String(g.id) === String(currentEditingGroupId));
+        if (group) {
+            group.name = groupName;
+            group.fundIds = fids;
+            await saveToCloudFundGroups(fundGroups);
+            
+            const modalEl = document.getElementById('editGroupModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+            
+            await displayGroups();
+            showSuccess('Collection updated');
+        }
+    } catch (err) {
+        showError('Failed to update collection');
+    } finally {
+        hideGlobalLoader();
     }
 }
 
-async function deleteGroup() {
-    const group = fundGroups.find(g => String(g.id) === String(currentEditingGroupId));
+
+
+async function deleteGroup(groupId) {
+    const id = groupId || currentEditingGroupId;
+    const group = fundGroups.find(g => String(g.id) === String(id));
     if (!group) return;
 
-    // Hide edit modal
-    document.getElementById('editGroupModal').classList.remove('show');
+    // Close edit modal if open
+    const modalEl = document.getElementById('editGroupModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
 
     // Show custom confirm modal
-    pendingDeleteId = currentEditingGroupId;
+    pendingDeleteId = id;
     pendingDeleteType = 'group';
     const nameEl = document.getElementById('deleteFundName');
-    if (nameEl) nameEl.textContent = `Group: ${group.name}`;
+    if (nameEl) nameEl.textContent = `Collection: ${group.name}`;
     
-    document.getElementById('deleteConfirmModal').classList.add('show');
+    const confirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    confirmModal.show();
 }
+
 
 /**
  * Data Refresh
@@ -672,6 +811,7 @@ async function refreshAllData() {
         updateSyncUI();
         syncAutomatedGroups(); 
         displayFunds();
+        displayUniqueFunds();
         displayGroups();
         updateSummary();
         showSuccess('Portfolio Synced Successfully');
