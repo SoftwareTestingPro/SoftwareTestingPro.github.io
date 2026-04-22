@@ -262,6 +262,31 @@
                                     </div>
                                 </div>
 
+                                <div id="purchaseModeContainer" style="margin-bottom: 8px;">
+                                    <div class="btn-group btn-group-sm w-100" role="group" style="background: rgba(255,255,255,0.05); padding: 2px; border-radius: 8px;">
+                                        <input type="radio" class="btn-check" name="purchaseMode" id="modeLumpsum" value="lumpsum" checked onchange="togglePurchaseMode()">
+                                        <label class="btn btn-outline-primary border-0" for="modeLumpsum" style="border-radius: 6px; font-size: 0.75rem;">Lumpsum</label>
+                                        
+                                        <input type="radio" class="btn-check" name="purchaseMode" id="modeSIP" value="sip" onchange="togglePurchaseMode()">
+                                        <label class="btn btn-outline-primary border-0" for="modeSIP" style="border-radius: 6px; font-size: 0.75rem;">SIP</label>
+                                    </div>
+                                </div>
+
+                                <div id="sipFrequencyContainer" style="display: none; margin-bottom: 8px;">
+                                    <div class="modern-floating-label">
+                                        <select class="form-control-modern" id="sipFrequency" style="background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.05); color: white; border-radius: 8px; appearance: none; padding-right: 40px !important;">
+                                            <option value="Daily">Daily</option>
+                                            <option value="Weekly">Weekly</option>
+                                            <option value="Monthly" selected>Monthly</option>
+                                            <option value="Quarterly">Quarterly</option>
+                                            <option value="Half-yearly">Half-yearly</option>
+                                            <option value="Yearly">Yearly</option>
+                                        </select>
+                                        <label for="sipFrequency" style="color: rgba(255,255,255,0.6);">SIP Frequency</label>
+                                        <i class="bi bi-chevron-down dropdown-chevron" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3); pointer-events: none;"></i>
+                                    </div>
+                                </div>
+
                                 <div class="modern-floating-label mb-2">
                                     <input type="number" class="form-control-modern" id="investmentAmount" placeholder=" "
                                         step="any" required

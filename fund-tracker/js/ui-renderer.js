@@ -289,6 +289,9 @@ async function displayFunds() {
                                 <div class="card-meta-v2 text-muted-v2">
                                     <i class="bi ${isRedeem ? 'bi-dash-circle' : 'bi-calendar3'} me-1"></i> ${isRedeem ? 'Redeemed' : 'Purchased'}: ${formatDate(investment.investmentDate)}
                                 </div>
+                                <div class="card-meta-v2 text-muted-v2" style="margin-top: 2px;">
+                                    <span class="modern-badge-v2 info" style="font-size: 0.6rem; padding: 2px 6px;">${investment.isSIP ? 'SIP (' + (investment.sipFrequency || 'Monthly') + ')' : 'Lumpsum'}</span>
+                                </div>
                                 
                                 <div class="card-stats-grid">
                                     <div class="stat-box">
@@ -1368,6 +1371,9 @@ async function displayUniqueFunds() {
                             <h5 class="card-title-v2" title="${group.schemeName}">${cleanTitle}</h5>
                             <div class="card-meta-v2 text-muted-v2">
                                 ${planType} • ${group.totalUnits.toFixed(2)} Units • ${group.txCount} Purchase${group.txCount > 1 ? 's' : ''}
+                            </div>
+                            <div class="card-meta-v2 text-muted-v2" style="margin-top: 2px;">
+                                <span class="modern-badge-v2 info" style="font-size: 0.6rem; padding: 2px 6px;">${group.txCount > 1 ? 'SIP / Multiple' : (userInvestments.find(i => i.schemeCode === group.schemeCode)?.isSIP ? 'SIP' : 'Lumpsum')}</span>
                             </div>
                             
                             <div class="card-stats-grid">

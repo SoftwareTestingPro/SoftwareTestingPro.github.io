@@ -455,74 +455,155 @@ async function handleAddFund(e) {
 
     const txType = document.querySelector('input[name="txType"]:checked').value;
     const isRedeem = txType === 'redeem';
+    const purchaseMode = document.querySelector('input[name="purchaseMode"]:checked').value;
+    const isSIP = !isRedeem && purchaseMode === 'sip';
     
     let loaderTitle = 'Processing...';
     if (editingInvestmentId) {
         loaderTitle = 'Updating Transaction';
     } else {
-        loaderTitle = isRedeem ? 'Redeeming Fund' : 'Adding Fund';
+        if (isRedeem) loaderTitle = 'Redeeming Fund';
+        else if (isSIP) loaderTitle = 'Generating SIP Transactions';
+        else loaderTitle = 'Adding Fund';
     }
 
     showGlobalLoader(loaderTitle, 'Processing transactions and fetching latest NAV...');
     try {
-        const nav = await getNAVForDate(code, date);
         const redeemMode = document.querySelector('input[name="redeemMode"]:checked').value;
-        const isRedeem = txType === 'redeem';
-        
-        let finalUnits, finalAmount;
         const STAMP_DUTY_RATE = 0.00005; // 0.005%
 
-        if (isRedeem) {
-            // Check current balance (excluding the current transaction if editing)
-            const currentUnits = userInvestments
-                .filter(inv => inv.schemeCode == code && String(inv.id) !== String(editingInvestmentId))
-                .reduce((sum, inv) => sum + inv.units, 0);
+        if (isSIP && !editingInvestmentId) {
+            const frequency = document.getElementById('sipFrequency').value;
+            const startDate = new Date(date);
+            let currentDate = new Date(startDate);
+            currentDate.setHours(0, 0, 0, 0); // Normalize to midnight local time
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize today to midnight local time
 
-            if (currentUnits <= 0) {
-                throw new Error('Transaction denied: You do not have any units of this fund in your portfolio.');
+            const newInvestments = [];
+            const navResult = await NAVManager.getNAV(code);
+            const navData = navResult.data;
+
+            while (currentDate <= today) {
+                const dateStr = currentDate.toISOString().split('T')[0];
+                
+                // Find NAV for this specific date or closest previous
+                const targetTimestamp = currentDate.getTime();
+                let closestNAV = null;
+                let closestTimestamp = null;
+
+                for (const navRecord of navData) {
+                    const [d, m, y] = navRecord.date.split('-');
+                    const recordTimestamp = new Date(y, m - 1, d).getTime();
+
+                    if (recordTimestamp <= targetTimestamp) {
+                        if (closestTimestamp === null || recordTimestamp > closestTimestamp) {
+                            closestTimestamp = recordTimestamp;
+                            closestNAV = parseFloat(navRecord.nav);
+                        }
+                    }
+                }
+
+                if (!closestNAV) {
+                    // Fallback to oldest if before inception
+                    const sorted = [...navData].sort((a, b) => {
+                        const [d1, m1, y1] = a.date.split('-');
+                        const [d2, m2, y2] = b.date.split('-');
+                        return new Date(y1, m1 - 1, d1) - new Date(y2, m2 - 1, d2);
+                    });
+                    closestNAV = parseFloat(sorted[0].nav);
+                }
+
+                const netAmount = amount * (1 - STAMP_DUTY_RATE);
+                const units = netAmount / closestNAV;
+
+                newInvestments.push({
+                    id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                    schemeCode: code,
+                    schemeName: finalName,
+                    investmentDate: dateStr,
+                    investmentAmount: amount,
+                    nav: closestNAV,
+                    category: 'N/A',
+                    units: units,
+                    type: 'purchase',
+                    addedDate: new Date().toISOString(),
+                    isSIP: true,
+                    sipFrequency: frequency
+                });
+
+                // Advance date based on frequency
+                if (frequency === 'Daily') currentDate.setDate(currentDate.getDate() + 1);
+                else if (frequency === 'Weekly') currentDate.setDate(currentDate.getDate() + 7);
+                else if (frequency === 'Monthly') currentDate.setMonth(currentDate.getMonth() + 1);
+                else if (frequency === 'Quarterly') currentDate.setMonth(currentDate.getMonth() + 3);
+                else if (frequency === 'Half-yearly') currentDate.setMonth(currentDate.getMonth() + 6);
+                else if (frequency === 'Yearly') currentDate.setFullYear(currentDate.getFullYear() + 1);
+                
+                // Safety break to prevent infinite loops
+                if (newInvestments.length > 500) break;
             }
 
-            let unitsToRedeem;
-            if (redeemMode === 'units') {
-                unitsToRedeem = amount;
-                finalUnits = -amount;
-                finalAmount = -(amount * nav);
+            if (newInvestments.length === 0) {
+                throw new Error('No installments generated. Check your start date.');
+            }
+
+            userInvestments.push(...newInvestments);
+            showSuccess(`Generated ${newInvestments.length} SIP installments`);
+        } else {
+            const nav = await getNAVForDate(code, date);
+            let finalUnits, finalAmount;
+
+            if (isRedeem) {
+                const currentUnits = userInvestments
+                    .filter(inv => inv.schemeCode == code && String(inv.id) !== String(editingInvestmentId))
+                    .reduce((sum, inv) => sum + inv.units, 0);
+
+                if (currentUnits <= 0) {
+                    throw new Error('Transaction denied: You do not have any units of this fund in your portfolio.');
+                }
+
+                let unitsToRedeem;
+                if (redeemMode === 'units') {
+                    unitsToRedeem = amount;
+                    finalUnits = -amount;
+                    finalAmount = -(amount * nav);
+                } else {
+                    finalUnits = -(amount / nav);
+                    finalAmount = -amount;
+                    unitsToRedeem = Math.abs(finalUnits);
+                }
+
+                if (unitsToRedeem > (currentUnits + 0.00001)) {
+                    throw new Error(`Insufficient Balance: You only own ${currentUnits.toFixed(4)} units. You are trying to redeem ${unitsToRedeem.toFixed(4)} units.`);
+                }
             } else {
-                finalUnits = -(amount / nav);
-                finalAmount = -amount;
-                unitsToRedeem = Math.abs(finalUnits);
+                const netAmount = amount * (1 - STAMP_DUTY_RATE);
+                finalAmount = amount;
+                finalUnits = netAmount / nav;
             }
 
-            // Validate if user has enough units (with small epsilon for float precision)
-            if (unitsToRedeem > (currentUnits + 0.00001)) {
-                throw new Error(`Insufficient Balance: You only own ${currentUnits.toFixed(4)} units. You are trying to redeem ${unitsToRedeem.toFixed(4)} units.`);
+            const investment = { 
+                id: editingInvestmentId || Date.now(), 
+                schemeCode: code, 
+                schemeName: finalName, 
+                investmentDate: date, 
+                investmentAmount: finalAmount, 
+                nav, 
+                category: 'N/A', 
+                units: finalUnits, 
+                type: txType,
+                redeemMode: isRedeem ? redeemMode : null,
+                addedDate: new Date().toISOString() 
+            };
+
+            if (editingInvestmentId) {
+                const idx = userInvestments.findIndex(i => String(i.id) === String(editingInvestmentId));
+                if (idx !== -1) userInvestments[idx] = investment;
+            } else {
+                userInvestments.push(investment);
             }
-        } else {
-            const netAmount = amount * (1 - STAMP_DUTY_RATE);
-            finalAmount = amount;
-            finalUnits = netAmount / nav;
-        }
-
-        const investment = { 
-            id: editingInvestmentId || Date.now(), 
-            schemeCode: code, 
-            schemeName: finalName, 
-            investmentDate: date, 
-            investmentAmount: finalAmount, 
-            nav, 
-            category: 'N/A', 
-            units: finalUnits, 
-            type: txType,
-            redeemMode: isRedeem ? redeemMode : null,
-            addedDate: new Date().toISOString() 
-        };
-
-        const isEditing = !!editingInvestmentId;
-        if (editingInvestmentId) {
-            const idx = userInvestments.findIndex(i => String(i.id) === String(editingInvestmentId));
-            if (idx !== -1) userInvestments[idx] = investment;
-        } else {
-            userInvestments.push(investment);
         }
 
         syncAutomatedGroups();
@@ -536,7 +617,9 @@ async function handleAddFund(e) {
             updateSummary()
         ]);
         
-        showSuccess(isEditing ? 'Transaction updated successfully' : 'Transaction recorded successfully');
+        if (!isSIP || editingInvestmentId) {
+            showSuccess(editingInvestmentId ? 'Transaction updated successfully' : 'Transaction recorded successfully');
+        }
     } catch (err) { showError('Failed to process transaction: ' + err.message); }
     finally { hideGlobalLoader(); }
 }
@@ -549,6 +632,8 @@ function toggleTxType() {
     const dateLabel = document.getElementById('dateLabel');
     const submitBtn = document.getElementById('submitBtn');
     const redeemModeContainer = document.getElementById('redemptionModeContainer');
+    const purchaseModeContainer = document.getElementById('purchaseModeContainer');
+    const sipFreqContainer = document.getElementById('sipFrequencyContainer');
     
     if (isRedeem) {
         title.innerText = 'Redeem Fund';
@@ -557,6 +642,8 @@ function toggleTxType() {
             submitBtn.innerHTML = '<i class="bi bi-dash-circle"></i> Redeem';
         }
         redeemModeContainer.style.display = 'block';
+        purchaseModeContainer.style.display = 'none';
+        sipFreqContainer.style.display = 'none';
         toggleRedeemMode();
     } else {
         title.innerText = 'Add Fund';
@@ -566,11 +653,52 @@ function toggleTxType() {
             submitBtn.innerHTML = '<i class="bi bi-plus-lg"></i> Add';
         }
         redeemModeContainer.style.display = 'none';
+        purchaseModeContainer.style.display = 'block';
+        togglePurchaseMode();
+    }
+}
+
+function togglePurchaseMode() {
+    const modeElements = document.getElementsByName('purchaseMode');
+    let mode = 'lumpsum';
+    for (const el of modeElements) {
+        if (el.checked) {
+            mode = el.value;
+            break;
+        }
+    }
+    const isSIP = mode === 'sip';
+    const sipFreqContainer = document.getElementById('sipFrequencyContainer');
+    const dateLabel = document.getElementById('dateLabel');
+    const amountLabel = document.getElementById('amountLabel');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (isSIP) {
+        sipFreqContainer.style.display = 'block';
+        dateLabel.innerText = 'SIP Start Date';
+        amountLabel.innerText = 'Installment Amount (₹)';
+        if (!editingInvestmentId) {
+            submitBtn.innerHTML = '<i class="bi bi-repeat"></i> Generate SIP';
+        }
+    } else {
+        sipFreqContainer.style.display = 'none';
+        dateLabel.innerText = 'Investment Date';
+        amountLabel.innerText = 'Investment Amount (₹)';
+        if (!editingInvestmentId) {
+            submitBtn.innerHTML = '<i class="bi bi-plus-lg"></i> Add';
+        }
     }
 }
 
 function toggleRedeemMode() {
-    const mode = document.querySelector('input[name="redeemMode"]:checked').value;
+    const modeElements = document.getElementsByName('redeemMode');
+    let mode = 'amount';
+    for (const el of modeElements) {
+        if (el.checked) {
+            mode = el.value;
+            break;
+        }
+    }
     const amountLabel = document.getElementById('amountLabel');
     if (mode === 'units') {
         amountLabel.innerText = 'Units to Redeem';
@@ -588,6 +716,7 @@ function clearForm() {
     document.getElementById('fundSearchContainer').style.display = 'none';
     document.getElementById('fundRadioContainer').style.display = 'none';
     document.getElementById('txPurchase').checked = true;
+    document.getElementById('modeLumpsum').checked = true;
     toggleTxType();
     document.getElementById('submitBtn').innerHTML = '<i class="bi bi-plus-lg"></i> Add';
 }
@@ -632,6 +761,15 @@ async function editFund(id) {
         toggleRedeemMode();
     } else {
         document.getElementById('txPurchase').checked = true;
+        
+        // Populate Lumpsum/SIP state
+        if (inv.isSIP) {
+            document.getElementById('modeSIP').checked = true;
+            document.getElementById('sipFrequency').value = inv.sipFrequency || 'Monthly';
+        } else {
+            document.getElementById('modeLumpsum').checked = true;
+        }
+        
         toggleTxType();
         document.getElementById('investmentAmount').value = inv.investmentAmount;
     }
