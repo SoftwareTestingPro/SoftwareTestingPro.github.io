@@ -226,11 +226,8 @@ h1, h2, h3, h4, h5, h6 {
     max-height: 95vh;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    overflow: visible; /* Allow floating menus to escape */
 }
-.desktop-sidebar::-webkit-scrollbar { display: none; }
 
 .sidebar-nav-v2 {
     display: flex;
@@ -304,15 +301,16 @@ h1, h2, h3, h4, h5, h6 {
     display: flex !important;
     position: absolute;
     left: 105%; /* Position to the right of sidebar */
-    bottom: 0;
+    bottom: 20px; /* Elevated slightly */
     width: 140px;
     background: rgba(30, 41, 59, 0.95);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    z-index: 2000;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    z-index: 9999;
     margin-left: 15px;
     padding: 12px;
+    border-radius: 16px;
 }
 
 /* Submenu Arrow/Pointer */
@@ -1169,4 +1167,105 @@ body.loading-lock {
 .btn-add-group:hover {
     background: rgba(59, 130, 246, 0.2) !important;
     border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+/* -------------------------------------
+ * MODERN TOAST NOTIFICATIONS
+ * ------------------------------------- */
+.toast-container {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 1000000; /* Higher than modals */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none; /* Let clicks pass through if container is large */
+}
+
+.toast {
+    pointer-events: auto;
+    min-width: 280px;
+    max-width: 380px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    transform: translateX(120%);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    opacity: 0;
+}
+
+.toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast.success {
+    border-left: 4px solid #10b981;
+}
+
+.toast.error {
+    border-left: 4px solid #ef4444;
+}
+
+.toast.info {
+    border-left: 4px solid var(--brand-primary);
+}
+
+.toast-message {
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Success Icon logic via CSS pseudo-elements for zero extra HTML */
+.toast.success::before {
+    content: '\F633'; /* bi-check-circle-fill */
+    font-family: 'bootstrap-icons';
+    color: #10b981;
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+.toast.error::before {
+    content: '\F33A'; /* bi-exclamation-octagon-fill */
+    font-family: 'bootstrap-icons';
+    color: #ef4444;
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+.toast.info::before {
+    content: '\F44F'; /* bi-info-circle-fill */
+    font-family: 'bootstrap-icons';
+    color: var(--brand-primary);
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        top: auto;
+        bottom: 100px; /* Above mobile nav */
+        left: 20px;
+        right: 20px;
+        align-items: center;
+    }
+    
+    .toast {
+        min-width: 0;
+        width: 100%;
+        transform: translateY(100px);
+    }
+    
+    .toast.show {
+        transform: translateY(0);
+    }
 }

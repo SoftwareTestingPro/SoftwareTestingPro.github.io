@@ -615,9 +615,15 @@ function syncAutomatedGroups() {
         { name: 'Large Cap / Bluechip', keywords: ['large cap', 'bluechip', 'top 100', 'focused'] },
         { name: 'Flexi Cap', keywords: ['flexi cap', 'flexicap'] },
         { name: 'Multi Cap', keywords: ['multi cap', 'multicap'] },
+        { name: 'Index & ETF', keywords: ['index', 'nifty', 'sensex', 'etf', 'passive'] },
         { name: 'Tax Saver (ELSS)', keywords: ['elss', 'tax saver', 'tax saving', '80c'] },
         { name: 'Liquid & Overnight', keywords: ['liquid', 'overnight', 'cash', 'money market'] },
-        { name: 'Debt & Hybrid', keywords: ['debt', 'bond', 'gilt', 'hybrid', 'balanced', 'equity savings'] }
+        { name: 'Debt & Bonds', keywords: ['debt', 'bond', 'gilt', 'treasury', 'short term', 'corporate'] },
+        { name: 'Hybrid & Balanced', keywords: ['hybrid', 'balanced', 'equity savings', 'multi asset'] },
+        { name: 'Arbitrage', keywords: ['arbitrage'] },
+        { name: 'Value & Contra', keywords: ['value', 'contra'] },
+        { name: 'Sectoral & Thematic', keywords: ['technology', 'it', 'pharma', 'healthcare', 'banking', 'psu', 'infrastructure', 'energy', 'consumption'] },
+        { name: 'International', keywords: ['international', 'global', 'nasdaq', 'us', 'world', 'overseas'] }
     ];
 
     categories.forEach(cat => {

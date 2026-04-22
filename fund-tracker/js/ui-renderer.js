@@ -349,6 +349,32 @@ async function updateSummary() {
     if (isSummaryUpdating) return;
     isSummaryUpdating = true;
 
+    if (userInvestments.length === 0) {
+        const onboardingHTML = `
+            <div style="grid-column: 1 / -1; padding: 60px 20px; text-align: center; max-width: 800px; margin: 0 auto;">
+                <h1 style="font-weight: 800; margin-bottom: 24px; letter-spacing: -1.5px; font-size: 2.5rem; color: white;">
+                    Track your Mutual Funds <span style="color: var(--brand-primary);">Anonymously</span>
+                </h1>
+                <p style="color: var(--text-secondary); font-size: 1.2rem; line-height: 1.7; margin-bottom: 32px;">
+                    Start tracking your portfolio without ever sharing your PAN card or sensitive bank credentials. 
+                    Your privacy is our priority—we do not track, see, or store your funds on our servers. 
+                    Everything stays synced securely within your personal Google Drive.
+                </p>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 40px;">
+                    Simply add your fund details manually, and we'll take care of the NAV tracking, XIRR calculations, and detailed performance insights for you.
+                </p>
+                <div>
+                    <a href="javascript:void(0)" onclick="switchMainView('history')" style="color: var(--brand-primary); font-weight: 700; font-size: 1.2rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; border-bottom: 2px solid rgba(59, 130, 246, 0.3); padding-bottom: 4px; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--brand-primary)'" onmouseout="this.style.borderColor='rgba(59, 130, 246, 0.3)'">
+                        Add your first fund here <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>`;
+        const summaryContainer = document.getElementById('summaryStatsContainer');
+        if (summaryContainer) summaryContainer.innerHTML = onboardingHTML;
+        isSummaryUpdating = false;
+        return;
+    }
+
     try {
         let totalInv = 0, totalVal = 0, totalYTDStart = 0, flows = [];
         const curYear = new Date().getFullYear();
@@ -938,12 +964,12 @@ async function displayResearch() {
                         <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px;">${sub}</p>
                         
                         <div class="card-main-stat">
-                            <div class="profit-amount ${isPos ? 'text-success' : 'text-danger'}" style="font-size: 2rem;">
-                                ${isPos ? '+' : '-'}₹${formattedAmount}
+                            <div class="profit-amount ${maxXirr >= 0 ? 'text-success' : 'text-danger'}" style="font-size: 2rem; font-weight: 800; letter-spacing: -1px;">
+                                XIRR ${Number(maxXirr || 0).toFixed(2)}%
                             </div>
                             <div class="profit-badges">
-                                <span class="modern-badge-v2 ${isPos ? 'success' : 'danger'}">${isPos ? '+' : ''}${Number(mainPct || 0).toFixed(2)}%</span>
-                                <span class="modern-badge-v2 ${maxXirr >= 0 ? 'success' : 'danger'}">XIRR ${Number(maxXirr || 0).toFixed(2)}%</span>
+                                <span class="modern-badge-v2 ${isPos ? 'success' : 'danger'}" title="Total Returns Percentage">${isPos ? '+' : ''}${Number(mainPct || 0).toFixed(2)}%</span>
+                                <span class="modern-badge-v2 ${isPos ? 'success' : 'danger'}" title="Absolute Profit/Loss">${isPos ? '+' : '-'}₹${formattedAmount}</span>
                             </div>
                         </div>
 
@@ -1290,7 +1316,7 @@ async function displayUniqueFunds() {
             }
         });
 
-        const sortedGroups = Object.values(groups).sort((a, b) => b.totalInvestment - a.totalInvestment);
+        const sortedGroups = Object.values(groups).sort((a, b) => a.schemeName.localeCompare(b.schemeName));
 
         const cardsHTML = await Promise.all(sortedGroups.map(async (group) => {
             try {
