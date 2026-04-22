@@ -864,7 +864,7 @@ function updateAuthUI() {
             const avatarEl = document.getElementById('userAvatarSidebar');
             if (nameEl) nameEl.textContent = currentUser.name;
             if (avatarEl) {
-                avatarEl.src = currentUser.avatar;
+                avatarEl.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=random`;
                 avatarEl.style.display = 'block';
             }
         }
@@ -875,7 +875,7 @@ function updateAuthUI() {
         const avatarMob = document.getElementById('userAvatarMobile');
         if (nameMob) nameMob.textContent = currentUser.name;
         if (emailMob) emailMob.textContent = currentUser.email;
-        if (avatarMob) avatarMob.src = currentUser.avatar;
+        if (avatarMob) avatarMob.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=random`;
 
         if (loginContent) loginContent.style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
