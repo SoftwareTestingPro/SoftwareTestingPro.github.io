@@ -9,7 +9,7 @@ echo    SoftwareTestingPro - Server Debug
 echo ==========================================
 
 set PORT=8000
-set TARGET=index.html
+set TARGET=app/index.html
 
 echo.
 echo [1] Checking for Python...

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 import 'home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final bool isEditMode;
+  const ProfileScreen({super.key, this.isEditMode = false});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -13,8 +16,101 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _nameController = TextEditingController();
   final _bioController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _professionController = TextEditingController();
+  
+  static const List<String> _cityOptions = [
+    'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Chennai', 'Kolkata', 
+    'Surat', 'Pune', 'Jaipur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane', 
+    'Bhopal', 'Visakhapatnam', 'Pimpri-Chinchwad', 'Patna', 'Vadodara', 'Ghaziabad', 
+    'Ludhiana', 'Agra', 'Nashik', 'Ranchi', 'Faridabad', 'Meerut', 'Rajkot', 
+    'Kalyan-Dombivli', 'Vasai-Virar', 'Varanasi', 'Srinagar', 'Aurangabad', 
+    'Dhanbad', 'Amritsar', 'Navi Mumbai', 'Allahabad', 'Howrah', 'Gwalior', 
+    'Jabalpur', 'Coimbatore', 'Vijayawada', 'Jodhpur', 'Madurai', 'Raipur', 
+    'Kota', 'Guwahati', 'Chandigarh', 'Solapur', 'Hubli-Dharwad', 'Bareilly', 
+    'Moradabad', 'Mysore', 'Gurgaon', 'Aligarh', 'Jalandhar', 'Tiruchirappalli', 
+    'Bhubaneswar', 'Salem', 'Mira-Bhayandar', 'Warangal', 'Guntur', 'Bhiwandi', 
+    'Saharanpur', 'Gorakhpur', 'Bikaner', 'Amravati', 'Noida', 'Jamshedpur', 
+    'Bhilai', 'Cuttack', 'Firozabad', 'Kochi', 'Nellore', 'Bhavnagar', 'Dehradun', 
+    'Durgapur', 'Asansol', 'Rourkela', 'Nanded', 'Kolhapur', 'Ajmer', 'Akola', 
+    'Gulbarga', 'Jamnagar', 'Ujjain', 'Loni', 'Siliguri', 'Jhansi', 'Ulhasnagar', 
+    'Jammu', 'Sangli-Miraj & Kupwad', 'Mangalore', 'Erode', 'Belgaum', 'Ambattur', 
+    'Tirunelveli', 'Malegaon', 'Gaya', 'Jalgaon', 'Udaipur', 'Maheshtala',
+    'Unnao', 'Rae Bareli', 'Sitapur', 'Harda', 'Vidisha', 'Rewa', 'Satna', 
+    'Muzaffarpur', 'Bhagalpur', 'Gaya', 'Arrah', 'Begusarai', 'Katihar',
+    'Rohtak', 'Hisar', 'Panipat', 'Karnal', 'Sonipat', 'Ambala', 'Yamunanagar'
+  ];
+  
   String _selectedGender = 'Male';
   int _age = 25;
+  String? _base64Image;
+  List<String> _selectedRoles = [];
+  bool _isLoading = true;
+
+  final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _nameController.text = prefs.getString('userName') ?? '';
+      _bioController.text = prefs.getString('userBio') ?? '';
+      _cityController.text = prefs.getString('userCity') ?? '';
+      _professionController.text = prefs.getString('userProfession') ?? '';
+      _base64Image = prefs.getString('userImageBase64');
+      _selectedGender = prefs.getString('userGender') ?? 'Male';
+      _age = prefs.getInt('userAge') ?? 25;
+      _selectedRoles = prefs.getStringList('userRoles') ?? [];
+      _isLoading = false;
+    });
+  }
+
+  List<String> _getRolesForGender(String gender) {
+    List<String> common = ['Friend', 'Best Friend', 'Cousin', 'Colleague'];
+    if (gender == 'Male') {
+      return [
+        ...common,
+        'Boyfriend',
+        'Ex-Boyfriend',
+        'Husband',
+        'Father-in-law',
+        'Brother-in-law',
+        'Father',
+        'Brother',
+        'Uncle',
+        'Grandfather'
+      ];
+    } else if (gender == 'Female') {
+      return [
+        ...common,
+        'Girlfriend',
+        'Ex-Girlfriend',
+        'Wife',
+        'Mother-in-law',
+        'Sister-in-law',
+        'Mother',
+        'Sister',
+        'Aunt',
+        'Grandmother'
+      ];
+    }
+    return common;
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final bytes = await image.readAsBytes();
+      setState(() {
+        _base64Image = base64Encode(bytes);
+      });
+    }
+  }
 
   Future<void> _saveProfile() async {
     if (_nameController.text.isEmpty) {
@@ -27,25 +123,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userName', _nameController.text);
     await prefs.setString('userBio', _bioController.text);
+    await prefs.setString('userCity', _cityController.text);
+    await prefs.setString('userProfession', _professionController.text);
+    if (_base64Image != null) await prefs.setString('userImageBase64', _base64Image!);
     await prefs.setString('userGender', _selectedGender);
     await prefs.setInt('userAge', _age);
+    await prefs.setStringList('userRoles', _selectedRoles);
     await prefs.setBool('hasProfile', true);
 
     if (!mounted) return;
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
+    if (widget.isEditMode) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final availableRoles = _getRolesForGender(_selectedGender);
+
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Your Profile', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+        title: Text(widget.isEditMode ? 'Edit Profile' : 'Create Your Profile', 
+          style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         centerTitle: true,
+        actions: widget.isEditMode ? [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.clear();
+              if (!mounted) return;
+              Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
+            },
+            tooltip: 'Logout',
+          ),
+        ] : null,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -58,15 +183,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   CircleAvatar(
                     radius: 60,
                     backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                    child: Icon(Icons.person, size: 60, color: theme.colorScheme.primary),
+                    backgroundImage: _base64Image != null 
+                      ? MemoryImage(base64Decode(_base64Image!)) 
+                      : null,
+                    child: _base64Image == null 
+                      ? Icon(Icons.person, size: 60, color: theme.colorScheme.primary)
+                      : null,
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: theme.colorScheme.primary,
-                      child: const Icon(Icons.camera_alt, size: 20, color: Colors.white),
+                    child: InkWell(
+                      onTap: _pickImage,
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: theme.colorScheme.primary,
+                        child: const Icon(Icons.camera_alt, size: 20, color: Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -74,7 +207,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 32),
             _buildLabel('Full Name'),
-            _buildTextField(controller: _nameController, hint: 'e.g. Rahul Sharma'),
+            _buildTextField(controller: _nameController, hint: 'e.g. Rahul Sharma', icon: Icons.person_outline),
+            const SizedBox(height: 20),
+            _buildLabel('City'),
+            Autocomplete<String>(
+              optionsBuilder: (TextEditingValue textEditingValue) {
+                if (textEditingValue.text.isEmpty) {
+                  return const Iterable<String>.empty();
+                }
+                return _cityOptions.where((String option) {
+                  return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                });
+              },
+              onSelected: (String selection) {
+                _cityController.text = selection;
+              },
+              fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                // Sync the autocomplete controller with our persistence controller
+                if (_cityController.text.isNotEmpty && controller.text.isEmpty) {
+                  controller.text = _cityController.text;
+                }
+                controller.addListener(() {
+                  _cityController.text = controller.text;
+                });
+                return _buildTextField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  hint: 'e.g. New Delhi',
+                  icon: Icons.location_city,
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildLabel('Profession'),
+            _buildTextField(controller: _professionController, hint: 'e.g. Software Engineer', icon: Icons.work_outline),
+            const SizedBox(height: 20),
+            _buildLabel('Gender'),
+            Row(
+              children: [
+                _buildGenderChip('Male'),
+                const SizedBox(width: 12),
+                _buildGenderChip('Female'),
+                const SizedBox(width: 12),
+                _buildGenderChip('Other'),
+              ],
+            ),
             const SizedBox(height: 20),
             _buildLabel('Age'),
             Row(
@@ -93,15 +270,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            _buildLabel('Gender'),
-            Row(
-              children: [
-                _buildGenderChip('Male'),
-                const SizedBox(width: 12),
-                _buildGenderChip('Female'),
-                const SizedBox(width: 12),
-                _buildGenderChip('Other'),
-              ],
+            _buildLabel('Roles You Can Play'),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: availableRoles.length,
+                itemBuilder: (context, index) {
+                  final role = availableRoles[index];
+                  return CheckboxListTile(
+                    title: Text(role, style: GoogleFonts.montserrat(fontSize: 14)),
+                    value: _selectedRoles.contains(role),
+                    onChanged: (val) {
+                      setState(() {
+                        if (val == true) {
+                          _selectedRoles.add(role);
+                        } else {
+                          _selectedRoles.remove(role);
+                        }
+                      });
+                    },
+                    activeColor: theme.colorScheme.primary,
+                    dense: true,
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 20),
             _buildLabel('Short Bio'),
@@ -109,6 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               controller: _bioController,
               hint: 'Tell us a bit about yourself...',
               maxLines: 3,
+              icon: Icons.notes,
             ),
             const SizedBox(height: 40),
             SizedBox(
@@ -121,7 +320,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                child: Text('Complete Profile', style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text(widget.isEditMode ? 'Update Profile' : 'Complete Profile', 
+                  style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -140,11 +340,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildTextField({required TextEditingController controller, required String hint, int maxLines = 1}) {
+  Widget _buildTextField({
+    required TextEditingController controller, 
+    required String hint, 
+    int maxLines = 1,
+    IconData? icon,
+    FocusNode? focusNode,
+  }) {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       maxLines: maxLines,
       decoration: InputDecoration(
+        prefixIcon: icon != null ? Icon(icon, color: Colors.grey) : null,
         hintText: hint,
         hintStyle: GoogleFonts.montserrat(color: Colors.grey),
         filled: true,
@@ -167,7 +375,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       label: Text(gender),
       selected: isSelected,
       onSelected: (val) {
-        if (val) setState(() => _selectedGender = gender);
+        if (val) {
+          setState(() {
+            _selectedGender = gender;
+            // Clear roles that might not be valid for the new gender
+            // (Keep common roles, remove specific ones)
+            // But for simplicity, we'll just let the user re-select if they change gender
+          });
+        }
       },
       selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
       labelStyle: GoogleFonts.montserrat(

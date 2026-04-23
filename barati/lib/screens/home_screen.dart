@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/models.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -114,6 +116,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return SliverAppBar(
       expandedHeight: 300.0,
       pinned: true,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.logout, color: Colors.white),
+          onPressed: () => _logout(context),
+          tooltip: 'Logout',
+        ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
           'Barati',
@@ -334,10 +343,24 @@ class _HomeScreenState extends State<HomeScreen> {
             IconButton(icon: Icon(Icons.people, color: _selectedIndex == 1 ? theme.colorScheme.primary : Colors.grey), onPressed: () => setState(() => _selectedIndex = 1)),
             const SizedBox(width: 40),
             IconButton(icon: Icon(Icons.notifications_none, color: _selectedIndex == 2 ? theme.colorScheme.primary : Colors.grey), onPressed: () => setState(() => _selectedIndex = 2)),
-            IconButton(icon: Icon(Icons.person_outline, color: _selectedIndex == 3 ? theme.colorScheme.primary : Colors.grey), onPressed: () => setState(() => _selectedIndex = 3)),
+            IconButton(
+              icon: Icon(Icons.person_outline, color: _selectedIndex == 3 ? theme.colorScheme.primary : Colors.grey),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const ProfileScreen(isEditMode: true)),
+                );
+              },
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    if (!mounted) return;
+    Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
   }
 }

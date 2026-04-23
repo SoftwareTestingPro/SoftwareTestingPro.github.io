@@ -8,14 +8,21 @@ import 'theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  final hasProfile = prefs.getBool('hasProfile') ?? false;
+  final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  final bool hasProfile = prefs.getBool('hasProfile') ?? false;
 
-  runApp(MyApp(
-    initialScreen: !isLoggedIn 
-      ? const AuthScreen() 
-      : (!hasProfile ? const ProfileScreen() : const HomeScreen()),
-  ));
+  print('App Init: isLoggedIn=$isLoggedIn, hasProfile=$hasProfile');
+
+  Widget initialScreen;
+  if (!isLoggedIn) {
+    initialScreen = const AuthScreen();
+  } else if (!hasProfile) {
+    initialScreen = const ProfileScreen();
+  } else {
+    initialScreen = const HomeScreen();
+  }
+
+  runApp(MyApp(initialScreen: initialScreen));
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +35,13 @@ class MyApp extends StatelessWidget {
       title: 'Barati - Your Chosen Family',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: initialScreen,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => initialScreen,
+        '/auth': (context) => const AuthScreen(),
+        '/profile': (context) => const ProfileScreen(),
+        '/home': (context) => const HomeScreen(),
+      },
     );
   }
 }
