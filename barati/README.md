@@ -1,17 +1,13 @@
-# baratiij
+# Barati - Your Chosen Wedding Family
 
-A new Flutter project.
+Connect with a supportive community for your big day. Find family members, relatives, and friends to perform wedding rituals and make your celebration memorable.
+
+## Live App
+You can access the live web version here:
+👉 **[Launch Barati App](https://softwaretestingpro.github.io/barati/app/)**
+
+## Project Overview
+This is a multi-platform Flutter application (Android, iOS, and Web) integrated with Supabase for real-time synchronization.
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+For help getting started with Flutter development, view the [online documentation](https://docs.flutter.dev/).
