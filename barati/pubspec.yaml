@@ -1,4 +1,4 @@
-name: baratiij
+name: barati
 description: "Connect with a supportive community for your big day. Find family members, relatives, and friends to perform wedding rituals and make your celebration memorable."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -104,3 +104,4 @@ flutter_launcher_icons:
     image_path: "assets/images/app_icon.png"
     backgroundColor: "#8B0000"
     themeColor: "#8B0000"
+

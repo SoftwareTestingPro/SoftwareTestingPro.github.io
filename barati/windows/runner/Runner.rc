@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "baratiij" "\0"
+            VALUE "FileDescription", "barati" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "baratiij" "\0"
+            VALUE "InternalName", "barati" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "baratiij.exe" "\0"
-            VALUE "ProductName", "baratiij" "\0"
+            VALUE "OriginalFilename", "barati.exe" "\0"
+            VALUE "ProductName", "barati" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
@@ -119,3 +119,4 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+

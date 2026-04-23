@@ -1,5 +1,6 @@
-package com.example.baratiij
+package com.example.barati
 
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity : FlutterActivity()
+
