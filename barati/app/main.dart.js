@@ -37449,7 +37449,7 @@ $S:0}
 A.EX.prototype={
 N(a){var s=null,r=A.aio(B.Ag,B.S,s,B.bH,B.ko,B.bH,B.j),q=A.aAt().$0(),p=A.ah8().$3$color$fontSize$fontWeight(B.bH,32,B.ae),o=A.ah8().$3$color$fontSize$fontWeight(B.bH,24,B.cl),n=A.fb().$3$fontSize$fontWeight$letterSpacing(20,B.cl,1.2)
 n=q.a6l(A.fb().$2$color$fontSize(B.C,16),p,o,n)
-return new A.v0(B.Bw,"Barati",A.a50(s,new A.oc(s,s,A.aF(B.c.ap(25.5),B.bH.B()>>>16&255,B.bH.B()>>>8&255,B.bH.B()&255),s,8,s,new A.ce(A.hs(24),B.q)),r,n,!0),!1,s)}}
+return new A.v0(B.Bw,"Barati - Your Chosen Family",A.a50(s,new A.oc(s,s,A.aF(B.c.ap(25.5),B.bH.B()>>>16&255,B.bH.B()>>>8&255,B.bH.B()&255),s,8,s,new A.ce(A.hs(24),B.q)),r,n,!0),!1,s)}}
 A.I3.prototype={
 H(){return"UserRole."+this.b}}
 A.a4a.prototype={
