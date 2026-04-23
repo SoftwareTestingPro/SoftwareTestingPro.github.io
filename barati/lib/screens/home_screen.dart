@@ -26,7 +26,31 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _checkProfile();
     _loadEvents();
+  }
+
+  Future<void> _checkProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final mobileNumber = prefs.getString('mobileNumber');
+    
+    if (mobileNumber != null) {
+      final profile = await SupabaseService().getProfile(mobileNumber);
+      if (profile == null) {
+        // No cloud profile found, force setup
+        if (!mounted) return;
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        );
+      } else {
+        // Sync cloud data to local for UI convenience
+        await prefs.setString('userName', profile.name);
+        await prefs.setBool('hasProfile', true);
+        setState(() {
+          _firstName = profile.name.split(' ')[0];
+        });
+      }
+    }
   }
 
   Future<void> _loadEvents() async {

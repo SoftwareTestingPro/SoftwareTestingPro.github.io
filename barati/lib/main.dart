@@ -17,18 +17,10 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  final bool hasProfile = prefs.getBool('hasProfile') ?? false;
 
-  print('App Init: isLoggedIn=$isLoggedIn, hasProfile=$hasProfile');
+  print('App Init: isLoggedIn=$isLoggedIn');
 
-  Widget initialScreen;
-  if (!isLoggedIn) {
-    initialScreen = const AuthScreen();
-  } else if (!hasProfile) {
-    initialScreen = const ProfileScreen();
-  } else {
-    initialScreen = const HomeScreen();
-  }
+  Widget initialScreen = isLoggedIn ? const HomeScreen() : const AuthScreen();
 
   runApp(MyApp(initialScreen: initialScreen));
 }

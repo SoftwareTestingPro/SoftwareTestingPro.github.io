@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text(widget.isEditMode ? 'Edit Profile' : 'Create Your Profile', 
           style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         centerTitle: true,
-        actions: widget.isEditMode ? [
+        actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
@@ -192,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
             tooltip: 'Logout',
           ),
-        ] : null,
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
