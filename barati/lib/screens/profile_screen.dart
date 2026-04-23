@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'home_screen.dart';
+import '../services/supabase_service.dart';
+import '../models/models.dart';
 
 class ProfileScreen extends StatefulWidget {
   final bool isEditMode;
@@ -83,7 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'Father',
         'Brother',
         'Uncle',
-        'Grandfather'
+        'Grandfather',
+        'Best Man',
       ];
     } else if (gender == 'Female') {
       return [
@@ -96,7 +99,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'Mother',
         'Sister',
         'Aunt',
-        'Grandmother'
+        'Grandmother',
+        'Maid of Honor',
       ];
     }
     return common;
@@ -131,6 +135,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await prefs.setStringList('userRoles', _selectedRoles);
     await prefs.setBool('hasProfile', true);
 
+    // Save to Supabase
+    final mobileNumber = prefs.getString('mobileNumber') ?? 'unknown';
+    final user = BaratiUser(
+      id: mobileNumber,
+      name: _nameController.text,
+      age: _age,
+      gender: _selectedGender,
+      userRole: UserRole.host, // Default, can be adjusted
+      possibleRoles: _selectedRoles.map((r) {
+        // Map string back to enum (simple contains check for now)
+        return FamilyRole.values.firstWhere((e) => e.name.toLowerCase() == r.toLowerCase().replaceAll(' ', ''), orElse: () => FamilyRole.other);
+      }).toList(),
+      bio: _bioController.text,
+      profileImageUrl: _base64Image, // We use base64 for now as it's small, ideally upload to storage
+    );
+    
+    await SupabaseService().upsertProfile(user);
+
     if (!mounted) return;
 
     if (widget.isEditMode) {
@@ -164,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: const Icon(Icons.logout),
             onPressed: () async {
               final prefs = await SharedPreferences.getInstance();
-              await prefs.clear();
+              await prefs.remove('isLoggedIn');
               if (!mounted) return;
               Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
             },

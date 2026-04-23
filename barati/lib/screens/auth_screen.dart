@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_screen.dart';
+import 'home_screen.dart';
+import '../services/supabase_service.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -35,12 +37,29 @@ class _AuthScreenState extends State<AuthScreen> {
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('mobileNumber', _phoneController.text);
       
+      final bool hasLocalProfile = prefs.getBool('hasProfile') ?? false;
+      
+      // Check cloud profile
+      final cloudProfile = await SupabaseService().getProfile(_phoneController.text);
+      final bool hasProfile = hasLocalProfile || (cloudProfile != null);
+      
+      if (hasProfile && cloudProfile != null) {
+        // Sync cloud profile to local if needed (optional optimization)
+        await prefs.setBool('hasProfile', true);
+        await prefs.setString('userName', cloudProfile.name);
+      }
+
       if (!mounted) return;
       
-      // Navigate to Profile Creation
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const ProfileScreen()),
-      );
+      if (hasProfile) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Invalid OTP. Use 1234')),

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import '../models/models.dart';
 import 'profile_screen.dart';
+import 'add_event_screen.dart';
+import 'event_details_screen.dart';
+import 'manage_applications_screen.dart';
+import '../services/supabase_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +18,43 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  UserRole _currentType = UserRole.brideGroom;
+  UserRole _currentType = UserRole.host;
+  List<BaratiEvent> _events = [];
+  bool _isLoading = true;
+  String _firstName = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEvents();
+  }
+
+  Future<void> _loadEvents() async {
+    setState(() => _isLoading = true);
+    final prefs = await SharedPreferences.getInstance();
+    
+    // Load Name
+    final fullName = prefs.getString('userName') ?? 'User';
+    _firstName = fullName.split(' ')[0];
+
+    final eventsJson = prefs.getString('events') ?? '[]';
+    final List<dynamic> decoded = json.decode(eventsJson);
+    
+    // Load from Supabase
+    try {
+      final cloudEvents = await SupabaseService().getEvents();
+      setState(() {
+        _events = cloudEvents;
+        _isLoading = false;
+      });
+    } catch (e) {
+      // Fallback to local
+      setState(() {
+        _events = decoded.map((e) => BaratiEvent.fromJson(e)).toList();
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +73,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   _buildRoleToggle(context),
                   const SizedBox(height: 32),
-                  if (_currentType == UserRole.brideGroom) ...[
+                  if (_currentType == UserRole.host) ...[
                     _buildSectionHeader(context, 'Find Your Family', 'Search'),
                     const SizedBox(height: 16),
                     _buildAvailableBaratiList(),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader(context, 'My Events', 'View All'),
+                    const SizedBox(height: 16),
+                    _buildWeddingEventsList(),
                     const SizedBox(height: 32),
                     _buildSectionHeader(context, 'Needed for Rituals', 'View All'),
                     const SizedBox(height: 16),
                     _buildRitualRolesGrid(context),
                   ] else ...[
-                    _buildSectionHeader(context, 'Weddings Near You', 'Map'),
+                    _buildSectionHeader(context, 'Events Near You', 'Map'),
                     const SizedBox(height: 16),
                     _buildWeddingEventsList(),
                     const SizedBox(height: 32),
@@ -58,11 +103,22 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: _buildBottomNav(theme),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () async {
+          if (_currentType == UserRole.host) {
+            final result = await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AddEventScreen()),
+            );
+            if (result == true) {
+              _loadEvents();
+            }
+          } else {
+            // Search functionality could go here
+          }
+        },
         backgroundColor: theme.colorScheme.primary,
-        icon: Icon(_currentType == UserRole.brideGroom ? Icons.add : Icons.search, color: Colors.white),
+        icon: Icon(_currentType == UserRole.host ? Icons.add : Icons.search, color: Colors.white),
         label: Text(
-          _currentType == UserRole.brideGroom ? 'Create Wedding Event' : 'Find a Family',
+          _currentType == UserRole.host ? 'Create Event' : 'Find a Family',
           style: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -82,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildToggleButton('Bride/Groom', UserRole.brideGroom),
+            _buildToggleButton('Host', UserRole.host),
             _buildToggleButton('Be a Barati', UserRole.baratiMember),
           ],
         ),
@@ -124,14 +180,23 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          'Barati',
-          style: GoogleFonts.playfairDisplay(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontSize: 28,
-            shadows: [const Shadow(blurRadius: 10, color: Colors.black45, offset: Offset(2, 2))],
-          ),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Welcome, $_firstName',
+              style: GoogleFonts.montserrat(fontSize: 14, color: Colors.white70),
+            ),
+            Text(
+              'Barati',
+              style: GoogleFonts.playfairDisplay(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 28,
+                shadows: [const Shadow(blurRadius: 10, color: Colors.black45, offset: Offset(2, 2))],
+              ),
+            ),
+          ],
         ),
         centerTitle: true,
         background: Stack(
@@ -152,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
               left: 20,
               right: 20,
               child: Text(
-                _currentType == UserRole.brideGroom 
+                _currentType == UserRole.host 
                   ? 'Build your support system for the big day.' 
                   : 'Be the family someone needs.',
                 textAlign: TextAlign.center,
@@ -256,15 +321,56 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildWeddingEventsList() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_events.isEmpty) {
+      return Container(
+        height: 200,
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.event_busy, size: 48, color: Colors.grey[400]),
+              const SizedBox(height: 12),
+              Text(
+                'No events found yet.',
+                style: GoogleFonts.montserrat(color: Colors.grey[600]),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return SizedBox(
       height: 200,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
-        itemCount: 3,
+        itemCount: _events.length,
         itemBuilder: (context, index) {
-          final titles = ['Aman\'s Wedding', 'Neha\'s Sangeet', 'Sameer\'s Haldi'];
-          return Container(
+          final event = _events[index];
+          return GestureDetector(
+            onTap: () {
+              if (_currentType == UserRole.host) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => ManageApplicationsScreen(event: event)),
+                );
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
+                );
+              }
+            },
+            child: Container(
             width: 280,
             margin: const EdgeInsets.symmetric(horizontal: 8),
             padding: const EdgeInsets.all(16),
@@ -279,28 +385,72 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(titles[index], style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 18)),
-                    const Icon(Icons.favorite, color: Colors.red, size: 20),
+                    Expanded(
+                      child: Text(
+                        event.title,
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 18),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    _eventTypeBadge(event.eventType),
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text('Location: Delhi, India', style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey)),
+                Text(
+                  'Location: ${event.location}',
+                  style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Date: ${event.date.day}/${event.date.month}/${event.date.year}',
+                  style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey),
+                ),
                 const Spacer(),
                 Text('Roles Needed:', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Row(
-                  children: [
-                    _roleBadge('Father'),
-                    const SizedBox(width: 4),
-                    _roleBadge('Sister'),
-                    const SizedBox(width: 4),
-                    Text('+2 more', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.blue)),
-                  ],
-                ),
+                if (event.neededRoles.isEmpty)
+                  Text('No specific roles needed', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.grey))
+                else
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: event.neededRoles.take(3).map((role) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: _roleBadge(role.name),
+                        );
+                      }).toList().cast<Widget>()..addAll([
+                        if (event.neededRoles.length > 3)
+                          Text('+${event.neededRoles.length - 3} more', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.blue)),
+                      ]),
+                    ),
+                  ),
               ],
             ),
-          );
-        },
+          ),
+        );
+      },
+      ),
+    );
+  }
+
+  Widget _eventTypeBadge(EventType type) {
+    Color color;
+    switch (type) {
+      case EventType.marriage: color = Colors.pink; break;
+      case EventType.haldi: color = Colors.orange; break;
+      case EventType.mehndi: color = Colors.green; break;
+      case EventType.anniversary: color = Colors.purple; break;
+      case EventType.death: color = Colors.black54; break;
+      default: color = Colors.blue;
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+      child: Text(
+        type.name.toUpperCase(),
+        style: GoogleFonts.montserrat(fontSize: 10, fontWeight: FontWeight.bold, color: color),
       ),
     );
   }
@@ -359,7 +509,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await prefs.remove('isLoggedIn');
+    // We keep mobileNumber, events, and profile data so they persist across logins
     if (!mounted) return;
     Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
   }
