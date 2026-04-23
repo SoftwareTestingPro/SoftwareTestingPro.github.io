@@ -1,11 +1,11 @@
 {
-    "name": "baratiij",
-    "short_name": "baratiij",
+    "name": "Barati",
+    "short_name": "Barati",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#8B0000",
+    "theme_color": "#8B0000",
+    "description": "Connect with your chosen wedding family.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
