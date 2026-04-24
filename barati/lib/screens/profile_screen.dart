@@ -223,7 +223,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
+    return PopScope(
+      canPop: widget.isEditMode,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        if (!widget.isEditMode) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please complete your profile to continue')),
+          );
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         title: Text(widget.isEditMode ? 'Edit Profile' : 'Create Your Profile', 
           style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
@@ -440,7 +450,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildLabel(String label) {

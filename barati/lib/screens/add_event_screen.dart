@@ -27,6 +27,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   late EventType _selectedType;
   late DateTime _selectedDate;
   late List<EventRole> _selectedRoles;
+  String? _imageUrl;
 
   @override
   void initState() {
@@ -48,6 +49,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
     _selectedType = widget.eventToEdit?.eventType ?? EventType.marriage;
     _selectedDate = widget.eventToEdit?.date ?? DateTime.now().add(const Duration(days: 30));
     _selectedRoles = widget.eventToEdit != null ? List.from(widget.eventToEdit!.neededRoles) : [];
+    _imageUrl = widget.eventToEdit?.imageUrl;
+    _selectedCity = widget.eventToEdit?.city ?? _selectedCity;
+    _selectedState = widget.eventToEdit?.state ?? _selectedState;
   }
 
   @override
@@ -111,6 +115,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
         eventType: _selectedType,
         neededRoles: _selectedRoles,
         approvedMemberIds: widget.eventToEdit?.approvedMemberIds ?? [],
+        imageUrl: _imageUrl ?? 'https://images.unsplash.com/photo-1519741497674-611481863552',
+        city: _selectedCity,
+        state: _selectedState,
       );
 
       // Save to Supabase

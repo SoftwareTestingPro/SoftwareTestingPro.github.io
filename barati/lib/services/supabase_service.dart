@@ -89,6 +89,9 @@ class SupabaseService {
       'event_type': event.eventType.index,
       'needed_roles': event.neededRoles.map((r) => r.toJson()).toList(),
       'approved_member_ids': event.approvedMemberIds,
+      'image_url': event.imageUrl,
+      'city': event.city,
+      'state': event.state,
     });
   }
 
@@ -101,11 +104,10 @@ class SupabaseService {
       'event_type': event.eventType.index,
       'needed_roles': event.neededRoles.map((r) => r.toJson()).toList(),
       'approved_member_ids': event.approvedMemberIds,
+      'image_url': event.imageUrl,
+      'city': event.city,
+      'state': event.state,
     }).eq('id', event.id);
-  }
-
-  Future<void> deleteEvent(String eventId) async {
-    await client.from('events').delete().eq('id', eventId);
   }
 
   Future<List<BaratiEvent>> getEvents() async {
@@ -121,15 +123,35 @@ class SupabaseService {
       description: e['description'],
       date: DateTime.parse(e['date']),
       location: e['location'],
+      city: e['city'] ?? '',
+      state: e['state'] ?? '',
       eventType: EventType.values[e['event_type']],
       neededRoles: (e['needed_roles'] as List)
           .map((r) => r is int ? EventRole(role: FamilyRole.values[r], description: '', gender: 'Any') : EventRole.fromJson(r as Map<String, dynamic>))
           .toList(),
       approvedMemberIds: List<String>.from(e['approved_member_ids']),
+      imageUrl: e['image_url'] ?? 'https://images.unsplash.com/photo-1519741497674-611481863552',
     )).toList();
   }
 
   // --- Application Operations ---
+
+  Future<void> deleteEvent(String eventId) async {
+    // 1. Delete associated applications
+    await client.from('applications').delete().eq('event_id', eventId);
+    // 2. Delete the event
+    await client.from('events').delete().eq('id', eventId);
+  }
+
+  Future<void> updateApplicationRating(String applicationId, {double? userRating, double? hostRating}) async {
+    final updates = <String, dynamic>{};
+    if (userRating != null) updates['user_rating'] = userRating;
+    if (hostRating != null) updates['host_rating'] = hostRating;
+    
+    if (updates.isNotEmpty) {
+      await client.from('applications').update(updates).eq('id', applicationId);
+    }
+  }
 
   Future<void> applyForRole(RoleApplication app) async {
     await client.from('applications').insert({
@@ -139,6 +161,8 @@ class SupabaseService {
       'applied_role': app.appliedRole.index,
       'message': app.message,
       'is_approved': app.isApproved,
+      'status': app.status.index,
+      'is_invitation': app.isInvitation,
     });
   }
 
@@ -155,12 +179,19 @@ class SupabaseService {
       appliedRole: FamilyRole.values[app['applied_role']],
       message: app['message'],
       isApproved: app['is_approved'],
+      status: ApplicationStatus.values[app['status'] ?? 0],
+      isInvitation: app['is_invitation'] ?? false,
+      userRating: app['user_rating']?.toDouble(),
+      hostRating: app['host_rating']?.toDouble(),
     )).toList();
   }
 
   Future<void> approveApplication(String applicationId, String eventId, String applicantId) async {
     // 1. Mark application as approved
-    await client.from('applications').update({'is_approved': true}).eq('id', applicationId);
+    await client.from('applications').update({
+      'is_approved': true,
+      'status': ApplicationStatus.approved.index,
+    }).eq('id', applicationId);
     
     // 2. Fetch current approved_member_ids for the event
     final eventResponse = await client.from('events').select('approved_member_ids').eq('id', eventId).single();
@@ -173,6 +204,43 @@ class SupabaseService {
     }
   }
 
+  Future<void> declineApplication(String applicationId) async {
+    await client.from('applications').update({
+      'is_approved': false,
+      'status': ApplicationStatus.declined.index,
+    }).eq('id', applicationId);
+  }
+
+  Future<void> respondToInvitation(String applicationId, bool accept, String eventId, String userId) async {
+    if (accept) {
+      await approveApplication(applicationId, eventId, userId);
+      await client.from('applications').update({
+        'status': ApplicationStatus.invitationAccepted.index,
+      }).eq('id', applicationId);
+    } else {
+      await client.from('applications').update({
+        'status': ApplicationStatus.invitationDeclined.index,
+      }).eq('id', applicationId);
+    }
+  }
+
+  Future<void> cancelApplication(String applicationId, String eventId, String userId) async {
+    // 1. Mark application as declined/cancelled
+    await client.from('applications').update({
+      'is_approved': false,
+      'status': ApplicationStatus.declined.index,
+    }).eq('id', applicationId);
+    
+    // 2. Remove user from approved_member_ids in event
+    final eventResponse = await client.from('events').select('approved_member_ids').eq('id', eventId).single();
+    List<String> approved = List<String>.from(eventResponse['approved_member_ids']);
+    
+    if (approved.contains(userId)) {
+      approved.remove(userId);
+      await client.from('events').update({'approved_member_ids': approved}).eq('id', eventId);
+    }
+  }
+
   Future<bool> hasApplied(String eventId, String applicantId) async {
     final response = await client
         .from('applications')
@@ -181,5 +249,46 @@ class SupabaseService {
         .eq('applicant_id', applicantId)
         .maybeSingle();
     return response != null;
+  }
+
+  Future<List<RoleApplication>> getApplicationsForUserForEvent(String eventId, String applicantId) async {
+    final response = await client
+        .from('applications')
+        .select()
+        .eq('event_id', eventId)
+        .eq('applicant_id', applicantId);
+    
+    return (response as List).map((app) => RoleApplication(
+      id: app['id'],
+      eventId: app['event_id'],
+      applicantId: app['applicant_id'],
+      appliedRole: FamilyRole.values[app['applied_role']],
+      message: app['message'],
+      isApproved: app['is_approved'],
+      status: ApplicationStatus.values[app['status'] ?? 0],
+      isInvitation: app['is_invitation'] ?? false,
+      userRating: app['user_rating']?.toDouble(),
+      hostRating: app['host_rating']?.toDouble(),
+    )).toList();
+  }
+
+  Future<List<RoleApplication>> getApplicationsForUser(String userId) async {
+    final response = await client
+        .from('applications')
+        .select()
+        .eq('applicant_id', userId);
+    
+    return (response as List).map((app) => RoleApplication(
+      id: app['id'],
+      eventId: app['event_id'],
+      applicantId: app['applicant_id'],
+      appliedRole: FamilyRole.values[app['applied_role']],
+      message: app['message'],
+      isApproved: app['is_approved'],
+      status: ApplicationStatus.values[app['status'] ?? 0],
+      isInvitation: app['is_invitation'] ?? false,
+      userRating: app['user_rating']?.toDouble(),
+      hostRating: app['host_rating']?.toDouble(),
+    )).toList();
   }
 }

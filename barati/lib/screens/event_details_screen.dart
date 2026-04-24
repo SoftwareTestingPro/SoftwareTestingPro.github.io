@@ -15,7 +15,7 @@ class EventDetailsScreen extends StatefulWidget {
 }
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
-  bool _hasApplied = false;
+  List<RoleApplication> _myApplications = [];
   BaratiUser? _currentUser;
   BaratiUser? _hostUser;
   bool _isLoading = true;
@@ -32,13 +32,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     
     final profile = await SupabaseService().getProfile(userId);
     final hostProfile = await SupabaseService().getProfile(widget.event.hostId);
-    final applied = await SupabaseService().hasApplied(widget.event.id, userId);
+    final applications = await SupabaseService().getApplicationsForUserForEvent(widget.event.id, userId);
     
     if (mounted) {
       setState(() {
         _currentUser = profile;
         _hostUser = hostProfile;
-        _hasApplied = applied;
+        _myApplications = applications;
         _isLoading = false;
       });
     }
@@ -105,11 +105,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       // Save to Supabase
       await SupabaseService().applyForRole(newApp);
 
-      setState(() => _hasApplied = true);
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Application sent successfully!')),
-      );
+      _loadData(); // Refresh to get the latest application status
     }
   }
 
@@ -340,15 +336,54 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       ),
                     ],
                   ),
-                  ElevatedButton(
-                    onPressed: _hasApplied ? null : () => _applyForRole(roleInfo),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      elevation: 0,
-                    ),
-                    child: Text(_hasApplied ? 'Applied' : 'Apply'),
+                  Builder(
+                    builder: (context) {
+                      final now = DateTime.now();
+                      final isPast = widget.event.date.isBefore(now);
+                      final hasAppliedToThisEvent = _myApplications.isNotEmpty;
+                      final application = _myApplications.firstWhere(
+                        (app) => app.appliedRole == role, 
+                        orElse: () => RoleApplication(id: '', eventId: '', applicantId: '', appliedRole: role, message: ''),
+                      );
+                      
+                      final hasAppliedThisRole = application.id.isNotEmpty;
+                      final isApprovedThisRole = application.isApproved;
+                      final isDeclinedThisRole = application.status == ApplicationStatus.declined;
+
+                      if (isPast) {
+                        if (isApprovedThisRole) {
+                          return _buildRatingSection(application, isHost: false);
+                        }
+                        return Text('Event Ended', style: GoogleFonts.montserrat(color: Colors.grey, fontWeight: FontWeight.bold));
+                      }
+
+                      String buttonText = 'Apply';
+                      bool isDisabled = hasAppliedToThisEvent;
+
+                      if (isApprovedThisRole) {
+                        buttonText = 'Approved';
+                        isDisabled = true;
+                      } else if (isDeclinedThisRole) {
+                        buttonText = 'Declined';
+                        isDisabled = true;
+                      } else if (hasAppliedThisRole) {
+                        buttonText = 'Applied';
+                        isDisabled = true;
+                      }
+
+                      return ElevatedButton(
+                        onPressed: isDisabled ? null : () => _applyForRole(roleInfo),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isApprovedThisRole 
+                            ? Colors.green 
+                            : (isDeclinedThisRole ? Colors.red : Theme.of(context).colorScheme.primary),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          elevation: 0,
+                        ),
+                        child: Text(buttonText),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -363,6 +398,40 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildRatingSection(RoleApplication application, {required bool isHost}) {
+    final currentRating = isHost ? application.hostRating : application.userRating;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(isHost ? 'Rate Guest' : 'Rate Event', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.grey)),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(5, (index) {
+            final starValue = index + 1.0;
+            final isFull = currentRating != null && currentRating >= starValue;
+            
+            return GestureDetector(
+              onTap: () async {
+                if (isHost) {
+                  await SupabaseService().updateApplicationRating(application.id, hostRating: starValue);
+                } else {
+                  await SupabaseService().updateApplicationRating(application.id, userRating: starValue);
+                }
+                _loadData();
+              },
+              child: Icon(
+                isFull ? Icons.star : Icons.star_border,
+                color: Colors.amber,
+                size: 20,
+              ),
+            );
+          }),
+        ),
+      ],
     );
   }
 

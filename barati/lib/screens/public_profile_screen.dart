@@ -1,23 +1,143 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:uuid/uuid.dart';
 import '../models/models.dart';
+import '../services/supabase_service.dart';
 
-class PublicProfileScreen extends StatelessWidget {
+class PublicProfileScreen extends StatefulWidget {
   final BaratiUser user;
 
   const PublicProfileScreen({super.key, required this.user});
 
   @override
+  State<PublicProfileScreen> createState() => _PublicProfileScreenState();
+}
+
+class _PublicProfileScreenState extends State<PublicProfileScreen> {
+  bool _isHost = false;
+  String? _currentUserId;
+  List<BaratiEvent> _myEvents = [];
+  List<RoleApplication> _userApplicationsToMyEvents = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentUserInfo();
+  }
+
+  Future<void> _loadCurrentUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    _currentUserId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
+    final profile = await SupabaseService().getProfile(_currentUserId!);
+    
+    if (profile != null && profile.userRole == UserRole.host) {
+      final events = await SupabaseService().getEvents();
+      final allUserApps = await SupabaseService().getApplicationsForUser(widget.user.id);
+      
+      final now = DateTime.now();
+      _myEvents = events.where((e) {
+        final isOwner = e.hostId == _currentUserId;
+        final isFuture = e.date.isAfter(now);
+        final needsTheirRole = e.neededRoles.any((r) => widget.user.possibleRoles.contains(r.role));
+        final alreadyInteracted = allUserApps.any((a) => a.eventId == e.id);
+        return isOwner && isFuture && needsTheirRole && !alreadyInteracted;
+      }).toList();
+      
+      _isHost = true;
+    }
+    
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _showInviteDialog() async {
+    if (_myEvents.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('This user is already part of your events or matches no roles.')),
+      );
+      return;
+    }
+
+    BaratiEvent? selectedEvent;
+    EventRole? selectedRole;
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text('Invite to Event', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButtonFormField<BaratiEvent>(
+                decoration: const InputDecoration(labelText: 'Select Event'),
+                items: _myEvents.map((e) => DropdownMenuItem(value: e, child: Text(e.title))).toList(),
+                onChanged: (val) {
+                  setDialogState(() {
+                    selectedEvent = val;
+                    selectedRole = null;
+                  });
+                },
+              ),
+              if (selectedEvent != null) ...[
+                const SizedBox(height: 16),
+                DropdownButtonFormField<EventRole>(
+                  decoration: const InputDecoration(labelText: 'Select Role'),
+                  items: selectedEvent!.neededRoles
+                      .where((r) => r.gender == 'Any' || r.gender.toLowerCase() == widget.user.gender.toLowerCase())
+                      .where((r) => widget.user.possibleRoles.contains(r.role))
+                      .map((r) => DropdownMenuItem(value: r, child: Text(r.role.toLabel()))).toList(),
+                  onChanged: (val) => setDialogState(() => selectedRole = val),
+                ),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            ElevatedButton(
+              onPressed: (selectedEvent != null && selectedRole != null)
+                  ? () async {
+                      final newApp = RoleApplication(
+                        id: const Uuid().v4(),
+                        eventId: selectedEvent!.id,
+                        applicantId: widget.user.id,
+                        appliedRole: selectedRole!.role,
+                        isInvitation: true,
+                        status: ApplicationStatus.invitationPending,
+                      );
+                      await SupabaseService().applyForRole(newApp);
+                      if (!mounted) return;
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Invitation sent successfully!')),
+                      );
+                    }
+                  : null,
+              child: const Text('Send Invite'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final user = widget.user;
     
     return Scaffold(
       appBar: AppBar(
         title: Text('${user.name}\'s Profile', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: _isLoading 
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,6 +199,21 @@ class PublicProfileScreen extends StatelessWidget {
                 )).toList(),
             ),
             const SizedBox(height: 40),
+            if (_isHost && user.id != _currentUserId && _myEvents.isNotEmpty)
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton.icon(
+                  onPressed: _showInviteDialog,
+                  icon: const Icon(Icons.mail_outline),
+                  label: Text('Request for Role', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

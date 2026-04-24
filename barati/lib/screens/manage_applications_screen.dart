@@ -98,6 +98,15 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
     );
   }
 
+  Future<void> _declineApplication(RoleApplication app) async {
+    await SupabaseService().declineApplication(app.id);
+    _loadApplications();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Application declined')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,38 +220,93 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
                 style: GoogleFonts.montserrat(fontSize: 14, color: Colors.black87),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {}, // Not implemented yet
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        side: const BorderSide(color: Colors.red),
-                        foregroundColor: Colors.red,
+              Builder(
+                builder: (context) {
+                  final now = DateTime.now();
+                  final isPast = widget.event.date.isBefore(now);
+                  
+                  if (isPast) {
+                    if (app.isApproved) {
+                      return _buildRatingSection(app);
+                    }
+                    return const Center(child: Text('Event Ended', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)));
+                  }
+
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: (app.isApproved || app.status == ApplicationStatus.declined) ? null : () => _declineApplication(app),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                            side: const BorderSide(color: Colors.red),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: const Text('Decline'),
+                        ),
                       ),
-                      child: const Text('Decline'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: app.isApproved ? null : () => _approveApplication(app),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        elevation: 0,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: (app.status == ApplicationStatus.declined) ? null : () async {
+                            if (app.isApproved) {
+                              await SupabaseService().cancelApplication(app.id, app.eventId, app.applicantId);
+                              _loadApplications();
+                            } else {
+                              await _approveApplication(app);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: app.isApproved ? Colors.red.withOpacity(0.8) : Theme.of(context).colorScheme.primary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 0,
+                          ),
+                          child: Text(app.status == ApplicationStatus.declined ? 'Declined' : (app.isApproved ? 'Revoke Approval' : 'Approve')),
+                        ),
                       ),
-                      child: Text(app.isApproved ? 'Approved' : 'Approve'),
-                    ),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildRatingSection(RoleApplication application) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Divider(),
+        const SizedBox(height: 8),
+        Text('Rate Guest Performance', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey[700])),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(5, (index) {
+            final starValue = index + 1.0;
+            final isFull = application.hostRating != null && application.hostRating! >= starValue;
+            
+            return GestureDetector(
+              onTap: () async {
+                await SupabaseService().updateApplicationRating(application.id, hostRating: starValue);
+                _loadApplications();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Icon(
+                  isFull ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                  size: 32,
+                ),
+              ),
+            );
+          }),
+        ),
+      ],
     );
   }
 }

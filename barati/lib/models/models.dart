@@ -194,6 +194,9 @@ class BaratiEvent {
   final EventType eventType;
   final List<EventRole> neededRoles;
   final List<String> approvedMemberIds;
+  final String imageUrl;
+  final String city;
+  final String state;
 
   BaratiEvent({
     required this.id,
@@ -204,6 +207,9 @@ class BaratiEvent {
     required this.location,
     required this.eventType,
     required this.neededRoles,
+    required this.imageUrl,
+    required this.city,
+    required this.state,
     this.approvedMemberIds = const [],
   });
 
@@ -217,6 +223,9 @@ class BaratiEvent {
     'eventType': eventType.index,
     'neededRoles': neededRoles.map((r) => r.toJson()).toList(),
     'approvedMemberIds': approvedMemberIds,
+    'imageUrl': imageUrl,
+    'city': city,
+    'state': state,
   };
 
   factory BaratiEvent.fromJson(Map<String, dynamic> json) => BaratiEvent(
@@ -231,8 +240,13 @@ class BaratiEvent {
         .map((r) => r is int ? EventRole(role: FamilyRole.values[r], description: '', gender: 'Any') : EventRole.fromJson(r))
         .toList(),
     approvedMemberIds: List<String>.from(json['approved_member_ids'] ?? json['approvedMemberIds'] ?? []),
+    imageUrl: json['imageUrl'] ?? 'https://images.unsplash.com/photo-1519741497674-611481863552',
+    city: json['city'] ?? '',
+    state: json['state'] ?? '',
   );
 }
+
+enum ApplicationStatus { pending, approved, declined, invitationPending, invitationAccepted, invitationDeclined }
 
 class RoleApplication {
   final String id;
@@ -241,14 +255,22 @@ class RoleApplication {
   final FamilyRole appliedRole;
   final String message;
   final bool isApproved;
+  final ApplicationStatus status;
+  final bool isInvitation;
+  final double? userRating; // Guest's rating of the event
+  final double? hostRating; // Host's rating of the guest
 
   RoleApplication({
     required this.id,
     required this.eventId,
     required this.applicantId,
     required this.appliedRole,
-    required this.message,
+    this.message = '',
     this.isApproved = false,
+    this.status = ApplicationStatus.pending,
+    this.isInvitation = false,
+    this.userRating,
+    this.hostRating,
   });
 
   Map<String, dynamic> toJson() => {
@@ -258,6 +280,10 @@ class RoleApplication {
     'appliedRole': appliedRole.index,
     'message': message,
     'isApproved': isApproved,
+    'status': status.index,
+    'isInvitation': isInvitation,
+    'userRating': userRating,
+    'hostRating': hostRating,
   };
 
   factory RoleApplication.fromJson(Map<String, dynamic> json) => RoleApplication(
@@ -265,7 +291,11 @@ class RoleApplication {
     eventId: json['eventId'],
     applicantId: json['applicantId'],
     appliedRole: FamilyRole.values[json['appliedRole']],
-    message: json['message'],
-    isApproved: json['isApproved'],
+    message: json['message'] ?? '',
+    isApproved: json['isApproved'] ?? false,
+    status: ApplicationStatus.values[json['status'] ?? 0],
+    isInvitation: json['isInvitation'] ?? false,
+    userRating: json['userRating']?.toDouble(),
+    hostRating: json['hostRating']?.toDouble(),
   );
 }
