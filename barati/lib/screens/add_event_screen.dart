@@ -1,3 +1,4 @@
+import 'package:csc_picker_plus/csc_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,7 +8,8 @@ import '../models/models.dart';
 import '../services/supabase_service.dart';
 
 class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({super.key});
+  final BaratiEvent? eventToEdit;
+  const AddEventScreen({super.key, this.eventToEdit});
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
@@ -15,32 +17,43 @@ class AddEventScreen extends StatefulWidget {
 
 class _AddEventScreenState extends State<AddEventScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
+  late final TextEditingController _titleController;
   final _descriptionController = TextEditingController();
-  final _locationController = TextEditingController();
   
-  static const List<String> _cities = [
-    'Delhi', 'Mumbai', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Chennai', 'Kolkata', 'Surat', 
-    'Pune', 'Jaipur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam', 
-    'Pimpri-Chinchwad', 'Patna', 'Vadodara', 'Ghaziabad', 'Ludhiana', 'Agra', 'Nashik', 'Ranchi', 
-    'Faridabad', 'Meerut', 'Rajkot', 'Kalyan-Dombivli', 'Vasai-Virar', 'Varanasi', 'Srinagar', 
-    'Aurangabad', 'Dhanbad', 'Amritsar', 'Navi Mumbai', 'Allahabad', 'Howrah', 'Gwalior', 
-    'Jabalpur', 'Coimbatore', 'Vijayawada', 'Jodhpur', 'Madurai', 'Raipur', 'Kota', 'Guwahati', 
-    'Chandigarh', 'Solapur', 'Hubli-Dharwad', 'Bareilly', 'Moradabad', 'Mysore', 'Gurgaon', 
-    'Aligarh', 'Jalandhar', 'Tiruchirappalli', 'Bhubaneswar', 'Salem', 'Mira-Bhayandar', 
-    'Warangal', 'Guntur', 'Bhiwandi', 'Saharanpur', 'Gorakhpur', 'Bikaner', 'Amravati', 'Noida', 
-    'Jamshedpur', 'Bhilai', 'Cuttack', 'Firozabad', 'Kochi', 'Nellore', 'Bhavnagar', 'Dehradun'
-  ];
+  String _selectedCountry = 'India';
+  String _selectedState = '';
+  String _selectedCity = '';
 
-  EventType _selectedType = EventType.marriage;
-  DateTime _selectedDate = DateTime.now().add(const Duration(days: 30));
-  List<FamilyRole> _selectedRoles = [];
+  late EventType _selectedType;
+  late DateTime _selectedDate;
+  late List<EventRole> _selectedRoles;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.eventToEdit?.title);
+    _descriptionController.text = widget.eventToEdit?.description ?? '';
+    
+    // Parse location if editing
+    if (widget.eventToEdit?.location != null) {
+      final parts = widget.eventToEdit!.location.split(', ');
+      if (parts.length >= 2) {
+        _selectedCity = parts[0];
+        _selectedState = parts[1];
+      } else {
+        _selectedCity = widget.eventToEdit!.location;
+      }
+    }
+    
+    _selectedType = widget.eventToEdit?.eventType ?? EventType.marriage;
+    _selectedDate = widget.eventToEdit?.date ?? DateTime.now().add(const Duration(days: 30));
+    _selectedRoles = widget.eventToEdit != null ? List.from(widget.eventToEdit!.neededRoles) : [];
+  }
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _locationController.dispose();
     super.dispose();
   }
 
@@ -48,7 +61,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime.now(),
+      firstDate: DateTime.now().isBefore(_selectedDate) ? DateTime.now() : _selectedDate,
       lastDate: DateTime(2101),
       builder: (context, child) {
         return Theme(
@@ -72,27 +85,55 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   Future<void> _saveEvent() async {
     if (_formKey.currentState!.validate()) {
+      if (_selectedCity.isEmpty || _selectedCity.contains('Select City')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a valid city')),
+        );
+        return;
+      }
+      if (_selectedRoles.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select at least one role')),
+        );
+        return;
+      }
+
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
       
-      final newEvent = BaratiEvent(
-        id: const Uuid().v4(),
-        hostId: userId,
+      final event = BaratiEvent(
+        id: widget.eventToEdit?.id ?? const Uuid().v4(),
+        hostId: widget.eventToEdit?.hostId ?? userId,
         title: _titleController.text,
         description: _descriptionController.text,
         date: _selectedDate,
-        location: _locationController.text,
+        location: '$_selectedCity, $_selectedState',
         eventType: _selectedType,
         neededRoles: _selectedRoles,
+        approvedMemberIds: widget.eventToEdit?.approvedMemberIds ?? [],
       );
 
+      // Save to Supabase
+      if (widget.eventToEdit == null) {
+        await SupabaseService().createEvent(event);
+      } else {
+        await SupabaseService().updateEvent(event);
+      }
+
+      // Sync local (optional/legacy)
       final eventsJson = prefs.getString('events') ?? '[]';
       List<dynamic> eventsList = json.decode(eventsJson);
-      eventsList.add(newEvent.toJson());
+      if (widget.eventToEdit == null) {
+        eventsList.add(event.toJson());
+      } else {
+        final index = eventsList.indexWhere((e) => e['id'] == event.id);
+        if (index != -1) {
+          eventsList[index] = event.toJson();
+        } else {
+          eventsList.add(event.toJson());
+        }
+      }
       await prefs.setString('events', json.encode(eventsList));
-
-      // Save to Supabase
-      await SupabaseService().createEvent(newEvent);
 
       if (!mounted) return;
       Navigator.pop(context, true);
@@ -123,7 +164,43 @@ class _AddEventScreenState extends State<AddEventScreen> {
               const SizedBox(height: 16),
               _buildTextField('Description', _descriptionController, 'Tell people about the event...', maxLines: 3),
               const SizedBox(height: 16),
-              _buildLocationAutocomplete(),
+              _buildSectionTitle('Location'),
+              const SizedBox(height: 8),
+              CSCPickerPlus(
+                showStates: true,
+                showCities: true,
+                flagState: CountryFlag.DISABLE,
+                cityLanguage: CityLanguage.native,
+                countryStateLanguage: CountryStateLanguage.englishOrNative,
+                dropdownDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                disabledDropdownDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.grey[50],
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                selectedItemStyle: GoogleFonts.montserrat(fontSize: 14, color: Colors.black),
+                dropdownHeadingStyle: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.bold),
+                dropdownItemStyle: GoogleFonts.montserrat(fontSize: 14),
+                dropdownDialogRadius: 20,
+                searchBarRadius: 20,
+                defaultCountry: CscCountry.India,
+                currentCountry: _selectedCountry,
+                currentState: _selectedState,
+                currentCity: _selectedCity,
+                onCountryChanged: (value) {
+                  setState(() => _selectedCountry = value);
+                },
+                onStateChanged: (value) {
+                  setState(() => _selectedState = value ?? '');
+                },
+                onCityChanged: (value) {
+                  setState(() => _selectedCity = value ?? '');
+                },
+              ),
               const SizedBox(height: 24),
               _buildSectionTitle('Date'),
               const SizedBox(height: 8),
@@ -151,6 +228,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
               _buildSectionTitle('Roles You Need'),
               const SizedBox(height: 12),
               _buildRolesSelector(),
+              if (_selectedRoles.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                _buildSectionTitle('Role Details'),
+                const SizedBox(height: 12),
+                _buildRoleDetailsList(),
+              ],
               const SizedBox(height: 40),
               SizedBox(
                 width: double.infinity,
@@ -163,7 +246,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     elevation: 0,
                   ),
                   child: Text(
-                    'Create Event',
+                    widget.eventToEdit == null ? 'Create Event' : 'Update Event',
                     style: GoogleFonts.montserrat(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -186,76 +269,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 
-  Widget _buildLocationAutocomplete() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle('Location'),
-        const SizedBox(height: 8),
-        Autocomplete<String>(
-          optionsBuilder: (TextEditingValue textEditingValue) {
-            if (textEditingValue.text == '') {
-              return const Iterable<String>.empty();
-            }
-            return _cities.where((String option) {
-              return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-            });
-          },
-          onSelected: (String selection) {
-            _locationController.text = selection;
-          },
-          fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-            // Sync the internal controller with our _locationController
-            controller.addListener(() {
-              _locationController.text = controller.text;
-            });
-            if (_locationController.text.isNotEmpty && controller.text.isEmpty) {
-              controller.text = _locationController.text;
-            }
-            
-            return TextFormField(
-              controller: controller,
-              focusNode: focusNode,
-              decoration: InputDecoration(
-                hintText: 'Search for a city...',
-                hintStyle: GoogleFonts.montserrat(color: Colors.grey, fontSize: 14),
-                prefixIcon: const Icon(Icons.location_on_outlined, size: 20, color: Colors.grey),
-                contentPadding: const EdgeInsets.all(16),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey[300]!)),
-                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey[300]!)),
-                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.primary)),
-              ),
-              validator: (value) => value == null || value.isEmpty ? 'Please enter a location' : null,
-            );
-          },
-          optionsViewBuilder: (context, onSelected, options) {
-            return Align(
-              alignment: Alignment.topLeft,
-              child: Material(
-                elevation: 4.0,
-                borderRadius: BorderRadius.circular(12),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width - 48,
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: options.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final String option = options.elementAt(index);
-                      return ListTile(
-                        title: Text(option, style: GoogleFonts.montserrat()),
-                        onTap: () => onSelected(option),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
 
   Widget _buildTextField(String label, TextEditingController controller, String hint, {int maxLines = 1}) {
     return Column(
@@ -291,14 +304,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
           case EventType.marriage: icon = Icons.favorite; break;
           case EventType.haldi: icon = Icons.wb_sunny; break;
           case EventType.mehndi: icon = Icons.brush; break;
-          case EventType.anniversary: icon = Icons.celebration; break;
+          case EventType.sangeet: icon = Icons.music_note; break;
+          case EventType.reception: icon = Icons.celebration; break;
+          case EventType.engagement: icon = Icons.ring_volume; break;
+          case EventType.birthday: icon = Icons.cake; break;
+          case EventType.babyShower: icon = Icons.child_care; break;
+          case EventType.houseWarming: icon = Icons.home; break;
+          case EventType.anniversary: icon = Icons.star; break;
           case EventType.death: icon = Icons.church; break;
           case EventType.other: icon = Icons.more_horiz; break;
         }
 
         return ChoiceChip(
           avatar: Icon(icon, size: 16, color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey),
-          label: Text(type.name.toUpperCase()),
+          label: Text(type.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toUpperCase()),
           selected: isSelected,
           onSelected: (selected) {
             if (selected) setState(() => _selectedType = type);
@@ -323,7 +342,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       spacing: 8,
       runSpacing: 8,
       children: FamilyRole.values.map((role) {
-        final isSelected = _selectedRoles.contains(role);
+        final isSelected = _selectedRoles.any((r) => r.role == role);
         String label = role.name;
         // Humanize camelCase names
         label = label.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
@@ -335,9 +354,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
           onSelected: (selected) {
             setState(() {
               if (selected) {
-                _selectedRoles.add(role);
+                final fixedGender = EventRole.getFixedGender(role);
+                _selectedRoles.add(EventRole(
+                  role: role, 
+                  description: '', 
+                  gender: fixedGender ?? 'Any',
+                  forWhom: 'Bride', // Default
+                ));
               } else {
-                _selectedRoles.remove(role);
+                _selectedRoles.removeWhere((r) => r.role == role);
               }
             });
           },
@@ -352,6 +377,158 @@ class _AddEventScreenState extends State<AddEventScreen> {
           backgroundColor: Colors.grey[100],
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           side: BorderSide(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildRoleDetailsList() {
+    return Column(
+      children: _selectedRoles.map((roleInfo) {
+        String label = roleInfo.role.name;
+        label = label.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
+        label = label[0].toUpperCase() + label.substring(1);
+
+        final fixedGender = EventRole.getFixedGender(roleInfo.role);
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey[200]!),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    label,
+                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18, color: Colors.red),
+                    onPressed: () {
+                      setState(() {
+                        _selectedRoles.removeWhere((r) => r.role == roleInfo.role);
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                initialValue: roleInfo.description,
+                decoration: InputDecoration(
+                  hintText: 'Describe who you\'re looking for...',
+                  hintStyle: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey),
+                  isDense: true,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                maxLines: 2,
+                onChanged: (val) {
+                  final index = _selectedRoles.indexWhere((r) => r.role == roleInfo.role);
+                  _selectedRoles[index] = EventRole(
+                    role: roleInfo.role,
+                    description: val,
+                    gender: roleInfo.gender,
+                    forWhom: roleInfo.forWhom,
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Text('Needed for:', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w600)),
+                  const SizedBox(width: 8),
+                  ...['Bride', 'Groom', 'Other'].map((side) {
+                    final isSel = roleInfo.forWhom == side;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: ChoiceChip(
+                        label: Text(side),
+                        selected: isSel,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() {
+                              final index = _selectedRoles.indexWhere((r) => r.role == roleInfo.role);
+                              _selectedRoles[index] = EventRole(
+                                role: roleInfo.role,
+                                description: roleInfo.description,
+                                gender: roleInfo.gender,
+                                forWhom: side,
+                              );
+                            });
+                          }
+                        },
+                        selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                        labelStyle: GoogleFonts.montserrat(
+                          fontSize: 10,
+                          color: isSel ? Theme.of(context).colorScheme.primary : Colors.grey,
+                        ),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Text('Gender:', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w600)),
+                  const SizedBox(width: 8),
+                  if (fixedGender != null)
+                    Chip(
+                      label: Text(fixedGender),
+                      backgroundColor: Colors.blue.withOpacity(0.1),
+                      labelStyle: GoogleFonts.montserrat(fontSize: 10, color: Colors.blue, fontWeight: FontWeight.bold),
+                      visualDensity: VisualDensity.compact,
+                      side: BorderSide.none,
+                    )
+                  else
+                    ...['Male', 'Female', 'Any'].map((g) {
+                      final isSel = roleInfo.gender == g;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ChoiceChip(
+                          label: Text(g),
+                          selected: isSel,
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() {
+                                final index = _selectedRoles.indexWhere((r) => r.role == roleInfo.role);
+                                _selectedRoles[index] = EventRole(
+                                  role: roleInfo.role,
+                                  description: roleInfo.description,
+                                  gender: g,
+                                  forWhom: roleInfo.forWhom,
+                                );
+                              });
+                            }
+                          },
+                          selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                          labelStyle: GoogleFonts.montserrat(
+                            fontSize: 10,
+                            color: isSel ? Theme.of(context).colorScheme.primary : Colors.grey,
+                          ),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      );
+                    }).toList(),
+                ],
+              ),
+            ],
+          ),
         );
       }).toList(),
     );

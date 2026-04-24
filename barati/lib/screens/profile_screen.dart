@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:csc_picker_plus/csc_picker_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,34 +20,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _nameController = TextEditingController();
   final _bioController = TextEditingController();
   final _cityController = TextEditingController();
+  final _stateController = TextEditingController();
   final _professionController = TextEditingController();
+  final _educationController = TextEditingController();
+  final _languagesController = TextEditingController();
+  String _mobileNumber = '';
   
-  static const List<String> _cityOptions = [
-    'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Chennai', 'Kolkata', 
-    'Surat', 'Pune', 'Jaipur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane', 
-    'Bhopal', 'Visakhapatnam', 'Pimpri-Chinchwad', 'Patna', 'Vadodara', 'Ghaziabad', 
-    'Ludhiana', 'Agra', 'Nashik', 'Ranchi', 'Faridabad', 'Meerut', 'Rajkot', 
-    'Kalyan-Dombivli', 'Vasai-Virar', 'Varanasi', 'Srinagar', 'Aurangabad', 
-    'Dhanbad', 'Amritsar', 'Navi Mumbai', 'Allahabad', 'Howrah', 'Gwalior', 
-    'Jabalpur', 'Coimbatore', 'Vijayawada', 'Jodhpur', 'Madurai', 'Raipur', 
-    'Kota', 'Guwahati', 'Chandigarh', 'Solapur', 'Hubli-Dharwad', 'Bareilly', 
-    'Moradabad', 'Mysore', 'Gurgaon', 'Aligarh', 'Jalandhar', 'Tiruchirappalli', 
-    'Bhubaneswar', 'Salem', 'Mira-Bhayandar', 'Warangal', 'Guntur', 'Bhiwandi', 
-    'Saharanpur', 'Gorakhpur', 'Bikaner', 'Amravati', 'Noida', 'Jamshedpur', 
-    'Bhilai', 'Cuttack', 'Firozabad', 'Kochi', 'Nellore', 'Bhavnagar', 'Dehradun', 
-    'Durgapur', 'Asansol', 'Rourkela', 'Nanded', 'Kolhapur', 'Ajmer', 'Akola', 
-    'Gulbarga', 'Jamnagar', 'Ujjain', 'Loni', 'Siliguri', 'Jhansi', 'Ulhasnagar', 
-    'Jammu', 'Sangli-Miraj & Kupwad', 'Mangalore', 'Erode', 'Belgaum', 'Ambattur', 
-    'Tirunelveli', 'Malegaon', 'Gaya', 'Jalgaon', 'Udaipur', 'Maheshtala',
-    'Unnao', 'Rae Bareli', 'Sitapur', 'Harda', 'Vidisha', 'Rewa', 'Satna', 
-    'Muzaffarpur', 'Bhagalpur', 'Gaya', 'Arrah', 'Begusarai', 'Katihar',
-    'Rohtak', 'Hisar', 'Panipat', 'Karnal', 'Sonipat', 'Ambala', 'Yamunanagar'
-  ];
+  String _selectedCountry = 'India';
+  String _selectedState = '';
+  String _selectedCity = '';
   
   String _selectedGender = 'Male';
   int _age = 25;
   String? _base64Image;
   List<String> _selectedRoles = [];
+  UserRole _currentUserRole = UserRole.host;
   bool _isLoading = true;
 
   final ImagePicker _picker = ImagePicker();
@@ -57,53 +45,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadProfileData();
   }
 
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _bioController.dispose();
+    _cityController.dispose();
+    _stateController.dispose();
+    _professionController.dispose();
+    _educationController.dispose();
+    _languagesController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
+    _mobileNumber = prefs.getString('mobileNumber') ?? '';
+    
+    try {
+      final cloudProfile = await SupabaseService().getProfile(_mobileNumber);
+      
+      if (cloudProfile != null) {
+        _currentUserRole = cloudProfile.userRole;
+        _nameController.text = cloudProfile.name;
+        _bioController.text = cloudProfile.bio;
+        _cityController.text = cloudProfile.city;
+        _selectedCity = cloudProfile.city;
+        _stateController.text = cloudProfile.state;
+        _selectedState = cloudProfile.state;
+        _professionController.text = cloudProfile.profession;
+        _educationController.text = cloudProfile.education;
+        _languagesController.text = cloudProfile.languages.join(', ');
+        _base64Image = cloudProfile.profileImageUrl;
+        _selectedGender = cloudProfile.gender;
+        _age = cloudProfile.age;
+        
+        // Re-humanize roles for UI
+        _selectedRoles = cloudProfile.possibleRoles.map((r) {
+          String name = r.name;
+          String label = name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
+          label = label[0].toUpperCase() + label.substring(1);
+          return label;
+        }).toList();
+        
+        if (mounted) setState(() {});
+      } else {
+        // Local fallback
+        _nameController.text = prefs.getString('userName') ?? '';
+        _bioController.text = prefs.getString('userBio') ?? '';
+        _cityController.text = prefs.getString('userCity') ?? '';
+        _selectedCity = _cityController.text;
+        _stateController.text = prefs.getString('userState') ?? '';
+        _selectedState = _stateController.text;
+        _professionController.text = prefs.getString('userProfession') ?? '';
+        _educationController.text = prefs.getString('userEducation') ?? '';
+        _languagesController.text = (prefs.getStringList('userLanguages') ?? []).join(', ');
+        _base64Image = prefs.getString('userImageBase64');
+        _selectedGender = prefs.getString('userGender') ?? 'Male';
+        _age = prefs.getInt('userAge') ?? 25;
+        _selectedRoles = prefs.getStringList('userRoles') ?? [];
+        if (mounted) setState(() {});
+      }
+    } catch (e) {
+      debugPrint('Error loading profile: $e');
+    }
     setState(() {
-      _nameController.text = prefs.getString('userName') ?? '';
-      _bioController.text = prefs.getString('userBio') ?? '';
-      _cityController.text = prefs.getString('userCity') ?? '';
-      _professionController.text = prefs.getString('userProfession') ?? '';
-      _base64Image = prefs.getString('userImageBase64');
-      _selectedGender = prefs.getString('userGender') ?? 'Male';
-      _age = prefs.getInt('userAge') ?? 25;
-      _selectedRoles = prefs.getStringList('userRoles') ?? [];
       _isLoading = false;
     });
   }
 
   List<String> _getRolesForGender(String gender) {
-    List<String> common = ['Friend', 'Best Friend', 'Cousin', 'Colleague'];
-    if (gender == 'Male') {
-      return [
-        ...common,
-        'Boyfriend',
-        'Ex-Boyfriend',
-        'Husband',
-        'Father-in-law',
-        'Brother-in-law',
-        'Father',
-        'Brother',
-        'Uncle',
-        'Grandfather',
-        'Best Man',
-      ];
-    } else if (gender == 'Female') {
-      return [
-        ...common,
-        'Girlfriend',
-        'Ex-Girlfriend',
-        'Wife',
-        'Mother-in-law',
-        'Sister-in-law',
-        'Mother',
-        'Sister',
-        'Aunt',
-        'Grandmother',
-        'Maid of Honor',
-      ];
-    }
-    return common;
+    return FamilyRole.values.where((role) {
+      if (role == FamilyRole.other) return true;
+      final fixedGender = EventRole.getFixedGender(role);
+      if (fixedGender == null) return true; // Flexible roles like Friend, Colleague, Neighbor
+      if (gender == 'Other') return true; // 'Other' gender can play any role
+      return fixedGender == gender;
+    }).map((role) {
+      String label = role.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
+      label = label[0].toUpperCase() + label.substring(1);
+      return label;
+    }).toList();
   }
 
   Future<void> _pickImage() async {
@@ -117,10 +138,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _saveProfile() async {
-    if (_nameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your name')),
-      );
+    if (_base64Image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please upload a profile picture')));
+      return;
+    }
+    if (_nameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter your full name')));
+      return;
+    }
+    if (_stateController.text.trim().isEmpty || _stateController.text.contains('Select State')) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select your state')));
+      return;
+    }
+    if (_cityController.text.trim().isEmpty || _cityController.text.contains('Select City')) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select your city')));
+      return;
+    }
+    if (_professionController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter your profession')));
+      return;
+    }
+    if (_educationController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter your education')));
+      return;
+    }
+    if (_languagesController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter languages you speak')));
+      return;
+    }
+    if (_selectedRoles.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select at least one role you can play')));
+      return;
+    }
+    if (_bioController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please write a short bio')));
       return;
     }
 
@@ -128,7 +179,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await prefs.setString('userName', _nameController.text);
     await prefs.setString('userBio', _bioController.text);
     await prefs.setString('userCity', _cityController.text);
+    await prefs.setString('userState', _stateController.text);
     await prefs.setString('userProfession', _professionController.text);
+    await prefs.setString('userEducation', _educationController.text);
+    final languages = _languagesController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    await prefs.setStringList('userLanguages', languages);
     if (_base64Image != null) await prefs.setString('userImageBase64', _base64Image!);
     await prefs.setString('userGender', _selectedGender);
     await prefs.setInt('userAge', _age);
@@ -136,19 +191,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await prefs.setBool('hasProfile', true);
 
     // Save to Supabase
-    final mobileNumber = prefs.getString('mobileNumber') ?? 'unknown';
     final user = BaratiUser(
-      id: mobileNumber,
+      id: _mobileNumber,
       name: _nameController.text,
       age: _age,
       gender: _selectedGender,
-      userRole: UserRole.host, // Default, can be adjusted
+      userRole: _currentUserRole,
       possibleRoles: _selectedRoles.map((r) {
-        // Map string back to enum (simple contains check for now)
-        return FamilyRole.values.firstWhere((e) => e.name.toLowerCase() == r.toLowerCase().replaceAll(' ', ''), orElse: () => FamilyRole.other);
+        return FamilyRole.values.firstWhere((e) {
+          String name = e.name;
+          String label = name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
+          label = label[0].toUpperCase() + label.substring(1);
+          return label.toLowerCase() == r.toLowerCase();
+        }, orElse: () => FamilyRole.other);
       }).toList(),
       bio: _bioController.text,
-      profileImageUrl: _base64Image, // We use base64 for now as it's small, ideally upload to storage
+      profileImageUrl: _base64Image,
+      city: _selectedCity,
+      state: _selectedState,
+      profession: _professionController.text,
+      education: _educationController.text,
+      languages: languages,
     );
     
     await SupabaseService().upsertProfile(user);
@@ -156,14 +219,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (!mounted) return;
 
     if (widget.isEditMode) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully!')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile updated successfully!')));
       Navigator.of(context).pop();
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
     }
   }
 
@@ -205,9 +264,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   CircleAvatar(
                     radius: 60,
                     backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                    backgroundImage: _base64Image != null 
-                      ? MemoryImage(base64Decode(_base64Image!)) 
-                      : null,
+                    backgroundImage: _base64Image != null && _base64Image!.startsWith('http')
+                      ? NetworkImage(_base64Image!) as ImageProvider
+                      : _base64Image != null 
+                        ? MemoryImage(base64Decode(_base64Image!)) 
+                        : null,
                     child: _base64Image == null 
                       ? Icon(Icons.person, size: 60, color: theme.colorScheme.primary)
                       : null,
@@ -227,42 +288,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
+            const SizedBox(height: 16),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.phone_android, size: 16, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text(
+                      _mobileNumber,
+                      style: GoogleFonts.montserrat(color: Colors.grey[600], fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.lock_outline, size: 14, color: Colors.grey),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 32),
             _buildLabel('Full Name'),
             _buildTextField(controller: _nameController, hint: 'e.g. Rahul Sharma', icon: Icons.person_outline),
             const SizedBox(height: 20),
-            _buildLabel('City'),
-            Autocomplete<String>(
-              optionsBuilder: (TextEditingValue textEditingValue) {
-                if (textEditingValue.text.isEmpty) {
-                  return const Iterable<String>.empty();
-                }
-                return _cityOptions.where((String option) {
-                  return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+            _buildLabel('Country / State / City'),
+            CSCPickerPlus(
+              showStates: true,
+              showCities: true,
+              flagState: CountryFlag.DISABLE,
+              cityLanguage: CityLanguage.native,
+              countryStateLanguage: CountryStateLanguage.englishOrNative,
+              dropdownDecoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.grey[50],
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              disabledDropdownDecoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.grey[100],
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              selectedItemStyle: GoogleFonts.montserrat(fontSize: 14, color: Colors.black),
+              dropdownHeadingStyle: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.bold),
+              dropdownItemStyle: GoogleFonts.montserrat(fontSize: 14),
+              dropdownDialogRadius: 20,
+              searchBarRadius: 20,
+              defaultCountry: CscCountry.India,
+              currentCountry: _selectedCountry,
+              currentState: _selectedState,
+              currentCity: _selectedCity,
+              onCountryChanged: (value) {
+                setState(() => _selectedCountry = value);
+              },
+              onStateChanged: (value) {
+                setState(() {
+                  _selectedState = value ?? '';
+                  _stateController.text = _selectedState;
                 });
               },
-              onSelected: (String selection) {
-                _cityController.text = selection;
-              },
-              fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-                // Sync the autocomplete controller with our persistence controller
-                if (_cityController.text.isNotEmpty && controller.text.isEmpty) {
-                  controller.text = _cityController.text;
-                }
-                controller.addListener(() {
-                  _cityController.text = controller.text;
+              onCityChanged: (value) {
+                setState(() {
+                  _selectedCity = value ?? '';
+                  _cityController.text = _selectedCity;
                 });
-                return _buildTextField(
-                  controller: controller,
-                  focusNode: focusNode,
-                  hint: 'e.g. New Delhi',
-                  icon: Icons.location_city,
-                );
               },
             ),
             const SizedBox(height: 20),
             _buildLabel('Profession'),
             _buildTextField(controller: _professionController, hint: 'e.g. Software Engineer', icon: Icons.work_outline),
+            const SizedBox(height: 20),
+            _buildLabel('Education'),
+            _buildTextField(controller: _educationController, hint: 'e.g. B.Tech in CS', icon: Icons.school_outlined),
+            const SizedBox(height: 20),
+            _buildLabel('Languages Spoken'),
+            _buildTextField(controller: _languagesController, hint: 'e.g. Hindi, English, Punjabi', icon: Icons.translate),
             const SizedBox(height: 20),
             _buildLabel('Gender'),
             Row(
@@ -355,9 +458,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildLabel(String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        label,
-        style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
+      child: RichText(
+        text: TextSpan(
+          text: label,
+          style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
+          children: [
+            TextSpan(
+              text: ' *',
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }

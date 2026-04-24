@@ -16,6 +16,11 @@ class SupabaseService {
       'possible_roles': user.possibleRoles.map((r) => r.index).toList(),
       'bio': user.bio,
       'profile_image_url': user.profileImageUrl,
+      'city': user.city,
+      'state': user.state,
+      'profession': user.profession,
+      'education': user.education,
+      'languages': user.languages,
     });
   }
 
@@ -33,13 +38,42 @@ class SupabaseService {
       name: response['name'],
       age: response['age'],
       gender: response['gender'],
-      userRole: UserRole.values[response['user_role']],
-      possibleRoles: (response['possible_roles'] as List)
+      userRole: UserRole.values[response['user_role'] ?? 1],
+      possibleRoles: (response['possible_roles'] as List? ?? [])
           .map((r) => FamilyRole.values[r as int])
           .toList(),
-      bio: response['bio'],
+      bio: response['bio'] ?? '',
       profileImageUrl: response['profile_image_url'],
+      city: response['city'] ?? '',
+      state: response['state'] ?? '',
+      profession: response['profession'] ?? '',
+      education: response['education'] ?? '',
+      languages: List<String>.from(response['languages'] ?? []),
     );
+  }
+
+  Future<List<BaratiUser>> getProfiles() async {
+    final response = await client
+        .from('profiles')
+        .select();
+    
+    return (response as List).map((p) => BaratiUser(
+      id: p['id'],
+      name: p['name'],
+      age: p['age'],
+      gender: p['gender'],
+      userRole: UserRole.values[p['user_role'] ?? 1],
+      possibleRoles: (p['possible_roles'] as List? ?? [])
+          .map((r) => FamilyRole.values[r as int])
+          .toList(),
+      bio: p['bio'] ?? '',
+      profileImageUrl: p['profile_image_url'],
+      city: p['city'] ?? '',
+      state: p['state'] ?? '',
+      profession: p['profession'] ?? '',
+      education: p['education'] ?? '',
+      languages: List<String>.from(p['languages'] ?? []),
+    )).toList();
   }
 
   // --- Event Operations ---
@@ -53,9 +87,25 @@ class SupabaseService {
       'date': event.date.toIso8601String(),
       'location': event.location,
       'event_type': event.eventType.index,
-      'needed_roles': event.neededRoles.map((r) => r.index).toList(),
+      'needed_roles': event.neededRoles.map((r) => r.toJson()).toList(),
       'approved_member_ids': event.approvedMemberIds,
     });
+  }
+
+  Future<void> updateEvent(BaratiEvent event) async {
+    await client.from('events').update({
+      'title': event.title,
+      'description': event.description,
+      'date': event.date.toIso8601String(),
+      'location': event.location,
+      'event_type': event.eventType.index,
+      'needed_roles': event.neededRoles.map((r) => r.toJson()).toList(),
+      'approved_member_ids': event.approvedMemberIds,
+    }).eq('id', event.id);
+  }
+
+  Future<void> deleteEvent(String eventId) async {
+    await client.from('events').delete().eq('id', eventId);
   }
 
   Future<List<BaratiEvent>> getEvents() async {
@@ -73,7 +123,7 @@ class SupabaseService {
       location: e['location'],
       eventType: EventType.values[e['event_type']],
       neededRoles: (e['needed_roles'] as List)
-          .map((r) => FamilyRole.values[r as int])
+          .map((r) => r is int ? EventRole(role: FamilyRole.values[r], description: '', gender: 'Any') : EventRole.fromJson(r as Map<String, dynamic>))
           .toList(),
       approvedMemberIds: List<String>.from(e['approved_member_ids']),
     )).toList();

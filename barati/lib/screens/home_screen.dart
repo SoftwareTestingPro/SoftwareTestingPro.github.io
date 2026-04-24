@@ -20,14 +20,39 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   UserRole _currentType = UserRole.host;
   List<BaratiEvent> _events = [];
+  List<BaratiEvent> _filteredEvents = [];
+  List<BaratiUser> _profiles = [];
+  List<BaratiUser> _filteredProfiles = [];
+  List<FamilyRole> _userRoles = [];
   bool _isLoading = true;
   String _firstName = 'User';
+  final _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _checkProfile();
-    _loadEvents();
+    _loadData();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredProfiles = _profiles.where((p) {
+        final matchesName = p.name.toLowerCase().contains(query);
+        final matchesRole = p.possibleRoles.any((r) => 
+          r.name.toLowerCase().contains(query)
+        );
+        return matchesName || matchesRole;
+      }).toList();
+    });
   }
 
   Future<void> _checkProfile() async {
@@ -46,40 +71,156 @@ class _HomeScreenState extends State<HomeScreen> {
         // Sync cloud data to local for UI convenience
         await prefs.setString('userName', profile.name);
         await prefs.setBool('hasProfile', true);
-        setState(() {
-          _firstName = profile.name.split(' ')[0];
-        });
+        if (mounted) {
+          setState(() {
+            _firstName = profile.name.split(' ')[0];
+            _userRoles = profile.possibleRoles;
+          });
+        }
       }
     }
   }
 
-  Future<void> _loadEvents() async {
+  Future<void> _loadData() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
     final prefs = await SharedPreferences.getInstance();
     
     // Load Name
     final fullName = prefs.getString('userName') ?? 'User';
-    _firstName = fullName.split(' ')[0];
+    if (mounted) {
+      setState(() {
+        _firstName = fullName.split(' ')[0];
+      });
+    }
 
-    final eventsJson = prefs.getString('events') ?? '[]';
-    final List<dynamic> decoded = json.decode(eventsJson);
-    
     // Load from Supabase
     try {
       final cloudEvents = await SupabaseService().getEvents();
-      setState(() {
-        _events = cloudEvents;
-        _isLoading = false;
-      });
+      final cloudProfiles = await SupabaseService().getProfiles();
+      
+      // Get current user mobile/id to exclude from "Find Your Family"
+      final currentUserId = prefs.getString('user_id') ?? prefs.getString('mobileNumber');
+      final currentProfile = cloudProfiles.firstWhere((p) => p.id == currentUserId, orElse: () => cloudProfiles[0]);
+
+      if (mounted) {
+        setState(() {
+          _events = cloudEvents;
+          _userRoles = currentProfile.possibleRoles;
+          _profiles = cloudProfiles.where((p) => p.id != currentUserId).toList();
+          _filteredProfiles = _profiles;
+          
+          // Apply initial filtering for member view
+          if (_currentType == UserRole.baratiMember) {
+            _filteredEvents = _events.where((event) => 
+              event.neededRoles.any((r) => _userRoles.contains(r.role))
+            ).toList();
+          } else {
+            _filteredEvents = _events;
+          }
+          
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      // Fallback to local
-      setState(() {
-        _events = decoded.map((e) => BaratiEvent.fromJson(e)).toList();
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
+  Future<void> _loadEvents() => _loadData();
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: 'Search for roles or people...',
+          prefixIcon: const Icon(Icons.search, size: 20),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvailableBaratiList() {
+    if (_isLoading) return const Center(child: CircularProgressIndicator());
+    
+    if (_filteredProfiles.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text('No matching family members found.', style: GoogleFonts.montserrat(color: Colors.grey)),
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: 180,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        scrollDirection: Axis.horizontal,
+        itemCount: _filteredProfiles.length,
+        itemBuilder: (context, index) {
+          final profile = _filteredProfiles[index];
+          String rolesLabel = profile.possibleRoles.take(2).map((r) => r.name).join(', ');
+          if (profile.possibleRoles.length > 2) rolesLabel += '...';
+
+          return Container(
+            width: 140,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 35,
+                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  backgroundImage: profile.profileImageUrl != null ? NetworkImage(profile.profileImageUrl!) : null,
+                  child: profile.profileImageUrl == null ? Icon(Icons.person, size: 40, color: Theme.of(context).colorScheme.primary) : null,
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    profile.name, 
+                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 13),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    rolesLabel, 
+                    style: GoogleFonts.montserrat(fontSize: 11, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -99,6 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 32),
                   if (_currentType == UserRole.host) ...[
                     _buildSectionHeader(context, 'Find Your Family', 'Search'),
+                    _buildSearchBar(),
                     const SizedBox(height: 16),
                     _buildAvailableBaratiList(),
                     const SizedBox(height: 32),
@@ -133,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
               MaterialPageRoute(builder: (context) => const AddEventScreen()),
             );
             if (result == true) {
-              _loadEvents();
+              _loadData();
             }
           } else {
             // Search functionality could go here
@@ -173,7 +315,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildToggleButton(String label, UserRole type) {
     bool isSelected = _currentType == type;
     return GestureDetector(
-      onTap: () => setState(() => _currentType = type),
+      onTap: () {
+        setState(() {
+          _currentType = type;
+          if (_currentType == UserRole.host) {
+            _filteredEvents = _events;
+          } else {
+            _filteredEvents = _events.where((event) => 
+              event.neededRoles.any((r) => _userRoles.contains(r.role))
+            ).toList();
+          }
+        });
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -267,43 +420,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildAvailableBaratiList() {
-    return SizedBox(
-      height: 180,
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        scrollDirection: Axis.horizontal,
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          final names = ['Rahul S.', 'Priya M.', 'Amit K.', 'Suman V.', 'Vikram R.'];
-          final roles = ['Elder Brother', 'Sister', 'Uncle', 'Motherly Figure', 'Best Man'];
-          return Container(
-            width: 140,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 35,
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  child: Icon(Icons.person, size: 40, color: Theme.of(context).colorScheme.primary),
-                ),
-                const SizedBox(height: 12),
-                Text(names[index], style: GoogleFonts.montserrat(fontWeight: FontWeight.bold)),
-                Text(roles[index], style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey)),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   Widget _buildRitualRolesGrid(BuildContext context) {
     final roles = [
       {'name': 'Kanyadaan (Father)', 'icon': Icons.favorite, 'color': Colors.red},
@@ -374,6 +490,8 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
+    final currentUserId = SharedPreferences.getInstance().then((p) => p.getString('user_id') ?? p.getString('mobileNumber') ?? 'anonymous');
+
     return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -382,77 +500,105 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: _events.length,
         itemBuilder: (context, index) {
           final event = _events[index];
-          return GestureDetector(
-            onTap: () {
-              if (_currentType == UserRole.host) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ManageApplicationsScreen(event: event)),
-                );
-              } else {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
-                );
-              }
-            },
-            child: Container(
-            width: 280,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          return FutureBuilder<String>(
+            future: currentUserId,
+            builder: (context, snapshot) {
+              final userId = snapshot.data;
+              final isOwner = userId == event.hostId;
+
+              return GestureDetector(
+                onTap: () {
+                  if (_currentType == UserRole.host) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ManageApplicationsScreen(event: event)),
+                    );
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
+                    );
+                  }
+                },
+                child: Container(
+                width: 280,
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        event.title,
-                        style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 18),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            event.title,
+                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 18),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (isOwner)
+                          IconButton(
+                            icon: const Icon(Icons.edit_note, color: Colors.blue),
+                            onPressed: () async {
+                              final result = await Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => AddEventScreen(eventToEdit: event)),
+                              );
+                              if (result == true) {
+                                _loadEvents();
+                              }
+                            },
+                            visualDensity: VisualDensity.compact,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          )
+                        else
+                          _eventTypeBadge(event.eventType),
+                      ],
                     ),
-                    _eventTypeBadge(event.eventType),
+                    const SizedBox(height: 8),
+                    if (isOwner) _eventTypeBadge(event.eventType),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Location: ${event.location}',
+                      style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Date: ${event.date.day}/${event.date.month}/${event.date.year}',
+                      style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey),
+                    ),
+                    const Spacer(),
+                    Text('Roles Needed:', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    if (event.neededRoles.isEmpty)
+                      Text('No specific roles needed', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.grey))
+                    else
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: event.neededRoles.take(3).map((roleInfo) {
+                            String label = roleInfo.role.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
+                            label = label[0].toUpperCase() + label.substring(1);
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: _roleBadge(label),
+                            );
+                          }).toList().cast<Widget>()..addAll([
+                            if (event.neededRoles.length > 3)
+                              Text('+${event.neededRoles.length - 3} more', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.blue)),
+                          ]),
+                        ),
+                      ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Location: ${event.location}',
-                  style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Date: ${event.date.day}/${event.date.month}/${event.date.year}',
-                  style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey),
-                ),
-                const Spacer(),
-                Text('Roles Needed:', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                if (event.neededRoles.isEmpty)
-                  Text('No specific roles needed', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.grey))
-                else
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: event.neededRoles.take(3).map((role) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 4.0),
-                          child: _roleBadge(role.name),
-                        );
-                      }).toList().cast<Widget>()..addAll([
-                        if (event.neededRoles.length > 3)
-                          Text('+${event.neededRoles.length - 3} more', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.blue)),
-                      ]),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
       ),
@@ -465,7 +611,13 @@ class _HomeScreenState extends State<HomeScreen> {
       case EventType.marriage: color = Colors.pink; break;
       case EventType.haldi: color = Colors.orange; break;
       case EventType.mehndi: color = Colors.green; break;
-      case EventType.anniversary: color = Colors.purple; break;
+      case EventType.sangeet: color = Colors.indigo; break;
+      case EventType.reception: color = Colors.deepPurple; break;
+      case EventType.engagement: color = Colors.teal; break;
+      case EventType.birthday: color = Colors.lightBlue; break;
+      case EventType.babyShower: color = Colors.pinkAccent; break;
+      case EventType.houseWarming: color = Colors.brown; break;
+      case EventType.anniversary: color = Colors.amber; break;
       case EventType.death: color = Colors.black54; break;
       default: color = Colors.blue;
     }
@@ -473,7 +625,7 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
       child: Text(
-        type.name.toUpperCase(),
+        type.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toUpperCase(),
         style: GoogleFonts.montserrat(fontSize: 10, fontWeight: FontWeight.bold, color: color),
       ),
     );

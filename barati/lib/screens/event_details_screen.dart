@@ -16,24 +16,34 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   bool _hasApplied = false;
+  BaratiUser? _currentUser;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _checkApplicationStatus();
+    _loadData();
   }
 
-  Future<void> _checkApplicationStatus() async {
+  Future<void> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getString('mobileNumber') ?? 'anonymous';
+    final userId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
     
-    // Check Supabase
+    final profile = await SupabaseService().getProfile(userId);
     final applied = await SupabaseService().hasApplied(widget.event.id, userId);
-    setState(() => _hasApplied = applied);
+    
+    if (mounted) {
+      setState(() {
+        _currentUser = profile;
+        _hasApplied = applied;
+        _isLoading = false;
+      });
+    }
   }
 
-  Future<void> _applyForRole(FamilyRole role) async {
+  Future<void> _applyForRole(EventRole roleInfo) async {
     final messageController = TextEditingController();
+    final role = roleInfo.role;
     
     final result = await showDialog<bool>(
       context: context,
@@ -41,7 +51,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         title: Text('Apply for ${role.name}', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (roleInfo.description.isNotEmpty) ...[
+              Text('Requirement:', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey[600])),
+              const SizedBox(height: 4),
+              Text(roleInfo.description, style: GoogleFonts.montserrat(fontSize: 14, fontStyle: FontStyle.italic)),
+              const SizedBox(height: 16),
+            ],
             Text('Tell the host why you\'d be a great fit for this role.', style: GoogleFonts.montserrat(fontSize: 14)),
             const SizedBox(height: 16),
             TextField(
@@ -67,7 +84,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
     if (result == true) {
       final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getString('mobileNumber') ?? 'anonymous';
+      final userId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
       
       final newApp = RoleApplication(
         id: const Uuid().v4(),
@@ -95,8 +112,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -117,6 +136,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   ),
                   const SizedBox(height: 32),
                   _buildSectionTitle('Roles Needed'),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Apply for a role that matches your profile.',
+                    style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                  ),
                   const SizedBox(height: 12),
                   _buildRolesList(),
                   const SizedBox(height: 100),
@@ -195,17 +219,50 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   Widget _buildRolesList() {
-    if (widget.event.neededRoles.isEmpty) {
-      return Text('No specific roles listed.', style: GoogleFonts.montserrat(color: Colors.grey));
+    final filteredRoles = widget.event.neededRoles.where((roleInfo) {
+      if (_currentUser == null) return true;
+      
+      // Gender check
+      if (roleInfo.gender != 'Any' && roleInfo.gender.toLowerCase() != _currentUser!.gender.toLowerCase()) {
+        return false;
+      }
+      
+      // Role match check: Check if roleInfo.role exists in _currentUser.possibleRoles
+      return _currentUser!.possibleRoles.contains(roleInfo.role);
+    }).toList();
+
+    if (filteredRoles.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.amber.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Text(
+              'No matching roles found for your profile.',
+              style: GoogleFonts.montserrat(color: Colors.amber[900], fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'You can only apply for roles you have selected in your profile. Update your profile to add more roles.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(color: Colors.amber[900], fontSize: 12),
+            ),
+          ],
+        ),
+      );
     }
 
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
-      itemCount: widget.event.neededRoles.length,
+      itemCount: filteredRoles.length,
       itemBuilder: (context, index) {
-        final role = widget.event.neededRoles[index];
+        final roleInfo = filteredRoles[index];
+        final role = roleInfo.role;
         String label = role.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
         label = label[0].toUpperCase() + label.substring(1);
 
@@ -218,20 +275,53 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             border: Border.all(color: Colors.grey[200]!),
             boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)],
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16)),
-              ElevatedButton(
-                onPressed: _hasApplied ? null : () => _applyForRole(role),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                ),
-                child: Text(_hasApplied ? 'Applied' : 'Apply'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label, style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16)),
+                      Row(
+                        children: [
+                          if (roleInfo.gender != 'Any')
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Text(
+                                roleInfo.gender,
+                                style: GoogleFonts.montserrat(fontSize: 11, color: Colors.blue, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          Text(
+                            'for ${roleInfo.forWhom}',
+                            style: GoogleFonts.montserrat(fontSize: 11, color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: _hasApplied ? null : () => _applyForRole(roleInfo),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
+                    ),
+                    child: Text(_hasApplied ? 'Applied' : 'Apply'),
+                  ),
+                ],
               ),
+              if (roleInfo.description.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(
+                  roleInfo.description,
+                  style: GoogleFonts.montserrat(fontSize: 13, color: Colors.grey[700], fontStyle: FontStyle.italic),
+                ),
+              ],
             ],
           ),
         );
@@ -245,7 +335,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       case EventType.marriage: color = Colors.pink; break;
       case EventType.haldi: color = Colors.orange; break;
       case EventType.mehndi: color = Colors.green; break;
-      case EventType.anniversary: color = Colors.purple; break;
+      case EventType.sangeet: color = Colors.indigo; break;
+      case EventType.reception: color = Colors.deepPurple; break;
+      case EventType.engagement: color = Colors.teal; break;
+      case EventType.birthday: color = Colors.lightBlue; break;
+      case EventType.babyShower: color = Colors.pinkAccent; break;
+      case EventType.houseWarming: color = Colors.brown; break;
+      case EventType.anniversary: color = Colors.amber; break;
       case EventType.death: color = Colors.black54; break;
       default: color = Colors.blue;
     }
@@ -253,7 +349,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
       child: Text(
-        type.name.toUpperCase(),
+        type.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toUpperCase(),
         style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.bold, color: color),
       ),
     );

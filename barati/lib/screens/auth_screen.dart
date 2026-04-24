@@ -26,7 +26,7 @@ class _AuthScreenState extends State<AuthScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a 4-digit dummy number')),
+        const SnackBar(content: Text('Please enter a 4-digit Mobile Number')),
       );
     }
   }
