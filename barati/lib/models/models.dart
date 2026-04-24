@@ -29,6 +29,23 @@ enum FamilyRole {
   other,
 }
 
+extension FamilyRoleExtension on FamilyRole {
+  String toLabel() {
+    String name = this.name;
+    String label = name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
+    return label[0].toUpperCase() + label.substring(1);
+  }
+}
+
+class FamilyRoleHelper {
+  static FamilyRole fromLabel(String label) {
+    return FamilyRole.values.firstWhere(
+      (e) => e.toLabel().toLowerCase() == label.toLowerCase(),
+      orElse: () => FamilyRole.other,
+    );
+  }
+}
+
 enum EventType {
   marriage,
   haldi,

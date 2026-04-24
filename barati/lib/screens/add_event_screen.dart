@@ -343,10 +343,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       runSpacing: 8,
       children: FamilyRole.values.map((role) {
         final isSelected = _selectedRoles.any((r) => r.role == role);
-        String label = role.name;
-        // Humanize camelCase names
-        label = label.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
-        label = label[0].toUpperCase() + label.substring(1);
+        String label = role.toLabel();
         
         return FilterChip(
           label: Text(label),
@@ -385,9 +382,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   Widget _buildRoleDetailsList() {
     return Column(
       children: _selectedRoles.map((roleInfo) {
-        String label = roleInfo.role.name;
-        label = label.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
-        label = label[0].toUpperCase() + label.substring(1);
+        String label = roleInfo.role.toLabel();
 
         final fixedGender = EventRole.getFixedGender(roleInfo.role);
 

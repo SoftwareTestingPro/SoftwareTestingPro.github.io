@@ -17,6 +17,7 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   bool _hasApplied = false;
   BaratiUser? _currentUser;
+  BaratiUser? _hostUser;
   bool _isLoading = true;
 
   @override
@@ -30,11 +31,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     final userId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
     
     final profile = await SupabaseService().getProfile(userId);
+    final hostProfile = await SupabaseService().getProfile(widget.event.hostId);
     final applied = await SupabaseService().hasApplied(widget.event.id, userId);
     
     if (mounted) {
       setState(() {
         _currentUser = profile;
+        _hostUser = hostProfile;
         _hasApplied = applied;
         _isLoading = false;
       });
@@ -48,7 +51,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Apply for ${role.name}', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+        title: Text('Apply for ${role.toLabel()}', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,6 +210,41 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             ),
           ],
         ),
+        const SizedBox(height: 24),
+        if (_hostUser != null) ...[
+          _buildSectionTitle('Hosted by'),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                backgroundImage: _hostUser!.profileImageUrl != null && _hostUser!.profileImageUrl!.startsWith('http')
+                    ? NetworkImage(_hostUser!.profileImageUrl!) as ImageProvider
+                    : (_hostUser!.profileImageUrl != null
+                        ? MemoryImage(base64Decode(_hostUser!.profileImageUrl!))
+                        : null),
+                child: _hostUser!.profileImageUrl == null
+                    ? Icon(Icons.person, color: Theme.of(context).colorScheme.primary)
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _hostUser!.name,
+                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text(
+                    _hostUser!.city,
+                    style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }
@@ -263,8 +301,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       itemBuilder: (context, index) {
         final roleInfo = filteredRoles[index];
         final role = roleInfo.role;
-        String label = role.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
-        label = label[0].toUpperCase() + label.substring(1);
+        String label = role.toLabel();
 
         return Container(
           margin: const EdgeInsets.only(bottom: 12),

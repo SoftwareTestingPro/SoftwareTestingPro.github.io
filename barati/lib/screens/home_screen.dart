@@ -7,6 +7,7 @@ import 'profile_screen.dart';
 import 'add_event_screen.dart';
 import 'event_details_screen.dart';
 import 'manage_applications_screen.dart';
+import 'public_profile_screen.dart';
 import '../services/supabase_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -173,48 +174,63 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: _filteredProfiles.length,
         itemBuilder: (context, index) {
           final profile = _filteredProfiles[index];
-          String rolesLabel = profile.possibleRoles.take(2).map((r) => r.name).join(', ');
+          String rolesLabel = profile.possibleRoles.take(2).map((r) => r.toLabel()).join(', ');
           if (profile.possibleRoles.length > 2) rolesLabel += '...';
 
-          return Container(
-            width: 140,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 35,
-                  backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  backgroundImage: profile.profileImageUrl != null ? NetworkImage(profile.profileImageUrl!) : null,
-                  child: profile.profileImageUrl == null ? Icon(Icons.person, size: 40, color: Theme.of(context).colorScheme.primary) : null,
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PublicProfileScreen(user: profile),
                 ),
-                const SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    profile.name, 
-                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 13),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+              );
+            },
+            child: Container(
+              width: 140,
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 35,
+                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    backgroundImage: profile.profileImageUrl != null && profile.profileImageUrl!.startsWith('http')
+                      ? NetworkImage(profile.profileImageUrl!) as ImageProvider
+                      : profile.profileImageUrl != null 
+                        ? MemoryImage(base64Decode(profile.profileImageUrl!))
+                        : null,
+                    child: profile.profileImageUrl == null 
+                      ? Icon(Icons.person, size: 40, color: Theme.of(context).colorScheme.primary) 
+                      : null,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    rolesLabel, 
-                    style: GoogleFonts.montserrat(fontSize: 11, color: Colors.grey),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      profile.name, 
+                      style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 13),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      rolesLabel, 
+                      style: GoogleFonts.montserrat(fontSize: 11, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -582,8 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: event.neededRoles.take(3).map((roleInfo) {
-                            String label = roleInfo.role.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
-                            label = label[0].toUpperCase() + label.substring(1);
+                            String label = roleInfo.role.toLabel();
                             return Padding(
                               padding: const EdgeInsets.only(right: 4.0),
                               child: _roleBadge(label),
@@ -640,14 +655,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMyPossibleRoles(BuildContext context) {
-    final roles = ['Brother', 'Best Friend', 'Uncle', 'Cousin'];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
-        children: roles.map((r) => Chip(
-          label: Text(r),
+        children: _userRoles.map((r) => Chip(
+          label: Text(r.toLabel()),
           backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
           side: BorderSide.none,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

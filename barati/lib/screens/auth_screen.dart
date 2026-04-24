@@ -34,20 +34,33 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _verifyOtp() async {
     if (_otpController.text == _staticOtp) {
       final prefs = await SharedPreferences.getInstance();
+      final String? oldMobileNumber = prefs.getString('mobileNumber');
+      final String currentMobileNumber = _phoneController.text;
+
+      // If a different user is logging in, clear previous local profile data
+      if (oldMobileNumber != null && oldMobileNumber != currentMobileNumber) {
+        await prefs.remove('hasProfile');
+        await prefs.remove('userName');
+        await prefs.remove('userBio');
+        await prefs.remove('userCity');
+        await prefs.remove('userState');
+        await prefs.remove('userProfession');
+        await prefs.remove('userEducation');
+        await prefs.remove('userLanguages');
+        await prefs.remove('userImageBase64');
+        await prefs.remove('userGender');
+        await prefs.remove('userAge');
+        await prefs.remove('userRoles');
+      }
+
       await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('mobileNumber', _phoneController.text);
-      
-      final bool hasLocalProfile = prefs.getBool('hasProfile') ?? false;
+      await prefs.setString('mobileNumber', currentMobileNumber);
       
       // Check cloud profile
-      final cloudProfile = await SupabaseService().getProfile(_phoneController.text);
-      final bool hasProfile = hasLocalProfile || (cloudProfile != null);
+      final cloudProfile = await SupabaseService().getProfile(currentMobileNumber);
       
-      if (hasProfile && cloudProfile != null) {
-        // Sync cloud profile to local if needed (optional optimization)
-        await prefs.setBool('hasProfile', true);
-        await prefs.setString('userName', cloudProfile.name);
-      }
+      final bool hasProfile = (cloudProfile != null);
+      await prefs.setBool('hasProfile', hasProfile);
 
       if (!mounted) return;
       
@@ -110,7 +123,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     if (!_isOtpSent) ...[
                       _buildTextField(
                         controller: _phoneController,
-                        hint: '4-Digit Dummy Number',
+                        hint: '4-Digit Mobile Number',
                         icon: Icons.phone_android,
                         keyboardType: TextInputType.phone,
                         maxLength: 4,

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/models.dart';
+import 'public_profile_screen.dart';
 import '../services/supabase_service.dart';
 
 class ManageApplicationsScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class ManageApplicationsScreen extends StatefulWidget {
 
 class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
   List<RoleApplication> _applications = [];
+  Map<String, BaratiUser> _applicantProfiles = {};
   bool _isLoading = true;
 
   @override
@@ -29,8 +31,16 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
     // Load from Supabase
     try {
       final cloudApps = await SupabaseService().getApplicationsForEvent(widget.event.id);
+      
+      // Fetch all user profiles to show names/images
+      final allProfiles = await SupabaseService().getProfiles();
+      final Map<String, BaratiUser> profileMap = {
+        for (var p in allProfiles) p.id: p
+      };
+
       setState(() {
         _applications = cloudApps;
+        _applicantProfiles = profileMap;
         _isLoading = false;
       });
     } catch (e) {
@@ -125,8 +135,8 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
       itemCount: _applications.length,
       itemBuilder: (context, index) {
         final app = _applications[index];
-        String roleLabel = app.appliedRole.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
-        roleLabel = roleLabel[0].toUpperCase() + roleLabel.substring(1);
+        final applicant = _applicantProfiles[app.applicantId];
+        String roleLabel = app.appliedRole.toLabel();
 
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
@@ -140,30 +150,49 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                    child: Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Applicant: ${app.applicantId}',
-                          style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        Text(
-                          'Applied for: $roleLabel',
-                          style: GoogleFonts.montserrat(color: Colors.grey[600], fontSize: 14),
-                        ),
-                      ],
+              GestureDetector(
+                onTap: () {
+                  if (applicant != null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PublicProfileScreen(user: applicant),
+                      ),
+                    );
+                  }
+                },
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                      backgroundImage: applicant?.profileImageUrl != null && applicant!.profileImageUrl!.startsWith('http')
+                          ? NetworkImage(applicant.profileImageUrl!) as ImageProvider
+                          : (applicant?.profileImageUrl != null
+                              ? MemoryImage(base64Decode(applicant!.profileImageUrl!))
+                              : null),
+                      child: applicant?.profileImageUrl == null
+                          ? Icon(Icons.person, color: Theme.of(context).colorScheme.primary)
+                          : null,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            applicant?.name ?? 'Applicant: ${app.applicantId}',
+                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            'Applied for: $roleLabel',
+                            style: GoogleFonts.montserrat(color: Colors.grey[600], fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right, color: Colors.grey),
+                  ],
+                ),
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.0),

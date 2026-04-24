@@ -79,17 +79,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _selectedGender = cloudProfile.gender;
         _age = cloudProfile.age;
         
-        // Re-humanize roles for UI
-        _selectedRoles = cloudProfile.possibleRoles.map((r) {
-          String name = r.name;
-          String label = name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
-          label = label[0].toUpperCase() + label.substring(1);
-          return label;
-        }).toList();
+        // Use consistent label conversion
+        _selectedRoles = cloudProfile.possibleRoles.map((r) => r.toLabel()).toList();
         
         if (mounted) setState(() {});
       } else {
-        // Local fallback
+        // Local fallback - only if mobile number matches what's in local prefs
+        // Actually, AuthScreen now clears these if number changes, so this is safer.
         _nameController.text = prefs.getString('userName') ?? '';
         _bioController.text = prefs.getString('userBio') ?? '';
         _cityController.text = prefs.getString('userCity') ?? '';
@@ -120,11 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (fixedGender == null) return true; // Flexible roles like Friend, Colleague, Neighbor
       if (gender == 'Other') return true; // 'Other' gender can play any role
       return fixedGender == gender;
-    }).map((role) {
-      String label = role.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
-      label = label[0].toUpperCase() + label.substring(1);
-      return label;
-    }).toList();
+    }).map((role) => role.toLabel()).toList();
   }
 
   Future<void> _pickImage() async {
@@ -197,14 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       age: _age,
       gender: _selectedGender,
       userRole: _currentUserRole,
-      possibleRoles: _selectedRoles.map((r) {
-        return FamilyRole.values.firstWhere((e) {
-          String name = e.name;
-          String label = name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
-          label = label[0].toUpperCase() + label.substring(1);
-          return label.toLowerCase() == r.toLowerCase();
-        }, orElse: () => FamilyRole.other);
-      }).toList(),
+      possibleRoles: _selectedRoles.map((r) => FamilyRoleHelper.fromLabel(r)).toList(),
       bio: _bioController.text,
       profileImageUrl: _base64Image,
       city: _selectedCity,
