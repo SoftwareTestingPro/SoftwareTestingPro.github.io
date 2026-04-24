@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
+import 'add_event_screen.dart';
+import 'manage_applications_screen.dart';
 import '../models/models.dart';
 import '../services/supabase_service.dart';
 
@@ -19,6 +21,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   BaratiUser? _currentUser;
   BaratiUser? _hostUser;
   bool _isLoading = true;
+  List<RoleApplication> _allApplications = [];
+  Map<String, BaratiUser> _applicantProfiles = {};
 
   @override
   void initState() {
@@ -41,6 +45,20 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         _myApplications = applications;
         _isLoading = false;
       });
+      
+      // If host, load all applications
+      if (userId == widget.event.hostId) {
+        final allApps = await SupabaseService().getApplicationsForEvent(widget.event.id);
+        final allProfiles = await SupabaseService().getProfiles();
+        final Map<String, BaratiUser> profileMap = {for (var p in allProfiles) p.id: p};
+        
+        if (mounted) {
+          setState(() {
+            _allApplications = allApps;
+            _applicantProfiles = profileMap;
+          });
+        }
+      }
     }
   }
 
@@ -135,11 +153,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   ),
                   const SizedBox(height: 32),
                   _buildSectionTitle('Roles Needed'),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Apply for a role that matches your profile.',
-                    style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
-                  ),
+                  if (_currentUser?.id != widget.event.hostId) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'Apply for a role that matches your profile.',
+                      style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                  ],
                   const SizedBox(height: 12),
                   _buildRolesList(),
                   const SizedBox(height: 100),
@@ -241,6 +261,24 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             ],
           ),
         ],
+        if (_currentUser?.id == widget.event.hostId) ...[
+          const SizedBox(height: 32),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildSectionTitle('Applicants'),
+              TextButton(
+                onPressed: () => Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => ManageApplicationsScreen(event: widget.event))
+                ).then((_) => _loadData()),
+                child: const Text('Manage'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildApplicantsList(),
+        ],
       ],
     );
   }
@@ -251,21 +289,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.bold),
     );
   }
-
   Widget _buildRolesList() {
+    final isHost = _currentUser?.id == widget.event.hostId;
+
     final filteredRoles = widget.event.neededRoles.where((roleInfo) {
-      if (_currentUser == null) return true;
+      if (_currentUser == null || isHost) return true;
       
       // Gender check
       if (roleInfo.gender != 'Any' && roleInfo.gender.toLowerCase() != _currentUser!.gender.toLowerCase()) {
         return false;
       }
       
-      // Role match check: Check if roleInfo.role exists in _currentUser.possibleRoles
+      // Role match check
       return _currentUser!.possibleRoles.contains(roleInfo.role);
     }).toList();
 
-    if (filteredRoles.isEmpty) {
+    if (filteredRoles.isEmpty && !isHost) {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -349,6 +388,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       final hasAppliedThisRole = application.id.isNotEmpty;
                       final isApprovedThisRole = application.isApproved;
                       final isDeclinedThisRole = application.status == ApplicationStatus.declined;
+                      final isWithdrawnThisRole = application.status == ApplicationStatus.withdrawn;
+                      final isHostOfEvent = widget.event.hostId == _currentUser?.id;
 
                       if (isPast) {
                         if (isApprovedThisRole) {
@@ -358,13 +399,19 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       }
 
                       String buttonText = 'Apply';
-                      bool isDisabled = hasAppliedToThisEvent;
+                      bool isDisabled = hasAppliedToThisEvent || isHostOfEvent;
 
-                      if (isApprovedThisRole) {
+                      if (isHostOfEvent) {
+                        buttonText = 'Host';
+                        isDisabled = true;
+                      } else if (isApprovedThisRole) {
                         buttonText = 'Approved';
                         isDisabled = true;
                       } else if (isDeclinedThisRole) {
                         buttonText = 'Declined';
+                        isDisabled = true;
+                      } else if (isWithdrawnThisRole) {
+                        buttonText = 'Withdrawn';
                         isDisabled = true;
                       } else if (hasAppliedThisRole) {
                         buttonText = 'Applied';
@@ -398,6 +445,65 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildApplicantsList() {
+    if (_allApplications.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(16)),
+        child: Center(child: Text('No applications yet.', style: GoogleFonts.montserrat(color: Colors.grey))),
+      );
+    }
+
+    return Column(
+      children: _allApplications.map((app) {
+        final profile = _applicantProfiles[app.applicantId];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey[100]!),
+          ),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: profile?.profileImageUrl != null ? MemoryImage(base64Decode(profile!.profileImageUrl!)) : null,
+                child: profile?.profileImageUrl == null ? const Icon(Icons.person, size: 20) : null,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(profile?.name ?? 'Anonymous', style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text(app.appliedRole.toLabel(), style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600])),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: app.isApproved ? Colors.green.withOpacity(0.1) : (app.status == ApplicationStatus.declined ? Colors.red.withOpacity(0.1) : Colors.orange.withOpacity(0.1)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  app.isApproved ? 'Approved' : (app.status == ApplicationStatus.declined ? 'Declined' : (app.status == ApplicationStatus.withdrawn ? 'Withdrawn' : 'Pending')),
+                  style: GoogleFonts.montserrat(
+                    fontSize: 10, 
+                    fontWeight: FontWeight.bold, 
+                    color: app.isApproved ? Colors.green : (app.status == ApplicationStatus.declined ? Colors.red : Colors.orange),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 

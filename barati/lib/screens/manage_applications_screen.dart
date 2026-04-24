@@ -232,6 +232,16 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
                     return const Center(child: Text('Event Ended', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)));
                   }
 
+                  if (app.isInvitation) {
+                    return Center(
+                      child: Text(
+                        app.status == ApplicationStatus.invitationAccepted ? 'Invitation Accepted' : 
+                        (app.status == ApplicationStatus.invitationDeclined ? 'Invitation Declined' : 'Invitation Sent (Pending)'),
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, color: Colors.blue),
+                      ),
+                    );
+                  }
+
                   return Row(
                     children: [
                       Expanded(

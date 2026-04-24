@@ -472,120 +472,97 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    final currentUserId = SharedPreferences.getInstance().then((p) => p.getString('user_id') ?? p.getString('mobileNumber') ?? 'anonymous');
-
     return SizedBox(
-      height: 200,
+      height: 220,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
         itemCount: futureEvents.length,
         itemBuilder: (context, index) {
           final event = futureEvents[index];
-          return FutureBuilder<String>(
-            future: currentUserId,
-            builder: (context, snapshot) {
-              final userId = snapshot.data;
-              final isOwner = userId == event.hostId;
-
-              return GestureDetector(
-                onTap: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  final userId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
-                  final isOwner = userId == event.hostId;
-
-                  if (_currentType == UserRole.host && isOwner) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => ManageApplicationsScreen(event: event)),
-                    );
-                  } else {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
-                    );
-                  }
-                },
-                child: Container(
-                width: 280,
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            event.title,
-                            style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 18),
-                            overflow: TextOverflow.ellipsis,
+          return GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
+            ).then((_) => _loadData()),
+            child: Container(
+              width: 280,
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          image: DecorationImage(
+                            image: event.imageUrl.startsWith('http') 
+                                ? NetworkImage(event.imageUrl) as ImageProvider
+                                : MemoryImage(base64Decode(event.imageUrl)),
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        if (isOwner)
-                          IconButton(
-                            icon: const Icon(Icons.edit_note, color: Colors.blue),
-                            onPressed: () async {
-                              final result = await Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => AddEventScreen(eventToEdit: event)),
-                              );
-                              if (result == true) {
-                                _loadEvents();
-                              }
-                            },
-                            visualDensity: VisualDensity.compact,
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                          )
-                        else
-                          _eventTypeBadge(event.eventType),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    if (isOwner) _eventTypeBadge(event.eventType),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Location: ${event.location}',
-                      style: GoogleFonts.montserrat(fontSize: 14, color: Colors.grey),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Date: ${event.date.day}/${event.date.month}/${event.date.year}',
-                      style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey),
-                    ),
-                    const Spacer(),
-                    Text('Roles Needed:', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    if (event.neededRoles.isEmpty)
-                      Text('No specific roles needed', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.grey))
-                    else
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: event.neededRoles.take(3).map((roleInfo) {
-                            String label = roleInfo.role.toLabel();
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
-                              child: _roleBadge(label),
-                            );
-                          }).toList().cast<Widget>()..addAll([
-                            if (event.neededRoles.length > 3)
-                              Text('+${event.neededRoles.length - 3} more', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.blue)),
-                          ]),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              event.title,
+                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            _eventTypeBadge(event.eventType),
+                          ],
                         ),
                       ),
-                  ],
-                ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          '${event.city}, ${event.state}',
+                          style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${event.date.day}/${event.date.month}/${event.date.year}',
+                        style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${event.neededRoles.length} Roles Needed',
+                    style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                  ),
+                ],
               ),
-            );
-          },
-        );
-      },
+            ),
+          );
+        },
       ),
     );
   }
@@ -708,12 +685,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     )
-                  else if (apps.any((a) => a.status != ApplicationStatus.declined))
+                  else if (apps.any((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn))
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton.icon(
                         onPressed: () async {
-                          final app = apps.firstWhere((a) => a.status != ApplicationStatus.declined);
+                          final app = apps.firstWhere((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn);
                           await SupabaseService().cancelApplication(app.id, app.eventId, app.applicantId);
                           _loadData();
                         },
@@ -824,6 +801,7 @@ class _HomeScreenState extends State<HomeScreen> {
     
     if (app.isApproved) return 'Approved';
     if (app.status == ApplicationStatus.declined) return 'Declined';
+    if (app.status == ApplicationStatus.withdrawn) return 'Withdrawn';
     
     return 'Pending';
   }
@@ -832,6 +810,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (app.isInvitation && app.status == ApplicationStatus.invitationPending) return Colors.blue;
     if (app.isApproved || app.status == ApplicationStatus.invitationAccepted) return Colors.green;
     if (app.status == ApplicationStatus.declined || app.status == ApplicationStatus.invitationDeclined) return Colors.red;
+    if (app.status == ApplicationStatus.withdrawn) return Colors.grey;
     return Colors.orange;
   }
 
@@ -844,15 +823,15 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (futureEvents.isNotEmpty) ...[
-          _buildSectionHeader(context, 'Upcoming Events', 'View All'),
+          _buildSectionHeader(context, 'My Upcoming Events', 'View All'),
           const SizedBox(height: 16),
-          _buildEventsGrid(futureEvents, isHost: true),
+          _buildEventsList(futureEvents, isHost: true),
         ],
         if (pastEvents.isNotEmpty) ...[
           const SizedBox(height: 32),
-          _buildSectionHeader(context, 'Past Events', 'History'),
+          _buildSectionHeader(context, 'My Past Events', 'History'),
           const SizedBox(height: 16),
-          _buildEventsGrid(pastEvents, isHost: true, isPast: true),
+          _buildEventsList(pastEvents, isHost: true, isPast: true),
         ],
         if (_filteredEvents.isEmpty)
           _buildEmptyState('No events found. Start by creating one!', Icons.add_circle_outline),
@@ -860,43 +839,41 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildEventsGrid(List<BaratiEvent> events, {bool isHost = false, bool isPast = false}) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.8,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemCount: events.length,
-      itemBuilder: (context, index) {
-        final event = events[index];
-        return GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
-          ).then((_) => _loadData()),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
-              ],
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        width: double.infinity,
+  Widget _buildEventsList(List<BaratiEvent> events, {bool isHost = false, bool isPast = false}) {
+    return SizedBox(
+      height: 220,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        scrollDirection: Axis.horizontal,
+        itemCount: events.length,
+        itemBuilder: (context, index) {
+          final event = events[index];
+          final isOwner = isHost;
+
+          return GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
+            ).then((_) => _loadData()),
+            child: Container(
+              width: 280,
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
                           image: DecorationImage(
                             image: event.imageUrl.startsWith('http') 
                                 ? NetworkImage(event.imageUrl) as ImageProvider
@@ -904,93 +881,110 @@ class _HomeScreenState extends State<HomeScreen> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [Colors.transparent, Colors.black.withOpacity(0.4)],
-                            ),
-                          ),
-                        ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
+                      const SizedBox(width: 12),
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               event.title,
+                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold, fontSize: 14),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${event.city}, ${event.state}',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.montserrat(fontSize: 10, color: Colors.grey[600]),
-                            ),
-                            const Spacer(),
-                            if (isHost)
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${event.approvedMemberIds.length} Joined',
-                                    style: GoogleFonts.montserrat(fontSize: 10, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
-                                  ),
-                                  Icon(Icons.chevron_right, size: 16, color: Theme.of(context).colorScheme.primary),
-                                ],
-                              ),
+                            _eventTypeBadge(event.eventType),
                           ],
                         ),
                       ),
+                      if (isOwner && !isPast)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit_outlined, color: Colors.blue, size: 20),
+                              onPressed: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AddEventScreen(eventToEdit: event)),
+                                );
+                                if (result == true) _loadData();
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                              onPressed: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Delete Event'),
+                                content: const Text('Are you sure you want to delete this event?'),
+                                actions: [
+                                  TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, true),
+                                    style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              await SupabaseService().deleteEvent(event.id);
+                              _loadData();
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                if (isHost && !isPast)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: GestureDetector(
-                      onTap: () async {
-                        final confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Delete Event'),
-                            content: const Text('Are you sure you want to delete this event? This action cannot be undone.'),
-                            actions: [
-                              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true), 
-                                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                                child: const Text('Delete'),
-                              ),
-                            ],
-                          ),
-                        );
-                        if (confirm == true) {
-                          await SupabaseService().deleteEvent(event.id);
-                          _loadData();
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(color: Colors.red.withOpacity(0.8), shape: BoxShape.circle),
-                        child: const Icon(Icons.delete_outline, size: 16, color: Colors.white),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          '${event.city}, ${event.state}',
+                          style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-              ],
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${event.date.day}/${event.date.month}/${event.date.year}',
+                        style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${event.neededRoles.length} Roles Needed',
+                        style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                      ),
+                      if (isOwner)
+                        Text(
+                          '${event.approvedMemberIds.length} Joined',
+                          style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.green),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

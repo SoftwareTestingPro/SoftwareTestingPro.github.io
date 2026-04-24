@@ -246,7 +246,7 @@ class BaratiEvent {
   );
 }
 
-enum ApplicationStatus { pending, approved, declined, invitationPending, invitationAccepted, invitationDeclined }
+enum ApplicationStatus { pending, approved, declined, withdrawn, invitationPending, invitationAccepted, invitationDeclined }
 
 class RoleApplication {
   final String id;

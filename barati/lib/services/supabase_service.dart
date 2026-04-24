@@ -225,10 +225,10 @@ class SupabaseService {
   }
 
   Future<void> cancelApplication(String applicationId, String eventId, String userId) async {
-    // 1. Mark application as declined/cancelled
+    // 1. Mark application as withdrawn
     await client.from('applications').update({
       'is_approved': false,
-      'status': ApplicationStatus.declined.index,
+      'status': ApplicationStatus.withdrawn.index,
     }).eq('id', applicationId);
     
     // 2. Remove user from approved_member_ids in event
