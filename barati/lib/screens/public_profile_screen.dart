@@ -69,12 +69,14 @@ class PublicProfileScreen extends StatelessWidget {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: user.possibleRoles.map((role) => Chip(
-                label: Text(role.toLabel()),
-                backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                side: BorderSide.none,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              )).toList(),
+              children: user.possibleRoles
+                .where((role) => role.isValidForGender(user.gender))
+                .map((role) => Chip(
+                  label: Text(role.toLabel()),
+                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                  side: BorderSide.none,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                )).toList(),
             ),
             const SizedBox(height: 40),
           ],

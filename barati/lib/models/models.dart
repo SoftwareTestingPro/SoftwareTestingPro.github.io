@@ -35,6 +35,14 @@ extension FamilyRoleExtension on FamilyRole {
     String label = name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
     return label[0].toUpperCase() + label.substring(1);
   }
+
+  bool isValidForGender(String gender) {
+    if (this == FamilyRole.other) return true;
+    final fixedGender = EventRole.getFixedGender(this);
+    if (fixedGender == null) return true; // Flexible roles
+    if (gender == 'Other') return true;
+    return fixedGender == gender;
+  }
 }
 
 class FamilyRoleHelper {

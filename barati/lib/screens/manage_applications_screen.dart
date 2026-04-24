@@ -137,6 +137,9 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
         final app = _applications[index];
         final applicant = _applicantProfiles[app.applicantId];
         String roleLabel = app.appliedRole.toLabel();
+        
+        // Safety check: if role doesn't match applicant gender, highlight it
+        bool isMismatch = applicant != null && !app.appliedRole.isValidForGender(applicant.gender);
 
         return Container(
           margin: const EdgeInsets.only(bottom: 16),

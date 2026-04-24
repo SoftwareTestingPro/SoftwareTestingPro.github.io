@@ -79,8 +79,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _selectedGender = cloudProfile.gender;
         _age = cloudProfile.age;
         
-        // Use consistent label conversion
-        _selectedRoles = cloudProfile.possibleRoles.map((r) => r.toLabel()).toList();
+        // Filter out roles that don't match the gender (prevents corrupted data display)
+        _selectedRoles = cloudProfile.possibleRoles
+            .where((r) => r.isValidForGender(_selectedGender))
+            .map((r) => r.toLabel())
+            .toList();
         
         if (mounted) setState(() {});
       } else {
@@ -496,9 +499,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (val) {
           setState(() {
             _selectedGender = gender;
-            // Clear roles that might not be valid for the new gender
-            // (Keep common roles, remove specific ones)
-            // But for simplicity, we'll just let the user re-select if they change gender
+            // Clear roles that are no longer valid for the new gender
+            _selectedRoles = _selectedRoles.where((label) {
+              final role = FamilyRoleHelper.fromLabel(label);
+              return role.isValidForGender(gender);
+            }).toList();
           });
         }
       },

@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _filteredProfiles = _profiles.where((p) {
         final matchesName = p.name.toLowerCase().contains(query);
         final matchesRole = p.possibleRoles.any((r) => 
-          r.name.toLowerCase().contains(query)
+          r.isValidForGender(p.gender) && r.toLabel().toLowerCase().contains(query)
         );
         return matchesName || matchesRole;
       }).toList();
@@ -174,8 +174,12 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: _filteredProfiles.length,
         itemBuilder: (context, index) {
           final profile = _filteredProfiles[index];
-          String rolesLabel = profile.possibleRoles.take(2).map((r) => r.toLabel()).join(', ');
-          if (profile.possibleRoles.length > 2) rolesLabel += '...';
+          String rolesLabel = profile.possibleRoles
+              .where((r) => r.isValidForGender(profile.gender))
+              .take(2)
+              .map((r) => r.toLabel())
+              .join(', ');
+          if (profile.possibleRoles.where((r) => r.isValidForGender(profile.gender)).length > 2) rolesLabel += '...';
 
           return GestureDetector(
             onTap: () {
