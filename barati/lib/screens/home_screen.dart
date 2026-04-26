@@ -146,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
+      debugPrint('Error loading home data: $e');
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -594,7 +595,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          '${event.city}, ${event.state}',
+                          event.city.isNotEmpty && event.city != 'City' 
+                              ? '${event.city}, ${event.state}' 
+                              : (event.state.isNotEmpty && event.state != 'State' ? event.state : 'Location not set'),
                           style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -622,7 +625,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       if (event.neededRoles.any((r) => 
                         _userRoles.contains(r.role) && 
-                        (r.gender == 'Any' || r.gender.toLowerCase() == _userGender?.toLowerCase())
+                        EventRole.matchGender(_userGender ?? 'Other', r.gender)
                       ))
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -652,9 +655,25 @@ class _HomeScreenState extends State<HomeScreen> {
     final filteredApps = _userApplications.where((app) {
       final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => _events[0]);
       if (isPast) {
+        // Attended events: past and approved
         return event.date.isBefore(now) && app.isApproved;
       } else {
-        return event.date.isAfter(now) || (event.date.isBefore(now) && !app.isApproved);
+        // Active applications: 
+        // 1. Future events (any status)
+        // 2. Past events that were approved (Wait, no, those are in 'Attended')
+        // 3. Past events where application is pending/invitation is pending? No, those should be expired.
+        
+        // Only show future events in active applications, 
+        // OR past events if they were approved (but wait, that's what 'isPast' true handles).
+        // Actually, let's keep it simple: Active = Future events only, 
+        // or specifically pending things for future events.
+        
+        if (event.date.isBefore(now)) {
+          // If event is past, only show it in 'Active' if it was NOT approved but we want to show history?
+          // No, usually 'Active' means things you can still act upon or are waiting for.
+          return false; 
+        }
+        return true;
       }
     }).toList();
 
@@ -753,27 +772,44 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   if (apps.any((a) => a.isInvitation && a.status == ApplicationStatus.invitationPending))
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () async {
-                            final invite = apps.firstWhere((a) => a.isInvitation && a.status == ApplicationStatus.invitationPending);
-                            await SupabaseService().respondToInvitation(invite.id, false, invite.eventId, invite.applicantId);
-                            _loadData();
-                          },
-                          child: const Text('Deny', style: TextStyle(color: Colors.red)),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final invite = apps.firstWhere((a) => a.isInvitation && a.status == ApplicationStatus.invitationPending);
-                            await SupabaseService().respondToInvitation(invite.id, true, invite.eventId, invite.applicantId);
-                            _loadData();
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
-                          child: const Text('Accept'),
-                        ),
-                      ],
+                    Builder(
+                      builder: (context) {
+                        final isEventPast = event.date.isBefore(DateTime.now());
+                        if (isEventPast) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'Invitation Expired',
+                                style: GoogleFonts.montserrat(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
+                            ),
+                          );
+                        }
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                final invite = apps.firstWhere((a) => a.isInvitation && a.status == ApplicationStatus.invitationPending);
+                                await SupabaseService().respondToInvitation(invite.id, false, invite.eventId, invite.applicantId);
+                                _loadData();
+                              },
+                              child: const Text('Deny', style: TextStyle(color: Colors.red)),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                final invite = apps.firstWhere((a) => a.isInvitation && a.status == ApplicationStatus.invitationPending);
+                                await SupabaseService().respondToInvitation(invite.id, true, invite.eventId, invite.applicantId);
+                                _loadData();
+                              },
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+                              child: const Text('Accept'),
+                            ),
+                          ],
+                        );
+                      }
                     )
                   else if (!isPast && apps.any((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn))
                     Align(

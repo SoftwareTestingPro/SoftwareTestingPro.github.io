@@ -17,6 +17,13 @@ class _AuthScreenState extends State<AuthScreen> {
   final _otpController = TextEditingController();
   bool _isOtpSent = false;
   final String _staticOtp = "1234";
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Pre-cache the background image for smoother transition
+    precacheImage(const AssetImage('assets/images/hero_bg.png'), context);
+  }
 
   Future<void> _sendOtp() async {
     if (_phoneController.text.length == 4) {

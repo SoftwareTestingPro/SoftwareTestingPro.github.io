@@ -113,13 +113,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   List<String> _getRolesForGender(String gender) {
-    return FamilyRole.values.where((role) {
-      if (role == FamilyRole.other) return true;
-      final fixedGender = EventRole.getFixedGender(role);
-      if (fixedGender == null) return true; // Flexible roles like Friend, Colleague, Neighbor
-      if (gender != 'Male' && gender != 'Female') return true; // Non-binary/Other can play any role
-      return fixedGender == gender;
-    }).map((role) => role.toLabel()).toList();
+    return FamilyRole.values
+        .where((role) => role.isValidForGender(gender))
+        .map((role) => role.toLabel())
+        .toList();
   }
 
   Future<void> _pickImage() async {
@@ -185,6 +182,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await prefs.setStringList('userRoles', _selectedRoles);
     await prefs.setBool('hasProfile', true);
 
+    final cleanCity = (_selectedCity == 'City' || _selectedCity.contains('Select City')) ? '' : _selectedCity;
+    final cleanState = (_selectedState == 'State' || _selectedState.contains('Select State')) ? '' : _selectedState;
+
     // Save to Supabase
     final user = BaratiUser(
       id: _mobileNumber,
@@ -195,8 +195,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       possibleRoles: _selectedRoles.map((r) => FamilyRoleHelper.fromLabel(r)).toList(),
       bio: _bioController.text,
       profileImageUrl: _base64Image,
-      city: _selectedCity,
-      state: _selectedState,
+      city: cleanCity,
+      state: cleanState,
       profession: _professionController.text,
       education: _educationController.text,
       languages: languages,
@@ -211,6 +211,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Navigator.of(context).pop();
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
+    }
+  }
+
+  Future<void> _deleteProfile() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete Profile', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold, color: Colors.red)),
+        content: const Text('Are you sure you want to delete your profile? This will delete all your hosted events, applications, and ratings. This action cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      setState(() => _isLoading = true);
+      try {
+        await SupabaseService().deleteProfile(_mobileNumber);
+        
+        final prefs = await SharedPreferences.getInstance();
+        // Clear all user-related local data
+        await prefs.remove('userName');
+        await prefs.remove('userBio');
+        await prefs.remove('userCity');
+        await prefs.remove('userState');
+        await prefs.remove('userProfession');
+        await prefs.remove('userEducation');
+        await prefs.remove('userLanguages');
+        await prefs.remove('userImageBase64');
+        await prefs.remove('userGender');
+        await prefs.remove('userAge');
+        await prefs.remove('userRoles');
+        await prefs.remove('hasProfile');
+        await prefs.remove('isLoggedIn');
+        await prefs.remove('user_id');
+
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile deleted successfully')));
+        Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
+      } catch (e) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error deleting profile: $e')));
+      }
     }
   }
 
@@ -372,11 +422,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 'Male',
                 'Female',
-                'Non-binary',
+                'Transgender man',
+                'Transgender woman',
+                'Nonbinary',
                 'Genderqueer',
-                'Genderfluid',
-                'Transgender',
                 'Agender',
+                'Bigender',
+                'Genderfluid',
+                'Intergender',
+                'Two-Spirit',
                 'Other',
                 'Prefer not to say'
               ].map((g) => _buildGenderChip(g)).toList(),
@@ -453,6 +507,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ),
+            if (widget.isEditMode) ...[
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton(
+                  onPressed: _deleteProfile,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.red),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                  child: Text('Delete Profile', 
+                    style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red)),
+                ),
+              ),
+            ],
           ],
         ),
       ),

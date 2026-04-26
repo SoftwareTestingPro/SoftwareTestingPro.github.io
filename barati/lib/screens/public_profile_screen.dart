@@ -76,61 +76,82 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     }
 
     BaratiEvent? selectedEvent;
-    EventRole? selectedRole;
+    List<FamilyRole> selectedRoles = [];
 
     await showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
           title: Text('Invite to Event', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownButtonFormField<BaratiEvent>(
-                decoration: const InputDecoration(labelText: 'Select Event'),
-                items: _myEvents.map((e) => DropdownMenuItem(value: e, child: Text(e.title))).toList(),
-                onChanged: (val) {
-                  setDialogState(() {
-                    selectedEvent = val;
-                    selectedRole = null;
-                  });
-                },
-              ),
-              if (selectedEvent != null) ...[
-                const SizedBox(height: 16),
-                DropdownButtonFormField<EventRole>(
-                  decoration: const InputDecoration(labelText: 'Select Role'),
-                  items: selectedEvent!.neededRoles
-                      .where((r) => r.gender == 'Any' || r.gender.toLowerCase() == widget.user.gender.toLowerCase())
-                      .where((r) => widget.user.possibleRoles.contains(r.role))
-                      .map((r) => DropdownMenuItem(value: r, child: Text(r.role.toLabel()))).toList(),
-                  onChanged: (val) => setDialogState(() => selectedRole = val),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButtonFormField<BaratiEvent>(
+                  decoration: const InputDecoration(labelText: 'Select Event'),
+                  items: _myEvents.map((e) => DropdownMenuItem(value: e, child: Text(e.title))).toList(),
+                  onChanged: (val) {
+                    setDialogState(() {
+                      selectedEvent = val;
+                      selectedRoles = [];
+                    });
+                  },
                 ),
+                if (selectedEvent != null) ...[
+                  const SizedBox(height: 16),
+                  Text('Select Roles:', style: GoogleFonts.montserrat(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Flexible(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: selectedEvent!.neededRoles
+                          .where((r) => EventRole.matchGender(widget.user.gender, r.gender))
+                          .where((r) => widget.user.possibleRoles.contains(r.role))
+                          .map((r) => CheckboxListTile(
+                                title: Text(r.role.toLabel()),
+                                value: selectedRoles.contains(r.role),
+                                onChanged: (val) {
+                                  setDialogState(() {
+                                    if (val == true) {
+                                      selectedRoles.add(r.role);
+                                    } else {
+                                      selectedRoles.remove(r.role);
+                                    }
+                                  });
+                                },
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
           actions: [
             TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
             ElevatedButton(
-              onPressed: (selectedEvent != null && selectedRole != null)
+              onPressed: (selectedEvent != null && selectedRoles.isNotEmpty)
                   ? () async {
-                      final newApp = RoleApplication(
-                        id: const Uuid().v4(),
-                        eventId: selectedEvent!.id,
-                        applicantId: widget.user.id,
-                        appliedRole: selectedRole!.role,
-                        isInvitation: true,
-                        status: ApplicationStatus.invitationPending,
-                      );
-                      await SupabaseService().applyForRole(newApp);
+                      for (var role in selectedRoles) {
+                        final newApp = RoleApplication(
+                          id: const Uuid().v4(),
+                          eventId: selectedEvent!.id,
+                          applicantId: widget.user.id,
+                          appliedRole: role,
+                          isInvitation: true,
+                          status: ApplicationStatus.invitationPending,
+                        );
+                        await SupabaseService().applyForRole(newApp);
+                      }
                       if (!mounted) return;
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Invitation sent successfully!')),
+                        const SnackBar(content: Text('Invitations sent successfully!')),
                       );
                     }
                   : null,
-              child: const Text('Send Invite'),
+              child: const Text('Send Invites'),
             ),
           ],
         ),

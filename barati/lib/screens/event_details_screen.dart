@@ -129,6 +129,32 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
   }
 
+  Future<void> _respondToInvitation(RoleApplication app, bool accept) async {
+    setState(() => _isLoading = true);
+    await SupabaseService().respondToInvitation(app.id, accept, widget.event.id, app.applicantId);
+    await _loadData();
+  }
+
+  Future<void> _withdrawApplication(RoleApplication app) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Withdraw Application'),
+        content: const Text('Are you sure you want to withdraw from this role?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('No')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Yes')),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      setState(() => _isLoading = true);
+      await SupabaseService().cancelApplication(app.id, widget.event.id, app.applicantId);
+      await _loadData();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -275,7 +301,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Text(
-                    _hostUser!.city,
+                    _hostUser!.city.isNotEmpty && _hostUser!.city != 'City' ? _hostUser!.city : 'Location not set',
                     style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],
@@ -319,7 +345,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       if (_currentUser == null || isHost) return true;
       
       // Gender check
-      if (roleInfo.gender != 'Any' && roleInfo.gender.toLowerCase() != _currentUser!.gender.toLowerCase()) {
+      if (!EventRole.matchGender(_currentUser!.gender, roleInfo.gender)) {
         return false;
       }
       
@@ -402,40 +428,113 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     builder: (context) {
                       final now = DateTime.now();
                       final isPast = widget.event.date.isBefore(now);
-                      final hasAppliedToThisEvent = _myApplications.isNotEmpty;
-                      final application = _myApplications.firstWhere(
-                        (app) => app.appliedRole == role, 
-                        orElse: () => RoleApplication(id: '', eventId: '', applicantId: '', appliedRole: role, message: ''),
-                      );
-                      
-                      final hasAppliedThisRole = application.id.isNotEmpty;
-                      final isApprovedThisRole = application.isApproved;
-                      final isDeclinedThisRole = application.status == ApplicationStatus.declined;
-                      final isWithdrawnThisRole = application.status == ApplicationStatus.withdrawn;
                       final isHostOfEvent = widget.event.hostId == _currentUser?.id;
 
-                      if (isPast) {
-                        return Text(isApprovedThisRole ? 'Attended' : 'Event Ended', style: GoogleFonts.montserrat(color: isApprovedThisRole ? Colors.green : Colors.grey, fontWeight: FontWeight.bold));
-                      }
+                      // Find application for THIS role
+                      final application = _myApplications.where((app) => app.appliedRole == role).firstOrNull;
+                      
+                      // Check if there are ANY active applications for this user in this event
+                      // Active = pending, approved, invitationPending, invitationAccepted
+                      final activeApp = _myApplications.where((app) => 
+                        app.status == ApplicationStatus.pending || 
+                        app.status == ApplicationStatus.approved || 
+                        app.status == ApplicationStatus.invitationPending || 
+                        app.status == ApplicationStatus.invitationAccepted
+                      ).firstOrNull;
 
-                      String buttonText = 'Apply';
-                      bool isDisabled = hasAppliedToThisEvent || isHostOfEvent;
+                      if (isPast) {
+                        final isAccepted = application != null && (application.status == ApplicationStatus.approved || application.status == ApplicationStatus.invitationAccepted);
+                        return Text(isAccepted ? 'Attended' : 'Event Ended', style: GoogleFonts.montserrat(color: isAccepted ? Colors.green : Colors.grey, fontWeight: FontWeight.bold));
+                      }
 
                       if (isHostOfEvent) {
                         return const SizedBox.shrink();
                       }
 
+                      // If there's an active application for any role, 
+                      // we only show buttons for THAT role, and hide buttons for others.
+                      if (activeApp != null) {
+                        if (application != null && application.id == activeApp.id) {
+                          if (application.status == ApplicationStatus.invitationPending) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () => _respondToInvitation(application, true),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green, 
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Accept', style: TextStyle(fontSize: 12)),
+                                ),
+                                const SizedBox(width: 4),
+                                ElevatedButton(
+                                  onPressed: () => _respondToInvitation(application, false),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red, 
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  child: const Text('Decline', style: TextStyle(fontSize: 12)),
+                                ),
+                              ],
+                            );
+                          } else if (application.status == ApplicationStatus.pending) {
+                            return ElevatedButton(
+                              onPressed: null, // Disabled
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey[400], 
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                elevation: 0,
+                              ),
+                              child: const Text('Awaiting approval'),
+                            );
+                          } else if (application.status == ApplicationStatus.approved || application.status == ApplicationStatus.invitationAccepted) {
+                            return ElevatedButton(
+                              onPressed: () => _withdrawApplication(application),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange, 
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              child: const Text('Withdraw'),
+                            );
+                          }
+                        } else {
+                          // Hide buttons for all other roles if we have an active app elsewhere
+                          return const SizedBox.shrink();
+                        }
+                      }
+
+                      // If we are here, there is NO active application.
+                      // We might still have a withdrawn application for this role.
+                      if (application != null && application.status == ApplicationStatus.withdrawn) {
+                        return ElevatedButton(
+                          onPressed: null, // Disabled
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey[300], 
+                            foregroundColor: Colors.white70,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 0,
+                          ),
+                          child: const Text('Withdrawn'),
+                        );
+                      }
+
+                      // Otherwise, show Apply button (this includes declined cases)
                       return ElevatedButton(
-                        onPressed: isDisabled ? null : () => _applyForRole(roleInfo),
+                        onPressed: () => _applyForRole(roleInfo),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isApprovedThisRole 
-                            ? Colors.green 
-                            : (isDeclinedThisRole ? Colors.red : Theme.of(context).colorScheme.primary),
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           elevation: 0,
                         ),
-                        child: Text(buttonText),
+                        child: const Text('Apply'),
                       );
                     },
                   ),
@@ -528,58 +627,83 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             
             return GestureDetector(
               onTap: () async {
+                double selectedRating = starValue;
                 final commentController = TextEditingController(text: isHost ? application.hostComment : application.userComment);
+                
                 final result = await showDialog<bool>(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text('Rate your experience'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(5, (i) => Icon(
-                            i < starValue ? Icons.star : Icons.star_border,
-                            color: Colors.amber,
-                            size: 32,
-                          )),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: commentController,
-                          maxLines: 3,
-                          decoration: InputDecoration(
-                            hintText: 'Add a comment (optional)...',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  builder: (context) => StatefulBuilder(
+                    builder: (context, setDialogState) => AlertDialog(
+                      title: Text('Rate your experience'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(5, (i) {
+                              final starIndex = i + 1.0;
+                              return GestureDetector(
+                                onTap: () => setDialogState(() => selectedRating = starIndex),
+                                child: Icon(
+                                  starIndex <= selectedRating ? Icons.star : Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 40,
+                                ),
+                              );
+                            }),
                           ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: commentController,
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                              hintText: 'Add a comment (optional)...',
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Submit'),
                         ),
                       ],
                     ),
-                    actions: [
-                      TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Submit'),
-                      ),
-                    ],
                   ),
                 );
 
                 if (result == true) {
-                  if (isHost) {
-                    await SupabaseService().updateApplicationRating(
-                      application.id, 
-                      hostRating: starValue,
-                      hostComment: commentController.text,
-                    );
-                  } else {
-                    await SupabaseService().updateApplicationRating(
-                      application.id, 
-                      userRating: starValue,
-                      userComment: commentController.text,
-                    );
+                  setState(() => _isLoading = true);
+                  try {
+                    if (isHost) {
+                      await SupabaseService().updateApplicationRating(
+                        application.id, 
+                        hostRating: selectedRating,
+                        hostComment: commentController.text,
+                      );
+                    } else {
+                      await SupabaseService().updateApplicationRating(
+                        application.id, 
+                        userRating: selectedRating,
+                        userComment: commentController.text,
+                      );
+                    }
+                    await _loadData();
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Rating submitted successfully!')),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      setState(() => _isLoading = false);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error submitting rating: $e')),
+                      );
+                    }
                   }
-                  _loadData();
                 }
               },
               child: Padding(

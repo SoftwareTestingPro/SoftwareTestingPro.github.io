@@ -316,50 +316,75 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
             
             return GestureDetector(
               onTap: () async {
+                double selectedRating = starValue;
                 final commentController = TextEditingController(text: application.hostComment);
+                
                 final result = await showDialog<bool>(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text('Rate Guest Performance'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(5, (i) => Icon(
-                            i < starValue ? Icons.star : Icons.star_border,
-                            color: Colors.amber,
-                            size: 32,
-                          )),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: commentController,
-                          maxLines: 3,
-                          decoration: InputDecoration(
-                            hintText: 'Add a performance note (optional)...',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  builder: (context) => StatefulBuilder(
+                    builder: (context, setDialogState) => AlertDialog(
+                      title: Text('Rate Guest Performance'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(5, (i) {
+                              final starIndex = i + 1.0;
+                              return GestureDetector(
+                                onTap: () => setDialogState(() => selectedRating = starIndex),
+                                child: Icon(
+                                  starIndex <= selectedRating ? Icons.star : Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 40,
+                                ),
+                              );
+                            }),
                           ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: commentController,
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                              hintText: 'Add a performance note (optional)...',
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Submit'),
                         ),
                       ],
                     ),
-                    actions: [
-                      TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Submit'),
-                      ),
-                    ],
                   ),
                 );
 
                 if (result == true) {
-                  await SupabaseService().updateApplicationRating(
-                    application.id, 
-                    hostRating: starValue,
-                    hostComment: commentController.text,
-                  );
-                  _loadApplications();
+                  setState(() => _isLoading = true);
+                  try {
+                    await SupabaseService().updateApplicationRating(
+                      application.id, 
+                      hostRating: selectedRating,
+                      hostComment: commentController.text,
+                    );
+                    await _loadApplications();
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Rating submitted!')),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      setState(() => _isLoading = false);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error: $e')),
+                      );
+                    }
+                  }
                 }
               },
               child: Padding(

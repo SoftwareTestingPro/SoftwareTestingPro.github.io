@@ -16,7 +16,6 @@ enum FamilyRole {
   aunt,
   paternalCousin,
   maternalCousin,
-  grandparent,
   fatherInLaw,
   motherInLaw,
   brotherInLaw,
@@ -47,8 +46,16 @@ extension FamilyRoleExtension on FamilyRole {
     if (this == FamilyRole.other) return true;
     final fixedGender = EventRole.getFixedGender(this);
     if (fixedGender == null) return true; // Flexible roles
-    if (gender != 'Male' && gender != 'Female') return true;
-    return fixedGender == gender;
+    
+    // Determine the user's identification for role mapping
+    if (gender == 'Male' || gender == 'Transgender man') {
+      return fixedGender == 'Male';
+    } else if (gender == 'Female' || gender == 'Transgender woman') {
+      return fixedGender == 'Female';
+    }
+    
+    // For non-binary, genderqueer, etc., allow all roles
+    return true;
   }
 }
 
@@ -129,8 +136,13 @@ class BaratiUser {
     name: json['name'],
     age: json['age'],
     gender: json['gender'],
-    userRole: UserRole.values[json['userRole'] ?? 1],
-    possibleRoles: (json['possibleRoles'] as List? ?? []).map((r) => FamilyRole.values[r as int]).toList(),
+    userRole: json['userRole'] != null && json['userRole'] < UserRole.values.length 
+        ? UserRole.values[json['userRole']] 
+        : UserRole.baratiMember,
+    possibleRoles: (json['possibleRoles'] as List? ?? []).map((r) {
+      int index = r as int;
+      return index < FamilyRole.values.length ? FamilyRole.values[index] : FamilyRole.other;
+    }).toList(),
     bio: json['bio'] ?? '',
     profileImageUrl: json['profileImageUrl'],
     city: json['city'] ?? '',
@@ -161,12 +173,29 @@ class EventRole {
     'forWhom': forWhom,
   };
 
-  factory EventRole.fromJson(Map<String, dynamic> json) => EventRole(
-    role: FamilyRole.values[json['role']],
-    description: json['description'] ?? '',
-    gender: json['gender'] ?? 'Any',
-    forWhom: json['forWhom'] ?? 'Other',
-  );
+  factory EventRole.fromJson(Map<String, dynamic> json) {
+    int roleIndex = json['role'] ?? FamilyRole.other.index;
+    return EventRole(
+      role: roleIndex < FamilyRole.values.length ? FamilyRole.values[roleIndex] : FamilyRole.other,
+      description: json['description'] ?? '',
+      gender: json['gender'] ?? 'Any',
+      forWhom: json['forWhom'] ?? 'Other',
+    );
+  }
+  
+  static bool matchGender(String userGender, String requiredGender) {
+    if (requiredGender == 'Any') return true;
+    
+    // Determine user's identity group
+    if (userGender == 'Male' || userGender == 'Transgender man') {
+      return requiredGender == 'Male';
+    } else if (userGender == 'Female' || userGender == 'Transgender woman') {
+      return requiredGender == 'Female';
+    }
+    
+    // For non-binary, genderqueer, agender, etc., they are allowed for any role requirement
+    return true;
+  }
 
   static String? getFixedGender(FamilyRole role) {
     switch (role) {
@@ -247,9 +276,20 @@ class BaratiEvent {
     description: json['description'],
     date: DateTime.parse(json['date']),
     location: json['location'],
-    eventType: EventType.values[json['eventType']],
+    eventType: (json['eventType'] ?? 0) < EventType.values.length 
+        ? EventType.values[json['eventType'] ?? 0] 
+        : EventType.other,
     neededRoles: (json['needed_roles'] ?? json['neededRoles'] as List)
-        .map((r) => r is int ? EventRole(role: FamilyRole.values[r], description: '', gender: 'Any') : EventRole.fromJson(r))
+        .map((r) {
+          if (r is int) {
+            return EventRole(
+              role: r < FamilyRole.values.length ? FamilyRole.values[r] : FamilyRole.other, 
+              description: '', 
+              gender: 'Any'
+            );
+          }
+          return EventRole.fromJson(r);
+        })
         .toList(),
     approvedMemberIds: List<String>.from(json['approved_member_ids'] ?? json['approvedMemberIds'] ?? []),
     imageUrl: json['imageUrl'] ?? 'https://images.unsplash.com/photo-1519741497674-611481863552',
@@ -308,10 +348,14 @@ class RoleApplication {
     id: json['id'],
     eventId: json['eventId'],
     applicantId: json['applicantId'],
-    appliedRole: FamilyRole.values[json['appliedRole']],
+    appliedRole: (json['appliedRole'] ?? 0) < FamilyRole.values.length 
+        ? FamilyRole.values[json['appliedRole']] 
+        : FamilyRole.other,
     message: json['message'] ?? '',
     isApproved: json['isApproved'] ?? false,
-    status: ApplicationStatus.values[json['status'] ?? 0],
+    status: (json['status'] ?? 0) < ApplicationStatus.values.length 
+        ? ApplicationStatus.values[json['status'] ?? 0] 
+        : ApplicationStatus.pending,
     isInvitation: json['isInvitation'] ?? false,
     userRating: json['userRating']?.toDouble(),
     hostRating: json['hostRating']?.toDouble(),

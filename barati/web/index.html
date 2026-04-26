@@ -34,6 +34,44 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <div id="loading-indicator">
+    <style>
+      body {
+        background-color: #FDF5E6;
+        margin: 0;
+        padding: 0;
+      }
+      #loading-indicator {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+      }
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #8B000022;
+        border-top: 5px solid #8B0000;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .loading-text {
+        font-family: 'Playfair Display', serif;
+        color: #8B0000;
+        font-size: 24px;
+        font-weight: bold;
+      }
+    </style>
+    <div class="spinner"></div>
+    <div class="loading-text">Barati</div>
+  </div>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

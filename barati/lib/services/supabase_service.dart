@@ -58,13 +58,21 @@ class SupabaseService {
         .select();
     
     return (response as List).map((p) => BaratiUser(
-      id: p['id'],
-      name: p['name'],
-      age: p['age'],
-      gender: p['gender'],
-      userRole: UserRole.values[p['user_role'] ?? 1],
+      id: p['id'] ?? '',
+      name: p['name'] ?? 'Anonymous',
+      age: p['age'] ?? 25,
+      gender: p['gender'] ?? 'Other',
+      userRole: p['user_role'] != null && p['user_role'] < UserRole.values.length 
+          ? UserRole.values[p['user_role']] 
+          : UserRole.baratiMember,
       possibleRoles: (p['possible_roles'] as List? ?? [])
-          .map((r) => FamilyRole.values[r as int])
+          .map((r) {
+            int index = r as int;
+            if (index < FamilyRole.values.length) {
+              return FamilyRole.values[index];
+            }
+            return FamilyRole.other;
+          })
           .toList(),
       bio: p['bio'] ?? '',
       profileImageUrl: p['profile_image_url'],
@@ -319,5 +327,19 @@ class SupabaseService {
       userComment: app['user_comment'],
       hostComment: app['host_comment'],
     )).toList();
+  }
+
+  Future<void> deleteProfile(String userId) async {
+    // 1. Get all events hosted by user
+    final events = await client.from('events').select('id').eq('host_id', userId);
+    for (var event in events) {
+      await deleteEvent(event['id']);
+    }
+
+    // 2. Delete all applications by user (participation info)
+    await client.from('applications').delete().eq('applicant_id', userId);
+
+    // 3. Delete the profile itself
+    await client.from('profiles').delete().eq('id', userId);
   }
 }

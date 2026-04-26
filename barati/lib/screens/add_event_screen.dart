@@ -130,19 +130,22 @@ class _AddEventScreenState extends State<AddEventScreen> {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
       
+      final cleanCity = (_selectedCity == 'City' || _selectedCity.contains('Select City')) ? '' : _selectedCity;
+      final cleanState = (_selectedState == 'State' || _selectedState.contains('Select State')) ? '' : _selectedState;
+      
       final event = BaratiEvent(
         id: widget.eventToEdit?.id ?? const Uuid().v4(),
         hostId: widget.eventToEdit?.hostId ?? userId,
         title: _titleController.text,
         description: _descriptionController.text,
         date: _selectedDate,
-        location: '$_selectedCity, $_selectedState',
+        location: cleanCity.isNotEmpty ? '$cleanCity, $cleanState' : cleanState,
         eventType: _selectedType,
         neededRoles: _selectedRoles,
         approvedMemberIds: widget.eventToEdit?.approvedMemberIds ?? [],
-        imageUrl: _imageUrl ?? 'https://images.unsplash.com/photo-1519741497674-611481863552',
-        city: _selectedCity,
-        state: _selectedState,
+        imageUrl: _imageUrl ?? EventLogic.getDefaultImageUrl(_selectedType),
+        city: cleanCity,
+        state: cleanState,
       );
 
       // Save to Supabase
