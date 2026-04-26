@@ -331,15 +331,23 @@ class SupabaseService {
 
   Future<void> deleteProfile(String userId) async {
     // 1. Get all events hosted by user
-    final events = await client.from('events').select('id').eq('host_id', userId);
-    for (var event in events) {
+    final hostedEvents = await client.from('events').select('id').eq('host_id', userId);
+    for (var event in hostedEvents) {
       await deleteEvent(event['id']);
     }
 
-    // 2. Delete all applications by user (participation info)
+    // 2. Remove user from approved_member_ids of other events they joined
+    final eventsJoined = await client.from('events').select('id, approved_member_ids').contains('approved_member_ids', [userId]);
+    for (var event in eventsJoined) {
+      List<String> approved = List<String>.from(event['approved_member_ids']);
+      approved.remove(userId);
+      await client.from('events').update({'approved_member_ids': approved}).eq('id', event['id']);
+    }
+
+    // 3. Delete all applications by user (participation info)
     await client.from('applications').delete().eq('applicant_id', userId);
 
-    // 3. Delete the profile itself
+    // 4. Delete the profile itself
     await client.from('profiles').delete().eq('id', userId);
   }
 }

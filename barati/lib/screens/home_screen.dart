@@ -306,8 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildRoleToggle(context),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 8),
                   if (_currentType == UserRole.host) ...[
                     _buildSectionHeader(context, 'Find Your Family'),
                     _buildSearchBar(),
@@ -336,25 +335,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       bottomNavigationBar: _buildBottomNav(theme),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          if (_currentType == UserRole.host) {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddEventScreen()),
-            );
-            if (result == true) {
-              _loadData();
-            }
-          }
-        },
-        backgroundColor: theme.colorScheme.primary,
-        icon: Icon(_currentType == UserRole.host ? Icons.add : Icons.search, color: Colors.white),
-        label: Text(
-          _currentType == UserRole.host ? 'Create Event' : 'Find a Family',
-          style: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -884,28 +864,73 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBottomNav(ThemeData theme) {
-    return BottomAppBar(
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 12,
-      child: SizedBox(
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(icon: Icon(Icons.home, color: _selectedIndex == 0 ? theme.colorScheme.primary : Colors.grey), onPressed: () => setState(() => _selectedIndex = 0)),
-            IconButton(icon: Icon(Icons.people, color: _selectedIndex == 1 ? theme.colorScheme.primary : Colors.grey), onPressed: () => setState(() => _selectedIndex = 1)),
-            const SizedBox(width: 40),
-            IconButton(icon: Icon(Icons.notifications_none, color: _selectedIndex == 2 ? theme.colorScheme.primary : Colors.grey), onPressed: () => setState(() => _selectedIndex = 2)),
-            IconButton(
-              icon: Icon(Icons.person_outline, color: _selectedIndex == 3 ? theme.colorScheme.primary : Colors.grey),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ProfileScreen(isEditMode: true)),
-                );
-              },
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5))],
+      ),
+      child: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) async {
+          if (index == 2) {
+            // Action Button (Create Event)
+            final result = await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AddEventScreen()),
+            );
+            if (result == true) {
+              _loadData();
+            }
+            return;
+          }
+          
+          if (index == 4) {
+            // Profile
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const ProfileScreen(isEditMode: true)),
+            );
+            _loadData();
+            return;
+          }
+
+          setState(() {
+            _selectedIndex = index;
+            if (index == 0) {
+              _currentType = UserRole.host;
+            } else if (index == 1) {
+              _currentType = UserRole.baratiMember;
+            }
+            
+            // Refresh filtered events based on new type
+            if (_currentUserId != null) {
+              if (_currentType == UserRole.host) {
+                _filteredEvents = _events.where((e) => e.hostId == _currentUserId).toList();
+              } else {
+                _filteredEvents = _events.where((e) => e.hostId != _currentUserId).toList();
+              }
+            }
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: theme.colorScheme.primary,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedLabelStyle: GoogleFonts.montserrat(fontSize: 10, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: GoogleFonts.montserrat(fontSize: 10),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard_outlined), activeIcon: Icon(Icons.dashboard), label: 'Host'),
+          BottomNavigationBarItem(icon: Icon(Icons.explore_outlined), activeIcon: Icon(Icons.explore), label: 'Discover'),
+          BottomNavigationBarItem(
+            icon: CircleAvatar(
+              radius: 20,
+              backgroundColor: Color(0xFF8B0000),
+              child: Icon(Icons.add, color: Colors.white),
             ),
-          ],
-        ),
+            label: 'Create',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), activeIcon: Icon(Icons.notifications), label: 'Activity'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+        ],
       ),
     );
   }
