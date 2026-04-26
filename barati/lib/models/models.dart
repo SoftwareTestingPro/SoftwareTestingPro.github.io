@@ -257,8 +257,10 @@ class RoleApplication {
   final bool isApproved;
   final ApplicationStatus status;
   final bool isInvitation;
-  final double? userRating; // Guest's rating of the event
+   final double? userRating; // Guest's rating of the event
   final double? hostRating; // Host's rating of the guest
+  final String? userComment; // Guest's comment about the event
+  final String? hostComment; // Host's comment about the guest
 
   RoleApplication({
     required this.id,
@@ -271,6 +273,8 @@ class RoleApplication {
     this.isInvitation = false,
     this.userRating,
     this.hostRating,
+    this.userComment,
+    this.hostComment,
   });
 
   Map<String, dynamic> toJson() => {
@@ -284,6 +288,8 @@ class RoleApplication {
     'isInvitation': isInvitation,
     'userRating': userRating,
     'hostRating': hostRating,
+    'userComment': userComment,
+    'hostComment': hostComment,
   };
 
   factory RoleApplication.fromJson(Map<String, dynamic> json) => RoleApplication(
@@ -297,5 +303,7 @@ class RoleApplication {
     isInvitation: json['isInvitation'] ?? false,
     userRating: json['userRating']?.toDouble(),
     hostRating: json['hostRating']?.toDouble(),
+    userComment: json['userComment'],
+    hostComment: json['hostComment'],
   );
 }

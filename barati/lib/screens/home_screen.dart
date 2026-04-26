@@ -9,6 +9,8 @@ import 'event_details_screen.dart';
 import 'manage_applications_screen.dart';
 import 'public_profile_screen.dart';
 import '../services/supabase_service.dart';
+import '../services/logic_service.dart';
+import '../services/event_logic.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,8 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   List<FamilyRole> _userRoles = [];
   List<RoleApplication> _userApplications = [];
   List<RoleApplication> _allApplications = [];
+  int _eventsHostedCount = 0;
   bool _isLoading = true;
   String _firstName = 'User';
+  String? _currentUserId;
+  String? _userGender;
   final _searchController = TextEditingController();
 
   @override
@@ -88,6 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
     setState(() => _isLoading = true);
     final prefs = await SharedPreferences.getInstance();
+    _currentUserId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
+    final currentUserId = _currentUserId!;
     
     // Load Name
     final fullName = prefs.getString('userName') ?? 'User';
@@ -100,8 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final cloudEvents = await SupabaseService().getEvents();
       final cloudProfiles = await SupabaseService().getProfiles();
-      
-      final currentUserId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
       
       // Safety check: Find current user profile or create a temporary guest profile
       final currentProfile = cloudProfiles.where((p) => p.id == currentUserId).firstOrNull ?? 
@@ -122,6 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _events = cloudEvents;
           _userRoles = currentProfile.possibleRoles;
+          _userGender = currentProfile.gender;
           _profiles = cloudProfiles.where((p) => p.id != currentUserId).toList();
           _filteredProfiles = _profiles;
           _userApplications = userApps;
@@ -262,16 +268,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildUserRating(String userId) {
-    // Calculate average rating from all applications where this user was a guest
-    final guestApps = _allApplications.where((a) => a.applicantId == userId && a.hostRating != null).toList();
+    final avg = ReputationLogic.calculateGuestRating(userId, _allApplications);
     
-    if (guestApps.isEmpty) return const SizedBox.shrink();
-
-    double total = 0;
-    for (var app in guestApps) {
-      total += app.hostRating!;
-    }
-    double avg = total / guestApps.length;
+    if (avg == null) return const SizedBox.shrink();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -289,6 +288,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
       body: CustomScrollView(
@@ -314,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 16),
                     _buildWeddingEventsList(),
                     const SizedBox(height: 32),
-                    _buildSectionHeader(context, 'Upcoming Applications', 'History'),
+                    _buildSectionHeader(context, 'Active Applications', 'History'),
                     const SizedBox(height: 16),
                     _buildMyApplicationsList(isPast: false),
                     const SizedBox(height: 32),
@@ -615,7 +620,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         '${event.neededRoles.length} Roles Needed',
                         style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
                       ),
-                      if (event.neededRoles.any((r) => _userRoles.contains(r.role)))
+                      if (event.neededRoles.any((r) => 
+                        _userRoles.contains(r.role) && 
+                        (r.gender == 'Any' || r.gender.toLowerCase() == _userGender?.toLowerCase())
+                      ))
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
@@ -897,86 +905,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHostDashboard() {
-    final now = DateTime.now();
-    final futureEvents = _filteredEvents.where((e) => e.date.isAfter(now)).toList();
-    final pastEvents = _filteredEvents.where((e) => e.date.isBefore(now)).toList();
+    if (_currentUserId == null) return const SizedBox.shrink();
+    
+    final futureEvents = EventLogic.filterHostEvents(_events, _currentUserId!, isPast: false);
+    final pastEvents = EventLogic.filterHostEvents(_events, _currentUserId!, isPast: true);
 
     // Calculate host overall rating
-    double hostAvg = 0;
-    final eventIds = _filteredEvents.map((e) => e.id).toSet();
-    final applicationsToMyEvents = _allApplications.where((a) => eventIds.contains(a.eventId) && a.userRating != null).toList();
-
-    if (applicationsToMyEvents.isNotEmpty) {
-      double total = 0;
-      for (var app in applicationsToMyEvents) {
-        total += app.userRating!;
-      }
-      hostAvg = total / applicationsToMyEvents.length;
-    }
+    final hostAvg = ReputationLogic.calculateHostRating(_currentUserId!, _allApplications, _events);
+    _eventsHostedCount = ReputationLogic.countEventsHosted(_currentUserId!, _events);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (_filteredEvents.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [Colors.deepPurple[400]!, Colors.deepPurple[700]!]),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.deepPurple.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  )
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hosting Reputation',
-                          style: GoogleFonts.montserrat(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(Icons.star, color: Colors.amber, size: 24),
-                            const SizedBox(width: 8),
-                            Text(
-                              hostAvg > 0 ? hostAvg.toStringAsFixed(1) : 'N/A',
-                              style: GoogleFonts.montserrat(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(height: 40, width: 1, color: Colors.white24),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Events Hosted',
-                          style: GoogleFonts.montserrat(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${_filteredEvents.length}',
-                          style: GoogleFonts.montserrat(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         const SizedBox(height: 16),
         if (futureEvents.isNotEmpty) ...[
           _buildSectionHeader(context, 'My Upcoming Events', 'View All'),
@@ -1115,7 +1055,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
-                        '${event.date.day}/${event.date.month}/${event.date.year}',
+                        EventLogic.formatDate(event.date),
                         style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ],
@@ -1136,11 +1076,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (isPast) 
                         Builder(
                           builder: (context) {
-                            final apps = _allApplications.where((a) => a.eventId == event.id && a.userRating != null).toList();
-                            if (apps.isEmpty) return const SizedBox.shrink();
-                            double total = 0;
-                            for (var a in apps) total += a.userRating!;
-                            double avg = total / apps.length;
+                            final avg = ReputationLogic.calculateEventRating(event.id, _allApplications);
+                            if (avg == null) return const SizedBox.shrink();
                             return Row(
                               children: [
                                 const Icon(Icons.star, color: Colors.amber, size: 14),

@@ -143,10 +143,12 @@ class SupabaseService {
     await client.from('events').delete().eq('id', eventId);
   }
 
-  Future<void> updateApplicationRating(String applicationId, {double? userRating, double? hostRating}) async {
+  Future<void> updateApplicationRating(String applicationId, {double? userRating, double? hostRating, String? userComment, String? hostComment}) async {
     final updates = <String, dynamic>{};
     if (userRating != null) updates['user_rating'] = userRating;
     if (hostRating != null) updates['host_rating'] = hostRating;
+    if (userComment != null) updates['user_comment'] = userComment;
+    if (hostComment != null) updates['host_comment'] = hostComment;
     
     if (updates.isNotEmpty) {
       await client.from('applications').update(updates).eq('id', applicationId);
@@ -183,6 +185,8 @@ class SupabaseService {
       isInvitation: app['is_invitation'] ?? false,
       userRating: app['user_rating']?.toDouble(),
       hostRating: app['host_rating']?.toDouble(),
+      userComment: app['user_comment'],
+      hostComment: app['host_comment'],
     )).toList();
   }
 
@@ -269,6 +273,8 @@ class SupabaseService {
       isInvitation: app['is_invitation'] ?? false,
       userRating: app['user_rating']?.toDouble(),
       hostRating: app['host_rating']?.toDouble(),
+      userComment: app['user_comment'],
+      hostComment: app['host_comment'],
     )).toList();
   }
 
@@ -289,6 +295,8 @@ class SupabaseService {
       isInvitation: app['is_invitation'] ?? false,
       userRating: app['user_rating']?.toDouble(),
       hostRating: app['host_rating']?.toDouble(),
+      userComment: app['user_comment'],
+      hostComment: app['host_comment'],
     )).toList();
   }
 
@@ -308,6 +316,8 @@ class SupabaseService {
       isInvitation: app['is_invitation'] ?? false,
       userRating: app['user_rating']?.toDouble(),
       hostRating: app['host_rating']?.toDouble(),
+      userComment: app['user_comment'],
+      hostComment: app['host_comment'],
     )).toList();
   }
 }

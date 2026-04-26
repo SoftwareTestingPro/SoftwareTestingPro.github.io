@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../models/models.dart';
 import 'public_profile_screen.dart';
 import '../services/supabase_service.dart';
+import '../services/event_logic.dart';
 
 class ManageApplicationsScreen extends StatefulWidget {
   final BaratiEvent event;
@@ -222,8 +223,7 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
               const SizedBox(height: 20),
               Builder(
                 builder: (context) {
-                  final now = DateTime.now();
-                  final isPast = widget.event.date.isBefore(now);
+                  final isPast = EventLogic.isEventPast(widget.event);
                   
                   if (isPast) {
                     if (app.isApproved) {
@@ -316,8 +316,51 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
             
             return GestureDetector(
               onTap: () async {
-                await SupabaseService().updateApplicationRating(application.id, hostRating: starValue);
-                _loadApplications();
+                final commentController = TextEditingController(text: application.hostComment);
+                final result = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Rate Guest Performance'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(5, (i) => Icon(
+                            i < starValue ? Icons.star : Icons.star_border,
+                            color: Colors.amber,
+                            size: 32,
+                          )),
+                        ),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: commentController,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            hintText: 'Add a performance note (optional)...',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Submit'),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (result == true) {
+                  await SupabaseService().updateApplicationRating(
+                    application.id, 
+                    hostRating: starValue,
+                    hostComment: commentController.text,
+                  );
+                  _loadApplications();
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -330,6 +373,17 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
             );
           }),
         ),
+        if (application.hostComment != null && application.hostComment!.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              '"${application.hostComment}"',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(fontSize: 12, fontStyle: FontStyle.italic, color: Colors.grey[700]),
+            ),
+          ),
+        ],
       ],
     );
   }

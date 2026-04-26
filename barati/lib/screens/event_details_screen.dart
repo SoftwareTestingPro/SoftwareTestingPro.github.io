@@ -7,6 +7,8 @@ import 'add_event_screen.dart';
 import 'manage_applications_screen.dart';
 import '../models/models.dart';
 import '../services/supabase_service.dart';
+import '../services/event_logic.dart';
+import '../services/logic_service.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   final BaratiEvent event;
@@ -154,10 +156,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   const SizedBox(height: 32),
                   Builder(
                     builder: (context) {
-                      final now = DateTime.now();
-                      final isPast = widget.event.date.isBefore(now);
-                      final attendedApp = _myApplications.firstWhere((a) => a.isApproved, orElse: () => RoleApplication(id: '', eventId: '', applicantId: '', appliedRole: FamilyRole.other));
-                      final hasAttended = isPast && attendedApp.id.isNotEmpty;
+                      final isPast = EventLogic.isEventPast(widget.event);
+                      final attendedApp = EventLogic.getApprovedApplication(_myApplications);
+                      final hasAttended = isPast && attendedApp != null;
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,12 +172,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                             ),
                           ],
                           const SizedBox(height: 12),
-                          _buildRolesList(hasAttended ? attendedApp.appliedRole : null),
+                          _buildRolesList(hasAttended ? attendedApp!.appliedRole : null),
                           if (hasAttended) ...[
                             const SizedBox(height: 32),
                             _buildSectionTitle('Rate Your Experience'),
                             const SizedBox(height: 16),
-                            _buildRatingSection(attendedApp, isHost: false),
+                            _buildRatingSection(attendedApp!, isHost: false),
                           ],
                         ],
                       );
@@ -226,7 +227,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           children: [
             _eventTypeBadge(widget.event.eventType),
             Text(
-              '${widget.event.date.day}/${widget.event.date.month}/${widget.event.date.year}',
+              EventLogic.formatDate(widget.event.date),
               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, color: Colors.grey),
             ),
           ],
@@ -527,12 +528,59 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             
             return GestureDetector(
               onTap: () async {
-                if (isHost) {
-                  await SupabaseService().updateApplicationRating(application.id, hostRating: starValue);
-                } else {
-                  await SupabaseService().updateApplicationRating(application.id, userRating: starValue);
+                final commentController = TextEditingController(text: isHost ? application.hostComment : application.userComment);
+                final result = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Rate your experience'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(5, (i) => Icon(
+                            i < starValue ? Icons.star : Icons.star_border,
+                            color: Colors.amber,
+                            size: 32,
+                          )),
+                        ),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: commentController,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            hintText: 'Add a comment (optional)...',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Submit'),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (result == true) {
+                  if (isHost) {
+                    await SupabaseService().updateApplicationRating(
+                      application.id, 
+                      hostRating: starValue,
+                      hostComment: commentController.text,
+                    );
+                  } else {
+                    await SupabaseService().updateApplicationRating(
+                      application.id, 
+                      userRating: starValue,
+                      userComment: commentController.text,
+                    );
+                  }
+                  _loadData();
                 }
-                _loadData();
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
@@ -545,6 +593,20 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             );
           }),
         ),
+        if (!isHost && application.userComment != null && application.userComment!.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(
+            '"${application.userComment}"',
+            style: GoogleFonts.montserrat(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.grey[700]),
+          ),
+        ],
+        if (isHost && application.hostComment != null && application.hostComment!.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(
+            '"${application.hostComment}"',
+            style: GoogleFonts.montserrat(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.grey[700]),
+          ),
+        ],
       ],
     );
   }

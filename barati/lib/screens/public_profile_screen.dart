@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import '../models/models.dart';
 import '../services/supabase_service.dart';
+import '../services/logic_service.dart';
 
 class PublicProfileScreen extends StatefulWidget {
   final BaratiUser user;
@@ -23,6 +24,8 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   double? _guestRating;
   double? _hostRating;
   int _eventsHostedCount = 0;
+  List<RoleApplication> _allApps = [];
+  List<BaratiEvent> _allEvents = [];
   bool _isLoading = true;
 
   @override
@@ -52,34 +55,12 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
       _isHost = true;
     }
     
-    // Calculate Ratings and Stats
-    final allApps = await SupabaseService().getAllApplications();
-    final allEvents = await SupabaseService().getEvents();
+    _allApps = await SupabaseService().getAllApplications();
+    _allEvents = await SupabaseService().getEvents();
     
-    // 1. As a Barati (Guest): Average rating received from hosts
-    final applicationsAsGuest = allApps.where((a) => a.applicantId == widget.user.id && a.hostRating != null).toList();
-    if (applicationsAsGuest.isNotEmpty) {
-      double total = 0;
-      for (var app in applicationsAsGuest) {
-        total += app.hostRating!;
-      }
-      _guestRating = total / applicationsAsGuest.length;
-    }
-
-    // 2. As a Host: Count events hosted and average rating received from guests
-    final eventsHosted = allEvents.where((e) => e.hostId == widget.user.id).toList();
-    _eventsHostedCount = eventsHosted.length;
-    
-    final eventIds = eventsHosted.map((e) => e.id).toSet();
-    final applicationsToHostedEvents = allApps.where((a) => eventIds.contains(a.eventId) && a.userRating != null).toList();
-    
-    if (applicationsToHostedEvents.isNotEmpty) {
-      double total = 0;
-      for (var app in applicationsToHostedEvents) {
-        total += app.userRating!;
-      }
-      _hostRating = total / applicationsToHostedEvents.length;
-    }
+    _guestRating = ReputationLogic.calculateGuestRating(widget.user.id, _allApps);
+    _hostRating = ReputationLogic.calculateHostRating(widget.user.id, _allApps, _allEvents);
+    _eventsHostedCount = ReputationLogic.countEventsHosted(widget.user.id, _allEvents);
     
     if (mounted) {
       setState(() => _isLoading = false);
@@ -209,18 +190,33 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (_guestRating != null) 
-                  _buildStatBadge('Barati Rating', _guestRating!, Colors.amber),
-                if (_guestRating != null && _hostRating != null) const SizedBox(width: 8),
-                if (_hostRating != null)
-                  _buildStatBadge('Host Rating', _hostRating!, Colors.deepPurple),
+                  _buildStatBadge(
+                    'Guest Rating', 
+                    _guestRating!, 
+                    Colors.amber,
+                    onTap: () => _showReviewsSheet(isGuestReview: true),
+                  ),
               ],
             ),
             if (_eventsHostedCount > 0) ...[
               const SizedBox(height: 12),
               Center(
-                child: Text(
-                  'Hosted $_eventsHostedCount events',
-                  style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[700]),
+                child: Column(
+                  children: [
+                    Text(
+                      'Hosted $_eventsHostedCount ${_eventsHostedCount == 1 ? 'event' : 'events'}',
+                      style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[700]),
+                    ),
+                    if (_hostRating != null) ...[
+                      const SizedBox(height: 8),
+                      _buildStatBadge(
+                        'Hosting Reputation', 
+                        _hostRating!, 
+                        Colors.deepPurple,
+                        onTap: () => _showReviewsSheet(isGuestReview: false),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ],
@@ -287,23 +283,128 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     );
   }
 
-  Widget _buildStatBadge(String label, double rating, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+  Widget _buildStatBadge(String label, double rating, Color color, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.star, color: color, size: 16),
+            const SizedBox(width: 4),
+            Text(
+              '${rating.toStringAsFixed(1)} $label',
+              style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: color),
+            ),
+            if (onTap != null) ...[
+              const SizedBox(width: 4),
+              Icon(Icons.arrow_forward_ios, size: 10, color: color),
+            ],
+          ],
+        ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.star, color: color, size: 16),
-          const SizedBox(width: 4),
-          Text(
-            '${rating.toStringAsFixed(1)} $label',
-            style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: color),
-          ),
-        ],
+    );
+  }
+
+  void _showReviewsSheet({required bool isGuestReview}) {
+    final relevantApps = _allApps.where((app) {
+      if (isGuestReview) {
+        return app.applicantId == widget.user.id && app.hostRating != null;
+      } else {
+        final event = _allEvents.firstWhere((e) => e.id == app.eventId, orElse: () => _allEvents[0]);
+        return event.hostId == widget.user.id && app.userRating != null;
+      }
+    }).toList();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              isGuestReview ? 'Guest Reviews' : 'Hosting Reviews',
+              style: GoogleFonts.playfairDisplay(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: relevantApps.isEmpty
+                  ? Center(child: Text('No reviews yet.', style: GoogleFonts.montserrat(color: Colors.grey)))
+                  : ListView.builder(
+                      itemCount: relevantApps.length,
+                      itemBuilder: (context, index) {
+                        final app = relevantApps[index];
+                        final rating = isGuestReview ? app.hostRating : app.userRating;
+                        final comment = isGuestReview ? app.hostComment : app.userComment;
+                        final event = _allEvents.firstWhere((e) => e.id == app.eventId, orElse: () => _allEvents[0]);
+                        
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      event.title,
+                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 14),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: List.generate(5, (i) => Icon(
+                                      Icons.star,
+                                      size: 14,
+                                      color: i < rating! ? Colors.amber : Colors.grey[300],
+                                    )),
+                                  ),
+                                ],
+                              ),
+                              if (comment != null && comment.isNotEmpty) ...[
+                                const SizedBox(height: 8),
+                                Text(
+                                  '"$comment"',
+                                  style: GoogleFonts.montserrat(fontSize: 13, fontStyle: FontStyle.italic, color: Colors.grey[800]),
+                                ),
+                              ],
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

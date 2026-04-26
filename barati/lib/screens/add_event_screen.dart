@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import '../models/models.dart';
 import '../services/supabase_service.dart';
+import '../services/event_logic.dart';
 
 class AddEventScreen extends StatefulWidget {
   final BaratiEvent? eventToEdit;
@@ -225,7 +226,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       const Icon(Icons.calendar_today, size: 20, color: Colors.grey),
                       const SizedBox(width: 12),
                       Text(
-                        '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                        EventLogic.formatDate(_selectedDate),
                         style: GoogleFonts.montserrat(fontSize: 16),
                       ),
                     ],
