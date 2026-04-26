@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<BaratiUser> _filteredProfiles = [];
   List<FamilyRole> _userRoles = [];
   List<RoleApplication> _userApplications = [];
+  List<RoleApplication> _allApplications = [];
   bool _isLoading = true;
   String _firstName = 'User';
   final _searchController = TextEditingController();
@@ -101,9 +102,21 @@ class _HomeScreenState extends State<HomeScreen> {
       final cloudProfiles = await SupabaseService().getProfiles();
       
       final currentUserId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
-      final currentProfile = cloudProfiles.firstWhere((p) => p.id == currentUserId, orElse: () => cloudProfiles[0]);
+      
+      // Safety check: Find current user profile or create a temporary guest profile
+      final currentProfile = cloudProfiles.where((p) => p.id == currentUserId).firstOrNull ?? 
+          BaratiUser(
+            id: currentUserId, 
+            name: fullName, 
+            age: 25, 
+            gender: 'Other', 
+            userRole: UserRole.baratiMember, 
+            bio: '',
+            possibleRoles: []
+          );
       
       final userApps = await SupabaseService().getApplicationsForUser(currentUserId);
+      final allApps = await SupabaseService().getAllApplications();
 
       if (mounted) {
         setState(() {
@@ -112,14 +125,14 @@ class _HomeScreenState extends State<HomeScreen> {
           _profiles = cloudProfiles.where((p) => p.id != currentUserId).toList();
           _filteredProfiles = _profiles;
           _userApplications = userApps;
+          _allApplications = allApps;
           
           // Apply initial filtering
           if (_currentType == UserRole.host) {
             _filteredEvents = _events.where((e) => e.hostId == currentUserId).toList();
           } else {
             _filteredEvents = _events.where((event) => 
-              event.hostId != currentUserId && // Don't show self-hosted events in discovery
-              event.neededRoles.any((r) => _userRoles.contains(r.role))
+              event.hostId != currentUserId // Show all events in discovery
             ).toList();
           }
           
@@ -226,6 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
@@ -236,12 +250,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(height: 4),
+                  _buildUserRating(profile.id),
                 ],
               ),
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildUserRating(String userId) {
+    // Calculate average rating from all applications where this user was a guest
+    final guestApps = _allApplications.where((a) => a.applicantId == userId && a.hostRating != null).toList();
+    
+    if (guestApps.isEmpty) return const SizedBox.shrink();
+
+    double total = 0;
+    for (var app in guestApps) {
+      total += app.hostRating!;
+    }
+    double avg = total / guestApps.length;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(Icons.star, size: 12, color: Colors.amber),
+        const SizedBox(width: 2),
+        Text(
+          avg.toStringAsFixed(1),
+          style: GoogleFonts.montserrat(fontSize: 10, fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
   @override
@@ -273,9 +314,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 16),
                     _buildWeddingEventsList(),
                     const SizedBox(height: 32),
-                    _buildSectionHeader(context, 'My Applications', 'History'),
+                    _buildSectionHeader(context, 'Upcoming Applications', 'History'),
                     const SizedBox(height: 16),
-                    _buildMyApplicationsList(),
+                    _buildMyApplicationsList(isPast: false),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader(context, 'Attended Events', 'History'),
+                    const SizedBox(height: 16),
+                    _buildMyApplicationsList(isPast: true),
                   ],
                   const SizedBox(height: 100),
                 ],
@@ -340,8 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _filteredEvents = _events.where((e) => e.hostId == userId).toList();
           } else {
             _filteredEvents = _events.where((event) => 
-              event.hostId != userId && // Don't show self-hosted events in discovery
-              event.neededRoles.any((r) => _userRoles.contains(r.role))
+              event.hostId != userId // Show all events in discovery
             ).toList();
           }
         });
@@ -564,9 +608,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   const Spacer(),
-                  Text(
-                    '${event.neededRoles.length} Roles Needed',
-                    style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${event.neededRoles.length} Roles Needed',
+                        style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                      ),
+                      if (event.neededRoles.any((r) => _userRoles.contains(r.role)))
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            'MATCH',
+                            style: GoogleFonts.montserrat(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.green),
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ),
@@ -577,8 +638,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildMyApplicationsList() {
-    if (_userApplications.isEmpty) {
+  Widget _buildMyApplicationsList({bool isPast = false}) {
+    final now = DateTime.now();
+    
+    final filteredApps = _userApplications.where((app) {
+      final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => _events[0]);
+      if (isPast) {
+        return event.date.isBefore(now) && app.isApproved;
+      } else {
+        return event.date.isAfter(now) || (event.date.isBefore(now) && !app.isApproved);
+      }
+    }).toList();
+
+    if (filteredApps.isEmpty) {
       return Container(
         height: 120,
         margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -588,13 +660,13 @@ class _HomeScreenState extends State<HomeScreen> {
           border: Border.all(color: Colors.grey[200]!),
         ),
         child: Center(
-          child: Text('No applications yet.', style: GoogleFonts.montserrat(color: Colors.grey)),
+          child: Text(isPast ? 'No attended events yet.' : 'No active applications.', style: GoogleFonts.montserrat(color: Colors.grey)),
         ),
       );
     }
 
     final Map<String, List<RoleApplication>> groupedApps = {};
-    for (var app in _userApplications) {
+    for (var app in filteredApps) {
       groupedApps.putIfAbsent(app.eventId, () => []).add(app);
     }
 
@@ -695,7 +767,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     )
-                  else if (apps.any((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn))
+                  else if (!isPast && apps.any((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn))
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton.icon(
@@ -829,9 +901,83 @@ class _HomeScreenState extends State<HomeScreen> {
     final futureEvents = _filteredEvents.where((e) => e.date.isAfter(now)).toList();
     final pastEvents = _filteredEvents.where((e) => e.date.isBefore(now)).toList();
 
+    // Calculate host overall rating
+    double hostAvg = 0;
+    final eventIds = _filteredEvents.map((e) => e.id).toSet();
+    final applicationsToMyEvents = _allApplications.where((a) => eventIds.contains(a.eventId) && a.userRating != null).toList();
+
+    if (applicationsToMyEvents.isNotEmpty) {
+      double total = 0;
+      for (var app in applicationsToMyEvents) {
+        total += app.userRating!;
+      }
+      hostAvg = total / applicationsToMyEvents.length;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (_filteredEvents.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [Colors.deepPurple[400]!, Colors.deepPurple[700]!]),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.deepPurple.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hosting Reputation',
+                          style: GoogleFonts.montserrat(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Icon(Icons.star, color: Colors.amber, size: 24),
+                            const SizedBox(width: 8),
+                            Text(
+                              hostAvg > 0 ? hostAvg.toStringAsFixed(1) : 'N/A',
+                              style: GoogleFonts.montserrat(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(height: 40, width: 1, color: Colors.white24),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Events Hosted',
+                          style: GoogleFonts.montserrat(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${_filteredEvents.length}',
+                          style: GoogleFonts.montserrat(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        const SizedBox(height: 16),
         if (futureEvents.isNotEmpty) ...[
           _buildSectionHeader(context, 'My Upcoming Events', 'View All'),
           const SizedBox(height: 16),
@@ -924,31 +1070,31 @@ class _HomeScreenState extends State<HomeScreen> {
                             IconButton(
                               icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
                               onPressed: () async {
-                            final confirm = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Delete Event'),
-                                content: const Text('Are you sure you want to delete this event?'),
-                                actions: [
-                                  TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, true),
-                                    style: TextButton.styleFrom(foregroundColor: Colors.red),
-                                    child: const Text('Delete'),
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Delete Event'),
+                                    content: const Text('Are you sure you want to delete this event?'),
+                                    actions: [
+                                      TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, true),
+                                        style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                        child: const Text('Delete'),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                            if (confirm == true) {
-                              await SupabaseService().deleteEvent(event.id);
-                              _loadData();
-                            }
-                          },
+                                );
+                                if (confirm == true) {
+                                  await SupabaseService().deleteEvent(event.id);
+                                  _loadData();
+                                }
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -982,10 +1128,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         '${event.neededRoles.length} Roles Needed',
                         style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
                       ),
-                      if (isOwner)
+                      if (isOwner && !isPast)
                         Text(
                           '${event.approvedMemberIds.length} Joined',
                           style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.green),
+                        ),
+                      if (isPast) 
+                        Builder(
+                          builder: (context) {
+                            final apps = _allApplications.where((a) => a.eventId == event.id && a.userRating != null).toList();
+                            if (apps.isEmpty) return const SizedBox.shrink();
+                            double total = 0;
+                            for (var a in apps) total += a.userRating!;
+                            double avg = total / apps.length;
+                            return Row(
+                              children: [
+                                const Icon(Icons.star, color: Colors.amber, size: 14),
+                                const SizedBox(width: 4),
+                                Text(
+                                  avg.toStringAsFixed(1),
+                                  style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.amber[900]),
+                                ),
+                              ],
+                            );
+                          }
                         ),
                     ],
                   ),

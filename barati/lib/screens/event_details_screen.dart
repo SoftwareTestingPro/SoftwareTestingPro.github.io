@@ -152,16 +152,36 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     style: GoogleFonts.montserrat(fontSize: 16, color: Colors.grey[800], height: 1.5),
                   ),
                   const SizedBox(height: 32),
-                  _buildSectionTitle('Roles Needed'),
-                  if (_currentUser?.id != widget.event.hostId) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      'Apply for a role that matches your profile.',
-                      style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
-                    ),
-                  ],
-                  const SizedBox(height: 12),
-                  _buildRolesList(),
+                  Builder(
+                    builder: (context) {
+                      final now = DateTime.now();
+                      final isPast = widget.event.date.isBefore(now);
+                      final attendedApp = _myApplications.firstWhere((a) => a.isApproved, orElse: () => RoleApplication(id: '', eventId: '', applicantId: '', appliedRole: FamilyRole.other));
+                      final hasAttended = isPast && attendedApp.id.isNotEmpty;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSectionTitle(hasAttended ? 'Role Played' : 'Roles Needed'),
+                          if (_currentUser?.id != widget.event.hostId && !hasAttended) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              isPast ? 'Event has ended.' : 'Apply for a role that matches your profile.',
+                              style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                            ),
+                          ],
+                          const SizedBox(height: 12),
+                          _buildRolesList(hasAttended ? attendedApp.appliedRole : null),
+                          if (hasAttended) ...[
+                            const SizedBox(height: 32),
+                            _buildSectionTitle('Rate Your Experience'),
+                            const SizedBox(height: 16),
+                            _buildRatingSection(attendedApp, isHost: false),
+                          ],
+                        ],
+                      );
+                    },
+                  ),
                   const SizedBox(height: 100),
                 ],
               ),
@@ -290,10 +310,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       style: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.bold),
     );
   }
-  Widget _buildRolesList() {
+  Widget _buildRolesList([FamilyRole? onlyShowRole]) {
     final isHost = _currentUser?.id == widget.event.hostId;
 
     final filteredRoles = widget.event.neededRoles.where((roleInfo) {
+      if (onlyShowRole != null) return roleInfo.role == onlyShowRole;
       if (_currentUser == null || isHost) return true;
       
       // Gender check
@@ -393,10 +414,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       final isHostOfEvent = widget.event.hostId == _currentUser?.id;
 
                       if (isPast) {
-                        if (isApprovedThisRole) {
-                          return _buildRatingSection(application, isHost: false);
-                        }
-                        return Text('Event Ended', style: GoogleFonts.montserrat(color: Colors.grey, fontWeight: FontWeight.bold));
+                        return Text(isApprovedThisRole ? 'Attended' : 'Event Ended', style: GoogleFonts.montserrat(color: isApprovedThisRole ? Colors.green : Colors.grey, fontWeight: FontWeight.bold));
                       }
 
                       String buttonText = 'Apply';
@@ -499,9 +517,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     final currentRating = isHost ? application.hostRating : application.userRating;
     
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(isHost ? 'Rate Guest' : 'Rate Event', style: GoogleFonts.montserrat(fontSize: 10, color: Colors.grey)),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(5, (index) {
@@ -517,10 +534,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 }
                 _loadData();
               },
-              child: Icon(
-                isFull ? Icons.star : Icons.star_border,
-                color: Colors.amber,
-                size: 20,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  isFull ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                  size: 36,
+                ),
               ),
             );
           }),

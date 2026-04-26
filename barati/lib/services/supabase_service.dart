@@ -291,4 +291,23 @@ class SupabaseService {
       hostRating: app['host_rating']?.toDouble(),
     )).toList();
   }
+
+  Future<List<RoleApplication>> getAllApplications() async {
+    final response = await client
+        .from('applications')
+        .select();
+    
+    return (response as List).map((app) => RoleApplication(
+      id: app['id'],
+      eventId: app['event_id'],
+      applicantId: app['applicant_id'],
+      appliedRole: FamilyRole.values[app['applied_role']],
+      message: app['message'],
+      isApproved: app['is_approved'],
+      status: ApplicationStatus.values[app['status'] ?? 0],
+      isInvitation: app['is_invitation'] ?? false,
+      userRating: app['user_rating']?.toDouble(),
+      hostRating: app['host_rating']?.toDouble(),
+    )).toList();
+  }
 }

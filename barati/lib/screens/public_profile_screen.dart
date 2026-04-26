@@ -20,6 +20,9 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   String? _currentUserId;
   List<BaratiEvent> _myEvents = [];
   List<RoleApplication> _userApplicationsToMyEvents = [];
+  double? _guestRating;
+  double? _hostRating;
+  int _eventsHostedCount = 0;
   bool _isLoading = true;
 
   @override
@@ -47,6 +50,35 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
       }).toList();
       
       _isHost = true;
+    }
+    
+    // Calculate Ratings and Stats
+    final allApps = await SupabaseService().getAllApplications();
+    final allEvents = await SupabaseService().getEvents();
+    
+    // 1. As a Barati (Guest): Average rating received from hosts
+    final applicationsAsGuest = allApps.where((a) => a.applicantId == widget.user.id && a.hostRating != null).toList();
+    if (applicationsAsGuest.isNotEmpty) {
+      double total = 0;
+      for (var app in applicationsAsGuest) {
+        total += app.hostRating!;
+      }
+      _guestRating = total / applicationsAsGuest.length;
+    }
+
+    // 2. As a Host: Count events hosted and average rating received from guests
+    final eventsHosted = allEvents.where((e) => e.hostId == widget.user.id).toList();
+    _eventsHostedCount = eventsHosted.length;
+    
+    final eventIds = eventsHosted.map((e) => e.id).toSet();
+    final applicationsToHostedEvents = allApps.where((a) => eventIds.contains(a.eventId) && a.userRating != null).toList();
+    
+    if (applicationsToHostedEvents.isNotEmpty) {
+      double total = 0;
+      for (var app in applicationsToHostedEvents) {
+        total += app.userRating!;
+      }
+      _hostRating = total / applicationsToHostedEvents.length;
     }
     
     if (mounted) {
@@ -173,6 +205,25 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                 style: GoogleFonts.montserrat(fontSize: 16, color: Colors.grey[600]),
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_guestRating != null) 
+                  _buildStatBadge('Barati Rating', _guestRating!, Colors.amber),
+                if (_guestRating != null && _hostRating != null) const SizedBox(width: 8),
+                if (_hostRating != null)
+                  _buildStatBadge('Host Rating', _hostRating!, Colors.deepPurple),
+              ],
+            ),
+            if (_eventsHostedCount > 0) ...[
+              const SizedBox(height: 12),
+              Center(
+                child: Text(
+                  'Hosted $_eventsHostedCount events',
+                  style: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[700]),
+                ),
+              ),
+            ],
             const SizedBox(height: 32),
             
             _buildInfoSection(Icons.location_on, 'Location', '${user.city}, ${user.state}'),
@@ -232,6 +283,27 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
       child: Text(
         label,
         style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black),
+      ),
+    );
+  }
+
+  Widget _buildStatBadge(String label, double rating, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.star, color: color, size: 16),
+          const SizedBox(width: 4),
+          Text(
+            '${rating.toStringAsFixed(1)} $label',
+            style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: color),
+          ),
+        ],
       ),
     );
   }
