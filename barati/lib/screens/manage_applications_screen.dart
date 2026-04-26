@@ -233,29 +233,43 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
                   }
 
                   if (app.isInvitation) {
+                    String statusText = 'Invitation Sent (Pending)';
+                    Color statusColor = Colors.blue;
+                    
+                    if (app.status == ApplicationStatus.invitationAccepted) {
+                      statusText = 'Invitation Accepted';
+                      statusColor = Colors.green;
+                    } else if (app.status == ApplicationStatus.invitationDeclined) {
+                      statusText = 'Invitation Declined';
+                      statusColor = Colors.red;
+                    } else if (app.status == ApplicationStatus.withdrawn) {
+                      statusText = 'Invitation Withdrawn';
+                      statusColor = Colors.grey;
+                    }
+
                     return Center(
                       child: Text(
-                        app.status == ApplicationStatus.invitationAccepted ? 'Invitation Accepted' : 
-                        (app.status == ApplicationStatus.invitationDeclined ? 'Invitation Declined' : 'Invitation Sent (Pending)'),
-                        style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, color: Colors.blue),
+                        statusText,
+                        style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, color: statusColor),
                       ),
                     );
                   }
 
                   return Row(
                     children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: (app.isApproved || app.status == ApplicationStatus.declined) ? null : () => _declineApplication(app),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.red,
-                            side: const BorderSide(color: Colors.red),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      if (!app.isApproved)
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: (app.status == ApplicationStatus.declined) ? null : () => _declineApplication(app),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              side: BorderSide(color: Colors.red.withOpacity(0.5)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            child: Text('Decline', style: GoogleFonts.montserrat(color: Colors.red, fontWeight: FontWeight.bold)),
                           ),
-                          child: const Text('Decline'),
                         ),
-                      ),
-                      const SizedBox(width: 12),
+                      if (!app.isApproved) const SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: (app.status == ApplicationStatus.declined) ? null : () async {

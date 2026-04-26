@@ -134,6 +134,10 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
       appBar: AppBar(
         title: Text('${user.name}\'s Profile', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         centerTitle: true,
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: _isLoading 
         ? const Center(child: CircularProgressIndicator())
@@ -172,6 +176,8 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
             const SizedBox(height: 32),
             
             _buildInfoSection(Icons.location_on, 'Location', '${user.city}, ${user.state}'),
+            if (_isHost)
+              _buildInfoSection(Icons.phone, 'Mobile Number', user.id), // user.id is the mobile number in this app
             _buildInfoSection(Icons.work, 'Profession', user.profession),
             _buildInfoSection(Icons.school, 'Education', user.education),
             _buildInfoSection(Icons.translate, 'Languages', user.languages.join(', ')),

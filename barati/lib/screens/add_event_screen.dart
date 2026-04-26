@@ -155,6 +155,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.black), // It's black here because background is transparent (usually white/light)
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),

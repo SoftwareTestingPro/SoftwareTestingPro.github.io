@@ -262,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildRoleToggle(context),
                   const SizedBox(height: 32),
                   if (_currentType == UserRole.host) ...[
-                    _buildSectionHeader(context, 'Find Your Family', 'Search'),
+                    _buildSectionHeader(context, 'Find Your Family'),
                     _buildSearchBar(),
                     const SizedBox(height: 16),
                     _buildAvailableBaratiList(),
@@ -376,23 +376,32 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Welcome, $_firstName',
-              style: GoogleFonts.montserrat(fontSize: 14, color: Colors.white70),
-            ),
-            Text(
-              'Barati',
-              style: GoogleFonts.playfairDisplay(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 28,
-                shadows: [const Shadow(blurRadius: 10, color: Colors.black45, offset: Offset(2, 2))],
-              ),
-            ),
-          ],
+        title: LayoutBuilder(
+          builder: (context, constraints) {
+            // Only show the subtitle when expanded
+            final bool isExpanded = constraints.maxHeight > 150;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (isExpanded)
+                  Text(
+                    'Welcome, $_firstName',
+                    style: GoogleFonts.montserrat(fontSize: 14, color: Colors.white70),
+                  ),
+                Text(
+                  'Barati',
+                  style: GoogleFonts.playfairDisplay(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: isExpanded ? 32 : 20,
+                    shadows: [const Shadow(blurRadius: 10, color: Colors.black45, offset: Offset(2, 2))],
+                  ),
+                ),
+                if (isExpanded) const SizedBox(height: 60),
+              ],
+            );
+          },
         ),
         centerTitle: true,
         background: Stack(
@@ -409,7 +418,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Positioned(
-              bottom: 40,
+              bottom: 110,
               left: 20,
               right: 20,
               child: Text(
@@ -417,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? 'Build your support system for the big day.' 
                   : 'Be the family someone needs.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.montserrat(color: Colors.white70, fontSize: 16),
+                style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
               ),
             ),
           ],
@@ -426,14 +435,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, String action) {
+  Widget _buildSectionHeader(BuildContext context, String title, [String? action]) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: Theme.of(context).textTheme.headlineMedium),
-          TextButton(onPressed: () {}, child: Text(action, style: GoogleFonts.montserrat(color: const Color(0xFFD4AF37), fontWeight: FontWeight.bold))),
+          if (action != null)
+            TextButton(onPressed: () {}, child: Text(action, style: GoogleFonts.montserrat(color: const Color(0xFFD4AF37), fontWeight: FontWeight.bold))),
         ],
       ),
     );

@@ -176,6 +176,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     return SliverAppBar(
       expandedHeight: 250,
       pinned: true,
+      iconTheme: const IconThemeData(color: Colors.white),
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
@@ -402,20 +403,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       bool isDisabled = hasAppliedToThisEvent || isHostOfEvent;
 
                       if (isHostOfEvent) {
-                        buttonText = 'Host';
-                        isDisabled = true;
-                      } else if (isApprovedThisRole) {
-                        buttonText = 'Approved';
-                        isDisabled = true;
-                      } else if (isDeclinedThisRole) {
-                        buttonText = 'Declined';
-                        isDisabled = true;
-                      } else if (isWithdrawnThisRole) {
-                        buttonText = 'Withdrawn';
-                        isDisabled = true;
-                      } else if (hasAppliedThisRole) {
-                        buttonText = 'Applied';
-                        isDisabled = true;
+                        return const SizedBox.shrink();
                       }
 
                       return ElevatedButton(
