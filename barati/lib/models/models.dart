@@ -26,6 +26,10 @@ enum FamilyRole {
   neighbor,
   bestMan,
   maidOfHonor,
+  girlfriend,
+  exGirlfriend,
+  boyfriend,
+  exBoyfriend,
   other,
 }
 
@@ -33,6 +37,9 @@ extension FamilyRoleExtension on FamilyRole {
   String toLabel() {
     String name = this.name;
     String label = name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toLowerCase();
+    if (label.startsWith('ex ')) {
+      label = 'Ex-${label.substring(3)}';
+    }
     return label[0].toUpperCase() + label.substring(1);
   }
 
@@ -40,7 +47,7 @@ extension FamilyRoleExtension on FamilyRole {
     if (this == FamilyRole.other) return true;
     final fixedGender = EventRole.getFixedGender(this);
     if (fixedGender == null) return true; // Flexible roles
-    if (gender == 'Other') return true;
+    if (gender != 'Male' && gender != 'Female') return true;
     return fixedGender == gender;
   }
 }
@@ -66,6 +73,7 @@ enum EventType {
   houseWarming,
   anniversary,
   death,
+  houseParty,
   other,
 }
 
@@ -169,6 +177,8 @@ class EventRole {
       case FamilyRole.fatherInLaw:
       case FamilyRole.brotherInLaw:
       case FamilyRole.bestMan:
+      case FamilyRole.boyfriend:
+      case FamilyRole.exBoyfriend:
         return 'Male';
       case FamilyRole.mother:
       case FamilyRole.elderSister:
@@ -177,6 +187,8 @@ class EventRole {
       case FamilyRole.motherInLaw:
       case FamilyRole.sisterInLaw:
       case FamilyRole.maidOfHonor:
+      case FamilyRole.girlfriend:
+      case FamilyRole.exGirlfriend:
         return 'Female';
       default:
         return null;
@@ -218,7 +230,7 @@ class BaratiEvent {
     'hostId': hostId,
     'title': title,
     'description': description,
-    'date': date.toIso8601String(),
+    'date': date.toUtc().toIso8601String(),
     'location': location,
     'eventType': eventType.index,
     'neededRoles': neededRoles.map((r) => r.toJson()).toList(),

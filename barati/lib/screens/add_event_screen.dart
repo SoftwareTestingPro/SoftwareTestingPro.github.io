@@ -83,7 +83,31 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
-        _selectedDate = picked;
+        _selectedDate = DateTime(
+          picked.year,
+          picked.month,
+          picked.day,
+          _selectedDate.hour,
+          _selectedDate.minute,
+        );
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_selectedDate),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedDate = DateTime(
+          _selectedDate.year,
+          _selectedDate.month,
+          _selectedDate.day,
+          picked.hour,
+          picked.minute,
+        );
       });
     }
   }
@@ -210,28 +234,56 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   setState(() => _selectedCity = value ?? '');
                 },
               ),
-              const SizedBox(height: 24),
-              _buildSectionTitle('Date'),
-              const SizedBox(height: 8),
-              InkWell(
-                onTap: () => _selectDate(context),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[300]!),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.calendar_today, size: 20, color: Colors.grey),
-                      const SizedBox(width: 12),
-                      Text(
-                        EventLogic.formatDate(_selectedDate),
-                        style: GoogleFonts.montserrat(fontSize: 16),
+              _buildSectionTitle('Date & Time'),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => _selectDate(context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.calendar_today, size: 20, color: Colors.grey),
+                            const SizedBox(width: 12),
+                            Text(
+                              EventLogic.formatDate(_selectedDate),
+                              style: GoogleFonts.montserrat(fontSize: 14),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => _selectTime(context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.access_time, size: 20, color: Colors.grey),
+                            const SizedBox(width: 12),
+                            Text(
+                              EventLogic.formatTime(_selectedDate),
+                              style: GoogleFonts.montserrat(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
               _buildSectionTitle('Roles You Need'),
@@ -269,6 +321,30 @@ class _AddEventScreenState extends State<AddEventScreen> {
         ),
       ),
     );
+  }
+
+  List<String> _getNeededForOptions(EventType type) {
+    switch (type) {
+      case EventType.marriage:
+      case EventType.haldi:
+      case EventType.mehndi:
+      case EventType.sangeet:
+      case EventType.reception:
+      case EventType.engagement:
+        return ['Bride', 'Groom', 'Other'];
+      case EventType.birthday:
+        return ['Birthday Person', 'Other'];
+      case EventType.babyShower:
+        return ['Mother to be', 'Other'];
+      case EventType.houseWarming:
+      case EventType.houseParty:
+      case EventType.anniversary:
+        return ['Host', 'Other'];
+      case EventType.death:
+        return ['Family', 'Other'];
+      default:
+        return ['Host', 'Other'];
+    }
   }
 
   Widget _buildSectionTitle(String title) {
@@ -321,6 +397,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           case EventType.houseWarming: icon = Icons.home; break;
           case EventType.anniversary: icon = Icons.star; break;
           case EventType.death: icon = Icons.church; break;
+          case EventType.houseParty: icon = Icons.liquor; break;
           case EventType.other: icon = Icons.more_horiz; break;
         }
 
@@ -365,7 +442,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   role: role, 
                   description: '', 
                   gender: fixedGender ?? 'Any',
-                  forWhom: 'Bride', // Default
+                  forWhom: _getNeededForOptions(_selectedType)[0], // Default to first relevant option
                 ));
               } else {
                 _selectedRoles.removeWhere((r) => r.role == role);
@@ -455,10 +532,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 children: [
                   Text('Needed for:', style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.w600)),
                   const SizedBox(width: 8),
-                  ...['Bride', 'Groom', 'Other'].map((side) {
+                  ..._getNeededForOptions(_selectedType).map((side) {
                     final isSel = roleInfo.forWhom == side;
                     return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
+                      padding: const EdgeInsets.only(right: 4.0),
                       child: ChoiceChip(
                         label: Text(side),
                         selected: isSel,

@@ -227,7 +227,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           children: [
             _eventTypeBadge(widget.event.eventType),
             Text(
-              EventLogic.formatDate(widget.event.date),
+              EventLogic.formatDateTime(widget.event.date),
               style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, color: Colors.grey),
             ),
           ],

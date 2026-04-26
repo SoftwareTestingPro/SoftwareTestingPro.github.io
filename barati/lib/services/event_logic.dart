@@ -19,14 +19,34 @@ class EventLogic {
   static List<BaratiEvent> filterHostEvents(List<BaratiEvent> allEvents, String hostId, {required bool isPast}) {
     final now = DateTime.now();
     return allEvents.where((e) {
-      final matchesHost = e.hostId == hostId;
-      final matchesTime = isPast ? e.date.isBefore(now) : e.date.isAfter(now);
-      return matchesHost && matchesTime;
+      if (e.hostId != hostId) return false;
+      
+      if (isPast) {
+        return e.date.isBefore(now);
+      } else {
+        // If it's today or in the future, it's upcoming
+        return e.date.isAfter(now) || 
+               (e.date.year == now.year && e.date.month == now.month && e.date.day == now.day && e.date.isAfter(now.subtract(const Duration(hours: 1)))); // Buffer of 1 hour for ongoing events
+      }
     }).toList();
   }
 
   /// Formats a date to DD/MM/YYYY.
   static String formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+    final d = date.toLocal();
+    return '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+  }
+
+  /// Formats a time to HH:MM AM/PM.
+  static String formatTime(DateTime date) {
+    final d = date.toLocal();
+    final hour = d.hour > 12 ? d.hour - 12 : (d.hour == 0 ? 12 : d.hour);
+    final period = d.hour >= 12 ? 'PM' : 'AM';
+    return '${hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')} $period';
+  }
+
+  /// Formats both date and time.
+  static String formatDateTime(DateTime date) {
+    return '${formatDate(date)} ${formatTime(date)}';
   }
 }

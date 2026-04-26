@@ -84,7 +84,7 @@ class SupabaseService {
       'host_id': event.hostId,
       'title': event.title,
       'description': event.description,
-      'date': event.date.toIso8601String(),
+      'date': event.date.toUtc().toIso8601String(),
       'location': event.location,
       'event_type': event.eventType.index,
       'needed_roles': event.neededRoles.map((r) => r.toJson()).toList(),
@@ -99,7 +99,7 @@ class SupabaseService {
     await client.from('events').update({
       'title': event.title,
       'description': event.description,
-      'date': event.date.toIso8601String(),
+      'date': event.date.toUtc().toIso8601String(),
       'location': event.location,
       'event_type': event.eventType.index,
       'needed_roles': event.neededRoles.map((r) => r.toJson()).toList(),

@@ -117,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (role == FamilyRole.other) return true;
       final fixedGender = EventRole.getFixedGender(role);
       if (fixedGender == null) return true; // Flexible roles like Friend, Colleague, Neighbor
-      if (gender == 'Other') return true; // 'Other' gender can play any role
+      if (gender != 'Male' && gender != 'Female') return true; // Non-binary/Other can play any role
       return fixedGender == gender;
     }).map((role) => role.toLabel()).toList();
   }
@@ -366,14 +366,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildTextField(controller: _languagesController, hint: 'e.g. Hindi, English, Punjabi', icon: Icons.translate),
             const SizedBox(height: 20),
             _buildLabel('Gender'),
-            Row(
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
-                _buildGenderChip('Male'),
-                const SizedBox(width: 12),
-                _buildGenderChip('Female'),
-                const SizedBox(width: 12),
-                _buildGenderChip('Other'),
-              ],
+                'Male',
+                'Female',
+                'Non-binary',
+                'Genderqueer',
+                'Genderfluid',
+                'Transgender',
+                'Agender',
+                'Other',
+                'Prefer not to say'
+              ].map((g) => _buildGenderChip(g)).toList(),
             ),
             const SizedBox(height: 20),
             _buildLabel('Age'),

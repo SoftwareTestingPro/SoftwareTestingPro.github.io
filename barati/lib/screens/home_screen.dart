@@ -607,7 +607,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
-                        '${event.date.day}/${event.date.month}/${event.date.year}',
+                        EventLogic.formatDateTime(event.date),
                         style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ],
