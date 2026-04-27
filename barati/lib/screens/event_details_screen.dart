@@ -220,26 +220,74 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   Widget _buildSliverAppBar() {
+    final theme = Theme.of(context);
     return SliverAppBar(
       expandedHeight: 250,
       pinned: true,
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: IconThemeData(color: theme.colorScheme.primary),
       flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset('assets/images/hero_bg.png', fit: BoxFit.cover),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+        background: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xFFE3F2FD), // Very light blue
+                Colors.white,
+                const Color(0xFFFCE4EC), // Very light pink
+              ],
+            ),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                top: -20,
+                right: -20,
+                child: _buildDecorativeShape(120, const Color(0xFFFFE082).withOpacity(0.3)),
+              ),
+              Positioned(
+                bottom: 40,
+                left: -10,
+                child: _buildDecorativeShape(80, const Color(0xFF90CAF9).withOpacity(0.2)),
+              ),
+              Positioned(
+                top: 60,
+                left: 30,
+                child: _buildDecorativeShape(15, const Color(0xFFF48FB1).withOpacity(0.4), isCircle: false),
+              ),
+              
+              // Event Image Preview
+              Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20)],
+                    image: DecorationImage(
+                      image: widget.event.imageUrl.startsWith('http') 
+                          ? NetworkImage(widget.event.imageUrl) as ImageProvider
+                          : MemoryImage(base64Decode(widget.event.imageUrl)),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDecorativeShape(double size, Color color, {bool isCircle = true}) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: isCircle ? null : BorderRadius.circular(size * 0.2),
       ),
     );
   }
@@ -388,13 +436,24 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         String label = role.toLabel();
 
         return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey[200]!),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)],
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
+              ),
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.04),
+                blurRadius: 25,
+                spreadRadius: -2,
+                offset: const Offset(0, 12),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

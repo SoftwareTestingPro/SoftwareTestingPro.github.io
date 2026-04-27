@@ -22,7 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Pre-cache the background image for smoother transition
-    precacheImage(const AssetImage('assets/images/hero_bg.png'), context);
+    precacheImage(const AssetImage('assets/images/party_bg.png'), context);
   }
 
   Future<void> _sendOtp() async {
@@ -171,13 +171,46 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _buildBackground() {
     return Container(
       decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/hero_bg.png'),
-          fit: BoxFit.cover,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFE3F2FD),
+            Colors.white,
+            Color(0xFFFCE4EC),
+          ],
         ),
       ),
-      child: Container(
-        color: Colors.black.withOpacity(0.4),
+      child: Stack(
+        children: [
+          Positioned(
+            top: -50,
+            right: -50,
+            child: _buildDecorativeShape(200, const Color(0xFFFFE082).withOpacity(0.3)),
+          ),
+          Positioned(
+            bottom: -30,
+            left: -30,
+            child: _buildDecorativeShape(150, const Color(0xFF90CAF9).withOpacity(0.2)),
+          ),
+          Positioned(
+            top: 150,
+            left: 50,
+            child: _buildDecorativeShape(30, const Color(0xFFF48FB1).withOpacity(0.4), isCircle: false),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDecorativeShape(double size, Color color, {bool isCircle = true}) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: isCircle ? null : BorderRadius.circular(size * 0.2),
       ),
     );
   }

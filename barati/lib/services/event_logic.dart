@@ -52,20 +52,6 @@ class EventLogic {
 
   /// Gets a default image URL based on event type.
   static String getDefaultImageUrl(EventType type) {
-    switch (type) {
-      case EventType.marriage: return 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622';
-      case EventType.haldi: return 'https://images.unsplash.com/photo-1596464716127-f2a82984de30'; 
-      case EventType.mehndi: return 'https://images.unsplash.com/photo-1596464716127-f2a82984de30';
-      case EventType.sangeet: return 'https://images.unsplash.com/photo-1514525253361-bee1d4d75c7b';
-      case EventType.reception: return 'https://images.unsplash.com/photo-1519741497674-611481863552';
-      case EventType.engagement: return 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d';
-      case EventType.birthday: return 'https://images.unsplash.com/photo-1530103043960-ef38714abb15';
-      case EventType.babyShower: return 'https://images.unsplash.com/photo-1519689680058-324335c77eba';
-      case EventType.houseWarming: return 'https://images.unsplash.com/photo-1513584684374-8bdb7483fe8f';
-      case EventType.anniversary: return 'https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a';
-      case EventType.death: return 'https://images.unsplash.com/photo-1463171359979-330b1ed8f510';
-      case EventType.houseParty: return 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30';
-      default: return 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622';
-    }
+    return 'assets/images/${type.name}.jpg';
   }
 }

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static const Color primaryColor = Color(0xFF8B0000); // Deep Red/Maroon
   static const Color accentColor = Color(0xFFD4AF37); // Metallic Gold
-  static const Color backgroundColor = Color(0xFFFDF5E6); // Old Lace/Cream
+  static const Color backgroundColor = Color(0xFFFAFAFA); // Clean modern off-white
   static const Color surfaceColor = Colors.white;
 
   static ThemeData get lightTheme {

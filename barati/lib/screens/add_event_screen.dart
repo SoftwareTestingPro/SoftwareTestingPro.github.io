@@ -175,23 +175,88 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
   }
 
+  Widget _buildGlowShape(double size, Color color, {bool isCircle = true}) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 40,
+            spreadRadius: 20,
+          ),
+        ],
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.05),
+          shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+          borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPageBackground() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFF3E5F5).withOpacity(0.5), // Soft Lavender
+            const Color(0xFFE1F5FE).withOpacity(0.5), // Soft Sky
+            Colors.white,
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 40,
+            right: -20,
+            child: _buildGlowShape(120, Colors.purple.withOpacity(0.2)),
+          ),
+          Positioned(
+            top: 400,
+            left: -40,
+            child: _buildGlowShape(180, Colors.blue.withOpacity(0.15)),
+          ),
+          Positioned(
+            bottom: 100,
+            right: 40,
+            child: _buildGlowShape(150, Colors.pink.withOpacity(0.1)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Create Event', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+        title: Text(widget.eventToEdit == null ? 'Create Event' : 'Update Event', 
+          style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.black), // It's black here because background is transparent (usually white/light)
+        foregroundColor: Colors.black87,
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      body: Stack(
+        children: [
+          _buildPageBackground(),
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
               _buildSectionTitle('What kind of event?'),
               const SizedBox(height: 12),
               _buildEventTypeSelector(),
@@ -315,16 +380,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                    ),
                   ),
                 ),
               ),
+            ),
             ],
           ),
         ),
       ),
-    );
-  }
+    ],
+  ),
+);
+}
 
   List<String> _getNeededForOptions(EventType type) {
     switch (type) {

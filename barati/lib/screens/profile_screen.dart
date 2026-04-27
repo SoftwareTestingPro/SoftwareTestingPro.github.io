@@ -264,6 +264,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Widget _buildGlowShape(double size, Color color, {bool isCircle = true}) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 40,
+            spreadRadius: 20,
+          ),
+        ],
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.05),
+          shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+          borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPageBackground() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFF3E5F5).withOpacity(0.5), // Soft Lavender
+            const Color(0xFFE1F5FE).withOpacity(0.5), // Soft Sky
+            Colors.white,
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 40,
+            right: -20,
+            child: _buildGlowShape(120, Colors.purple.withOpacity(0.2)),
+          ),
+          Positioned(
+            top: 400,
+            left: -40,
+            child: _buildGlowShape(180, Colors.blue.withOpacity(0.15)),
+          ),
+          Positioned(
+            bottom: 100,
+            left: 40,
+            child: _buildGlowShape(150, Colors.amber.withOpacity(0.1)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -284,7 +344,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       },
       child: Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Text(widget.isEditMode ? 'Edit Profile' : 'Create Your Profile', 
           style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
         centerTitle: true,
@@ -301,11 +364,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: Stack(
+        children: [
+          _buildPageBackground(),
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             Center(
               child: Stack(
                 children: [
@@ -524,11 +590,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ],
+          ),
         ),
-      ),
+      ],
     ),
-  );
-  }
+  ),
+);
+}
 
   Widget _buildLabel(String label) {
     return Padding(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import '../models/models.dart';
 import 'profile_screen.dart';
 import 'add_event_screen.dart';
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _eventsHostedCount = 0;
   bool _isLoading = true;
   String _firstName = 'User';
+  String? _profileImageUrl;
   String? _currentUserId;
   String? _userGender;
   final _searchController = TextEditingController();
@@ -132,6 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _filteredProfiles = _profiles;
           _userApplications = userApps;
           _allApplications = allApps;
+          _profileImageUrl = currentProfile.profileImageUrl;
           
           // Apply initial filtering
           if (_currentType == UserRole.host) {
@@ -178,6 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAvailableBaratiList() {
+    final theme = Theme.of(context);
     if (_isLoading) return const Center(child: CircularProgressIndicator());
     
     if (_filteredProfiles.isEmpty) {
@@ -190,9 +194,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return SizedBox(
-      height: 180,
+      height: 190,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         scrollDirection: Axis.horizontal,
         itemCount: _filteredProfiles.length,
         itemBuilder: (context, index) {
@@ -213,51 +217,73 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
             child: Container(
-              width: 140,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
+              width: 150,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withOpacity(0.08),
+                    blurRadius: 15,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Colors.white,
+                    blurRadius: 1,
+                    spreadRadius: -2,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 35,
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                    backgroundImage: profile.profileImageUrl != null && profile.profileImageUrl!.startsWith('http')
-                      ? NetworkImage(profile.profileImageUrl!) as ImageProvider
-                      : profile.profileImageUrl != null 
-                        ? MemoryImage(base64Decode(profile.profileImageUrl!)) 
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [theme.colorScheme.primary.withOpacity(0.2), theme.colorScheme.secondary.withOpacity(0.2)],
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      radius: 35,
+                      backgroundColor: Colors.white,
+                      backgroundImage: profile.profileImageUrl != null && profile.profileImageUrl!.startsWith('http')
+                        ? NetworkImage(profile.profileImageUrl!) as ImageProvider
+                        : profile.profileImageUrl != null 
+                          ? MemoryImage(base64Decode(profile.profileImageUrl!)) 
+                          : null,
+                      child: profile.profileImageUrl == null 
+                        ? Icon(Icons.person, size: 35, color: theme.colorScheme.primary.withOpacity(0.5)) 
                         : null,
-                    child: profile.profileImageUrl == null 
-                      ? Icon(Icons.person, size: 40, color: Theme.of(context).colorScheme.primary) 
-                      : null,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       profile.name, 
-                      style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 13),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      rolesLabel, 
-                      style: GoogleFonts.montserrat(fontSize: 11, color: Colors.grey),
+                      style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      rolesLabel, 
+                      style: GoogleFonts.montserrat(fontSize: 10, color: Colors.grey[600], fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   _buildUserRating(profile.id),
                 ],
               ),
@@ -285,6 +311,84 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+
+  Widget _buildDecorativeShape(double size, Color color, {bool isCircle = true}) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: isCircle ? null : BorderRadius.circular(size * 0.2),
+      ),
+    );
+  }
+  Widget _buildGlowShape(double size, Color color, {bool isCircle = true}) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+        borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 40,
+            spreadRadius: 20,
+          ),
+        ],
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.05),
+          shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+          borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPageBackground() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFF3E5F5).withOpacity(0.5), // Soft Lavender
+            const Color(0xFFE1F5FE).withOpacity(0.5), // Soft Sky
+            Colors.white,
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          // 3D/Glowing Decorative Elements distributed across the page
+          Positioned(
+            top: 40,
+            right: -20,
+            child: _buildGlowShape(120, Colors.purple.withOpacity(0.2)),
+          ),
+          Positioned(
+            top: 300,
+            left: -40,
+            child: _buildGlowShape(180, Colors.blue.withOpacity(0.15)),
+          ),
+          Positioned(
+            top: 600,
+            right: 20,
+            child: _buildGlowShape(100, Colors.pink.withOpacity(0.1)),
+          ),
+          Positioned(
+            bottom: 100,
+            left: 40,
+            child: _buildGlowShape(150, Colors.amber.withOpacity(0.1)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -296,41 +400,46 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(context),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  if (_currentType == UserRole.host) ...[
-                    _buildSectionHeader(context, 'Find Your Family'),
-                    _buildSearchBar(),
-                    const SizedBox(height: 16),
-                    _buildAvailableBaratiList(),
-                    const SizedBox(height: 32),
-                    _buildHostDashboard(),
-                  ] else ...[
-                    _buildSectionHeader(context, 'Events Near You', 'Map'),
-                    const SizedBox(height: 16),
-                    _buildWeddingEventsList(),
-                    const SizedBox(height: 32),
-                    _buildSectionHeader(context, 'Active Applications', 'History'),
-                    const SizedBox(height: 16),
-                    _buildMyApplicationsList(isPast: false),
-                    const SizedBox(height: 32),
-                    _buildSectionHeader(context, 'Attended Events', 'History'),
-                    const SizedBox(height: 16),
-                    _buildMyApplicationsList(isPast: true),
-                  ],
-                  const SizedBox(height: 100),
-                ],
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          _buildPageBackground(),
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              _buildAppBar(context),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_currentType == UserRole.host) ...[
+                        _buildSectionHeader(context, 'Find Your Family'),
+                        _buildSearchBar(),
+                        const SizedBox(height: 16),
+                        _buildAvailableBaratiList(),
+                        const SizedBox(height: 32),
+                        _buildHostDashboard(),
+                      ] else ...[
+                        _buildSectionHeader(context, 'Events Near You', 'Map'),
+                        const SizedBox(height: 16),
+                        _buildWeddingEventsList(),
+                        const SizedBox(height: 32),
+                        _buildSectionHeader(context, 'Active Applications', 'History'),
+                        const SizedBox(height: 16),
+                        _buildMyApplicationsList(isPast: false),
+                        const SizedBox(height: 32),
+                        _buildSectionHeader(context, 'Attended Events', 'History'),
+                        const SizedBox(height: 16),
+                        _buildMyApplicationsList(isPast: true),
+                      ],
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -395,85 +504,150 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAppBar(BuildContext context) {
+    final theme = Theme.of(context);
     return SliverAppBar(
-      expandedHeight: 300.0,
-      pinned: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.logout, color: Colors.white),
-          onPressed: () => _logout(context),
-          tooltip: 'Logout',
-        ),
-      ],
-      flexibleSpace: FlexibleSpaceBar(
-        title: LayoutBuilder(
-          builder: (context, constraints) {
-            // Only show the subtitle when expanded
-            final bool isExpanded = constraints.maxHeight > 150;
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (isExpanded)
-                  Text(
-                    'Welcome, $_firstName',
-                    style: GoogleFonts.montserrat(fontSize: 14, color: Colors.white70),
-                  ),
-                Text(
-                  'Barati',
-                  style: GoogleFonts.playfairDisplay(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: isExpanded ? 32 : 20,
-                    shadows: [const Shadow(blurRadius: 10, color: Colors.black45, offset: Offset(2, 2))],
-                  ),
-                ),
-                if (isExpanded) const SizedBox(height: 60),
-              ],
-            );
-          },
-        ),
-        centerTitle: true,
-        background: Stack(
-          fit: StackFit.expand,
+      toolbarHeight: 110,
+      pinned: false,
+      floating: true,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      scrolledUnderElevation: 0,
+      automaticallyImplyLeading: false,
+      titleSpacing: 0,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: Row(
           children: [
-            Image.asset('assets/images/hero_bg.png', fit: BoxFit.cover),
-            const DecoratedBox(
+            Container(
+              padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.black26, Colors.transparent, Colors.black87],
-                ),
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFB2DFDB), width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFB2DFDB).withOpacity(0.3),
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: CircleAvatar(
+                radius: 32,
+                backgroundColor: Colors.white,
+                backgroundImage: _profileImageUrl != null && _profileImageUrl!.startsWith('http')
+                    ? NetworkImage(_profileImageUrl!) as ImageProvider
+                    : _profileImageUrl != null
+                        ? MemoryImage(base64Decode(_profileImageUrl!))
+                        : const AssetImage('assets/images/default_avatar.png'),
+                child: _profileImageUrl == null
+                    ? Icon(Icons.person, size: 32, color: theme.colorScheme.primary.withOpacity(0.5))
+                    : null,
               ),
             ),
-            Positioned(
-              bottom: 110,
-              left: 20,
-              right: 20,
-              child: Text(
-                _currentType == UserRole.host 
-                  ? 'Build your support system for the big day.' 
-                  : 'Be the family someone needs.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Welcome, $_firstName!',
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '- The Wedding Festivities Begin',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 13,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
+      actions: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.notifications_outlined, color: Colors.black87, size: 28),
+              onPressed: () {},
+            ),
+            Positioned(
+              right: 12,
+              top: 12,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Colors.redAccent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(width: 10),
+      ],
     );
   }
 
   Widget _buildSectionHeader(BuildContext context, String title, [String? action]) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: Theme.of(context).textTheme.headlineMedium),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.primary.withOpacity(0.3),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title, 
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 22, 
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
           if (action != null)
-            TextButton(onPressed: () {}, child: Text(action, style: GoogleFonts.montserrat(color: const Color(0xFFD4AF37), fontWeight: FontWeight.bold))),
+            TextButton(
+              onPressed: () {}, 
+              child: Text(
+                action, 
+                style: GoogleFonts.montserrat(
+                  color: theme.colorScheme.secondary, 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -513,9 +687,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return SizedBox(
-      height: 220,
+      height: 260,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
         scrollDirection: Axis.horizontal,
         itemCount: futureEvents.length,
         itemBuilder: (context, index) {
@@ -524,107 +698,299 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
             ).then((_) => _loadData()),
-            child: Container(
-              width: 280,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-              ),
+            child: _buildModernEventCard(event),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCardIconButton(IconData icon, Color color, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.9),
+          shape: BoxShape.circle,
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)],
+        ),
+        child: Icon(icon, color: color, size: 18),
+      ),
+    );
+  }
+
+  Color _getEventTypeColor(EventType type) {
+    switch (type) {
+      case EventType.marriage: return Colors.pink;
+      case EventType.haldi: return Colors.orange;
+      case EventType.mehndi: return Colors.green;
+      case EventType.sangeet: return Colors.indigo;
+      case EventType.reception: return Colors.deepPurple;
+      case EventType.engagement: return Colors.teal;
+      case EventType.birthday: return Colors.lightBlue;
+      default: return Colors.blue;
+    }
+  }
+
+  Widget _buildModernEventCard(BaratiEvent event, {bool isHost = false, bool isPast = false}) {
+    final theme = Theme.of(context);
+    final guestsConfirmed = event.approvedMemberIds.length;
+    final isMatch = !isHost && !isPast && event.neededRoles.any((r) => 
+      _userRoles.contains(r.role) && 
+      EventRole.matchGender(_userGender ?? 'Other', r.gender)
+    );
+    
+    return Container(
+      width: 250,
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(32),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFE1BEE7), // Soft Lavender
+            const Color(0xFFA8E6CF), // Mint
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Container(
+        margin: const EdgeInsets.all(1.5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(31),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                  child: Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: event.imageUrl.startsWith('http') 
+                            ? NetworkImage(event.imageUrl) as ImageProvider
+                            : (event.imageUrl.startsWith('assets/') 
+                                ? AssetImage(event.imageUrl) as ImageProvider
+                                : MemoryImage(base64Decode(event.imageUrl))),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 15,
+                  left: 15,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: _getEventTypeColor(event.eventType),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          event.eventType.name.toUpperCase(),
+                          style: GoogleFonts.montserrat(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (isMatch)
+                  Positioned(
+                    top: 15,
+                    right: 15,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'MATCH',
+                        style: GoogleFonts.montserrat(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                if (isHost && !isPast)
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Row(
+                      children: [
+                        _buildCardIconButton(Icons.edit_outlined, Colors.blue, () async {
+                           final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AddEventScreen(eventToEdit: event)),
+                          );
+                          if (result == true) _loadData();
+                        }),
+                        const SizedBox(width: 8),
+                        _buildCardIconButton(Icons.delete_outline, Colors.red, () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Delete Event'),
+                              content: const Text('Are you sure you want to delete this event?'),
+                              actions: [
+                                TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true) {
+                            await SupabaseService().deleteEvent(event.id);
+                            _loadData();
+                          }
+                        }),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          image: DecorationImage(
-                            image: event.imageUrl.startsWith('http') 
-                                ? NetworkImage(event.imageUrl) as ImageProvider
-                                : MemoryImage(base64Decode(event.imageUrl)),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              event.title,
-                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            _eventTypeBadge(event.eventType),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Text(
+                    DateFormat('dd MMM | h:mm a').format(event.date),
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black54,
+                    ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 2),
+                  Text(
+                    event.title,
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
+                      Icon(Icons.location_on, size: 12, color: theme.colorScheme.primary.withOpacity(0.5)),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          event.city.isNotEmpty && event.city != 'City' 
-                              ? '${event.city}, ${event.state}' 
-                              : (event.state.isNotEmpty && event.state != 'State' ? event.state : 'Location not set'),
-                          style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
+                          event.city.isNotEmpty ? '${event.city}, ${event.state}' : event.state,
+                          style: GoogleFonts.montserrat(
+                            fontSize: 10,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(
-                        EventLogic.formatDateTime(event.date),
-                        style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${event.neededRoles.length} Roles Needed',
-                        style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
-                      ),
-                      if (event.neededRoles.any((r) => 
-                        _userRoles.contains(r.role) && 
-                        EventRole.matchGender(_userGender ?? 'Other', r.gender)
-                      ))
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            'MATCH',
-                            style: GoogleFonts.montserrat(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.green),
-                          ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.people_outline, size: 20, color: Colors.black87),
+                            const SizedBox(width: 6),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '$guestsConfirmed Guests',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  isPast ? 'Attended' : 'Confirmed',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 10,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Icon(
+                              isPast ? Icons.star : Icons.info_outline, 
+                              size: 20, 
+                              color: isPast ? Colors.amber : Colors.black87
+                            ),
+                            const SizedBox(width: 6),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  isPast 
+                                    ? (ReputationLogic.calculateEventRating(event.id, _allApplications)?.toStringAsFixed(1) ?? 'N/A')
+                                    : '${event.neededRoles.length} Roles',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  isPast ? 'Ratings by Guest' : 'Required',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 10,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
@@ -830,8 +1196,8 @@ class _HomeScreenState extends State<HomeScreen> {
       default: color = Colors.blue;
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
       child: Text(
         type.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toUpperCase(),
         style: GoogleFonts.montserrat(fontSize: 10, fontWeight: FontWeight.bold, color: color),
@@ -998,164 +1364,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildEventsList(List<BaratiEvent> events, {bool isHost = false, bool isPast = false}) {
     return SizedBox(
-      height: 220,
+      height: 260,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
         itemCount: events.length,
         itemBuilder: (context, index) {
           final event = events[index];
-          final isOwner = isHost;
-
           return GestureDetector(
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
             ).then((_) => _loadData()),
-            child: Container(
-              width: 280,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          image: DecorationImage(
-                            image: event.imageUrl.startsWith('http') 
-                                ? NetworkImage(event.imageUrl) as ImageProvider
-                                : MemoryImage(base64Decode(event.imageUrl)),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              event.title,
-                              style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            _eventTypeBadge(event.eventType),
-                          ],
-                        ),
-                      ),
-                      if (isOwner && !isPast)
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit_outlined, color: Colors.blue, size: 20),
-                              onPressed: () async {
-                                final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => AddEventScreen(eventToEdit: event)),
-                                );
-                                if (result == true) _loadData();
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                              onPressed: () async {
-                                final confirm = await showDialog<bool>(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text('Delete Event'),
-                                    content: const Text('Are you sure you want to delete this event?'),
-                                    actions: [
-                                      TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context, true),
-                                        style: TextButton.styleFrom(foregroundColor: Colors.red),
-                                        child: const Text('Delete'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                if (confirm == true) {
-                                  await SupabaseService().deleteEvent(event.id);
-                                  _loadData();
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          '${event.city}, ${event.state}',
-                          style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(
-                        EventLogic.formatDate(event.date),
-                        style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${event.neededRoles.length} Roles Needed',
-                        style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
-                      ),
-                      if (isOwner && !isPast)
-                        Text(
-                          '${event.approvedMemberIds.length} Joined',
-                          style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.green),
-                        ),
-                      if (isPast) 
-                        Builder(
-                          builder: (context) {
-                            final avg = ReputationLogic.calculateEventRating(event.id, _allApplications);
-                            if (avg == null) return const SizedBox.shrink();
-                            return Row(
-                              children: [
-                                const Icon(Icons.star, color: Colors.amber, size: 14),
-                                const SizedBox(width: 4),
-                                Text(
-                                  avg.toStringAsFixed(1),
-                                  style: GoogleFonts.montserrat(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.amber[900]),
-                                ),
-                              ],
-                            );
-                          }
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            child: _buildModernEventCard(event, isHost: isHost, isPast: isPast),
           );
         },
       ),
