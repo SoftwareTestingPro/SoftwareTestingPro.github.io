@@ -10,7 +10,8 @@ import '../services/event_logic.dart';
 
 class AddEventScreen extends StatefulWidget {
   final BaratiEvent? eventToEdit;
-  const AddEventScreen({super.key, this.eventToEdit});
+  final VoidCallback? onSaveComplete;
+  const AddEventScreen({super.key, this.eventToEdit, this.onSaveComplete});
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
@@ -170,8 +171,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
       }
       await prefs.setString('events', json.encode(eventsList));
 
-      if (!mounted) return;
-      Navigator.pop(context, true);
+      if (widget.onSaveComplete != null) {
+        widget.onSaveComplete!();
+      } else {
+        if (!mounted) return;
+        Navigator.pop(context, true);
+      }
     }
   }
 
@@ -485,9 +490,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
             color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey[600],
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          backgroundColor: Colors.grey[100],
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          side: BorderSide(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent),
+          side: BorderSide(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey[300]!),
         );
       }).toList(),
     );
@@ -527,9 +532,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
             color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey[600],
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          backgroundColor: Colors.grey[100],
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          side: BorderSide(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent),
+          side: BorderSide(color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey[300]!),
         );
       }).toList(),
     );
@@ -627,6 +632,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           fontSize: 10,
                           color: isSel ? Theme.of(context).colorScheme.primary : Colors.grey,
                         ),
+                        backgroundColor: Colors.white,
+                        side: BorderSide(color: isSel ? Theme.of(context).colorScheme.primary : Colors.grey[300]!),
                         visualDensity: VisualDensity.compact,
                       ),
                     );
@@ -672,6 +679,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             fontSize: 10,
                             color: isSel ? Theme.of(context).colorScheme.primary : Colors.grey,
                           ),
+                          backgroundColor: Colors.white,
+                          side: BorderSide(color: isSel ? Theme.of(context).colorScheme.primary : Colors.grey[300]!),
                           visualDensity: VisualDensity.compact,
                         ),
                       );

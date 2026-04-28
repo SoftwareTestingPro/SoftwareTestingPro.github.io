@@ -9,6 +9,7 @@ import 'add_event_screen.dart';
 import 'event_details_screen.dart';
 import 'manage_applications_screen.dart';
 import 'public_profile_screen.dart';
+import 'activity_screen.dart';
 import '../services/supabase_service.dart';
 import '../services/logic_service.dart';
 import '../services/event_logic.dart';
@@ -37,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _currentUserId;
   String? _userGender;
   final _searchController = TextEditingController();
+  int _unreadActivityCount = 0;
 
   @override
   void initState() {
@@ -144,6 +146,17 @@ class _HomeScreenState extends State<HomeScreen> {
               event.hostId != currentUserId // Show all events in discovery
             ).toList();
           }
+          
+          int activityCount = 0;
+          for (var app in allApps) {
+            final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
+            if (event.id != 'dummy' && (app.applicantId == currentUserId || event.hostId == currentUserId)) {
+              activityCount++;
+            }
+          }
+          
+          final lastViewed = prefs.getInt('lastViewedActivityCount') ?? 0;
+          _unreadActivityCount = activityCount > lastViewed ? activityCount - lastViewed : 0;
           
           _isLoading = false;
         });
@@ -399,15 +412,16 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
+    Widget _buildMainContent() {
+      return Stack(
         children: [
           _buildPageBackground(),
           CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              _buildAppBar(context),
+              SliverToBoxAdapter(
+                child: _buildTopBar(context),
+              ),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 24.0),
@@ -442,7 +456,31 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ],
-      ),
+      );
+    }
+
+    Widget body;
+    if (_selectedIndex == 2) {
+      body = AddEventScreen(
+        onSaveComplete: () {
+          _loadData();
+          setState(() {
+            _selectedIndex = 0;
+            _currentType = UserRole.host;
+          });
+        },
+      );
+    } else if (_selectedIndex == 3) {
+      body = const ActivityScreen();
+    } else if (_selectedIndex == 4) {
+      body = const ProfileScreen(isEditMode: true);
+    } else {
+      body = _buildMainContent();
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: body,
       bottomNavigationBar: _buildBottomNav(theme),
     );
   }
@@ -503,19 +541,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildTopBar(BuildContext context) {
     final theme = Theme.of(context);
-    return SliverAppBar(
-      toolbarHeight: 110,
-      pinned: false,
-      floating: true,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      scrolledUnderElevation: 0,
-      automaticallyImplyLeading: false,
-      titleSpacing: 0,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 20.0),
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Row(
           children: [
             Container(
@@ -574,30 +605,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      actions: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.notifications_outlined, color: Colors.black87, size: 28),
-              onPressed: () {},
-            ),
-            Positioned(
-              right: 12,
-              top: 12,
-              child: Container(
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: Colors.redAccent,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 10),
-      ],
     );
   }
 
@@ -687,7 +694,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return SizedBox(
-      height: 260,
+      height: 270,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
         scrollDirection: Axis.horizontal,
@@ -741,9 +748,11 @@ class _HomeScreenState extends State<HomeScreen> {
       EventRole.matchGender(_userGender ?? 'Other', r.gender)
     );
     
-    return Container(
-      width: 250,
-      margin: const EdgeInsets.symmetric(horizontal: 10),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        width: 250,
+        margin: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32),
         gradient: LinearGradient(
@@ -770,6 +779,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Stack(
               children: [
@@ -929,24 +939,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             const Icon(Icons.people_outline, size: 20, color: Colors.black87),
                             const SizedBox(width: 6),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '$guestsConfirmed Guests',
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '$guestsConfirmed Guests',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                                Text(
-                                  isPast ? 'Attended' : 'Confirmed',
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 10,
-                                    color: Colors.grey[600],
+                                  Text(
+                                    isPast ? 'Attended' : 'Confirmed',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 10,
+                                      color: Colors.grey[600],
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -960,26 +974,30 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: isPast ? Colors.amber : Colors.black87
                             ),
                             const SizedBox(width: 6),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  isPast 
-                                    ? (ReputationLogic.calculateEventRating(event.id, _allApplications)?.toStringAsFixed(1) ?? 'N/A')
-                                    : '${event.neededRoles.length} Roles',
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    isPast 
+                                      ? (ReputationLogic.calculateEventRating(event.id, _allApplications)?.toStringAsFixed(1) ?? 'N/A')
+                                      : '${event.neededRoles.length} Roles',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                                Text(
-                                  isPast ? 'Ratings by Guest' : 'Required',
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 10,
-                                    color: Colors.grey[600],
+                                  Text(
+                                    isPast ? 'Guest Rating' : 'Required',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 10,
+                                      color: Colors.grey[600],
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -992,7 +1010,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildMyApplicationsList({bool isPast = false}) {
@@ -1058,7 +1076,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
-              );
+              ).then((_) => _loadData());
             },
             child: Container(
               width: 280,
@@ -1079,7 +1097,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-                  Text('Applied Roles:', style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600])),
+                  Text(apps.isNotEmpty && apps.first.isInvitation ? 'Requested Role:' : 'Applied Role:', style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600])),
                   const SizedBox(height: 4),
                   Expanded(
                     child: ListView.builder(
@@ -1238,24 +1256,18 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) async {
-          if (index == 2) {
-            // Action Button (Create Event)
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddEventScreen()),
-            );
-            if (result == true) {
-              _loadData();
+          if (index == 3) {
+            // Activity Tab: Clear notification badge when opened
+            final prefs = await SharedPreferences.getInstance();
+            int currentTotal = 0;
+            for (var app in _allApplications) {
+              final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
+              if (event.id != 'dummy' && (app.applicantId == _currentUserId || event.hostId == _currentUserId)) {
+                currentTotal++;
+              }
             }
-            return;
-          }
-          
-          if (index == 4) {
-            // Profile
-            await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const ProfileScreen(isEditMode: true)),
-            );
+            await prefs.setInt('lastViewedActivityCount', currentTotal);
             _loadData();
-            return;
           }
 
           setState(() {
@@ -1283,10 +1295,10 @@ class _HomeScreenState extends State<HomeScreen> {
         showUnselectedLabels: true,
         selectedLabelStyle: GoogleFonts.montserrat(fontSize: 10, fontWeight: FontWeight.bold),
         unselectedLabelStyle: GoogleFonts.montserrat(fontSize: 10),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard_outlined), activeIcon: Icon(Icons.dashboard), label: 'Host'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore_outlined), activeIcon: Icon(Icons.explore), label: 'Discover'),
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.dashboard_outlined), activeIcon: Icon(Icons.dashboard), label: 'Host'),
+          const BottomNavigationBarItem(icon: Icon(Icons.explore_outlined), activeIcon: Icon(Icons.explore), label: 'Discover'),
+          const BottomNavigationBarItem(
             icon: CircleAvatar(
               radius: 20,
               backgroundColor: Color(0xFF8B0000),
@@ -1294,8 +1306,40 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Create',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), activeIcon: Icon(Icons.notifications), label: 'Activity'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Stack(
+              children: [
+                const Icon(Icons.notifications_outlined),
+                if (_unreadActivityCount > 0)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 12,
+                        minHeight: 12,
+                      ),
+                      child: Text(
+                        '$_unreadActivityCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+              ],
+            ),
+            activeIcon: const Icon(Icons.notifications),
+            label: 'Activity',
+          ),
+          const BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );
@@ -1364,7 +1408,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildEventsList(List<BaratiEvent> events, {bool isHost = false, bool isPast = false}) {
     return SizedBox(
-      height: 260,
+      height: 270,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,

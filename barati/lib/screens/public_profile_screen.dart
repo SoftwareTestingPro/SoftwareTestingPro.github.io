@@ -76,7 +76,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     }
 
     BaratiEvent? selectedEvent;
-    List<FamilyRole> selectedRoles = [];
+    FamilyRole? selectedRole;
 
     await showDialog(
       context: context,
@@ -94,13 +94,13 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   onChanged: (val) {
                     setDialogState(() {
                       selectedEvent = val;
-                      selectedRoles = [];
+                      selectedRole = null;
                     });
                   },
                 ),
                 if (selectedEvent != null) ...[
                   const SizedBox(height: 16),
-                  Text('Select Roles:', style: GoogleFonts.montserrat(fontWeight: FontWeight.bold)),
+                  Text('Select Role:', style: GoogleFonts.montserrat(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   Flexible(
                     child: ListView(
@@ -108,16 +108,13 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                       children: selectedEvent!.neededRoles
                           .where((r) => EventRole.matchGender(widget.user.gender, r.gender))
                           .where((r) => widget.user.possibleRoles.contains(r.role))
-                          .map((r) => CheckboxListTile(
+                          .map((r) => RadioListTile<FamilyRole>(
                                 title: Text(r.role.toLabel()),
-                                value: selectedRoles.contains(r.role),
+                                value: r.role,
+                                groupValue: selectedRole,
                                 onChanged: (val) {
                                   setDialogState(() {
-                                    if (val == true) {
-                                      selectedRoles.add(r.role);
-                                    } else {
-                                      selectedRoles.remove(r.role);
-                                    }
+                                    selectedRole = val;
                                   });
                                 },
                               ))
@@ -131,27 +128,27 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
           actions: [
             TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
             ElevatedButton(
-              onPressed: (selectedEvent != null && selectedRoles.isNotEmpty)
+              onPressed: (selectedEvent != null && selectedRole != null)
                   ? () async {
-                      for (var role in selectedRoles) {
-                        final newApp = RoleApplication(
-                          id: const Uuid().v4(),
-                          eventId: selectedEvent!.id,
-                          applicantId: widget.user.id,
-                          appliedRole: role,
-                          isInvitation: true,
-                          status: ApplicationStatus.invitationPending,
-                        );
-                        await SupabaseService().applyForRole(newApp);
-                      }
+                      final newApp = RoleApplication(
+                        id: const Uuid().v4(),
+                        eventId: selectedEvent!.id,
+                        applicantId: widget.user.id,
+                        appliedRole: selectedRole!,
+                        isInvitation: true,
+                        status: ApplicationStatus.invitationPending,
+                      );
+                      await SupabaseService().applyForRole(newApp);
+                      
                       if (!mounted) return;
                       Navigator.pop(context);
+                      _loadCurrentUserInfo();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Invitations sent successfully!')),
+                        const SnackBar(content: Text('Invitation sent successfully!')),
                       );
                     }
                   : null,
-              child: const Text('Send Invites'),
+              child: const Text('Send Invite'),
             ),
           ],
         ),
