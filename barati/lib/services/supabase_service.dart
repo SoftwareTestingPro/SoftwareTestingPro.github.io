@@ -129,13 +129,13 @@ class SupabaseService {
       hostId: e['host_id'],
       title: e['title'],
       description: e['description'],
-      date: DateTime.parse(e['date']),
+      date: DateTime.parse(e['date'].toString().endsWith('Z') || e['date'].toString().contains('+') || e['date'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? e['date'] : '${e['date']}Z').toLocal(),
       location: e['location'],
       city: e['city'] ?? '',
       state: e['state'] ?? '',
-      eventType: EventType.values[e['event_type']],
+      eventType: (e['event_type'] ?? 0) < EventType.values.length ? EventType.values[e['event_type'] ?? 0] : EventType.other,
       neededRoles: (e['needed_roles'] as List)
-          .map((r) => r is int ? EventRole(role: FamilyRole.values[r], description: '', gender: 'Any') : EventRole.fromJson(r as Map<String, dynamic>))
+          .map((r) => r is int ? EventRole(role: r < FamilyRole.values.length ? FamilyRole.values[r] : FamilyRole.other, description: '', gender: 'Any') : EventRole.fromJson(r as Map<String, dynamic>))
           .toList(),
       approvedMemberIds: List<String>.from(e['approved_member_ids']),
       imageUrl: e['image_url'] ?? 'https://images.unsplash.com/photo-1519741497674-611481863552',
@@ -186,15 +186,16 @@ class SupabaseService {
       id: app['id'],
       eventId: app['event_id'],
       applicantId: app['applicant_id'],
-      appliedRole: FamilyRole.values[app['applied_role']],
+      appliedRole: (app['applied_role'] ?? 0) < FamilyRole.values.length ? FamilyRole.values[app['applied_role'] ?? 0] : FamilyRole.other,
       message: app['message'],
       isApproved: app['is_approved'],
-      status: ApplicationStatus.values[app['status'] ?? 0],
+      status: (app['status'] ?? 0) < ApplicationStatus.values.length ? ApplicationStatus.values[app['status'] ?? 0] : ApplicationStatus.pending,
       isInvitation: app['is_invitation'] ?? false,
       userRating: app['user_rating']?.toDouble(),
       hostRating: app['host_rating']?.toDouble(),
       userComment: app['user_comment'],
       hostComment: app['host_comment'],
+      createdAt: app['created_at'] != null ? DateTime.parse(app['created_at'].toString().endsWith('Z') || app['created_at'].toString().contains('+') || app['created_at'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? app['created_at'] : '${app['created_at']}Z').toLocal() : null,
     )).toList();
   }
 
@@ -274,15 +275,16 @@ class SupabaseService {
       id: app['id'],
       eventId: app['event_id'],
       applicantId: app['applicant_id'],
-      appliedRole: FamilyRole.values[app['applied_role']],
+      appliedRole: (app['applied_role'] ?? 0) < FamilyRole.values.length ? FamilyRole.values[app['applied_role'] ?? 0] : FamilyRole.other,
       message: app['message'],
       isApproved: app['is_approved'],
-      status: ApplicationStatus.values[app['status'] ?? 0],
+      status: (app['status'] ?? 0) < ApplicationStatus.values.length ? ApplicationStatus.values[app['status'] ?? 0] : ApplicationStatus.pending,
       isInvitation: app['is_invitation'] ?? false,
       userRating: app['user_rating']?.toDouble(),
       hostRating: app['host_rating']?.toDouble(),
       userComment: app['user_comment'],
       hostComment: app['host_comment'],
+      createdAt: app['created_at'] != null ? DateTime.parse(app['created_at'].toString().endsWith('Z') || app['created_at'].toString().contains('+') || app['created_at'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? app['created_at'] : '${app['created_at']}Z').toLocal() : null,
     )).toList();
   }
 
@@ -296,15 +298,16 @@ class SupabaseService {
       id: app['id'],
       eventId: app['event_id'],
       applicantId: app['applicant_id'],
-      appliedRole: FamilyRole.values[app['applied_role']],
+      appliedRole: (app['applied_role'] ?? 0) < FamilyRole.values.length ? FamilyRole.values[app['applied_role'] ?? 0] : FamilyRole.other,
       message: app['message'],
       isApproved: app['is_approved'],
-      status: ApplicationStatus.values[app['status'] ?? 0],
+      status: (app['status'] ?? 0) < ApplicationStatus.values.length ? ApplicationStatus.values[app['status'] ?? 0] : ApplicationStatus.pending,
       isInvitation: app['is_invitation'] ?? false,
       userRating: app['user_rating']?.toDouble(),
       hostRating: app['host_rating']?.toDouble(),
       userComment: app['user_comment'],
       hostComment: app['host_comment'],
+      createdAt: app['created_at'] != null ? DateTime.parse(app['created_at'].toString().endsWith('Z') || app['created_at'].toString().contains('+') || app['created_at'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? app['created_at'] : '${app['created_at']}Z').toLocal() : null,
     )).toList();
   }
 
@@ -317,15 +320,16 @@ class SupabaseService {
       id: app['id'],
       eventId: app['event_id'],
       applicantId: app['applicant_id'],
-      appliedRole: FamilyRole.values[app['applied_role']],
+      appliedRole: (app['applied_role'] ?? 0) < FamilyRole.values.length ? FamilyRole.values[app['applied_role'] ?? 0] : FamilyRole.other,
       message: app['message'],
       isApproved: app['is_approved'],
-      status: ApplicationStatus.values[app['status'] ?? 0],
+      status: (app['status'] ?? 0) < ApplicationStatus.values.length ? ApplicationStatus.values[app['status'] ?? 0] : ApplicationStatus.pending,
       isInvitation: app['is_invitation'] ?? false,
       userRating: app['user_rating']?.toDouble(),
       hostRating: app['host_rating']?.toDouble(),
       userComment: app['user_comment'],
       hostComment: app['host_comment'],
+      createdAt: app['created_at'] != null ? DateTime.parse(app['created_at'].toString().endsWith('Z') || app['created_at'].toString().contains('+') || app['created_at'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? app['created_at'] : '${app['created_at']}Z').toLocal() : null,
     )).toList();
   }
 

@@ -79,7 +79,6 @@ enum EventType {
   babyShower,
   houseWarming,
   anniversary,
-  death,
   houseParty,
   other,
 }
@@ -274,7 +273,7 @@ class BaratiEvent {
     hostId: json['hostId'],
     title: json['title'],
     description: json['description'],
-    date: DateTime.parse(json['date']),
+    date: DateTime.parse(json['date'].toString().endsWith('Z') || json['date'].toString().contains('+') || json['date'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? json['date'] : '${json['date']}Z').toLocal(),
     location: json['location'],
     eventType: (json['eventType'] ?? 0) < EventType.values.length 
         ? EventType.values[json['eventType'] ?? 0] 
@@ -313,6 +312,7 @@ class RoleApplication {
   final double? hostRating; // Host's rating of the guest
   final String? userComment; // Guest's comment about the event
   final String? hostComment; // Host's comment about the guest
+  final DateTime? createdAt;
 
   RoleApplication({
     required this.id,
@@ -327,6 +327,7 @@ class RoleApplication {
     this.hostRating,
     this.userComment,
     this.hostComment,
+    this.createdAt,
   });
 
   Map<String, dynamic> toJson() => {
@@ -342,6 +343,7 @@ class RoleApplication {
     'hostRating': hostRating,
     'userComment': userComment,
     'hostComment': hostComment,
+    'created_at': createdAt?.toUtc().toIso8601String(),
   };
 
   factory RoleApplication.fromJson(Map<String, dynamic> json) => RoleApplication(
@@ -361,5 +363,6 @@ class RoleApplication {
     hostRating: json['hostRating']?.toDouble(),
     userComment: json['userComment'],
     hostComment: json['hostComment'],
+    createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'].toString().endsWith('Z') || json['created_at'].toString().contains('+') || json['created_at'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? json['created_at'] : '${json['created_at']}Z').toLocal() : null,
   );
 }

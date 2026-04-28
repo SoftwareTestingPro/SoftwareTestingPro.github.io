@@ -264,62 +264,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Widget _buildGlowShape(double size, Color color, {bool isCircle = true}) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
-        borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.1),
-            blurRadius: 40,
-            spreadRadius: 20,
-          ),
-        ],
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.05),
-          shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
-          borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
-        ),
-      ),
-    );
-  }
-
   Widget _buildPageBackground() {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFFF3E5F5).withOpacity(0.5), // Soft Lavender
-            const Color(0xFFE1F5FE).withOpacity(0.5), // Soft Sky
-            Colors.white,
-          ],
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/app_background.png'),
+          fit: BoxFit.cover,
         ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 40,
-            right: -20,
-            child: _buildGlowShape(120, Colors.purple.withOpacity(0.2)),
-          ),
-          Positioned(
-            top: 400,
-            left: -40,
-            child: _buildGlowShape(180, Colors.blue.withOpacity(0.15)),
-          ),
-          Positioned(
-            bottom: 100,
-            left: 40,
-            child: _buildGlowShape(150, Colors.amber.withOpacity(0.1)),
-          ),
-        ],
       ),
     );
   }

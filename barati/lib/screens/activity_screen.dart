@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/models.dart';
 import '../services/supabase_service.dart';
+import '../services/event_logic.dart';
 import 'event_details_screen.dart';
 
 class ActivityScreen extends StatefulWidget {
@@ -125,67 +126,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
     return msg[0].toUpperCase() + msg.substring(1);
   }
 
-  Widget _buildGlowShape(double size, Color color, {bool isCircle = true}) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
-        borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.1),
-            blurRadius: 40,
-            spreadRadius: 20,
-          ),
-        ],
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.05),
-          shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
-          borderRadius: isCircle ? null : BorderRadius.circular(size * 0.3),
-        ),
-      ),
-    );
-  }
-
   Widget _buildPageBackground() {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFFF3E5F5).withOpacity(0.5), // Soft Lavender
-            const Color(0xFFE1F5FE).withOpacity(0.5), // Soft Sky
-            Colors.white,
-          ],
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/app_background.png'),
+          fit: BoxFit.cover,
         ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 40,
-            right: -20,
-            child: _buildGlowShape(120, Colors.purple.withOpacity(0.2)),
-          ),
-          Positioned(
-            top: 300,
-            left: -40,
-            child: _buildGlowShape(180, Colors.blue.withOpacity(0.15)),
-          ),
-          Positioned(
-            top: 600,
-            right: 20,
-            child: _buildGlowShape(100, Colors.pink.withOpacity(0.1)),
-          ),
-          Positioned(
-            bottom: 100,
-            left: 40,
-            child: _buildGlowShape(150, Colors.amber.withOpacity(0.1)),
-          ),
-        ],
       ),
     );
   }
@@ -259,15 +206,27 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      app.appliedRole.toLabel(),
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 12,
-                                        color: Colors.grey[600],
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            app.appliedRole.toLabel(),
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 12,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                          if (app.createdAt != null)
+                                            Text(
+                                              EventLogic.formatDateTime(app.createdAt!),
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 10,
+                                                color: Colors.grey[500],
+                                              ),
+                                            ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                    ],
                                 ),
                               ),
                             ],
