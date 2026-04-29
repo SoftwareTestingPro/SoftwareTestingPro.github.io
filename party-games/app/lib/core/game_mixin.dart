@@ -49,6 +49,7 @@ mixin GameLogicMixin<T extends StatefulWidget> on State<T> {
 
   void stopTimer() {
     timer?.cancel();
+    audioPlayer.stop(); // Instantly stop any playing timer audio
     setState(() => timerRunning = false);
   }
 

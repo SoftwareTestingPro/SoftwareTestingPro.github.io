@@ -9,9 +9,11 @@ import '../controllers/poker_controller.dart';
 import '../core/utils.dart';
 import '../core/constants.dart';
 import '../core/game_mixin.dart';
+import '../core/game_layout.dart';
 import '../widgets/game_card.dart';
 import '../widgets/level_selector.dart';
 import '../widgets/game_timer_display.dart';
+import '../widgets/refuse_task_prompt.dart';
 import 'dart:math' as math;
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -79,6 +81,7 @@ class _PokerGameScreenState extends State<PokerGameScreen>
   }
 
   void _swipeAway(bool isRight) {
+    stopTimer(); // Ensure timer stops on swipe
     final screenWidth = MediaQuery.of(context).size.width;
     final targetX = isRight ? screenWidth * 1.5 : -screenWidth * 1.5;
     _startSwipeAnimation(Offset(targetX, _dragOffset.dy), nextTask: true);
@@ -156,7 +159,7 @@ class _PokerGameScreenState extends State<PokerGameScreen>
                 },
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
 
               FadeInDown(
                 child: Text(
@@ -169,14 +172,14 @@ class _PokerGameScreenState extends State<PokerGameScreen>
                 ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
 
               Expanded(
                 child: Center(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      final cardHeight = constraints.maxHeight * 0.95;
-                      final cardWidth = (cardHeight * 0.72).clamp(200.0, constraints.maxWidth * 0.95);
+                      final cardHeight = GameLayout.getCardHeight(context, constraints);
+                      final cardWidth = GameLayout.getCardWidth(cardHeight, constraints);
 
                       return Stack(
                         alignment: Alignment.center,
@@ -186,6 +189,39 @@ class _PokerGameScreenState extends State<PokerGameScreen>
                             height: cardHeight,
                             icon: Icons.style_rounded,
                           ),
+
+                          // Tinder-style "NEXT" overlay
+                          if (_dragOffset.dx.abs() > 20)
+                            Positioned(
+                              top: 50,
+                              left: _dragOffset.dx > 0 ? 30 : null,
+                              right: _dragOffset.dx < 0 ? 30 : null,
+                              child: Opacity(
+                                opacity: (_dragOffset.dx.abs() / 100).clamp(0.0, 1.0),
+                                child: Transform.rotate(
+                                  angle: _dragOffset.dx > 0 ? -0.2 : 0.2,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: _dragOffset.dx > 0 ? Colors.greenAccent : Colors.orangeAccent,
+                                        width: 4,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      "NEXT",
+                                      style: GoogleFonts.outfit(
+                                        color: _dragOffset.dx > 0 ? Colors.greenAccent : Colors.orangeAccent,
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 4,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           
                           GestureDetector(
                             onHorizontalDragUpdate: (details) {
@@ -271,18 +307,9 @@ class _PokerGameScreenState extends State<PokerGameScreen>
               
               const SizedBox(height: 12),
 
-              if (!_isFlipped && _currentTask.isNotEmpty)
-                FadeInUp(
-                  child: Text(
-                    "Refuse task? Tap for Punishment.",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.outfit(
-                      color: Colors.black87,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              RefuseTaskPrompt(
+                show: !_isFlipped && _currentTask.isNotEmpty,
+              ),
               
               const SizedBox(height: 12),
               

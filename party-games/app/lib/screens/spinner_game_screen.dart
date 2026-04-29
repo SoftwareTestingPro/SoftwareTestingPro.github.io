@@ -9,9 +9,11 @@ import '../controllers/spinner_controller.dart';
 import '../core/utils.dart';
 import '../core/constants.dart';
 import '../core/game_mixin.dart';
+import '../core/game_layout.dart';
 import '../widgets/game_card.dart';
 import '../widgets/level_selector.dart';
 import '../widgets/game_timer_display.dart';
+import '../widgets/refuse_task_prompt.dart';
 import 'dart:math' as math;
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -190,8 +192,8 @@ class _SpinnerGameScreenState extends State<SpinnerGameScreen>
                 child: Center(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      final cardHeight = constraints.maxHeight * 0.95;
-                      final cardWidth = (cardHeight * 0.72).clamp(200.0, constraints.maxWidth * 0.95);
+                      final cardHeight = GameLayout.getCardHeight(context, constraints);
+                      final cardWidth = GameLayout.getCardWidth(cardHeight, constraints);
 
                       return Stack(
                         alignment: Alignment.center,
@@ -301,18 +303,9 @@ class _SpinnerGameScreenState extends State<SpinnerGameScreen>
                   
                   const SizedBox(height: 15),
 
-                  if (!_isFlipped && !_showBottle && _currentTask.isNotEmpty)
-                    FadeInUp(
-                      child: Text(
-                        "Refuse task? Tap for Punishment.",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.outfit(
-                          color: Colors.black87,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+                  RefuseTaskPrompt(
+                    show: !_isFlipped && !_showBottle && _currentTask.isNotEmpty,
+                  ),
                 ],
               ),
               
