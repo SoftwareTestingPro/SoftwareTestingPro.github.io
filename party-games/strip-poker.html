@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Strip Poker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/strip-poker.css">
+</head>
+<body>
+<a href="index.html" class="home-btn" aria-label="Home">🏠</a>
+
+<div id="player-setup-container"></div>
+
+<!-- Game Screen -->
+<div class="container hidden" id="gameScreen">
+    <div id="baseIndicator"></div>
+
+    <div class="card-container" id="card-container">
+        <div class="card-face card-front">
+            <div id="taskDisplay">Loading tasks...</div>
+        </div>
+        <div class="card-face card-back">
+            <div id="punishmentDisplay"></div>
+        </div>
+    </div>
+
+    <div id="timerContainer"></div>
+    <button id="punishBtn" onclick="showPunishment()">😈 I can't, better punish me</button>
+
+    <!-- circular heart button -->
+    <div class="heart-wrap">
+        <button id="nextTaskBtn" class="heart-circle" aria-label="Next task" onclick="onHeartClick()">
+            <span class="heart-emoji">❤️</span>
+        </button>
+    </div>
+
+    <div id="baseSwitch"></div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/strip-poker.js"></script>
+<script>
+    // Load player setup template
+    fetch('templates/player-setup.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('player-setup-container').innerHTML = html;
+            loadPlayerSetup();
+        });
+</script>
+</body>
+</html>

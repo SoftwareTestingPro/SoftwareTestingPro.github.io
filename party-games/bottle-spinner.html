@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Bottle Spinner</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bottle-spinner.css">
+</head>
+<body>
+<a href="index.html" class="home-btn" aria-label="Home">🏠</a>
+
+<div id="player-setup-container"></div>
+
+<div class="container hidden" id="game-container">
+    <h1>Spin the Bottle</h1>
+    <div id="bottle-container">
+        <div id="bottle">
+            <div class="bottle-neck"></div>
+            <div class="bottle-body"></div>
+            <div class="bottle-cap"></div>
+        </div>
+    </div>
+    <button id="spin-button">Spin the Bottle</button>
+</div>
+<script src="js/common.js"></script>
+<script src="js/bottle-spinner.js"></script>
+<script>
+    // Load player setup template
+    fetch('templates/player-setup.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('player-setup-container').innerHTML = html;
+            loadPlayerSetup();
+        });
+
+    function startGame() {
+        document.getElementById('startScreen').classList.add('hidden');
+        document.getElementById('game-container').classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
