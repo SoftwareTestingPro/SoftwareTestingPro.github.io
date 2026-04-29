@@ -20,6 +20,10 @@ abstract class GameController {
     currentBase = 1;
   }
 
+  void switchBase(int base) {
+    currentBase = base;
+  }
+
   String getNextTask() {
     if (players.isEmpty) return "No players added!";
     

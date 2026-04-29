@@ -9,8 +9,4 @@ class PokerController extends GameController {
   Player get lastActivePlayer {
     return players[(currentPlayerIndex - 1 + players.length) % players.length];
   }
-  
-  void switchBase(int base) {
-    currentBase = base;
-  }
 }
