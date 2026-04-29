@@ -128,25 +128,28 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(20),
-                itemCount: _nameControllers.length,
-                itemBuilder: (context, index) {
-                  return FadeInRight(
-                    delay: Duration(milliseconds: index * 100),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: _PlayerRow(
-                        nameController: _nameControllers[index],
-                        selectedGender: _genders[index],
-                        onGenderSelected: (gender) {
-                          setState(() => _genders[index] = gender);
-                        },
-                        onRemove: () => _removePlayer(index),
+              child: Center(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(20),
+                  itemCount: _nameControllers.length,
+                  itemBuilder: (context, index) {
+                    return FadeInRight(
+                      delay: Duration(milliseconds: index * 100),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: _PlayerRow(
+                          nameController: _nameControllers[index],
+                          selectedGender: _genders[index],
+                          onGenderSelected: (gender) {
+                            setState(() => _genders[index] = gender);
+                          },
+                          onRemove: () => _removePlayer(index),
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
             Padding(
@@ -195,6 +198,7 @@ class _PlayerRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           flex: 5,

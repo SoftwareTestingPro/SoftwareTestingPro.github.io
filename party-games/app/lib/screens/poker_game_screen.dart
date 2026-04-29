@@ -3,6 +3,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../main.dart';
 import '../controllers/poker_controller.dart';
 import '../core/utils.dart';
@@ -23,6 +24,7 @@ class _PokerGameScreenState extends State<PokerGameScreen> with TickerProviderSt
   bool _isFlipped = false;
   late AnimationController _flipController;
   late AnimationController _swipeController;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   Offset _dragOffset = Offset.zero;
   double _dragAngle = 0;
@@ -54,6 +56,7 @@ class _PokerGameScreenState extends State<PokerGameScreen> with TickerProviderSt
     _swipeController.dispose();
     _timer?.cancel();
     WakelockPlus.disable();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -88,16 +91,36 @@ class _PokerGameScreenState extends State<PokerGameScreen> with TickerProviderSt
   void _startTimer() {
     setState(() => _timerRunning = true);
     _timer?.cancel();
+    
+    // Play initial tick
+    _playTimerSound();
+    
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_secondsLeft > 0) {
           _secondsLeft--;
+          _playTimerSound();
+          
+          if (_secondsLeft == 0) {
+            _timer?.cancel();
+            _timerRunning = false;
+          }
         } else {
           _timer?.cancel();
           _timerRunning = false;
         }
       });
     });
+  }
+
+  void _playTimerSound() {
+    if (_secondsLeft > 8) {
+      _audioPlayer.play(AssetSource('sounds/tick.mp3'));
+    } else if (_secondsLeft > 3) {
+      _audioPlayer.play(AssetSource('sounds/warning.mp3'));
+    } else {
+      _audioPlayer.play(AssetSource('sounds/end.mp3'));
+    }
   }
 
   void _stopTimer() {
@@ -163,8 +186,8 @@ class _PokerGameScreenState extends State<PokerGameScreen> with TickerProviderSt
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            onPressed: _nextTask,
+            icon: const Icon(Icons.home_rounded),
+            onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false),
           )
         ],
       ),
@@ -349,13 +372,13 @@ class _PokerGameScreenState extends State<PokerGameScreen> with TickerProviderSt
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
-                          "Refuse the task? Tap the card for your punishment.",
+                          "Refuse task? Tap for Punishment.",
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           style: GoogleFonts.outfit(
-                            color: Colors.white54,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.2,
                           ),
                         ),
@@ -368,7 +391,7 @@ class _PokerGameScreenState extends State<PokerGameScreen> with TickerProviderSt
               
               const Text(
                 'Swipe Left for Next Task • Tap to Flip',
-                style: TextStyle(color: Colors.white38, fontSize: 10),
+                style: TextStyle(color: Colors.black45, fontSize: 13, fontWeight: FontWeight.bold),
               ),
             ],
           ),

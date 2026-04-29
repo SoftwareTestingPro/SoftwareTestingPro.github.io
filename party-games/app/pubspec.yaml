@@ -17,6 +17,7 @@ dependencies:
   animate_do: ^3.3.4
   simple_animations: ^5.0.2
   wakelock_plus: ^1.2.11
+  audioplayers: ^6.6.0
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +32,7 @@ flutter:
     - assets/tasks/
     - assets/punishments/
     - assets/images/
+    - assets/sounds/
 
 flutter_launcher_icons:
   android: "launcher_icon"
