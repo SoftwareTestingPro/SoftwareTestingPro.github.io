@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/barati_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -171,7 +172,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: _isLoading 
-        ? const Center(child: CircularProgressIndicator())
+        ? const Center(child: BaratiLoader(isFullScreen: false))
         : SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(

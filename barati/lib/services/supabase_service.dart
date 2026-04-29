@@ -138,7 +138,9 @@ class SupabaseService {
           .map((r) => r is int ? EventRole(role: r < FamilyRole.values.length ? FamilyRole.values[r] : FamilyRole.other, description: '', gender: 'Any') : EventRole.fromJson(r as Map<String, dynamic>))
           .toList(),
       approvedMemberIds: List<String>.from(e['approved_member_ids']),
-      imageUrl: e['image_url'] ?? 'https://images.unsplash.com/photo-1519741497674-611481863552',
+      imageUrl: (e['image_url'] != null && (e['image_url'].toString().startsWith('assets/') || e['image_url'].toString().startsWith('/9j/'))) 
+          ? e['image_url'] 
+          : 'assets/images/${((e['event_type'] ?? 0) < EventType.values.length ? EventType.values[e['event_type'] ?? 0] : EventType.other).name}.jpg',
     )).toList();
   }
 

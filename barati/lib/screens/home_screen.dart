@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/barati_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -195,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildAvailableBaratiList() {
     final theme = Theme.of(context);
-    if (_isLoading) return const Center(child: CircularProgressIndicator());
+    if (_isLoading) return const Center(child: BaratiLoader(isFullScreen: false));
     
     if (_filteredProfiles.isEmpty) {
       return Center(
@@ -353,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
     
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: BaratiLoader(isFullScreen: false)),
       );
     }
 
@@ -381,15 +382,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 32),
                         _buildHostDashboard(),
                       ] else ...[
-                        _buildSectionHeader(context, 'Events Near You', 'Map'),
+                        _buildSectionHeader(context, 'Events Near You'),
                         const SizedBox(height: 16),
                         _buildWeddingEventsList(),
                         const SizedBox(height: 32),
-                        _buildSectionHeader(context, 'Active Applications', 'History'),
+                        if (_userApplications.any((app) {
+                          final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
+                          return event.id != 'dummy' && event.date.isAfter(DateTime.now()) && app.isApproved;
+                        })) ...[
+                          _buildSectionHeader(context, 'Approved Events for Me'),
+                          const SizedBox(height: 16),
+                          _buildApprovedEventsList(),
+                          const SizedBox(height: 32),
+                        ],
+                        _buildSectionHeader(context, 'Active Applications'),
                         const SizedBox(height: 16),
                         _buildMyApplicationsList(isPast: false),
                         const SizedBox(height: 32),
-                        _buildSectionHeader(context, 'Attended Events', 'History'),
+                        _buildSectionHeader(context, 'Attended Events'),
                         const SizedBox(height: 16),
                         _buildMyApplicationsList(isPast: true),
                       ],
@@ -605,9 +615,73 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildApprovedEventsList() {
+    if (_isLoading) {
+      return const Center(child: BaratiLoader(isFullScreen: false));
+    }
+
+    final now = DateTime.now();
+    final approvedApps = _userApplications.where((app) {
+      final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
+      return event.id != 'dummy' && event.date.isAfter(now) && app.isApproved;
+    }).toList();
+
+    final Map<String, List<RoleApplication>> groupedApps = {};
+    for (var app in approvedApps) {
+      groupedApps.putIfAbsent(app.eventId, () => []).add(app);
+    }
+
+    return SizedBox(
+      height: 270,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+        scrollDirection: Axis.horizontal,
+        itemCount: groupedApps.length,
+        itemBuilder: (context, index) {
+          final eventId = groupedApps.keys.elementAt(index);
+          final event = _events.firstWhere((e) => e.id == eventId);
+          final apps = groupedApps[eventId]!;
+
+          return GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
+            ).then((_) => _loadData()),
+            child: _buildModernEventCard(
+              event,
+              isApproved: true,
+              onWithdraw: () async {
+                 final confirm = await showDialog<bool>(
+                   context: context,
+                   builder: (context) => AlertDialog(
+                     title: const Text('Withdraw Request'),
+                     content: const Text('Are you sure you want to withdraw from this approved event?'),
+                     actions: [
+                       TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                       TextButton(
+                         onPressed: () => Navigator.pop(context, true),
+                         style: TextButton.styleFrom(foregroundColor: Colors.red),
+                         child: const Text('Withdraw'),
+                       ),
+                     ],
+                   ),
+                 );
+                 if (confirm == true) {
+                   for (var app in apps) {
+                     await SupabaseService().cancelApplication(app.id, app.eventId, app.applicantId);
+                   }
+                   _loadData();
+                 }
+              }
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildWeddingEventsList() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: BaratiLoader(isFullScreen: false));
     }
 
     final now = DateTime.now();
@@ -685,10 +759,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget _buildModernEventCard(BaratiEvent event, {bool isHost = false, bool isPast = false}) {
+  Widget _buildModernEventCard(BaratiEvent event, {bool isHost = false, bool isPast = false, bool isApproved = false, VoidCallback? onWithdraw}) {
     final theme = Theme.of(context);
     final guestsConfirmed = event.approvedMemberIds.length;
-    final isMatch = !isHost && !isPast && event.neededRoles.any((r) => 
+    final isMatch = !isHost && !isPast && !isApproved && event.neededRoles.any((r) => 
       _userRoles.contains(r.role) && 
       EventRole.matchGender(_userGender ?? 'Other', r.gender)
     );
@@ -793,6 +867,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: GoogleFonts.montserrat(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
+                  ),
+                if (onWithdraw != null)
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: _buildCardIconButton(Icons.cancel_outlined, Colors.red, onWithdraw),
                   ),
                 if (isHost && !isPast)
                   Positioned(
@@ -978,11 +1058,9 @@ class _HomeScreenState extends State<HomeScreen> {
         // or specifically pending things for future events.
         
         if (event.date.isBefore(now)) {
-          // If event is past, only show it in 'Active' if it was NOT approved but we want to show history?
-          // No, usually 'Active' means things you can still act upon or are waiting for.
           return false; 
         }
-        return true;
+        return !app.isApproved;
       }
     }).toList();
 
@@ -1334,13 +1412,13 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         const SizedBox(height: 16),
         if (futureEvents.isNotEmpty) ...[
-          _buildSectionHeader(context, 'My Upcoming Events', 'View All'),
+          _buildSectionHeader(context, 'My Upcoming Events'),
           const SizedBox(height: 16),
           _buildEventsList(futureEvents, isHost: true),
         ],
         if (pastEvents.isNotEmpty) ...[
           const SizedBox(height: 32),
-          _buildSectionHeader(context, 'My Past Events', 'History'),
+          _buildSectionHeader(context, 'My Past Events'),
           const SizedBox(height: 16),
           _buildEventsList(pastEvents, isHost: true, isPast: true),
         ],

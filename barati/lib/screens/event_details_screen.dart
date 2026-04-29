@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/barati_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -169,7 +170,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const BaratiLoader(isFullScreen: true);
     }
 
     return Scaffold(

@@ -37,9 +37,10 @@
   <div id="loading-indicator">
     <style>
       body {
-        background-color: #FDF5E6;
+        background: radial-gradient(circle at center, #FDF5E6 0%, #faecd5 100%);
         margin: 0;
         padding: 0;
+        overflow: hidden;
       }
       #loading-indicator {
         display: flex;
@@ -49,28 +50,60 @@
         height: 100vh;
         width: 100vw;
       }
-      .spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid #8B000022;
-        border-top: 5px solid #8B0000;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-bottom: 20px;
+      .loader {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 30px;
       }
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
+      .loader:before, .loader:after {
+        content: '';
+        border-radius: 50%;
+        position: absolute;
+        inset: 0;
+        box-shadow: 0 0 20px 5px rgba(139, 0, 0, 0.3) inset;
+      }
+      .loader:after {
+        box-shadow: 0 5px 0 #8B0000 inset;
+        animation: rotate 2s linear infinite;
+      }
+      @keyframes rotate {
+        0% { transform: rotate(0); }
         100% { transform: rotate(360deg); }
+      }
+      .pulse {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        background-color: #8B0000;
+        border-radius: 50%;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+        50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
       }
       .loading-text {
         font-family: 'Playfair Display', serif;
         color: #8B0000;
-        font-size: 24px;
-        font-weight: bold;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        animation: fade 2s ease-in-out infinite;
+      }
+      @keyframes fade {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
       }
     </style>
-    <div class="spinner"></div>
-    <div class="loading-text">Barati</div>
+    <div class="loader">
+      <div class="pulse"></div>
+    </div>
+    <div class="loading-text">BARATI</div>
   </div>
   <script src="flutter_bootstrap.js" async></script>
 </body>

@@ -291,7 +291,9 @@ class BaratiEvent {
         })
         .toList(),
     approvedMemberIds: List<String>.from(json['approved_member_ids'] ?? json['approvedMemberIds'] ?? []),
-    imageUrl: json['imageUrl'] ?? 'https://images.unsplash.com/photo-1519741497674-611481863552',
+    imageUrl: (json['imageUrl'] != null && (json['imageUrl'].toString().startsWith('assets/') || json['imageUrl'].toString().startsWith('/9j/'))) 
+        ? json['imageUrl'] 
+        : 'assets/images/${((json['eventType'] ?? 0) < EventType.values.length ? EventType.values[json['eventType'] ?? 0] : EventType.other).name}.jpg',
     city: json['city'] ?? '',
     state: json['state'] ?? '',
   );

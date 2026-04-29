@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/barati_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -116,7 +117,7 @@ class _ManageApplicationsScreenState extends State<ManageApplicationsScreen> {
         centerTitle: true,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: BaratiLoader(isFullScreen: false))
           : _applications.isEmpty
               ? _buildEmptyState()
               : _buildApplicationsList(),

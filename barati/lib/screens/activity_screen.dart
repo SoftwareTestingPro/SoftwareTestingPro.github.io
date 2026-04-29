@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/barati_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -33,16 +34,45 @@ class _ActivityScreenState extends State<ActivityScreen> {
       _currentUserId = prefs.getString('user_id') ?? prefs.getString('mobileNumber');
       if (_currentUserId == null) return;
 
+      // 1. Try to load from cache first for instant UI
+      final cachedApps = prefs.getString('cached_activity_apps');
+      final cachedEvents = prefs.getString('cached_activity_events');
+      final cachedProfiles = prefs.getString('cached_activity_profiles');
+
+      if (cachedApps != null && cachedEvents != null && cachedProfiles != null) {
+        try {
+          final appsList = jsonDecode(cachedApps) as List;
+          final eventsList = jsonDecode(cachedEvents) as List;
+          final profilesList = jsonDecode(cachedProfiles) as List;
+
+          final cApps = appsList.map((e) => RoleApplication.fromJson(e)).toList();
+          final cEvents = eventsList.map((e) => BaratiEvent.fromJson(e)).toList();
+          final cProfiles = profilesList.map((p) => BaratiUser.fromJson(p)).toList();
+
+          if (mounted) {
+            setState(() {
+              _eventsMap = {for (var e in cEvents) e.id: e};
+              _profilesMap = {for (var p in cProfiles) p.id: p};
+              _activities = cApps;
+              _isLoading = false;
+            });
+          }
+        } catch (e) {
+          // ignore cache errors
+        }
+      }
+
+      // 2. Fetch fresh data in the background
       final allApps = await SupabaseService().getAllApplications();
       final allEvents = await SupabaseService().getEvents();
       final allProfiles = await SupabaseService().getProfiles();
 
-      _eventsMap = {for (var e in allEvents) e.id: e};
-      _profilesMap = {for (var p in allProfiles) p.id: p};
+      final freshEventsMap = {for (var e in allEvents) e.id: e};
+      final freshProfilesMap = {for (var p in allProfiles) p.id: p};
 
       List<RoleApplication> relevantApps = [];
       for (var app in allApps) {
-        final event = _eventsMap[app.eventId];
+        final event = freshEventsMap[app.eventId];
         if (event == null) continue;
 
         // Skip my own actions applied to my own events (if any)
@@ -58,10 +88,18 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
       if (mounted) {
         setState(() {
+          _eventsMap = freshEventsMap;
+          _profilesMap = freshProfilesMap;
           _activities = relevantApps;
           _isLoading = false;
         });
       }
+
+      // 3. Update cache
+      prefs.setString('cached_activity_apps', jsonEncode(relevantApps.map((e) => e.toJson()).toList()));
+      prefs.setString('cached_activity_events', jsonEncode(allEvents.map((e) => e.toJson()).toList()));
+      prefs.setString('cached_activity_profiles', jsonEncode(allProfiles.map((e) => e.toJson()).toList()));
+
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -149,7 +187,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         children: [
           _buildPageBackground(),
           _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(child: BaratiLoader(isFullScreen: false))
               : _activities.isEmpty
                   ? Center(
                       child: Text(

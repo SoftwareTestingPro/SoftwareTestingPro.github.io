@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/barati_loader.dart';
 import 'package:csc_picker_plus/csc_picker_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -281,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final availableRoles = _getRolesForGender(_selectedGender);
 
     if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const BaratiLoader(isFullScreen: true);
     }
 
     return PopScope(

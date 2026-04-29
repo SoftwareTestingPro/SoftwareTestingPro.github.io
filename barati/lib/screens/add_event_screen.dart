@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
 import '../models/models.dart';
 import '../services/supabase_service.dart';
 import '../services/event_logic.dart';
@@ -30,6 +32,38 @@ class _AddEventScreenState extends State<AddEventScreen> {
   late DateTime _selectedDate;
   late List<EventRole> _selectedRoles;
   String? _imageUrl;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? imageFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
+      
+      if (imageFile != null) {
+        final bytes = await imageFile.readAsBytes();
+        final decodedImage = img.decodeImage(bytes);
+        if (decodedImage != null) {
+          img.Image resizedImage = decodedImage;
+          if (decodedImage.width > 800) {
+            resizedImage = img.copyResize(decodedImage, width: 800);
+          }
+          final jpgBytes = img.encodeJpg(resizedImage, quality: 80);
+          final base64String = base64Encode(jpgBytes);
+          setState(() {
+            _imageUrl = base64String;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error selecting image: $e')),
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -213,6 +247,41 @@ class _AddEventScreenState extends State<AddEventScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+              _buildSectionTitle('Event Cover Image (Optional)'),
+              const SizedBox(height: 12),
+              InkWell(
+                onTap: _pickImage,
+                child: Container(
+                  height: 180,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.grey[300]!),
+                    image: _imageUrl != null && _imageUrl!.isNotEmpty
+                        ? DecorationImage(
+                            image: _imageUrl!.startsWith('assets/')
+                                ? AssetImage(_imageUrl!) as ImageProvider
+                                : MemoryImage(base64Decode(_imageUrl!)),
+                            fit: BoxFit.cover,
+                          )
+                        : DecorationImage(
+                            image: AssetImage(EventLogic.getDefaultImageUrl(_selectedType)),
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: _pickImage,
+                  icon: const Icon(Icons.upload_file, size: 18),
+                  label: Text('Upload Custom Image', style: GoogleFonts.montserrat(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 24),
               _buildSectionTitle('What kind of event?'),
               const SizedBox(height: 12),
               _buildEventTypeSelector(),
@@ -429,7 +498,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
           label: Text(type.name.replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}').toUpperCase()),
           selected: isSelected,
           onSelected: (selected) {
-            if (selected) setState(() => _selectedType = type);
+            if (selected) {
+              setState(() {
+                _selectedType = type;
+                if (_imageUrl != null && _imageUrl!.startsWith('assets/')) {
+                  _imageUrl = null;
+                }
+              });
+            }
           },
           selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
           labelStyle: GoogleFonts.montserrat(

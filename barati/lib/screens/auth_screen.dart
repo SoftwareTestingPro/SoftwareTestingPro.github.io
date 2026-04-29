@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_screen.dart';
 import 'home_screen.dart';
 import '../services/supabase_service.dart';
+import '../widgets/barati_loader.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -16,6 +17,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _phoneController = TextEditingController();
   final _otpController = TextEditingController();
   bool _isOtpSent = false;
+  bool _isLoading = false;
   final String _staticOtp = "1234";
   
   @override
@@ -40,6 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _verifyOtp() async {
     if (_otpController.text == _staticOtp) {
+      setState(() => _isLoading = true);
       final prefs = await SharedPreferences.getInstance();
       final String? oldMobileNumber = prefs.getString('mobileNumber');
       final String currentMobileNumber = _phoneController.text;
@@ -80,7 +83,9 @@ class _AuthScreenState extends State<AuthScreen> {
           MaterialPageRoute(builder: (context) => const ProfileScreen()),
         );
       }
+      // If we don't navigate (e.g. error), we should stop loading, but here we pushReplacement so it's fine.
     } else {
+      setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Invalid OTP. Use 1234')),
       );
@@ -89,6 +94,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const BaratiLoader();
+    }
+    
     final theme = Theme.of(context);
     
     return Scaffold(
