@@ -29,6 +29,7 @@ flutter:
 
   assets:
     - assets/tasks/
+    - assets/punishments/
     - assets/images/
 
 flutter_launcher_icons:

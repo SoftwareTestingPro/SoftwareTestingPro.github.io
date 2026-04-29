@@ -45,8 +45,9 @@ abstract class GameController {
   }
 
   String getRandomPunishment(Player player) {
-    if (assetService.punishments.isEmpty) return "No punishments available!";
-    String p = assetService.punishments[Random().nextInt(assetService.punishments.length)];
+    final pool = assetService.basePunishments[currentBase] ?? [];
+    if (pool.isEmpty) return "No punishments available!";
+    String p = pool[Random().nextInt(pool.length)];
     return p.replaceAll('{p1}', player.name);
   }
 

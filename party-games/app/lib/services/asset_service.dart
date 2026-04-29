@@ -8,7 +8,7 @@ class AssetService {
   AssetService._internal();
 
   Map<int, TaskData> baseTasks = {};
-  List<String> punishments = [];
+  Map<int, List<String>> basePunishments = {};
   bool tasksLoaded = false;
 
   Future<void> loadTasks() async {
@@ -19,10 +19,10 @@ class AssetService {
         final String jsonString = await rootBundle.loadString('assets/tasks/Base-$i.json');
         final dynamic jsonData = json.decode(jsonString);
         baseTasks[i] = TaskData.fromJson(jsonData);
-      }
 
-      final String pString = await rootBundle.loadString('assets/tasks/Punishments.json');
-      punishments = List<String>.from(json.decode(pString));
+        final String pString = await rootBundle.loadString('assets/punishments/Base-$i.json');
+        basePunishments[i] = List<String>.from(json.decode(pString));
+      }
 
       tasksLoaded = true;
     } catch (e) {

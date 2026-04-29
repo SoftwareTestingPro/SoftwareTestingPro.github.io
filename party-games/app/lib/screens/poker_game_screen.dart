@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,12 +16,16 @@ class PokerGameScreen extends StatefulWidget {
   State<PokerGameScreen> createState() => _PokerGameScreenState();
 }
 
-class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProviderStateMixin {
+class _PokerGameScreenState extends State<PokerGameScreen> with TickerProviderStateMixin {
   final PokerController _controller = PokerController();
   String _currentTask = "";
   String _currentPunishment = "";
   bool _isFlipped = false;
   late AnimationController _flipController;
+  late AnimationController _swipeController;
+
+  Offset _dragOffset = Offset.zero;
+  double _dragAngle = 0;
   
   Timer? _timer;
   int _secondsLeft = 0;
@@ -35,6 +40,10 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
+    _swipeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
     WakelockPlus.enable();
     _nextTask();
   }
@@ -42,6 +51,7 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
   @override
   void dispose() {
     _flipController.dispose();
+    _swipeController.dispose();
     _timer?.cancel();
     WakelockPlus.disable();
     super.dispose();
@@ -93,6 +103,43 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
   void _stopTimer() {
     _timer?.cancel();
     setState(() => _timerRunning = false);
+  }
+
+  void _swipeAway(bool isRight) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final targetX = isRight ? screenWidth * 1.5 : -screenWidth * 1.5;
+    _startSwipeAnimation(Offset(targetX, _dragOffset.dy), nextTask: true);
+  }
+
+  void _returnToCenter() {
+    _startSwipeAnimation(Offset.zero, nextTask: false);
+  }
+
+  void _startSwipeAnimation(Offset targetOffset, {required bool nextTask}) {
+    _swipeController.stop();
+    final startOffset = _dragOffset;
+    final startAngle = _dragAngle;
+    final targetAngle = nextTask ? (targetOffset.dx > 0 ? 0.4 : -0.4) : 0.0;
+
+    void listener() {
+      setState(() {
+        _dragOffset = Offset.lerp(startOffset, targetOffset, _swipeController.value)!;
+        _dragAngle = lerpDouble(startAngle, targetAngle, _swipeController.value)!;
+      });
+    }
+
+    _swipeController.reset();
+    _swipeController.addListener(listener);
+    _swipeController.forward().then((_) {
+      _swipeController.removeListener(listener);
+      if (nextTask) {
+        _nextTask();
+        setState(() {
+          _dragOffset = Offset.zero;
+          _dragAngle = 0;
+        });
+      }
+    });
   }
 
   @override
@@ -191,43 +238,92 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
 
               // 3D Card Area
               Expanded(
-                child: GestureDetector(
-                  onHorizontalDragEnd: (details) {
-                    if (details.primaryVelocity != null && details.primaryVelocity!.abs() > 300) {
-                      _nextTask();
-                    }
-                  },
-                  onTap: () {
-                    if (!_isFlipped) _showPunishment();
-                  },
-                  child: Center(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        // Dynamically size card based on available space
-                        final cardHeight = constraints.maxHeight.clamp(200.0, 420.0);
-                        final cardWidth = (cardHeight * 0.76).clamp(150.0, 320.0);
-                        
-                        return AnimatedBuilder(
-                          animation: _flipController,
-                          builder: (context, child) {
-                            final angle = _flipController.value * math.pi;
-                            return Transform(
-                              transform: Matrix4.identity()
-                                ..setEntry(3, 2, 0.001)
-                                ..rotateY(angle),
+                child: Center(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final cardHeight = constraints.maxHeight.clamp(200.0, 420.0);
+                      final cardWidth = (cardHeight * 0.76).clamp(150.0, 320.0);
+
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Background Card
+                          Transform.scale(
+                            scale: 0.9 + (0.1 * (_dragOffset.dx.abs() / constraints.maxWidth).clamp(0.0, 1.0)),
+                            child: _buildCardPlaceholder(cardWidth, cardHeight),
+                          ),
+                          
+                          // Foreground Card
+                          GestureDetector(
+                            onHorizontalDragUpdate: (details) {
+                              setState(() {
+                                _dragOffset += details.delta;
+                                _dragAngle = (_dragOffset.dx / constraints.maxWidth) * 0.2;
+                              });
+                            },
+                            onHorizontalDragEnd: (details) {
+                              final threshold = constraints.maxWidth * 0.35;
+                              final isLeft = _dragOffset.dx < -threshold || (details.primaryVelocity ?? 0) < -500;
+                              if (isLeft) {
+                                _swipeAway(false);
+                              } else {
+                                _returnToCenter();
+                              }
+                            },
+                            onTap: () {
+                              if (_isFlipped) {
+                                setState(() {
+                                  _isFlipped = false;
+                                  _flipController.reverse();
+                                  _stopTimer();
+                                  _checkForTimer(_currentTask);
+                                });
+                              } else {
+                                _showPunishment();
+                              }
+                            },
+                            child: Transform(
+                              transform: Matrix4.translationValues(_dragOffset.dx, _dragOffset.dy, 0)
+                                ..rotateZ(_dragAngle),
                               alignment: Alignment.center,
-                              child: angle < math.pi / 2
-                                  ? _buildCardFront(cardWidth, cardHeight)
-                                  : Transform(
-                                      transform: Matrix4.identity()..rotateY(math.pi),
-                                      alignment: Alignment.center,
-                                      child: _buildCardBack(cardWidth, cardHeight),
+                              child: Stack(
+                                children: [
+                                  AnimatedBuilder(
+                                    animation: _flipController,
+                                    builder: (context, child) {
+                                      final angle = _flipController.value * math.pi;
+                                      return Transform(
+                                        transform: Matrix4.identity()
+                                          ..setEntry(3, 2, 0.001)
+                                          ..rotateY(angle),
+                                        alignment: Alignment.center,
+                                        child: angle < math.pi / 2
+                                            ? _buildCardFront(cardWidth, cardHeight)
+                                            : Transform(
+                                                transform: Matrix4.identity()..rotateY(math.pi),
+                                                alignment: Alignment.center,
+                                                child: _buildCardBack(cardWidth, cardHeight),
+                                              ),
+                                      );
+                                    },
+                                  ),
+                                  // Swipe Overlay (Only Left Swipe shows NEXT)
+                                  if (_dragOffset.dx < -20)
+                                    Positioned(
+                                      top: 40,
+                                      right: 20,
+                                      child: Transform.rotate(
+                                        angle: 0.2,
+                                        child: _buildSwipeLabel("NEXT", Colors.greenAccent),
+                                      ),
                                     ),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -250,7 +346,20 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
                   if (!_isFlipped)
                     FadeInUp(
                       delay: const Duration(milliseconds: 200),
-                      child: _buildPunishButton(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          "Refuse the task? Tap the card for your punishment.",
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          style: GoogleFonts.outfit(
+                            color: Colors.white54,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                      ),
                     ),
                 ],
               ),
@@ -258,7 +367,7 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
               const SizedBox(height: 8),
               
               const Text(
-                'Swipe Right for Next Task',
+                'Swipe Left for Next Task • Tap to Flip',
                 style: TextStyle(color: Colors.white38, fontSize: 10),
               ),
             ],
@@ -308,41 +417,7 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
     );
   }
 
-  Widget _buildPunishButton() {
-    return GestureDetector(
-      onTap: _showPunishment,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFF4757), Color(0xFFFF6B6B)],
-          ),
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFFF4757).withOpacity(0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            )
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.local_fire_department, color: Colors.white),
-            const SizedBox(width: 8),
-            Text(
-              "I CAN'T, PUNISH ME",
-              style: GoogleFonts.outfit(
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildCardFront(double width, double height) {
     return Container(
@@ -412,7 +487,7 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'TAP TO FLIP',
+                    'TAP FOR PUNISHMENT',
                     style: TextStyle(color: Colors.white24, letterSpacing: 2, fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -420,6 +495,47 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSwipeLabel(String text, Color color) {
+    final opacity = (_dragOffset.dx.abs() / 100).clamp(0.0, 1.0);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        border: Border.all(color: color.withOpacity(opacity), width: 4),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        text,
+        style: GoogleFonts.outfit(
+          color: color.withOpacity(opacity),
+          fontSize: 32,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardPlaceholder(double width, double height) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF6A11CB).withOpacity(0.2),
+            const Color(0xFF2575FC).withOpacity(0.2),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: const Center(
+        child: Icon(Icons.psychology_alt_rounded, color: Colors.white10, size: 60),
       ),
     );
   }
@@ -494,7 +610,7 @@ class _PokerGameScreenState extends State<PokerGameScreen> with SingleTickerProv
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'SWIPE FOR NEXT',
+                    'TAP TO YOUR TASK',
                     style: TextStyle(color: Colors.white24, letterSpacing: 2, fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ],
