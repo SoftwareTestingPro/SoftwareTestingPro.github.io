@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/barati_loader.dart';
 import 'package:csc_picker_plus/csc_picker_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -258,11 +259,81 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile deleted successfully')));
         Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
       } catch (e) {
-        if (!mounted) return;
-        setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error deleting profile: $e')));
+        debugPrint('Error deleting profile: $e');
+        if (mounted) {
+          setState(() => _isLoading = false);
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to delete profile. Please try again.')));
+        }
       }
     }
+  }
+
+  Future<void> _showDeveloperConnectDialog() async {
+    String selectedOption = 'Provide Feedback';
+    final descriptionController = TextEditingController();
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text('Connect to Developer', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButtonFormField<String>(
+                value: selectedOption,
+                decoration: const InputDecoration(labelText: 'Purpose'),
+                items: ['Provide Feedback', 'Raise a Bug', 'Request a Feature']
+                    .map((opt) => DropdownMenuItem(value: opt, child: Text(opt)))
+                    .toList(),
+                onChanged: (val) => setDialogState(() => selectedOption = val!),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: descriptionController,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  hintText: 'Describe your issue/feedback...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            ElevatedButton(
+              onPressed: () async {
+                final description = descriptionController.text.trim();
+                if (description.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a description')));
+                  return;
+                }
+                
+                final String subject = '$selectedOption - Barati App';
+                final String body = 'From: ${_nameController.text}\n'
+                                   'Mobile: $_mobileNumber\n\n'
+                                   'Type: $selectedOption\n'
+                                   'Description: $description';
+                
+                final Uri emailUri = Uri(
+                  scheme: 'mailto',
+                  path: 'sushilsingh7688@gmail.com',
+                  query: 'subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}',
+                );
+
+                if (await canLaunchUrl(emailUri)) {
+                  await launchUrl(emailUri);
+                  if (mounted) Navigator.pop(context);
+                } else {
+                  if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not launch email client')));
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildPageBackground() {
@@ -541,6 +612,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ],
+            const SizedBox(height: 24),
+            Center(
+              child: TextButton.icon(
+                onPressed: _showDeveloperConnectDialog,
+                icon: const Icon(Icons.support_agent, color: Colors.blue),
+                label: Text('Connect to Developer', 
+                  style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue)),
+              ),
+            ),
           ],
           ),
         ),

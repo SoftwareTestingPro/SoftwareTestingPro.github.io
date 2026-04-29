@@ -6,6 +6,7 @@ import 'dart:convert';
 import '../models/models.dart';
 import '../services/supabase_service.dart';
 import '../services/event_logic.dart';
+import '../services/logic_service.dart';
 import 'event_details_screen.dart';
 
 class ActivityScreen extends StatefulWidget {
@@ -62,43 +63,50 @@ class _ActivityScreenState extends State<ActivityScreen> {
         }
       }
 
-      // 2. Fetch fresh data in the background
-      final allApps = await SupabaseService().getAllApplications();
-      final allEvents = await SupabaseService().getEvents();
-      final allProfiles = await SupabaseService().getProfiles();
+      // 2. Fetch fresh data in the background (Optimized)
+      final results = await Future.wait([
+        SupabaseService().getApplicationsForUser(_currentUserId!),
+        SupabaseService().getApplicationsByHost(_currentUserId!),
+      ]);
 
-      final freshEventsMap = {for (var e in allEvents) e.id: e};
-      final freshProfilesMap = {for (var p in allProfiles) p.id: p};
-
-      List<RoleApplication> relevantApps = [];
-      for (var app in allApps) {
-        final event = freshEventsMap[app.eventId];
-        if (event == null) continue;
-
-        // Skip my own actions applied to my own events (if any)
-        if (app.applicantId == _currentUserId && event.hostId == _currentUserId) continue;
-
-        if (app.applicantId == _currentUserId || event.hostId == _currentUserId) {
-          relevantApps.add(app);
-        }
-      }
+      final myApps = results[0];
+      final hostedApps = results[1];
       
-      // We can reverse the list to show newest first, assuming they are added chronologically in backend
-      relevantApps = relevantApps.reversed.toList();
+      final relevantApps = [...myApps, ...hostedApps];
+      
+      // Get unique IDs of events and profiles we actually need
+      final eventIds = relevantApps.map((a) => a.eventId).toSet().toList();
+      final applicantIds = relevantApps.map((a) => a.applicantId).toSet().toList();
+      
+      final freshEvents = await SupabaseService().getEventsByIds(eventIds);
+      final hostIds = freshEvents.map((e) => e.hostId).toSet().toList();
+      
+      final freshProfiles = await SupabaseService().getProfilesByIds({...applicantIds, ...hostIds}.toList());
+
+      final freshEventsMap = {for (var e in freshEvents) e.id: e};
+      final freshProfilesMap = {for (var p in freshProfiles) p.id: p};
+      
+      // Sort and reverse for newest first
+      final sortedApps = relevantApps.toList();
+      sortedApps.sort((a, b) => (b.createdAt ?? DateTime(2000)).compareTo(a.createdAt ?? DateTime(2000)));
 
       if (mounted) {
         setState(() {
           _eventsMap = freshEventsMap;
           _profilesMap = freshProfilesMap;
-          _activities = relevantApps;
+          _activities = sortedApps;
           _isLoading = false;
         });
       }
 
-      // 3. Update cache
-      prefs.setString('cached_activity_apps', jsonEncode(relevantApps.map((e) => e.toJson()).toList()));
-      prefs.setString('cached_activity_events', jsonEncode(allEvents.map((e) => e.toJson()).toList()));
-      prefs.setString('cached_activity_profiles', jsonEncode(allProfiles.map((e) => e.toJson()).toList()));
+      // 3. Update cache (Atomic & Stripped to avoid QuotaExceeded)
+      try {
+        prefs.setString('cached_activity_apps', CacheLogic.getStrippedJson(sortedApps.take(50).toList()));
+        prefs.setString('cached_activity_events', CacheLogic.getStrippedJson(freshEvents.take(50).toList()));
+        prefs.setString('cached_activity_profiles', CacheLogic.getStrippedJson(freshProfiles.take(50).toList()));
+      } catch (e) {
+        debugPrint('Failed to update activity cache: $e');
+      }
 
     } catch (e) {
       if (mounted) {
@@ -178,10 +186,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Activity', style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black87,
+        elevation: 0,
       ),
       body: Stack(
         children: [

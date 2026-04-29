@@ -1,4 +1,5 @@
 import '../models/models.dart';
+import 'dart:convert';
 
 class ReputationLogic {
   /// Calculates the average rating a user received as a Barati (Guest).
@@ -56,5 +57,35 @@ class ReputationLogic {
   /// Counts the total number of events hosted by a user.
   static int countEventsHosted(String hostId, List<BaratiEvent> allEvents) {
     return allEvents.where((e) => e.hostId == hostId).length;
+  }
+}
+class CacheLogic {
+  /// Strips large base64 strings from JSON data to avoid exceeding localStorage quota.
+  static String getStrippedJson(dynamic data) {
+    if (data is List) {
+      return json.encode(data.map((item) => _stripItem(item)).toList());
+    } else {
+      return json.encode(_stripItem(data));
+    }
+  }
+
+  static Map<String, dynamic> _stripItem(dynamic item) {
+    // If item is a model, convert to Json first
+    final Map<String, dynamic> map = Map<String, dynamic>.from(
+      item is Map ? item : (item as dynamic).toJson()
+    );
+    
+    // Remove base64 images (usually > 1000 chars) but keep URLs
+    if (map.containsKey('profileImageUrl') && map['profileImageUrl'] != null) {
+      if (map['profileImageUrl'].toString().length > 1000) {
+        map['profileImageUrl'] = null; 
+      }
+    }
+    if (map.containsKey('imageUrl') && map['imageUrl'] != null) {
+      if (map['imageUrl'].toString().length > 1000) {
+        map['imageUrl'] = null;
+      }
+    }
+    return map;
   }
 }

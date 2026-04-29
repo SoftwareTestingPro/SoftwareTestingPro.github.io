@@ -566,8 +566,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       );
     }
 
+    // Deduplicate by applicantId, keeping only the most recent one
+    final uniqueApps = <String, RoleApplication>{};
+    for (var app in _allApplications) {
+      if (!uniqueApps.containsKey(app.applicantId) || 
+          (app.createdAt ?? DateTime(2000)).isAfter(uniqueApps[app.applicantId]!.createdAt ?? DateTime(2000))) {
+        uniqueApps[app.applicantId] = app;
+      }
+    }
+    final displayApps = uniqueApps.values.toList();
+
     return Column(
-      children: _allApplications.map((app) {
+      children: displayApps.map((app) {
         final profile = _applicantProfiles[app.applicantId];
         return Container(
           margin: const EdgeInsets.only(bottom: 12),

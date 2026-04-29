@@ -84,6 +84,40 @@ class SupabaseService {
     )).toList();
   }
 
+  Future<List<BaratiUser>> getProfilesByIds(List<String> ids) async {
+    if (ids.isEmpty) return [];
+    final response = await client
+        .from('profiles')
+        .select()
+        .filter('id', 'in', ids);
+    
+    return (response as List).map((p) => BaratiUser(
+      id: p['id'] ?? '',
+      name: p['name'] ?? 'Anonymous',
+      age: p['age'] ?? 25,
+      gender: p['gender'] ?? 'Other',
+      userRole: p['user_role'] != null && p['user_role'] < UserRole.values.length 
+          ? UserRole.values[p['user_role']] 
+          : UserRole.baratiMember,
+      possibleRoles: (p['possible_roles'] as List? ?? [])
+          .map((r) {
+            int index = r as int;
+            if (index < FamilyRole.values.length) {
+              return FamilyRole.values[index];
+            }
+            return FamilyRole.other;
+          })
+          .toList(),
+      bio: p['bio'] ?? '',
+      profileImageUrl: p['profile_image_url'],
+      city: p['city'] ?? '',
+      state: p['state'] ?? '',
+      profession: p['profession'] ?? '',
+      education: p['education'] ?? '',
+      languages: List<String>.from(p['languages'] ?? []),
+    )).toList();
+  }
+
   // --- Event Operations ---
 
   Future<void> createEvent(BaratiEvent event) async {
@@ -123,6 +157,33 @@ class SupabaseService {
         .from('events')
         .select()
         .order('date', ascending: true);
+    
+    return (response as List).map((e) => BaratiEvent(
+      id: e['id'],
+      hostId: e['host_id'],
+      title: e['title'],
+      description: e['description'],
+      date: DateTime.parse(e['date'].toString().endsWith('Z') || e['date'].toString().contains('+') || e['date'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? e['date'] : '${e['date']}Z').toLocal(),
+      location: e['location'],
+      city: e['city'] ?? '',
+      state: e['state'] ?? '',
+      eventType: (e['event_type'] ?? 0) < EventType.values.length ? EventType.values[e['event_type'] ?? 0] : EventType.other,
+      neededRoles: (e['needed_roles'] as List)
+          .map((r) => r is int ? EventRole(role: r < FamilyRole.values.length ? FamilyRole.values[r] : FamilyRole.other, description: '', gender: 'Any') : EventRole.fromJson(r as Map<String, dynamic>))
+          .toList(),
+      approvedMemberIds: List<String>.from(e['approved_member_ids']),
+      imageUrl: (e['image_url'] != null && (e['image_url'].toString().startsWith('assets/') || e['image_url'].toString().startsWith('/9j/'))) 
+          ? e['image_url'] 
+          : 'assets/images/${((e['event_type'] ?? 0) < EventType.values.length ? EventType.values[e['event_type'] ?? 0] : EventType.other).name}.jpg',
+    )).toList();
+  }
+
+  Future<List<BaratiEvent>> getEventsByIds(List<String> ids) async {
+    if (ids.isEmpty) return [];
+    final response = await client
+        .from('events')
+        .select()
+        .filter('id', 'in', ids);
     
     return (response as List).map((e) => BaratiEvent(
       id: e['id'],
@@ -317,6 +378,36 @@ class SupabaseService {
     final response = await client
         .from('applications')
         .select();
+    
+    return (response as List).map((app) => RoleApplication(
+      id: app['id'],
+      eventId: app['event_id'],
+      applicantId: app['applicant_id'],
+      appliedRole: (app['applied_role'] ?? 0) < FamilyRole.values.length ? FamilyRole.values[app['applied_role'] ?? 0] : FamilyRole.other,
+      message: app['message'],
+      isApproved: app['is_approved'],
+      status: (app['status'] ?? 0) < ApplicationStatus.values.length ? ApplicationStatus.values[app['status'] ?? 0] : ApplicationStatus.pending,
+      isInvitation: app['is_invitation'] ?? false,
+      userRating: app['user_rating']?.toDouble(),
+      hostRating: app['host_rating']?.toDouble(),
+      userComment: app['user_comment'],
+      hostComment: app['host_comment'],
+      createdAt: app['created_at'] != null ? DateTime.parse(app['created_at'].toString().endsWith('Z') || app['created_at'].toString().contains('+') || app['created_at'].toString().contains(RegExp(r'-\d{2}:\d{2}$')) ? app['created_at'] : '${app['created_at']}Z').toLocal() : null,
+    )).toList();
+  }
+
+  Future<List<RoleApplication>> getApplicationsByHost(String hostId) async {
+    // 1. Get events hosted by this user
+    final events = await client.from('events').select('id').eq('host_id', hostId);
+    final eventIds = (events as List).map((e) => e['id'] as String).toList();
+    
+    if (eventIds.isEmpty) return [];
+
+    // 2. Get applications for those events
+    final response = await client
+        .from('applications')
+        .select()
+        .filter('event_id', 'in', eventIds);
     
     return (response as List).map((app) => RoleApplication(
       id: app['id'],
