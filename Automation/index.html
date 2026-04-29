@@ -3,262 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Master test automation with comprehensive practice platform. Learn Selenium, Cypress and Playwright with real-world scenarios.">
+    <meta name="description" content="Master software testing with 90+ hands-on exercises. Learn Selenium, Cypress, Playwright. Free QA platform.">
     <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
-    <title>Test Automation Platform - Testing Guide | Software Testing Pro</title>
+    <title>Software Testing Pro - Free Automation Platform | 90+ Exercises</title>
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-MCHF9RDWT6');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
     <!-- Additional SEO Meta Tags -->
-    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="keywords" content="software testing, test automation, selenium practice, cypress tutorial, playwright exercises, QA training, free testing platform, automation practice, beginner testing, advanced testing, software quality assurance">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/index.html">
+    <meta name="author" content="Sushil Singh - Automation Expert">
+    <meta name="language" content="English">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/">
     <!-- Open Graph Tags -->
-    <meta property="og:title" content="Test Automation Platform - Testing Guide | Software Testing Pro">
-    <meta property="og:description" content="Master test automation with comprehensive practice platform. Learn Selenium, Cypress and Playwright with real-world scenarios.">
-    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/index.html">
-    <meta property="og:type" content="article">
-    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:title" content="Software Testing Pro - Free Automation Platform | 90+ Exercises">
+    <meta property="og:description" content="Master software testing with 90+ hands-on exercises. Learn Selenium, Cypress, Playwright. Free QA platform.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/og-image.jpg">
     <meta property="og:site_name" content="Software Testing Pro">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <!-- Twitter Card Tags -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Test Automation Platform - Testing Guide | Software Testing Pro">
-    <meta property="twitter:description" content="Master test automation with comprehensive practice platform. Learn Selenium, Cypress and Playwright with real-world scenarios.">
-    <meta property="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="twitter:title" content="Software Testing Pro - Free Automation Platform | 90+ Exercises">
+    <meta property="twitter:description" content="Master software testing with 90+ hands-on exercises. Learn Selenium, Cypress, Playwright. Free QA platform.">
+    <meta property="twitter:image" content="https://softwaretestingpro.github.io/assets/images/twitter-image.jpg">
+    <meta property="twitter:creator" content="@sushilsingh">
     <!-- Structured Data -->
     <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": "Test Automation Platform - Testing Guide | Software Testing Pro",
-            "description": "Master test automation with comprehensive practice platform. Learn Selenium, Cypress and Playwright with real-world scenarios.",
-            "url": "https://softwaretestingpro.github.io/Automation/index.html",
-            "publisher": {
-                "@type": "Organization",
-                "name": "Software Testing Pro"
-            }
-        }
+    {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "Software Testing Pro",
+        "url": "https://softwaretestingpro.github.io/",
+        "description": "Free test automation practice platform with 90+ hands-on exercises for Selenium, Cypress, and Playwright",
+        "founder": {
+            "@type": "Person",
+            "name": "Sushil Singh",
+            "jobTitle": "Automation Engineer"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "Free access to all test automation exercises"
+        },
+        "educationalLevel": ["Beginner", "Intermediate", "Advanced"],
+        "teaches": ["Software Testing", "Test Automation", "Selenium", "Cypress", "Playwright", "QA Testing"]
+    }
     </script>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    
     <!-- Header and Footer CSS -->
     <link rel="stylesheet" href="/header.css">
     <link rel="stylesheet" href="/footer.css">
-    <script src="assets/components/components.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .input-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-container label {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 600px;
+            justify-content: center;
+        }
+        .box {
+            width: 200px;
+            height: 150px;
+            margin: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .box:hover {
+            filter: brightness(0.9);
+        }
+        .box span {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        footer {
+            position: absolute;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        footer a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<div id="header-placeholder"></div>
-<div class="content-wrapper">
-    <main class="card scrollable-card">
-        <div class="card-content">
-            <h1>🚀 Welcome to Test Automation Practice Platform 🚀</h1>
-            <p class="lead">Master software test automation with real-world scenarios and industry-standard tools. This platform provides comprehensive practice challenges from beginner to advanced levels.</p>
-
-            <div class="hero-section">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">100+</div>
-                        <div class="stat-label">Practice Tasks</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">3</div>
-                        <div class="stat-label">Difficulty Levels</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">7</div>
-                        <div class="stat-label">Automation Areas</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">∞</div>
-                        <div class="stat-label">Learning Potential</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">8+</div>
-                        <div class="stat-label">Frameworks Supported</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">99%</div>
-                        <div class="stat-label">Success Rate</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="animated-section">
-                <h2>✨ The Importance of Test Automation in Software Industry ✨</h2>
-                <p>Test automation has become a cornerstone of modern software development, enabling teams to deliver high-quality applications faster and more reliably. Here's why it matters:</p>
-
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <div class="benefit-icon">⚡</div>
-                        <h3>Accelerated Delivery</h3>
-                        <p>Automated tests run 24/7, providing instant feedback and enabling continuous integration and deployment (CI/CD) pipelines.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">💰</div>
-                        <h3>Cost Efficiency</h3>
-                        <p>While initial setup requires investment, automation reduces long-term testing costs by up to 70% compared to manual testing.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🎯</div>
-                        <h3>Reliability & Accuracy</h3>
-                        <p>Eliminates human error in repetitive tasks, ensuring consistent test execution and results.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">📈</div>
-                        <h3>Scalability</h3>
-                        <p>Easily scale test coverage across multiple environments, browsers, and devices without proportional resource increases.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🔍</div>
-                        <h3>Early Bug Detection</h3>
-                        <p>Catches issues early in development cycles, reducing expensive fixes in later stages.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🛡️</div>
-                        <h3>Regression Testing</h3>
-                        <p>Ensures existing functionality remains intact during ongoing development and updates.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🏆</div>
-                        <h3>Competitive Advantage</h3>
-                        <p>Faster time-to-market and higher quality products give companies a significant edge in competitive markets.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🎯</div>
-                        <h3>Enhanced Quality Assurance</h3>
-                        <p>Comprehensive test coverage ensures higher software quality, fewer defects, and improved user experience across all platforms.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="areas-section">
-                <h3>🌐 Key Areas Where Test Automation is Used</h3>
-                <div class="areas-grid">
-                    <div class="area-item">🔗 <strong>Web Application Testing:</strong> Cross-browser compatibility, UI/UX validation, and user interaction testing using tools like Selenium, Cypress, and Playwright.</div>
-                    <div class="area-item">🔌 <strong>API Testing:</strong> Backend service validation, data integrity checks, and integration testing with frameworks like REST Assured and Postman automation.</div>
-                    <div class="area-item">📱 <strong>Mobile App Testing:</strong> Native and hybrid app testing across iOS and Android platforms using Appium and native testing frameworks.</div>
-                    <div class="area-item">🗄️ <strong>Database Testing:</strong> Data validation, schema testing, and performance monitoring to ensure data integrity and system reliability.</div>
-                    <div class="area-item">⚡ <strong>Performance Testing:</strong> Load testing, stress testing, and scalability validation using tools like JMeter and k6.</div>
-                    <div class="area-item">🔒 <strong>Security Testing:</strong> Automated vulnerability scanning and security control validation to protect against cyber threats.</div>
-                    <div class="area-item">🔄 <strong>DevOps Integration:</strong> Seamless integration with CI/CD pipelines for automated testing in deployment workflows.</div>
-                </div>
-            </div>
-
-            <div class="platform-section">
-                <h2>🎓 Why This Platform is Perfect for Learning Automation</h2>
-                <p>This practice platform is specifically designed to bridge the gap between theoretical knowledge and practical application, offering:</p>
-
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h4>🏭 Real-World Scenario Practice</h4>
-                        <ul>
-                            <li>Industry-Relevant Challenges that mirror professional testing scenarios</li>
-                            <li>Progressive Difficulty from beginner to advanced levels</li>
-                            <li>Multiple Frameworks including Selenium, Cypress, Playwright, and TestCafe</li>
-                            <li>Comprehensive Coverage of UI, API, file handling, and database testing</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🛠️ Best Practices Implementation</h4>
-                        <ul>
-                            <li>Page Object Model patterns for maintainable code</li>
-                            <li>Data-Driven Testing methodologies</li>
-                            <li>Cross-Browser Validation techniques</li>
-                            <li>Advanced Debugging and problem-solving skills</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4>📈 Career Advancement</h4>
-                        <ul>
-                            <li>Portfolio Building with completed challenges</li>
-                            <li>Industry Readiness for automation engineering roles</li>
-                            <li>Hands-On Experience with real automation scenarios</li>
-                            <li>Tool Agnostic Skills applicable across frameworks</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🤝 Community & Collaboration</h4>
-                        <ul>
-                            <li>Share solutions and learn from peer experiences</li>
-                            <li>Collaborative problem-solving environment</li>
-                            <li>Access to expert guidance and best practices</li>
-                            <li>Network with professionals in the testing community</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="learning-benefits">
-                <h3>🎯 Learning Benefits You'll Gain</h3>
-                <div class="benefits-list">
-                    <div class="benefit-item">🧠 <strong>Hands-On Experience:</strong> Apply theoretical concepts to practical scenarios, reinforcing your understanding through direct implementation.</div>
-                    <div class="benefit-item">🔧 <strong>Tool Agnostic Skills:</strong> Learn fundamental automation principles that apply across different tools and frameworks.</div>
-                    <div class="benefit-item">💼 <strong>Industry Readiness:</strong> Prepare for real-world automation roles with challenges that reflect actual job requirements.</div>
-                    <div class="benefit-item">🤝 <strong>Community Learning:</strong> Share solutions and learn from peers in the testing community.</div>
-                    <div class="benefit-item">🚀 <strong>Career Advancement:</strong> Build the skills needed for automation engineer, QA engineer, and SDET positions.</div>
-                </div>
-            </div>
-
-            <div class="cta-section">
-                <h2>🎯 Ready to Start Your Automation Journey?</h2>
-                <p>Begin with our structured learning path and transform your testing career. Whether you're new to automation or looking to enhance your existing skills, this platform provides the perfect environment to practice and master test automation.</p>
-                <p><strong>Start with our Instructions page to learn how to make the most of this platform!</strong></p>
-            </div>
-        </div>
-    </main>
-
-    <div class="card-nav">
-        <a href="" class="">
+    <div class="input-container">
+        <div style="font-size:20px;margin-bottom:10px">Select course to start practice:</div>
+    </div>
+    <div class="container">
+        <a href="Automation/index.html" class="box" aria-label="Navigate to Automation Home" title="Automation Home">
+            Software Automation
+            <span>Practice Automation</span>
         </a>
-        <a href="General/Instructions.html" class="nav-btn nav-btn-next">
-            Overview
-            <span class="nav-icon">→</span>
+    </div>
+	<div class="container">
+        <a href="Quiz/quiz.html" class="box" aria-label="Navigate to Quiz" title="Quiz">
+            Technical Quiz
+            <span>Technical Quiz</span>
         </a>
     </div>
 
-</div>
-<script>
-    // Add interactive animations
-    document.addEventListener('DOMContentLoaded', function() {
-        // Animate stat cards on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    <footer>
+        <a href="developer.html">About Developer</a>
+        <a href="https://forms.gle/GFYLiy6VJ8b2BEKj6">Contact</a>
+        <span style="margin-left:12px">|</span>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="disclosure.html">Disclosure</a>
+<!--        <a href="https://www.buymeacoffee.com/YOURNAME" target="_blank" rel="noopener noreferrer">Support</a>-->
+    </footer>
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boxes = document.querySelectorAll('.box');
+            boxes.forEach(box => {
+                // Set initial random background color
+                setRandomColor(box);
 
-        // Observe all animated elements
-        document.querySelectorAll('.stat-card, .benefit-card, .area-item, .feature-card, .benefit-item').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Add hover effects for CTA buttons
-        document.querySelectorAll('.cta-primary, .cta-secondary').forEach(btn => {
-            btn.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.05)';
-            });
-            btn.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
+                // Change color on hover
+                box.addEventListener('mouseover', () => {
+                    setRandomColor(box);
+                });
             });
         });
-    });
-</script>
-<div id="footer-placeholder"></div>
+
+        function setRandomColor(element) {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            element.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+    </script>
 </body>
 </html>
