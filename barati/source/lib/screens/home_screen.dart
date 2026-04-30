@@ -14,6 +14,7 @@ import 'activity_screen.dart';
 import '../services/supabase_service.dart';
 import '../services/logic_service.dart';
 import '../services/event_logic.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -266,13 +267,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildAvailableBaratiList() {
     final theme = Theme.of(context);
-    if (_isLoading) return const Center(child: BaratiLoader(isFullScreen: false));
+    if (_isDiscoveryLoading || (_profiles.isEmpty && !_isDiscoveryLoaded)) {
+      return SizedBox(
+        height: 190,
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          itemBuilder: (context, index) => _buildSkeletonProfileCard(),
+        ),
+      );
+    }
     
     if (_filteredProfiles.isEmpty) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Text('No matching family members found.', style: GoogleFonts.montserrat(color: Colors.grey)),
+          child: Column(
+            children: [
+              Icon(Icons.search_off, color: Colors.grey[300], size: 40),
+              const SizedBox(height: 8),
+              Text('No matching family members found.', style: GoogleFonts.montserrat(color: Colors.grey[500], fontSize: 12)),
+            ],
+          ),
         ),
       );
     }
@@ -378,6 +395,46 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildSkeletonProfileCard() {
+    final theme = Theme.of(context);
+    return Container(
+      width: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(color: theme.colorScheme.primary.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 5)),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              shape: BoxShape.circle,
+            ),
+          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+          const SizedBox(height: 12),
+          Container(
+            width: 80,
+            height: 12,
+            decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(6)),
+          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, delay: 200.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+          const SizedBox(height: 8),
+          Container(
+            width: 60,
+            height: 10,
+            decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(5)),
+          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, delay: 400.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+        ],
+      ),
+    );
+  }
+
   Widget _buildUserRating(String userId) {
     final avg = ReputationLogic.calculateGuestRating(userId, _allApplications);
     
@@ -422,11 +479,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: BaratiLoader(isFullScreen: false)),
-      );
-    }
+    // We removed the global _isLoading block to allow the background and 
+    // skeleton cards to render immediately for a more premium experience.
 
     Widget _buildMainContent() {
       return Stack(
@@ -450,35 +504,35 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (_currentType == UserRole.host) ...[
                           _buildSectionHeader(context, 'Find Your Family'),
                           _buildSearchBar(),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 8),
                           _buildAvailableBaratiList(),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 8),
                           _buildHostDashboard(),
                         ] else ...[
                           _buildSectionHeader(context, 'Events Near You'),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 8),
                           _buildWeddingEventsList(),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 8),
                           if (_userApplications.any((app) {
                             final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
                             return event.id != 'dummy' && event.date.isAfter(DateTime.now()) && app.isApproved;
                           })) ...[
-                            _buildSectionHeader(context, 'Approved Events for Me'),
-                            const SizedBox(height: 16),
+                            _buildSectionHeader(context, 'My Approved Events'),
+                            const SizedBox(height: 8),
                             _buildApprovedEventsList(),
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 8),
                           ],
                           if (_userApplications.any((app) {
                             final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
                             return event.id != 'dummy' && event.date.isBefore(DateTime.now()) && app.isApproved;
                           })) ...[
-                            const SizedBox(height: 32),
-                            _buildSectionHeader(context, 'Attended Events'),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
+                            _buildSectionHeader(context, 'My Attended Events'),
+                            const SizedBox(height: 8),
                             _buildMyApplicationsList(isPast: true),
                           ],
                         ],
-                        const SizedBox(height: 100),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
@@ -708,9 +762,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return SizedBox(
-      height: 350,
+      height: 240,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         scrollDirection: Axis.horizontal,
         itemCount: groupedApps.length,
         itemBuilder: (context, index) {
@@ -758,9 +812,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildWeddingEventsList() {
     if (_isDiscoveryLoading || (_events.where((e) => e.hostId != _currentUserId && e.date.isAfter(DateTime.now())).isEmpty && !_isDiscoveryLoaded)) {
-      return const SizedBox(
-        height: 200,
-        child: Center(child: BaratiLoader(isFullScreen: false)),
+      return SizedBox(
+        height: 350,
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          scrollDirection: Axis.horizontal,
+          itemCount: 2,
+          itemBuilder: (context, index) => _buildSkeletonEventCard(),
+        ),
       );
     }
 
@@ -793,9 +852,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return SizedBox(
-      height: 350,
+      height: 240,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         scrollDirection: Axis.horizontal,
         itemCount: futureEvents.length,
         itemBuilder: (context, index) {
@@ -1166,9 +1225,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-    ));
-  }
-
+    ),
+  );
+}
   Widget _buildMyApplicationsList({bool isPast = false}) {
     final theme = Theme.of(context);
     final now = DateTime.now();
@@ -1217,9 +1276,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return SizedBox(
-      height: isPast ? 450 : 380,
+      height: isPast ? 280 : 240,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         scrollDirection: Axis.horizontal,
         itemCount: groupedApps.length,
         itemBuilder: (context, index) {
@@ -1536,26 +1595,52 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        if (futureEvents.isNotEmpty) ...[
+        if (_isLoading) ...[
           _buildSectionHeader(context, 'My Upcoming Events'),
-          const SizedBox(height: 16),
-          _buildEventsList(futureEvents, isHost: true),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 350,
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              scrollDirection: Axis.horizontal,
+              itemCount: 1,
+              itemBuilder: (context, index) => _buildSkeletonEventCard(),
+            ),
+          ),
+        ] else ...[
+          if (futureEvents.isNotEmpty) ...[
+            _buildSectionHeader(context, 'My Upcoming Events'),
+            const SizedBox(height: 8),
+            _buildEventsList(futureEvents, isHost: true),
+          ],
+          if (pastEvents.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            _buildSectionHeader(context, 'My Past Events'),
+            const SizedBox(height: 8),
+            _buildEventsList(pastEvents, isHost: true, isPast: true),
+          ],
+          if (futureEvents.isEmpty && pastEvents.isEmpty)
+            _buildEmptyState('No events found. Start by creating one!', Icons.add_circle_outline),
         ],
-        if (pastEvents.isNotEmpty) ...[
-          const SizedBox(height: 32),
-          _buildSectionHeader(context, 'My Past Events'),
-          const SizedBox(height: 16),
-          _buildEventsList(pastEvents, isHost: true, isPast: true),
-        ],
-        if (_filteredEvents.isEmpty)
-          _buildEmptyState('No events found. Start by creating one!', Icons.add_circle_outline),
       ],
     );
   }
 
   Widget _buildEventsList(List<BaratiEvent> events, {bool isHost = false, bool isPast = false}) {
+    if (_isLoading && events.isEmpty) {
+      return SizedBox(
+        height: 350,
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          scrollDirection: Axis.horizontal,
+          itemCount: 2,
+          itemBuilder: (context, index) => _buildSkeletonEventCard(),
+        ),
+      );
+    }
+
     return SizedBox(
-      height: 350,
+      height: 240,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
@@ -1570,6 +1655,69 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildModernEventCard(event, isHost: isHost, isPast: isPast),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildSkeletonEventCard() {
+    final theme = Theme.of(context);
+    return Container(
+      width: 250,
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(32),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 15, offset: const Offset(0, 8)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 120,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+            ),
+          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 100,
+                  height: 12,
+                  decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(6)),
+                ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, delay: 200.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+                const SizedBox(height: 8),
+                Container(
+                  width: 180,
+                  height: 18,
+                  decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(9)),
+                ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, delay: 400.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(color: Colors.grey[100], shape: BoxShape.circle),
+                    ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, delay: 600.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+                    const SizedBox(width: 8),
+                    Container(
+                      width: 80,
+                      height: 12,
+                      decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(6)),
+                    ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, delay: 600.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

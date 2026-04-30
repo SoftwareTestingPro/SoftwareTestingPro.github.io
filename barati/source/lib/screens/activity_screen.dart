@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../widgets/barati_loader.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/models.dart';
+import 'package:flutter/foundation.dart';
 import '../services/supabase_service.dart';
 import '../services/event_logic.dart';
 import '../services/logic_service.dart';
@@ -293,7 +295,11 @@ class _ActivityScreenState extends State<ActivityScreen> with AutomaticKeepAlive
         children: [
           _buildPageBackground(),
           _isLoading
-              ? const Center(child: BaratiLoader(isFullScreen: false))
+              ? ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: 5,
+                  itemBuilder: (context, index) => _buildSkeletonActivityCard(),
+                )
               : _activities.isEmpty
                   ? Center(
                       child: Text(
@@ -380,6 +386,48 @@ class _ActivityScreenState extends State<ActivityScreen> with AutomaticKeepAlive
                     );
                   },
                 ),
+        ],
+      ),
+    );
+  }
+  Widget _buildSkeletonActivityCard() {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(color: Colors.grey[100], shape: BoxShape.circle),
+          ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 150,
+                  height: 14,
+                  decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(7)),
+                ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, delay: 200.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+                const SizedBox(height: 8),
+                Container(
+                  width: 100,
+                  height: 10,
+                  decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(5)),
+                ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 1500.ms, delay: 400.ms, color: theme.colorScheme.primary.withOpacity(0.1)),
+              ],
+            ),
+          ),
         ],
       ),
     );

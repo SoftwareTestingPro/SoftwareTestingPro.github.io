@@ -486,21 +486,27 @@ class SupabaseService {
 
       // 3. Collect unique IDs for Details
       final eventIds = uniqueAppList.map((a) => a['event_id'].toString()).toSet().toList();
-      final userIds = uniqueAppList.map((a) => a['applicant_id'].toString()).toSet().toList();
+      
+      // We need BOTH applicant IDs and Host IDs for full messages
+      final userIdsToFetch = uniqueAppList.map((a) => a['applicant_id'].toString()).toSet();
+      
+      // 4. Fetch Events first so we can get their host IDs
+      final events = await getEventsByIds(eventIds);
+      final eventsMap = {for (var e in events) e.id: e};
+      
+      for (var e in events) {
+        userIdsToFetch.add(e.hostId);
+      }
 
-      // 4. Fetch Details in parallel
-      final details = await Future.wait([
-        getEventsByIds(eventIds),
-        getProfilesByIds(userIds),
-      ]);
+      // 5. Fetch all Profiles in one batch
+      final profiles = await getProfilesByIds(userIdsToFetch.toList());
+      final profilesMap = {for (var p in profiles) p.id: p};
 
-      final eventsMap = {for (var e in details[0] as List<BaratiEvent>) e.id: e};
-      final profilesMap = {for (var p in details[1] as List<BaratiUser>) p.id: p};
-
-      // 5. Merge Locally with safety
+      // 6. Merge Locally with safety
       final List<Map<String, dynamic>> merged = uniqueAppList.map((a) {
         final event = eventsMap[a['event_id'].toString()];
         final applicant = profilesMap[a['applicant_id'].toString()];
+        final host = event != null ? profilesMap[event.hostId] : null;
         
         final Map<String, dynamic> result = Map<String, dynamic>.from(a);
         
@@ -516,6 +522,12 @@ class SupabaseService {
           'needed_roles': event.neededRoles.map((r) => r.toJson()).toList(),
           'approved_member_ids': event.approvedMemberIds,
           'image_url': event.imageUrl,
+          'host': host != null ? {
+            'id': host.id,
+            'name': host.name,
+            'profile_image_url': host.profileImageUrl,
+            'user_role': host.userRole.index,
+          } : null,
         } : null;
 
         result['applicant'] = applicant != null ? {
