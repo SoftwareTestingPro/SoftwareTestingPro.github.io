@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _userGender;
   final _searchController = TextEditingController();
   int _unreadActivityCount = 0;
+  DateTime? _lastEssentialLoad;
 
   @override
   void initState() {
@@ -68,6 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  bool _isDiscoveryLoaded = false;
+
   Future<void> _checkProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final mobileNumber = prefs.getString('mobileNumber');
@@ -75,19 +78,18 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mobileNumber != null) {
       final profile = await SupabaseService().getProfile(mobileNumber);
       if (profile == null) {
-        // No cloud profile found, force setup
         if (!mounted) return;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const ProfileScreen()),
         );
       } else {
-        // Sync cloud data to local for UI convenience
         await prefs.setString('userName', profile.name);
         await prefs.setBool('hasProfile', true);
         if (mounted) {
           setState(() {
             _firstName = profile.name.split(' ')[0];
             _userRoles = profile.possibleRoles;
+            _profileImageUrl = profile.profileImageUrl;
           });
         }
       }
@@ -95,102 +97,129 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadData() async {
+    await _loadEssentialData();
+  }
+
+  Future<void> _loadEssentialData() async {
     if (!mounted) return;
     setState(() => _isLoading = true);
+    
     final prefs = await SharedPreferences.getInstance();
     _currentUserId = prefs.getString('user_id') ?? prefs.getString('mobileNumber') ?? 'anonymous';
     final currentUserId = _currentUserId!;
-    
-    // Load basic info from cache immediately
-    final fullName = prefs.getString('userName') ?? 'User';
-    final cachedImage = prefs.getString('userImageBase64');
-    if (mounted) {
-      setState(() {
-        _firstName = fullName.split(' ')[0];
-        _profileImageUrl = cachedImage;
-      });
-    }
-
-    // 1. Try to load complex data from cache for instant UI
-    final cachedEventsStr = prefs.getString('cached_home_events');
-    final cachedProfilesStr = prefs.getString('cached_home_profiles');
-    if (cachedEventsStr != null && cachedProfilesStr != null) {
-      try {
-        final List eList = jsonDecode(cachedEventsStr);
-        final List pList = jsonDecode(cachedProfilesStr);
-        final cEvents = eList.map((e) => BaratiEvent.fromJson(e)).toList();
-        final cProfiles = pList.map((p) => BaratiUser.fromJson(p)).toList();
-        
-        if (mounted) {
-          setState(() {
-            _events = cEvents;
-            _profiles = cProfiles.where((p) => p.id != currentUserId).toList();
-            _filteredProfiles = _profiles;
-            _isLoading = false; // Show cached data immediately
-            _applyInitialFiltering(currentUserId);
-          });
-        }
-      } catch (e) { /* ignore cache errors */ }
-    }
 
     try {
-      // 2. Fetch fresh data in the background (Optimized)
+      // 1. Fetch only Essential User & Host Info (Parallel)
       final results = await Future.wait([
-        SupabaseService().getEvents(),
-        SupabaseService().getProfiles(),
+        SupabaseService().getEventsByHost(currentUserId),
+        SupabaseService().getEventsParticipated(currentUserId),
         SupabaseService().getApplicationsForUser(currentUserId),
         SupabaseService().getApplicationsByHost(currentUserId),
       ]);
 
-      final cloudEvents = results[0] as List<BaratiEvent>;
-      final cloudProfiles = results[1] as List<BaratiUser>;
+      final hostedEvents = results[0] as List<BaratiEvent>;
+      final participatedEvents = results[1] as List<BaratiEvent>;
       final userApps = results[2] as List<RoleApplication>;
-      final hostedApps = results[3] as List<RoleApplication>;
-      
-      final currentProfile = cloudProfiles.where((p) => p.id == currentUserId).firstOrNull ?? 
-          BaratiUser(id: currentUserId, name: fullName, age: 25, gender: 'Other', userRole: UserRole.baratiMember, bio: '', possibleRoles: []);
-      
-      final relevantApps = [...userApps, ...hostedApps];
+      final appsByMeAsHost = results[3] as List<RoleApplication>;
 
       if (mounted) {
         setState(() {
-          _events = cloudEvents;
-          _userRoles = currentProfile.possibleRoles;
-          _userGender = currentProfile.gender;
-          _profiles = cloudProfiles.where((p) => p.id != currentUserId).toList();
-          _filteredProfiles = _profiles;
+          // Merge personal events into existing events list to avoid nuking discovery data
+          final Map<String, BaratiEvent> eventMap = {for (var e in _events) e.id: e};
+          for (var e in hostedEvents) eventMap[e.id] = e;
+          for (var e in participatedEvents) eventMap[e.id] = e;
+          
+          _events = eventMap.values.toList();
           _userApplications = userApps;
-          _allApplications = relevantApps;
-          _profileImageUrl = currentProfile.profileImageUrl;
+          _allApplications = [...userApps, ...appsByMeAsHost];
           
           _applyInitialFiltering(currentUserId);
           
-          final activityCount = relevantApps.length;
+          final activityCount = _allApplications.length;
           final lastViewed = prefs.getInt('lastViewedActivityCount') ?? 0;
           _unreadActivityCount = activityCount > lastViewed ? activityCount - lastViewed : 0;
           
+          _lastEssentialLoad = DateTime.now();
           _isLoading = false;
         });
       }
-      
-      // 3. Update cache (Atomic & Stripped to avoid QuotaExceeded)
-      try {
-        prefs.setString('cached_home_events', CacheLogic.getStrippedJson(cloudEvents));
-        
-        // Only cache the top 20 profiles and STRIP base64 images
-        final profilesToCache = cloudProfiles.take(20).toList();
-        prefs.setString('cached_home_profiles', CacheLogic.getStrippedJson(profilesToCache));
-        
-        if (currentProfile.profileImageUrl != null && currentProfile.profileImageUrl!.length < 100000) {
-          prefs.setString('userImageBase64', currentProfile.profileImageUrl!);
+
+      // SILENT BACKGROUND PRE-LOAD:
+      // Start fetching activity feed in the background immediately after personal data is ready.
+      // This populates the ActivityScreen.cachedActivities so the tab is instant.
+      if (mounted) {
+        // We create a temporary instance just to trigger the background load
+        // Actually, better to just call a static helper if we had one, but 
+        // since we use a stateful widget, we'll just let the IndexedStack 
+        // handle the first one, OR we can explicitly call the service here.
+        SupabaseService().getActivityFeed(currentUserId).then((data) {
+           // We don't need to do anything with the data here, 
+           // but we could populate the cache if we wanted to be double sure.
+           // However, since IndexedStack builds ActivityScreen immediately, 
+           // its initState is already running.
+        });
+      }
+      if (mounted) {
+        try {
+          prefs.setString('cached_home_events', CacheLogic.getStrippedJson(_events.take(20).toList()));
+        } catch (e) {
+          debugPrint('Failed to update essential cache: $e');
         }
-      } catch (e) {
-        debugPrint('Failed to update cache: $e');
       }
 
+      // Kick off discovery loading in the background so profiles/events are ready when needed
+      // but DON'T await it here so the Host dashboard shows up instantly.
+      _loadDiscoveryData();
+
     } catch (e) {
-      debugPrint('Error loading home data: $e');
+      debugPrint('Error loading essential data: $e');
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  bool _isDiscoveryLoading = false;
+  Future<void> _loadDiscoveryData() async {
+    if (_isDiscoveryLoaded || _isDiscoveryLoading || !mounted) return;
+    
+    setState(() => _isDiscoveryLoading = true);
+    
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final results = await Future.wait([
+        SupabaseService().getEvents(), // Global future events
+        SupabaseService().getProfiles(), // Global available members
+      ]);
+
+      final cloudEvents = results[0] as List<BaratiEvent>;
+      final cloudProfiles = results[1] as List<BaratiUser>;
+
+      if (mounted) {
+        setState(() {
+          // Merge discovery events with personal events, avoiding duplicates
+          final Map<String, BaratiEvent> eventMap = {for (var e in _events) e.id: e};
+          for (var e in cloudEvents) {
+            eventMap[e.id] = e;
+          }
+          _events = eventMap.values.toList();
+          
+          _profiles = cloudProfiles.where((p) => p.id != _currentUserId).toList();
+          _filteredProfiles = _profiles;
+          _isDiscoveryLoaded = true;
+          _isDiscoveryLoading = false;
+          _applyInitialFiltering(_currentUserId!);
+        });
+      }
+      if (mounted) {
+        try {
+          prefs.setString('cached_home_profiles', CacheLogic.getStrippedJson(_profiles.take(20).toList()));
+          prefs.setString('cached_home_events', CacheLogic.getStrippedJson(_events.take(50).toList()));
+        } catch (e) {
+          debugPrint('Failed to update discovery cache: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading discovery data: $e');
+      if (mounted) setState(() => _isDiscoveryLoading = false);
     }
   }
 
@@ -202,7 +231,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _loadEvents() => _loadData();
+  Future<void> _loadEvents() async {
+    // Reset discovery flag to allow a fresh fetch
+    _isDiscoveryLoaded = false;
+    
+    // Always refresh essential personal data
+    await _loadEssentialData();
+    
+    // If we are currently in discovery mode, also refresh discovery data
+    if (_currentType == UserRole.baratiMember) {
+      await _loadDiscoveryData();
+    }
+  }
 
   Widget _buildSearchBar() {
     return Padding(
@@ -392,82 +432,81 @@ class _HomeScreenState extends State<HomeScreen> {
       return Stack(
         children: [
           _buildPageBackground(),
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: _buildTopBar(context),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (_currentType == UserRole.host) ...[
-                        _buildSectionHeader(context, 'Find Your Family'),
-                        _buildSearchBar(),
-                        const SizedBox(height: 16),
-                        _buildAvailableBaratiList(),
-                        const SizedBox(height: 32),
-                        _buildHostDashboard(),
-                      ] else ...[
-                        _buildSectionHeader(context, 'Events Near You'),
-                        const SizedBox(height: 16),
-                        _buildWeddingEventsList(),
-                        const SizedBox(height: 32),
-                        if (_userApplications.any((app) {
-                          final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
-                          return event.id != 'dummy' && event.date.isAfter(DateTime.now()) && app.isApproved;
-                        })) ...[
-                          _buildSectionHeader(context, 'Approved Events for Me'),
+          RefreshIndicator(
+            onRefresh: _loadEvents,
+            color: Theme.of(context).colorScheme.primary,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: _buildTopBar(context),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (_currentType == UserRole.host) ...[
+                          _buildSectionHeader(context, 'Find Your Family'),
+                          _buildSearchBar(),
                           const SizedBox(height: 16),
-                          _buildApprovedEventsList(),
+                          _buildAvailableBaratiList(),
                           const SizedBox(height: 32),
-                        ],
-                        if (_userApplications.any((app) {
-                          final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
-                          return event.id != 'dummy' && event.date.isBefore(DateTime.now()) && app.isApproved;
-                        })) ...[
-                          const SizedBox(height: 32),
-                          _buildSectionHeader(context, 'Attended Events'),
+                          _buildHostDashboard(),
+                        ] else ...[
+                          _buildSectionHeader(context, 'Events Near You'),
                           const SizedBox(height: 16),
-                          _buildMyApplicationsList(isPast: true),
+                          _buildWeddingEventsList(),
+                          const SizedBox(height: 32),
+                          if (_userApplications.any((app) {
+                            final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
+                            return event.id != 'dummy' && event.date.isAfter(DateTime.now()) && app.isApproved;
+                          })) ...[
+                            _buildSectionHeader(context, 'Approved Events for Me'),
+                            const SizedBox(height: 16),
+                            _buildApprovedEventsList(),
+                            const SizedBox(height: 32),
+                          ],
+                          if (_userApplications.any((app) {
+                            final event = _events.firstWhere((e) => e.id == app.eventId, orElse: () => BaratiEvent(id: 'dummy', hostId: '', title: '', description: '', date: DateTime.now(), location: '', eventType: EventType.other, neededRoles: [], imageUrl: '', city: '', state: ''));
+                            return event.id != 'dummy' && event.date.isBefore(DateTime.now()) && app.isApproved;
+                          })) ...[
+                            const SizedBox(height: 32),
+                            _buildSectionHeader(context, 'Attended Events'),
+                            const SizedBox(height: 16),
+                            _buildMyApplicationsList(isPast: true),
+                          ],
                         ],
+                        const SizedBox(height: 100),
                       ],
-                      const SizedBox(height: 100),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       );
     }
 
-    Widget body;
-    if (_selectedIndex == 2) {
-      body = AddEventScreen(
-        onSaveComplete: () {
-          _loadData();
-          setState(() {
-            _selectedIndex = 0;
-            _currentType = UserRole.host;
-          });
-        },
-      );
-    } else if (_selectedIndex == 3) {
-      body = const ActivityScreen();
-    } else if (_selectedIndex == 4) {
-      body = const ProfileScreen(isEditMode: true);
-    } else {
-      body = _buildMainContent();
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
-      body: body,
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          _buildMainContent(), // Index 0: Host
+          _buildMainContent(), // Index 1: Discover (Shared content with role toggle logic)
+          AddEventScreen(
+            onSaveComplete: () {
+              _loadData();
+              setState(() => _selectedIndex = 0);
+            },
+          ), // Index 2: Create
+          const ActivityScreen(), // Index 3: Activity (Now persistent)
+          const ProfileScreen(isEditMode: true), // Index 4: Profile
+        ],
+      ),
       bottomNavigationBar: _buildBottomNav(theme),
     );
   }
@@ -509,6 +548,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ).toList();
           }
         });
+
+        // Trigger lazy loading of discovery data if switching to Barati mode
+        if (_currentType == UserRole.baratiMember) {
+          _loadDiscoveryData();
+        }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -713,8 +757,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildWeddingEventsList() {
-    if (_isLoading) {
-      return const Center(child: BaratiLoader(isFullScreen: false));
+    if (_isDiscoveryLoading || (_events.where((e) => e.hostId != _currentUserId && e.date.isAfter(DateTime.now())).isEmpty && !_isDiscoveryLoaded)) {
+      return const SizedBox(
+        height: 200,
+        child: Center(child: BaratiLoader(isFullScreen: false)),
+      );
     }
 
     final now = DateTime.now();
@@ -1011,7 +1058,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '$guestsConfirmed Guests',
+                                    '$guestsConfirmed ${guestsConfirmed == 1 ? 'Guest' : 'Guests'}',
                                     style: GoogleFonts.montserrat(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
@@ -1071,8 +1118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  if (sortedApps.isNotEmpty && !isHost && !isPast) 
-                    _buildApplicationStatusInfo(sortedApps),
+                  if (sortedApps.isNotEmpty && !isHost) 
+                    _buildApplicationStatusInfo(sortedApps, isPast: isPast),
                   if (isHost && !isPast) ...[
                     Builder(
                       builder: (context) {
@@ -1123,6 +1170,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMyApplicationsList({bool isPast = false}) {
+    final theme = Theme.of(context);
     final now = DateTime.now();
     
     final filteredApps = _userApplications.where((app) {
@@ -1169,7 +1217,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return SizedBox(
-      height: 180,
+      height: isPast ? 450 : 380,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
@@ -1185,118 +1233,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 MaterialPageRoute(builder: (context) => EventDetailsScreen(event: event)),
               ).then((_) => _loadData());
             },
-            child: Container(
-              width: 280,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    event.title,
-                    style: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 16),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(apps.isNotEmpty && apps.first.isInvitation ? 'Requested Role:' : 'Applied Role:', style: GoogleFonts.montserrat(fontSize: 12, color: Colors.grey[600])),
-                  const SizedBox(height: 4),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: apps.length,
-                      itemBuilder: (context, i) {
-                        final app = apps[i];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 4.0),
-                          child: Row(
-                            children: [
-                              Icon(
-                                app.isApproved ? Icons.check_circle : Icons.pending,
-                                size: 14,
-                                color: app.isApproved ? Colors.green : Colors.orange,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  app.appliedRole.toLabel(),
-                                  style: GoogleFonts.montserrat(fontSize: 13),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Text(
-                                _getStatusText(app),
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: _getStatusColor(app),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
+            child: Column(
+              children: [
+                _buildModernEventCard(
+                  event, 
+                  isPast: isPast, 
+                  isApproved: apps.any((a) => a.isApproved),
+                  applications: apps,
+                ),
+                if (!isPast && apps.any((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn))
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () async {
+                        final app = apps.firstWhere((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn);
+                        await SupabaseService().cancelApplication(app.id, app.eventId, app.applicantId);
+                        _loadData();
                       },
+                      icon: const Icon(Icons.cancel_outlined, size: 16, color: Colors.red),
+                      label: const Text('Withdraw', style: TextStyle(color: Colors.red, fontSize: 12)),
                     ),
                   ),
-                  if (apps.any((a) => a.isInvitation && a.status == ApplicationStatus.invitationPending))
-                    Builder(
-                      builder: (context) {
-                        final isEventPast = event.date.isBefore(DateTime.now());
-                        if (isEventPast) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Invitation Expired',
-                                style: GoogleFonts.montserrat(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12),
-                              ),
-                            ),
-                          );
-                        }
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () async {
-                                final invite = apps.firstWhere((a) => a.isInvitation && a.status == ApplicationStatus.invitationPending);
-                                await SupabaseService().respondToInvitation(invite.id, false, invite.eventId, invite.applicantId);
-                                _loadData();
-                              },
-                              child: const Text('Deny', style: TextStyle(color: Colors.red)),
-                            ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                final invite = apps.firstWhere((a) => a.isInvitation && a.status == ApplicationStatus.invitationPending);
-                                await SupabaseService().respondToInvitation(invite.id, true, invite.eventId, invite.applicantId);
-                                _loadData();
-                              },
-                              style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
-                              child: const Text('Accept'),
-                            ),
-                          ],
-                        );
-                      }
-                    )
-                  else if (!isPast && apps.any((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn))
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton.icon(
-                        onPressed: () async {
-                          final app = apps.firstWhere((a) => a.status != ApplicationStatus.declined && a.status != ApplicationStatus.withdrawn);
-                          await SupabaseService().cancelApplication(app.id, app.eventId, app.applicantId);
-                          _loadData();
-                        },
-                        icon: const Icon(Icons.cancel_outlined, size: 16, color: Colors.red),
-                        label: const Text('Withdraw', style: TextStyle(color: Colors.red, fontSize: 12)),
-                      ),
-                    ),
-                ],
-              ),
+              ],
             ),
           );
         },
@@ -1362,6 +1320,10 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) async {
+          // Safety: Unfocus any active text fields to prevent "ViewInsets cannot be negative" errors
+          // when switching tabs while the keyboard is visible.
+          FocusScope.of(context).unfocus();
+
           if (index == 3) {
             // Activity Tab: Clear notification badge when opened
             final prefs = await SharedPreferences.getInstance();
@@ -1373,7 +1335,12 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             }
             await prefs.setInt('lastViewedActivityCount', currentTotal);
-            _loadData();
+            
+            // Only reload if data is older than 2 minutes to save data/time
+            final now = DateTime.now();
+            if (_lastEssentialLoad == null || now.difference(_lastEssentialLoad!).inMinutes >= 2 || _unreadActivityCount > 0) {
+              _loadEssentialData(); 
+            }
           }
 
           setState(() {
@@ -1382,6 +1349,8 @@ class _HomeScreenState extends State<HomeScreen> {
               _currentType = UserRole.host;
             } else if (index == 1) {
               _currentType = UserRole.baratiMember;
+              // Trigger lazy loading of discovery data when switching to Discover tab
+              _loadDiscoveryData();
             }
             
             // Refresh filtered events based on new type
@@ -1473,7 +1442,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return 'Pending';
   }
 
-  Widget _buildApplicationStatusInfo(List<RoleApplication> apps) {
+  Widget _buildApplicationStatusInfo(List<RoleApplication> apps, {bool isPast = false}) {
     return Column(
       children: [
         const SizedBox(height: 4),
@@ -1483,7 +1452,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.only(bottom: 4),
           child: Row(
             children: [
-              Icon(_getStatusIcon(app), size: 12, color: _getStatusColor(app)),
+              Icon(isPast ? Icons.verified : _getStatusIcon(app), size: 12, color: _getStatusColor(app)),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
@@ -1493,13 +1462,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                _getStatusText(app),
+                isPast ? 'Attended' : _getStatusText(app),
                 style: GoogleFonts.montserrat(fontSize: 9, fontWeight: FontWeight.bold, color: _getStatusColor(app)),
               ),
             ],
           ),
         )),
-        _buildApplicationActionButtons(apps),
+        if (!isPast) _buildApplicationActionButtons(apps),
       ],
     );
   }

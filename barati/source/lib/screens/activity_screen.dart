@@ -12,16 +12,26 @@ import 'event_details_screen.dart';
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
 
+  // Global cache to allow background pre-loading from other screens
+  static List<RoleApplication> cachedActivities = [];
+  static Map<String, BaratiEvent> cachedEvents = {};
+  static Map<String, BaratiUser> cachedProfiles = {};
+  static DateTime? lastGlobalLoad;
+
   @override
   State<ActivityScreen> createState() => _ActivityScreenState();
 }
 
-class _ActivityScreenState extends State<ActivityScreen> {
+class _ActivityScreenState extends State<ActivityScreen> with AutomaticKeepAliveClientMixin {
   bool _isLoading = true;
   String? _currentUserId;
-  List<RoleApplication> _activities = [];
-  Map<String, BaratiUser> _profilesMap = {};
-  Map<String, BaratiEvent> _eventsMap = {};
+  List<RoleApplication> _activities = ActivityScreen.cachedActivities;
+  Map<String, BaratiUser> _profilesMap = ActivityScreen.cachedProfiles;
+  Map<String, BaratiEvent> _eventsMap = ActivityScreen.cachedEvents;
+  DateTime? _lastLoadTime = ActivityScreen.lastGlobalLoad;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -30,6 +40,22 @@ class _ActivityScreenState extends State<ActivityScreen> {
   }
 
   Future<void> _loadActivities() async {
+    // If we have cached data that is less than 5 minutes old, use it immediately
+    if (ActivityScreen.lastGlobalLoad != null && 
+        DateTime.now().difference(ActivityScreen.lastGlobalLoad!).inMinutes < 5 && 
+        ActivityScreen.cachedActivities.isNotEmpty) {
+      setState(() {
+        _activities = ActivityScreen.cachedActivities;
+        _eventsMap = ActivityScreen.cachedEvents;
+        _profilesMap = ActivityScreen.cachedProfiles;
+        _lastLoadTime = ActivityScreen.lastGlobalLoad;
+        _isLoading = false;
+      });
+      return;
+    }
+
+    if (mounted) setState(() => _isLoading = true);
+
     try {
       final prefs = await SharedPreferences.getInstance();
       _currentUserId = prefs.getString('user_id') ?? prefs.getString('mobileNumber');
@@ -55,6 +81,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
               _eventsMap = {for (var e in cEvents) e.id: e};
               _profilesMap = {for (var p in cProfiles) p.id: p};
               _activities = cApps;
+              _lastLoadTime = DateTime.now();
               _isLoading = false;
             });
           }
@@ -63,47 +90,116 @@ class _ActivityScreenState extends State<ActivityScreen> {
         }
       }
 
-      // 2. Fetch fresh data in the background (Optimized)
-      final results = await Future.wait([
-        SupabaseService().getApplicationsForUser(_currentUserId!),
-        SupabaseService().getApplicationsByHost(_currentUserId!),
-      ]);
+      // 2. Fetch fresh data in the background (Optimized single-query fetch)
+      final feed = await SupabaseService().getActivityFeed(_currentUserId!);
 
-      final myApps = results[0];
-      final hostedApps = results[1];
-      
-      final relevantApps = [...myApps, ...hostedApps];
-      
-      // Get unique IDs of events and profiles we actually need
-      final eventIds = relevantApps.map((a) => a.eventId).toSet().toList();
-      final applicantIds = relevantApps.map((a) => a.applicantId).toSet().toList();
-      
-      final freshEvents = await SupabaseService().getEventsByIds(eventIds);
-      final hostIds = freshEvents.map((e) => e.hostId).toSet().toList();
-      
-      final freshProfiles = await SupabaseService().getProfilesByIds({...applicantIds, ...hostIds}.toList());
+      final List<RoleApplication> freshApps = [];
+      final Map<String, BaratiEvent> freshEventsMap = {};
+      final Map<String, BaratiUser> freshProfilesMap = {};
 
-      final freshEventsMap = {for (var e in freshEvents) e.id: e};
-      final freshProfilesMap = {for (var p in freshProfiles) p.id: p};
-      
-      // Sort and reverse for newest first
-      final sortedApps = relevantApps.toList();
-      sortedApps.sort((a, b) => (b.createdAt ?? DateTime(2000)).compareTo(a.createdAt ?? DateTime(2000)));
+      for (var item in feed) {
+        try {
+          // Parse Application
+          final app = RoleApplication(
+            id: item['id'],
+            eventId: item['event_id'],
+            applicantId: item['applicant_id'],
+            appliedRole: (item['applied_role'] ?? 0) < FamilyRole.values.length ? FamilyRole.values[item['applied_role'] ?? 0] : FamilyRole.other,
+            message: item['message'],
+            isApproved: item['is_approved'],
+            status: (item['status'] ?? 0) < ApplicationStatus.values.length ? ApplicationStatus.values[item['status'] ?? 0] : ApplicationStatus.pending,
+            isInvitation: item['is_invitation'] ?? false,
+            createdAt: item['created_at'] != null ? DateTime.parse(item['created_at']).toLocal() : null,
+          );
+          freshApps.add(app);
+
+          // Parse Event
+          final e = item['events'];
+          if (e != null) {
+            final event = BaratiEvent(
+              id: e['id'] ?? '',
+              hostId: e['host_id'] ?? '',
+              title: e['title'] ?? 'Untitled Event',
+              description: e['description'] ?? '',
+              date: e['date'] != null ? DateTime.parse(e['date']).toLocal() : DateTime.now(),
+              location: e['location'] ?? '',
+              city: e['city'] ?? '',
+              state: e['state'] ?? '',
+              eventType: (e['event_type'] ?? 0) < EventType.values.length ? EventType.values[e['event_type'] ?? 0] : EventType.other,
+              neededRoles: (e['needed_roles'] as List? ?? []).map((r) => EventRole.fromJson(r as Map<String, dynamic>)).toList(),
+              approvedMemberIds: List<String>.from(e['approved_member_ids'] ?? []),
+              imageUrl: e['image_url'] ?? '',
+            );
+            freshEventsMap[event.id] = event;
+
+            // Parse Host Profile
+            final h = e['host'];
+            if (h != null) {
+              final host = BaratiUser(
+                id: h['id'] ?? '',
+                name: h['name'] ?? 'Anonymous',
+                age: h['age'] ?? 25,
+                gender: h['gender'] ?? 'Other',
+                userRole: (h['user_role'] ?? 1) < UserRole.values.length ? UserRole.values[h['user_role'] ?? 1] : UserRole.baratiMember,
+                possibleRoles: (h['possible_roles'] as List? ?? []).map((r) => FamilyRole.values[r as int]).toList(),
+                bio: h['bio'] ?? '',
+                profileImageUrl: h['profile_image_url'],
+                city: h['city'] ?? '',
+                state: h['state'] ?? '',
+                profession: h['profession'] ?? '',
+                education: h['education'] ?? '',
+                languages: List<String>.from(h['languages'] ?? []),
+              );
+              freshProfilesMap[host.id] = host;
+            }
+          }
+
+          // Parse Applicant Profile
+          final a = item['applicant'];
+          if (a != null) {
+            final applicant = BaratiUser(
+              id: a['id'] ?? '',
+              name: a['name'] ?? 'Anonymous',
+              age: a['age'] ?? 25,
+              gender: a['gender'] ?? 'Other',
+              userRole: (a['user_role'] ?? 1) < UserRole.values.length ? UserRole.values[a['user_role'] ?? 1] : UserRole.baratiMember,
+              possibleRoles: (a['possible_roles'] as List? ?? []).map((r) => FamilyRole.values[r as int]).toList(),
+              bio: a['bio'] ?? '',
+              profileImageUrl: a['profile_image_url'],
+              city: a['city'] ?? '',
+              state: a['state'] ?? '',
+              profession: a['profession'] ?? '',
+              education: a['education'] ?? '',
+              languages: List<String>.from(a['languages'] ?? []),
+            );
+            freshProfilesMap[applicant.id] = applicant;
+          }
+        } catch (e) {
+          debugPrint('Error parsing activity item: $e');
+        }
+      }
 
       if (mounted) {
         setState(() {
+          // Update global cache
+          ActivityScreen.cachedActivities = freshApps;
+          ActivityScreen.cachedEvents = freshEventsMap;
+          ActivityScreen.cachedProfiles = freshProfilesMap;
+          ActivityScreen.lastGlobalLoad = DateTime.now();
+
           _eventsMap = freshEventsMap;
           _profilesMap = freshProfilesMap;
-          _activities = sortedApps;
+          _activities = freshApps;
+          _lastLoadTime = ActivityScreen.lastGlobalLoad;
           _isLoading = false;
         });
       }
 
       // 3. Update cache (Atomic & Stripped to avoid QuotaExceeded)
       try {
-        prefs.setString('cached_activity_apps', CacheLogic.getStrippedJson(sortedApps.take(50).toList()));
-        prefs.setString('cached_activity_events', CacheLogic.getStrippedJson(freshEvents.take(50).toList()));
-        prefs.setString('cached_activity_profiles', CacheLogic.getStrippedJson(freshProfiles.take(50).toList()));
+        prefs.setString('cached_activity_apps', CacheLogic.getStrippedJson(freshApps.take(50).toList()));
+        prefs.setString('cached_activity_events', CacheLogic.getStrippedJson(freshEventsMap.values.take(50).toList()));
+        prefs.setString('cached_activity_profiles', CacheLogic.getStrippedJson(freshProfilesMap.values.take(50).toList()));
       } catch (e) {
         debugPrint('Failed to update activity cache: $e');
       }
@@ -185,6 +281,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
