@@ -5,6 +5,7 @@ import '../core/utils.dart';
 
 mixin GameLogicMixin<T extends StatefulWidget> on State<T> {
   final AudioPlayer audioPlayer = AudioPlayer();
+  final AudioPlayer effectPlayer = AudioPlayer();
   Timer? timer;
   int secondsLeft = 0;
   bool timerRunning = false;
@@ -38,18 +39,33 @@ mixin GameLogicMixin<T extends StatefulWidget> on State<T> {
   }
 
   void playTimerSound() {
-    if (secondsLeft > 8) {
-      audioPlayer.play(AssetSource('sounds/tick.mp3'));
-    } else if (secondsLeft > 3) {
-      audioPlayer.play(AssetSource('sounds/warning.mp3'));
-    } else {
-      audioPlayer.play(AssetSource('sounds/end.mp3'));
+    String soundPath = 'sounds/tick.mp3';
+    if (secondsLeft <= 3) {
+      soundPath = 'sounds/end.mp3';
+    } else if (secondsLeft <= 8) {
+      soundPath = 'sounds/warning.mp3';
     }
+    
+    // Using a separate player for timer to avoid conflicts with effects
+    audioPlayer.stop().then((_) {
+      audioPlayer.play(AssetSource(soundPath));
+    });
+  }
+
+  void playSpinSound() {
+    effectPlayer.setReleaseMode(ReleaseMode.loop);
+    effectPlayer.play(AssetSource('sounds/spin.mp3')).catchError((e) {
+      debugPrint("Spin sound not found or failed: $e");
+    });
+  }
+
+  void stopSpinSound() {
+    effectPlayer.stop();
   }
 
   void stopTimer() {
     timer?.cancel();
-    audioPlayer.stop(); // Instantly stop any playing timer audio
+    audioPlayer.stop();
     setState(() => timerRunning = false);
   }
 
@@ -57,6 +73,7 @@ mixin GameLogicMixin<T extends StatefulWidget> on State<T> {
   void dispose() {
     timer?.cancel();
     audioPlayer.dispose();
+    effectPlayer.dispose();
     super.dispose();
   }
 }

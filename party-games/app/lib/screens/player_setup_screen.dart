@@ -120,7 +120,7 @@ class _PlayerSetupScreenState extends State<PlayerSetupScreen> {
   Widget build(BuildContext context) {
     return GradientScaffold(
       appBar: AppBar(
-        title: const Text('Player Setup'),
+        title: const Text('Players Setup'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

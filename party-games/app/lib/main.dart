@@ -4,6 +4,7 @@ import 'screens/home_screen.dart';
 import 'screens/player_setup_screen.dart';
 import 'screens/poker_game_screen.dart';
 import 'screens/spinner_game_screen.dart';
+import 'screens/loading_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +34,9 @@ class PartyGamesApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: '/',
+      initialRoute: '/loading',
       routes: {
+        '/loading': (context) => const LoadingScreen(),
         '/': (context) => const HomeScreen(),
         '/player_setup': (context) => const PlayerSetupScreen(),
         '/poker': (context) => const PokerGameScreen(),
@@ -54,10 +56,9 @@ class GradientScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF4FACFE), Color(0xFF00F2FE)],
+        image: DecorationImage(
+          image: AssetImage('assets/images/game_bg.jpg'),
+          fit: BoxFit.cover,
         ),
       ),
       child: Scaffold(

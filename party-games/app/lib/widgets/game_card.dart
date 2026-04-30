@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/constants.dart';
+import '../models/player.dart';
 
 class GameCard extends StatelessWidget {
   final double width;
@@ -9,6 +10,7 @@ class GameCard extends StatelessWidget {
   final String content;
   final bool isPunishment;
   final String? label;
+  final Gender? gender;
 
   const GameCard({
     super.key,
@@ -17,6 +19,7 @@ class GameCard extends StatelessWidget {
     required this.content,
     this.isPunishment = false,
     this.label,
+    this.gender,
   });
 
   @override
@@ -25,18 +28,15 @@ class GameCard extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isPunishment
-              ? [
-                  GameConstants.punishmentColor1.withOpacity(0.7),
-                  GameConstants.punishmentColor2.withOpacity(0.7),
-                ]
-              : [
-                  GameConstants.primaryColor.withOpacity(0.6),
-                  GameConstants.secondaryColor.withOpacity(0.6),
-                ],
+        image: DecorationImage(
+          image: AssetImage(
+            isPunishment
+                ? 'assets/images/punishment_card_bg.jpg'
+                : gender == Gender.female
+                    ? 'assets/images/female_card_bg.jpg'
+                    : 'assets/images/male_card_bg.jpg',
+          ),
+          fit: BoxFit.cover,
         ),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.white.withOpacity(0.4)),
@@ -81,7 +81,9 @@ class GameCard extends StatelessWidget {
                   child: Center(
                     child: SingleChildScrollView(
                       child: Text(
-                        content,
+                        content.isNotEmpty 
+                            ? content[0].toUpperCase() + content.substring(1) 
+                            : content,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.outfit(
                           fontSize: 24,

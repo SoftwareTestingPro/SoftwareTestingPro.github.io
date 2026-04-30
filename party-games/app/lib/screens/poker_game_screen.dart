@@ -49,7 +49,8 @@ class _PokerGameScreenState extends State<PokerGameScreen>
       duration: const Duration(milliseconds: 400),
     );
     WakelockPlus.enable();
-    _nextTask();
+    // Start with empty task to show "game load" UI
+    _currentTask = "";
   }
 
   @override
@@ -66,6 +67,7 @@ class _PokerGameScreenState extends State<PokerGameScreen>
       _flipController.reverse();
       _currentTask = _controller.getNextTask();
       stopTimer();
+      secondsLeft = 0; // Clear timer UI immediately
       checkForTimer(_currentTask);
     });
   }
@@ -154,23 +156,26 @@ class _PokerGameScreenState extends State<PokerGameScreen>
                 onLevelSelected: (level) {
                   setState(() {
                     _controller.switchBase(level);
-                    _nextTask();
+                    _currentTask = "";
+                    _isFlipped = false;
+                    stopTimer();
                   });
                 },
               ),
 
               const SizedBox(height: 15),
 
-              FadeInDown(
-                child: Text(
-                  "${_controller.lastActivePlayer.name}'s Turn",
-                  style: GoogleFonts.outfit(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white70,
+              if (_currentTask.isNotEmpty)
+                FadeInDown(
+                  child: Text(
+                    "${_controller.lastActivePlayer.name}'s Turn",
+                    style: GoogleFonts.outfit(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white70,
+                    ),
                   ),
                 ),
-              ),
 
               const SizedBox(height: 15),
 
@@ -184,11 +189,38 @@ class _PokerGameScreenState extends State<PokerGameScreen>
                       return Stack(
                         alignment: Alignment.center,
                         children: [
-                          GameCardPlaceholder(
-                            width: cardWidth,
-                            height: cardHeight,
-                            icon: Icons.style_rounded,
-                          ),
+                          if (_currentTask.isNotEmpty)
+                            GameCardPlaceholder(
+                              width: cardWidth,
+                              height: cardHeight,
+                              icon: Icons.style_rounded,
+                            ),
+                          
+                          if (_currentTask.isEmpty)
+                            GestureDetector(
+                              onTap: _nextTask,
+                              child: ShaderMask(
+                                shaderCallback: (bounds) => const LinearGradient(
+                                  colors: [
+                                    Colors.red,
+                                    Colors.orange,
+                                    Colors.yellow,
+                                    Colors.green,
+                                    Colors.blue,
+                                    Colors.indigo,
+                                    Colors.purple,
+                                  ],
+                                ).createShader(bounds),
+                                child: Text(
+                                  'Start',
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 80,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
 
                           // Tinder-style "NEXT" overlay
                           if (_dragOffset.dx.abs() > 20)
@@ -224,7 +256,7 @@ class _PokerGameScreenState extends State<PokerGameScreen>
                             ),
                           
                           GestureDetector(
-                            onHorizontalDragUpdate: (details) {
+                            onHorizontalDragUpdate: _currentTask.isEmpty ? null : (details) {
                               setState(() {
                                 _dragOffset += details.delta;
                                 _dragAngle = (_dragOffset.dx / constraints.maxWidth) * 0.2;
@@ -244,6 +276,7 @@ class _PokerGameScreenState extends State<PokerGameScreen>
                               }
                             },
                             onTap: () {
+                              if (_currentTask.isEmpty) return;
                               if (_isFlipped) {
                                 setState(() {
                                   _isFlipped = false;
@@ -255,40 +288,44 @@ class _PokerGameScreenState extends State<PokerGameScreen>
                                 _showPunishment();
                               }
                             },
-                            child: Transform(
-                              transform: Matrix4.translationValues(_dragOffset.dx, _dragOffset.dy, 0)
-                                ..rotateZ(_dragAngle),
-                              alignment: Alignment.center,
-                              child: AnimatedBuilder(
-                                animation: _flipController,
-                                builder: (context, child) {
-                                  final angle = _flipController.value * math.pi;
-                                  return Transform(
-                                    transform: Matrix4.identity()
-                                      ..setEntry(3, 2, 0.001)
-                                      ..rotateY(angle),
-                                    alignment: Alignment.center,
-                                    child: angle < math.pi / 2
-                                        ? GameCard(
-                                            width: cardWidth,
-                                            height: cardHeight,
-                                            content: _currentTask,
-                                          )
-                                        : Transform(
-                                            transform: Matrix4.identity()..rotateY(math.pi),
-                                            alignment: Alignment.center,
-                                            child: GameCard(
-                                              width: cardWidth,
-                                              height: cardHeight,
-                                              content: _currentPunishment,
-                                              isPunishment: true,
-                                              label: "PUNISHMENT",
-                                            ),
-                                          ),
-                                  );
-                                },
-                              ),
-                            ),
+                            child: _currentTask.isEmpty 
+                              ? const SizedBox.shrink()
+                              : Transform(
+                                  transform: Matrix4.translationValues(_dragOffset.dx, _dragOffset.dy, 0)
+                                    ..rotateZ(_dragAngle),
+                                  alignment: Alignment.center,
+                                  child: AnimatedBuilder(
+                                    animation: _flipController,
+                                    builder: (context, child) {
+                                      final angle = _flipController.value * math.pi;
+                                      return Transform(
+                                        transform: Matrix4.identity()
+                                          ..setEntry(3, 2, 0.001)
+                                          ..rotateY(angle),
+                                        alignment: Alignment.center,
+                                        child: angle < math.pi / 2
+                                            ? GameCard(
+                                                width: cardWidth,
+                                                height: cardHeight,
+                                                content: _currentTask,
+                                                gender: _controller.lastActivePlayer.gender,
+                                              )
+                                            : Transform(
+                                                transform: Matrix4.identity()..rotateY(math.pi),
+                                                alignment: Alignment.center,
+                                                child: GameCard(
+                                                  width: cardWidth,
+                                                  height: cardHeight,
+                                                  content: _currentPunishment,
+                                                  isPunishment: true,
+                                                  label: "PUNISHMENT",
+                                                  gender: _controller.lastActivePlayer.gender,
+                                                ),
+                                              ),
+                                      );
+                                    },
+                                  ),
+                                ),
                           ),
                         ],
                       );
@@ -313,10 +350,16 @@ class _PokerGameScreenState extends State<PokerGameScreen>
               
               const SizedBox(height: 12),
               
-              const Text(
-                'Swipe for Next Task • Tap to Flip',
-                style: TextStyle(color: Colors.black45, fontSize: 13, fontWeight: FontWeight.bold),
-              ),
+              if (_currentTask.isNotEmpty)
+                const Text(
+                  'Swipe for Next Task • Tap to Flip',
+                  style: TextStyle(
+                    color: Colors.white70, 
+                    fontSize: 13, 
+                    fontWeight: FontWeight.bold,
+                    shadows: [Shadow(color: Colors.black26, offset: Offset(0, 1), blurRadius: 2)],
+                  ),
+                ),
             ],
           ),
         ),

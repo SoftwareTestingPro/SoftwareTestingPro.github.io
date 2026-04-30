@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 40),
                   FadeInDown(
                     child: const Text(
-                      'Game Hub',
+                      'Games Hub',
                       style: TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                   FadeInUp(
                     delay: const Duration(milliseconds: 200),
                     child: _GameLink(
-                      title: 'Poker',
+                      title: 'Strip Poker',
                       icon: '🃏',
                       onTap: () => Navigator.pushNamed(context, '/player_setup', arguments: '/poker'),
                     ),

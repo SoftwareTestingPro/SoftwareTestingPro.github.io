@@ -77,6 +77,8 @@ class _SpinnerGameScreenState extends State<SpinnerGameScreen>
       _showBottle = true;
       _currentTask = ""; 
       stopTimer();
+      secondsLeft = 0; // Clear timer UI immediately
+      playSpinSound();
     });
 
     final double randomAngle = math.pi * 2 * (5 + math.Random().nextDouble() * 5);
@@ -97,6 +99,7 @@ class _SpinnerGameScreenState extends State<SpinnerGameScreen>
     _spinController.addListener(listener);
     _spinController.forward().then((_) {
       _spinController.removeListener(listener);
+      stopSpinSound();
       _controller.pickRandomPlayer();
       _nextTask(); 
       
@@ -160,6 +163,8 @@ class _SpinnerGameScreenState extends State<SpinnerGameScreen>
                   setState(() {
                     _controller.switchBase(level);
                     _currentTask = ""; 
+                    _showBottle = true;
+                    _isSpinning = false;
                     stopTimer();
                   });
                 },
@@ -233,6 +238,7 @@ class _SpinnerGameScreenState extends State<SpinnerGameScreen>
                                             width: cardWidth,
                                             height: cardHeight,
                                             content: _currentTask,
+                                            gender: _controller.lastSelectedPlayer?.gender,
                                           )
                                         : Transform(
                                             transform: Matrix4.identity()..rotateY(math.pi),
@@ -243,6 +249,7 @@ class _SpinnerGameScreenState extends State<SpinnerGameScreen>
                                               content: _currentPunishment,
                                               isPunishment: true,
                                               label: "PUNISHMENT",
+                                              gender: _controller.lastSelectedPlayer?.gender,
                                             ),
                                           ),
                                   );
@@ -253,9 +260,12 @@ class _SpinnerGameScreenState extends State<SpinnerGameScreen>
 
                           if (_showBottle)
                             Center(
-                              child: Transform.rotate(
-                                angle: _bottleRotation,
-                                child: PremiumBottle(height: cardHeight * 0.85),
+                              child: GestureDetector(
+                                onTap: _spinBottle,
+                                child: Transform.rotate(
+                                  angle: _bottleRotation,
+                                  child: PremiumBottle(height: cardHeight * 0.85),
+                                ),
                               ),
                             ),
                         ],

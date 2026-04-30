@@ -24,9 +24,16 @@ class RefuseTaskPrompt extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           style: GoogleFonts.outfit(
-            color: Colors.black87,
+            color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            shadows: [
+              const Shadow(
+                color: Colors.black45,
+                offset: Offset(0, 1),
+                blurRadius: 4,
+              ),
+            ],
           ),
         ),
       ),
