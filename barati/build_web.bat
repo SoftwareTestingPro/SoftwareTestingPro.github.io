@@ -1,45 +1,49 @@
 @echo off
 echo ========================================
-echo   Barati Self-Contained Web Build
+echo   Barati Root Web Build
 echo ========================================
 
 :: 1. Sync dependencies
-echo [1/3] Syncing dependencies...
+echo [1/4] Syncing dependencies in /source...
+cd source
 call flutter pub get
 if %errorlevel% neq 0 (
     echo.
     echo ERROR: 'flutter pub get' failed.
+    cd ..
     pause
     exit /b %errorlevel%
 )
 
 :: 2. Build the Flutter Web project
-echo [2/3] Building Flutter Web...
-call flutter build web --base-href "/barati/app/" --release
+echo [2/4] Building Flutter Web...
+call flutter build web --base-href "/barati/" --release
 if %errorlevel% neq 0 (
     echo.
     echo ERROR: Flutter build failed.
+    cd ..
     pause
     exit /b %errorlevel%
 )
 
-:: 3. Deploy build output to the /app folder
-echo [3/3] Deploying build to /app folder...
+:: 3. Deploy build output to the root folder
+echo [3/4] Deploying build to root folder...
+xcopy /s /e /y "build\web\*" "..\"
 
-:: Clean existing app folder to ensure no stale files
-if exist "app" rd /s /q "app"
-mkdir "app"
+:: 4. Clean up the build folder to save space (prevents duplication)
+echo [4/4] Cleaning up intermediate build files...
+if exist "build" rd /s /q "build"
 
-xcopy /s /e /y "build\web\*" "app\"
+cd ..
 
 echo.
 echo ========================================
 echo   SUCCESS!
 echo.
-echo   The latest version of Barati is now 
-echo   ready in the '/app' folder.
+echo   Project size has been optimized by 
+echo   removing the duplicate build folder.
 echo.
-echo   1. Commit and push the 'app' folder.
-echo   2. Visit: https://softwaretestingpro.github.io/barati/app/
+echo   1. Commit and push all files in /barati.
+echo   2. Visit: https://softwaretestingpro.github.io/barati/
 echo ========================================
 pause

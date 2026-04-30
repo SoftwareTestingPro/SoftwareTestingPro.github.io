@@ -27,10 +27,13 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+source/.dart_tool/
 .flutter-plugins-dependencies
+source/.flutter-plugins-dependencies
 .pub-cache/
 .pub/
 /build/
+source/build/
 /coverage/
 
 # Symbolication related
@@ -43,3 +46,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+source/android/app/debug
+source/android/app/profile
+source/android/app/release
