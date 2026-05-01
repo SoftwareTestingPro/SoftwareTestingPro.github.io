@@ -1,6 +1,6 @@
 @echo off
 echo Running Flutter Clean and Pub Get...
-cd app
+cd source
 call flutter clean
 call flutter pub get
 echo.

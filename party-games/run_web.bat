@@ -1,5 +1,5 @@
 @echo off
 echo Running Party Games on Web...
-cd app
+cd source
 call flutter run -d chrome
 pause
