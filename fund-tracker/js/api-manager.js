@@ -209,116 +209,40 @@ async function getNAVForDate(schemeCode, date) {
     }
 }
 
-/**
- * Google Drive API Helpers
- */
-async function fetchDriveAPI(url, options = {}) {
-    if (!accessToken) throw new Error('Not authenticated');
-
-    const headers = {
-        'Authorization': `Bearer ${accessToken}`,
-        ...(options.headers || {})
-    };
-
-    const fetchOptions = {
-        cache: 'no-store',
-        ...options,
-        headers
-    };
-
-    const response = await fetch(url, fetchOptions);
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Drive API error: ${response.status} ${errorText}`);
-    }
-    return response;
-}
-
-async function getDriveFileId(fileName) {
-    const q = encodeURIComponent(`name='${fileName}' and 'appDataFolder' in parents and trashed=false`);
-    const url = `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id)`;
-
-    const response = await fetchDriveAPI(url);
-    const data = await response.json();
-    if (data.files && data.files.length > 0) return data.files[0].id;
-    return null;
-}
-
-async function readDriveFile(fileId) {
-    const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-    const response = await fetchDriveAPI(url);
-    return await response.json();
-}
-
-async function writeDriveFile(fileName, contentObj) {
-    let fileId = await getDriveFileId(fileName);
-
-    if (!fileId) {
-        const createUrl = `https://www.googleapis.com/drive/v3/files`;
-        const createResponse = await fetchDriveAPI(createUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: fileName, parents: ['appDataFolder'] })
-        });
-        const createData = await createResponse.json();
-        fileId = createData.id;
-    }
-
-    const fileContent = JSON.stringify(contentObj, null, 2);
-    const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`;
-    await fetchDriveAPI(url, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: fileContent
-    });
-}
-
-// Cloud Synchronization Logic
+// Local Persistence Logic
 async function getCloudInvestments() {
     try {
-        const fileId = await getDriveFileId('mf_investments.json');
-        if (fileId) {
-            const content = await readDriveFile(fileId);
-            return content.investments || [];
-        }
+        const data = await getFromDB('mf_investments');
+        return data || [];
     } catch (error) {
-        console.error('Error getting investments from Drive:', error);
+        console.error('Error getting investments from local storage:', error);
     }
     return [];
 }
 
 async function saveToCloud(investments) {
     try {
-        await writeDriveFile('mf_investments.json', {
-            investments: investments,
-            lastSyncTime: new Date().toISOString()
-        });
+        await saveToDB('mf_investments', investments);
     } catch (error) {
-        console.error('Failed to save to Google Drive:', error);
+        console.error('Failed to save to local storage:', error);
     }
 }
 
 async function getCloudFundGroups() {
     try {
-        const fileId = await getDriveFileId('mf_groups.json');
-        if (fileId) {
-            const content = await readDriveFile(fileId);
-            return content.fundGroups || [];
-        }
+        const data = await getFromDB('mf_groups');
+        return data || [];
     } catch (error) {
-        console.error('Error getting fund groups from Drive:', error);
+        console.error('Error getting fund groups from local storage:', error);
     }
     return [];
 }
 
 async function saveToCloudFundGroups(fundGroups) {
     try {
-        await writeDriveFile('mf_groups.json', {
-            fundGroups: fundGroups,
-            lastSyncTime: new Date().toISOString()
-        });
+        await saveToDB('mf_groups', fundGroups);
     } catch (error) {
-        console.error('Failed to save fund groups to Google Drive:', error);
+        console.error('Failed to save fund groups to local storage:', error);
     }
 }
 /**

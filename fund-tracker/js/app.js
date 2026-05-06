@@ -15,10 +15,8 @@ var pendingDeleteId = null;
 var pendingDeleteType = 'fund'; // 'fund' or 'group'
 let currentView = 'individual';
 let currentGroupFilter = 'all';
-let currentUser = null;
-let isSignedIn = false;
-let accessToken = null;
-let tokenClient;
+let currentUser = { name: 'Guest User', email: 'local@storage' };
+let isSignedIn = true;
 
 const SYNC_COOLDOWN_MS = 15 * 60 * 1000;
 
@@ -26,51 +24,27 @@ const SYNC_COOLDOWN_MS = 15 * 60 * 1000;
  * Initialize Application
  */
 async function initApp() {
-    await showGlobalLoader('Mutual Fund Tracker', 'Restoring your secure session...');
-    checkAuthState();
+    await showGlobalLoader('Mutual Fund Tracker', 'Restoring your local dashboard...');
+    
+    updateSyncUI();
+    updateLoadingText('Fetching your groups...');
+    fundGroups = await getCloudFundGroups();
+    updateLoadingText('Synchronizing investments...');
+    userInvestments = await getCloudInvestments();
+    updateLoadingText('Verifying fund database...');
+    await loadAllFundsCache();
+    populateFundHouses();
 
-    if (isSignedIn) {
-        updateAuthUI();
-        updateSyncUI();
-        updateLoadingText('Fetching your groups...');
-        fundGroups = await getCloudFundGroups();
-        updateLoadingText('Synchronizing investments...');
-        userInvestments = await getCloudInvestments();
-        updateLoadingText('Verifying fund database...');
-        await loadAllFundsCache();
-        populateFundHouses();
-
-        syncAutomatedGroups(); // Apply heuristic grouping
-        showMainContent();
-    } else {
-        showMainContent();
-    }
+    syncAutomatedGroups(); // Apply heuristic grouping
+    showMainContent();
     hideGlobalLoader();
 }
 
 /**
  * Auth State Checker
  */
-function checkAuthState() {
-    const authData = localStorage.getItem('mf_auth');
-    if (authData) {
-        try {
-            const parsed = JSON.parse(authData);
-            if (parsed.expiry > Date.now() && parsed.accessToken && parsed.user) {
-                accessToken = parsed.accessToken;
-                currentUser = parsed.user;
-                isSignedIn = true;
-
-                // Legacy Cleanup
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('nav_cache_') || key.startsWith('nav_')) localStorage.removeItem(key);
-                });
-                return;
-            }
-        } catch (e) { localStorage.removeItem('mf_auth'); }
-    }
-    isSignedIn = false;
-}
+// Auth is now always enabled locally
+function checkAuthState() {}
 
 /**
  * UI State Orchestration
@@ -78,16 +52,12 @@ function checkAuthState() {
 function showMainContent() {
     const mainContent = document.getElementById('mainContent');
     const loginContent = document.getElementById('loginContent');
-    if (isSignedIn) {
-        if (mainContent) mainContent.style.display = 'block';
-        if (loginContent) loginContent.style.display = 'none';
-        
-        // Default View State
-        switchMainView('individual');
-    } else {
-        if (mainContent) mainContent.style.display = 'none';
-        if (loginContent) loginContent.style.display = 'flex';
-    }
+    
+    if (mainContent) mainContent.style.display = 'block';
+    if (loginContent) loginContent.style.display = 'none';
+    
+    // Default View State
+    switchMainView('individual');
 }
 
 /**
@@ -224,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setupEventListeners();
-    initializeGoogleAuth();
 });
 
 /**
@@ -1086,31 +1055,10 @@ async function refreshAllData() {
 /**
  * Auth Logic
  */
-function initializeGoogleAuth() {
-    if (typeof google === 'undefined') { setTimeout(initializeGoogleAuth, 500); return; }
-    tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: '648600237663-25le2m3002pk7si6g511k7dssrsnv1i8.apps.googleusercontent.com',
-        scope: 'https://www.googleapis.com/auth/drive.appdata email profile',
-        callback: async (res) => {
-            if (res.access_token) {
-                accessToken = res.access_token;
-                showGlobalLoader('Signing in...', 'Retrieving profile...');
-                const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${accessToken}` } });
-                const userData = await userRes.json();
-                currentUser = { name: userData.name || userData.email, email: userData.email, avatar: userData.picture };
-                isSignedIn = true;
-                localStorage.setItem('mf_auth', JSON.stringify({ accessToken, user: currentUser, expiry: Date.now() + 3600000 }));
-                await initApp();
-            }
-        }
-    });
-}
-
-function signInWithGoogle() { tokenClient?.requestAccessToken(); }
+function initializeGoogleAuth() {}
+function signInWithGoogle() {}
 function signOut() {
-    isSignedIn = false; currentUser = null; accessToken = null;
-    localStorage.removeItem('mf_auth');
-    showMainContent();
+    showSuccess('Local data remains active. To clear data, use browser settings.');
 }
 
 function updateAuthUI() {
@@ -1125,27 +1073,16 @@ function updateAuthUI() {
             const nameEl = document.getElementById('userNameSidebar');
             const avatarEl = document.getElementById('userAvatarSidebar');
             if (nameEl) nameEl.textContent = currentUser.name;
-            if (avatarEl) {
-                avatarEl.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=random`;
-                avatarEl.style.display = 'block';
-            }
         }
 
         // Update Mobile Profile View
         const nameMob = document.getElementById('userNameMobile');
         const emailMob = document.getElementById('userEmailMobile');
-        const avatarMob = document.getElementById('userAvatarMobile');
         if (nameMob) nameMob.textContent = currentUser.name;
         if (emailMob) emailMob.textContent = currentUser.email;
-        if (avatarMob) avatarMob.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=random`;
 
         if (loginContent) loginContent.style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
-    } else {
-        if (userInfoSidebar) userInfoSidebar.style.display = 'none';
-        if (loginContent) loginContent.style.display = 'flex';
-        const mc = document.getElementById('mainContent');
-        if (mc) mc.style.display = 'none';
     }
 }
 
