@@ -143,6 +143,8 @@
         });
 
         // Add input validation handler
+        document.getElementById('inputField').addEventListener('input', function() {
+            const userInput = this.value;
             const successMessage = document.getElementById('successMessage');
             const failureMessage = document.getElementById('failureMessage');
             const warningMessage = document.getElementById('warningMessage');

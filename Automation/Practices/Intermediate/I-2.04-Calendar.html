@@ -97,9 +97,7 @@
 
             // Hide messages initially
             successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
             failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
 
             var today = new Date();
             var randomMonth = Math.floor(Math.random() * 12);
@@ -160,16 +158,12 @@
                     // Check for 1st Wednesday
                     if (clickedDate === firstWednesdayDate) {
                         successMessage.style.display = 'flex';
-                        successMessage.classList.add('success');
                         failureMessage.style.display = 'none';
-                        failureMessage.classList.remove('failure');
                     } else {
                         expectedDate.textContent = firstWednesdayDate;
                         enteredDate.textContent = clickedDate;
                         successMessage.style.display = 'none';
-                        successMessage.classList.remove('success');
                         failureMessage.style.display = 'flex';
-                        failureMessage.classList.add('failure');
                     }
                 });
             });

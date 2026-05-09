@@ -1644,6 +1644,12 @@ fieldset {
     gap: 4px;
 }
 
+.message.warning {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fef3c7;
+}
+
 .message .detail {
     font-size: 0.85rem;
     opacity: 0.9;
