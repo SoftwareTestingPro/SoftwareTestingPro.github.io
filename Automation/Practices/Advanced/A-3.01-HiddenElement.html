@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation in automation.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Hidden Element Challenge - Element Visibility Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Advanced/styles-A-3.01.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.01-HiddenElement.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Hidden Element Challenge - Element Visibility Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation in automation.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.01-HiddenElement.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hidden Element Challenge - Element Visibility Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Hidden Element Challenge - Element Visibility Tutorial | Software Testing Pro",
+      "description": "Master hidden element testing and visibility control. Learn CSS display properties and element state validation in automation.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.01-HiddenElement.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-Intro.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Back to Introduction
+        </a>
+        <a href="A-3.02-Download.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Hidden Element Challenge</h1>
+        <p class="lead">Master timing and reflexes! Wait for the hidden button to appear after countdown, then click instantly to prove your speed skills.</p>
+        <div id="countdown">Time remaining: 5 seconds</div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;"><span>Congratulations! Well done!</span></div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite" style="display: none;"><span>Sorry, you missed clicking the button. Be fast!</span></div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var labelText = document.getElementById('labelText');
+            var countdown = document.getElementById('countdown');
+            var successMessage = document.getElementById('successMessage');
+            var failureMessage = document.getElementById('failureMessage');
+            var buttonClicked = false;
+            var timeLeft = 5;
+
+            // Hide messages on load
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.classList.remove('failure');
+
+            // Countdown timer
+            var countdownInterval = setInterval(function() {
+                timeLeft--;
+                countdown.textContent = `Time remaining: ${timeLeft} seconds`;
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+
+            // After 5 seconds, hide the label and create the button
+            setTimeout(function() {
+                countdown.style.display = 'none';
+
+                // Create the button element
+                var button = document.createElement('button');
+                button.id = 'showButton';
+                button.className = 'button';
+                button.textContent = 'Click Me';
+                button.style.backgroundColor = '#007bff';
+                const messageContainer = document.getElementById('messageContainer');
+                document.querySelector('.card-content').insertBefore(button, messageContainer);
+
+                // Show the button instantly
+                button.style.display = 'block';
+
+                // After 1 second, hide the button if not clicked
+                setTimeout(function() {
+                    if (!buttonClicked) {
+                        button.style.display = 'none';
+                        if (button.parentNode) {
+                            button.parentNode.removeChild(button); // Remove button from DOM
+                        }
+                        failureMessage.style.display = 'flex';
+                        failureMessage.classList.add('failure');
+                        successMessage.style.display = 'none';
+                        successMessage.classList.remove('success');
+                    }
+                }, 2000);
+
+                // If the button is clicked, show the success message
+                button.addEventListener('click', function() {
+                    buttonClicked = true;
+                    button.style.display = 'none';
+                    if (button.parentNode) {
+                        button.parentNode.removeChild(button); // Remove button from DOM
+                    }
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('success');
+                    failureMessage.style.display = 'none';
+                    failureMessage.classList.remove('failure');
+                });
+
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

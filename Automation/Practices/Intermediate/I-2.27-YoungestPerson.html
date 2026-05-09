@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master finding and analyzing data from collections. Learn data comparison and age calculation in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Youngest Person Challenge - Data Analysis Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Intermediate/styles-I-2.27.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.27-YoungestPerson.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Youngest Person Challenge - Data Analysis Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master finding and analyzing data from collections. Learn data comparison and age calculation in automation testing.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.27-YoungestPerson.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Youngest Person Challenge - Data Analysis Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master finding and analyzing data from collections. Learn data comparison and age calculation.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Youngest Person Challenge - Data Analysis Tutorial | Software Testing Pro",
+      "description": "Master finding and analyzing data from collections. Learn data comparison and age calculation in automation testing.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.27-YoungestPerson.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.26-ImagePosition.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.28-CompareImages.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Find the Youngest Person</h1>
+                <p class="lead">Master age analysis! Analyze the person details and select the youngest individual to prove your data interpretation and comparison skills.</p>
+
+                <form class="radio-group" id="radioGroup">
+                    <!-- Random names with radio buttons will be generated here -->
+                </form>
+
+                <div id="message" class="message"></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        function getRandomDateOfBirth() {
+            const start = new Date(2020, 0, 1).getTime();
+            const end = new Date(2023, 0, 1).getTime();
+            const dob = new Date(start + Math.random() * (end - start));
+            return dob;
+        }
+
+        function generateRandomNames() {
+            const names = ['John', 'Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'Sophia', 'James', 'Isabella', 'Ethan'];
+            const shuffledNames = names.sort(() => 0.5 - Math.random()).slice(0, 5);
+            return shuffledNames;
+        }
+
+        function createRadioButtons() {
+            const nameDOBs = generateRandomNames().map(name => ({
+                name,
+                dob: getRandomDateOfBirth()
+            }));
+
+            const sortedByAge = [...nameDOBs].sort((a, b) => b.dob - a.dob); // Youngest first
+
+            const youngestPerson = sortedByAge[0].name;
+
+            const radioGroup = document.getElementById('radioGroup');
+            radioGroup.innerHTML = '';
+
+            nameDOBs.forEach(person => {
+                const label = document.createElement('label');
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'person';
+                radio.value = person.name;
+
+                label.appendChild(radio);
+                label.appendChild(document.createTextNode(`${person.name} (DOB: ${person.dob.toLocaleString('en-IN')})`));
+                radioGroup.appendChild(label);
+            });
+
+            // Add event listener for user selection
+            radioGroup.addEventListener('change', function(event) {
+                const selectedPerson = event.target.value;
+                const messageElement = document.getElementById('message');
+                if (selectedPerson === youngestPerson) {
+                    messageElement.textContent = 'Success! You selected the youngest person.';
+                    messageElement.className = 'message success';
+                } else {
+                    messageElement.textContent = 'Failure! That is not the youngest person.';
+                    messageElement.className = 'message failure';
+                }
+            });
+        }
+
+        // Initialize the radio buttons on page load
+        window.onload = createRadioButtons;
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

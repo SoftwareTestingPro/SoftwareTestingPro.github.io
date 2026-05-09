@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master order confirmation and form submission testing. Learn order details validation and confirmation messages in automation.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Order Confirmation Challenge - Form Submission Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.28.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.28-OrderConfirmation.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Order Confirmation Challenge - Form Submission Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master order confirmation and form submission testing. Learn order details validation and confirmation messages in automation.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.28-OrderConfirmation.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Order Confirmation Challenge - Form Submission Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master order confirmation and form submission testing. Learn order details validation and confirmation messages.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Order Confirmation Challenge - Form Submission Tutorial | Software Testing Pro",
+      "description": "Master order confirmation and form submission testing. Learn order details validation and confirmation messages in automation.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.28-OrderConfirmation.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="B-1.27-MatchTheFollowing.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
+        <a href="B-1.29-CharCounter.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Order Confirmation</h1>
+            <p class="lead">Master data extraction! Locate and input the exact order number from randomly displayed details to prove your information gathering skills.</p>
+            <!-- Order details will be populated here by JavaScript -->
+            <div id="orderSummary" style="width: 70%;"></div>
+            <div class="input-group-parent">
+                <div class="input-group-left">
+                    <label for="orderInput" class="label-left">Enter Order Number:</label>
+                </div>
+                <div class="input-group-right">
+                    <input type="text" id="orderInput" name="orderInput" placeholder="Order Number" aria-describedby="orderMessage">
+                </div>
+            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! Order number matches.</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! Order number does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+        </div>
+    </main>
+</div>
+
+    <div id="footer-placeholder"></div>
+
+<script>
+    // Function to generate a random 10-digit number
+    function generateRandomNumber() {
+        return Math.floor(1000000000 + Math.random() * 9000000000);
+    }
+
+    // Function to generate a random cost between $50 and $500
+    function generateRandomCost() {
+        return "$" + (50 + Math.random() * 450).toFixed(2);
+    }
+
+    // Function to generate a random alphanumeric ID
+    function generateRandomId() {
+        return Math.random().toString(36).substr(2, 10); // 10-character random string
+    }
+
+    // List of random product names
+    const productNames = ["Wireless Mouse", "Bluetooth Headphones", "USB-C Cable", "Laptop Stand", "Smartwatch"];
+    
+    // Function to shuffle the display order of items
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Function to populate order summary
+    let orderNumber;  // Declare a global variable to store the order number
+    function populateOrderSummary() {
+        orderNumber = generateRandomNumber();
+        const orderTotal = generateRandomCost();
+        const productName = productNames[Math.floor(Math.random() * productNames.length)];
+
+        const orderItems = [
+            `<div class="item">
+                <div id="${generateRandomId()}" class="key">Order Number:</div>
+                <div id="${generateRandomId()}" class="value">${orderNumber}</div>
+             </div>`,
+            `<div class="item">
+                <div id="${generateRandomId()}" class="key">Order Total:</div>
+                <div id="${generateRandomId()}" class="value">${orderTotal}</div>
+             </div>`,
+            `<div class="item">
+                <div id="${generateRandomId()}" class="key">Product Name:</div>
+                <div id="${generateRandomId()}" class="value">${productName}</div>
+             </div>`
+        ];
+
+        shuffle(orderItems);
+
+        document.getElementById("orderSummary").insertAdjacentHTML('afterbegin', orderItems.join(""));
+    }
+
+    // Function to check if the input matches the order number
+    document.getElementById("orderInput").addEventListener("input", function () {
+        const input = document.getElementById("orderInput").value;
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValue = document.getElementById('expectedValue');
+        const actualValue = document.getElementById('actualValue');
+
+        if (input == orderNumber) {
+            successMessage.style.display = 'flex';
+            successMessage.classList.add('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+        } else if (input === "") {
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'none';
+            failureMessage.classList.remove('failure');
+        } else {
+            expectedValue.textContent = orderNumber;
+            actualValue.textContent = input;
+            successMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.style.display = 'flex';
+            failureMessage.classList.add('failure');
+        }
+    });
+
+    // Populate the order summary on page load
+    window.onload = populateOrderSummary;
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

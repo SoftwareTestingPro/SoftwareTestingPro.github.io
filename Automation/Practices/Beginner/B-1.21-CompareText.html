@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master text comparison and validation techniques. Learn text content comparison and string matching in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Text Comparison Challenge - Content Validation Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.21.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.21-CompareText.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Text Comparison Challenge - Content Validation Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master text comparison and validation techniques. Learn text content comparison and string matching in automation testing.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.21-CompareText.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Text Comparison Challenge - Content Validation Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master text comparison and validation techniques. Learn text content comparison and string matching.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Text Comparison Challenge - Content Validation Tutorial | Software Testing Pro",
+      "description": "Master text comparison and validation techniques. Learn text content comparison and string matching in automation testing.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.21-CompareText.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.20-ClickEnabledButton.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.22-ImagePath.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Text Comparison</h1>
+                <p class="lead">Master text comparison logic! Analyze the two texts below and determine if they match perfectly to prove your validation skills.</p>
+                <div class="text-container" style="display: flex; gap: 20px; justify-content: center;">
+                    <div class="text-item" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #f9f9f9; width: 200px;">
+                        <div class="text-label">Text 1:</div>
+                        <div id="text1" class="value-box"></div>
+                    </div>
+                    <div class="text-item" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #f9f9f9; width: 200px;">
+                        <div class="text-label">Text 2:</div>
+                        <div id="text2" class="value-box"></div>
+                    </div>
+                </div>
+
+                <div class="button-container" style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <button onclick="checkAnswer(true)" style="padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">Yes</button>
+                    <button onclick="checkAnswer(false)" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">No</button>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct!</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect!</span></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const text1Element = document.getElementById('text1');
+        const text2Element = document.getElementById('text2');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        const texts = ["Hello", "World", "Text", "Example", "Random", "Comparison"];
+
+        function setRandomTexts() {
+            const randomText1 = texts[Math.floor(Math.random() * texts.length)];
+            const randomText2 = Math.random() > 0.5 ? randomText1 : texts[Math.floor(Math.random() * texts.length)];
+            text1Element.textContent = randomText1;
+            text2Element.textContent = randomText2;
+        }
+
+        function checkAnswer(isTrueSelected) {
+            const text1 = text1Element.textContent;
+            const text2 = text2Element.textContent;
+            const isSuccess = (text1 === text2 && isTrueSelected) || (text1 !== text2 && !isTrueSelected);
+
+            if (isSuccess) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            } else {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+            }
+        }
+
+        setRandomTexts();
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

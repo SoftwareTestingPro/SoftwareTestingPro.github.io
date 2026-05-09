@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master screenshot capture and image testing. Learn page screenshots and visual element validation in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Screenshot Challenge - Image Capture Testing | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.16.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.16-CaptureScreeshot.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Screenshot Challenge - Image Capture Testing | Software Testing Pro">
+    <meta property="og:description" content="Master screenshot capture and image testing. Learn page screenshots and visual element validation in automation testing.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.16-CaptureScreeshot.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Screenshot Challenge - Image Capture Testing | Software Testing Pro">
+    <meta name="twitter:description" content="Master screenshot capture and image testing. Learn page screenshots and visual element validation.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Screenshot Challenge - Image Capture Testing | Software Testing Pro",
+      "description": "Master screenshot capture and image testing. Learn page screenshots and visual element validation in automation testing.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.16-CaptureScreeshot.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.15-DatePicker.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.17-Tooltip.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Capturing Screenshots</h1>
+                <p class="lead">Master screenshot automation! Capture three types: element screenshots, viewport captures, and full page scrolls to prove your visual testing prowess.</p>
+                <div id="timer">5</div>
+                <div id="flagsContainer"></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const timer = document.getElementById('timer');
+        const flagsContainer = document.getElementById('flagsContainer');
+        const contentContainer = document.getElementById('contentContainer');
+
+        const flags = [
+            "https://flagcdn.com/w320/us.png", // USA
+            "https://flagcdn.com/w320/ca.png", // Canada
+            "https://flagcdn.com/w320/gb.png", // UK
+            "https://flagcdn.com/w320/fr.png", // France
+            "https://flagcdn.com/w320/de.png", // Germany
+            "https://flagcdn.com/w320/jp.png", // Japan
+            "https://flagcdn.com/w320/au.png", // Australia
+            "https://flagcdn.com/w320/in.png", // India
+            "https://flagcdn.com/w320/br.png", // Brazil
+            "https://flagcdn.com/w320/ru.png"  // Russia
+        ];
+
+        // Instantly display the flag
+        timer.classList.add('hidden');
+        displayFlags(1);
+
+        function displayFlags(number) {
+            flagsContainer.innerHTML = '';
+            for (let i = 0; i < number; i++) {
+                const flagIndex = Math.floor(Math.random() * flags.length);
+                const img = document.createElement('img');
+                img.src = flags[flagIndex];
+                img.style.display = 'block';
+                img.style.margin = '0 auto 20px auto';
+                img.style.width = '250px';
+                img.style.border = '1px solid #ccc';
+                img.classList.add('hidden');
+                flagsContainer.appendChild(img);
+                
+                setTimeout(() => {
+                    img.classList.remove('hidden');
+                    img.classList.add('visible');
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

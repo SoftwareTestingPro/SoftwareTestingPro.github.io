@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master date picker testing and calendar selection. Learn date input controls and calendar widget validation in automation.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Date Picker Challenge - Calendar Selection Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.15.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.15-DatePicker.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Date Picker Challenge - Calendar Selection Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master date picker testing and calendar selection. Learn date input controls and calendar widget validation in automation.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.15-DatePicker.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Date Picker Challenge - Calendar Selection Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master date picker testing and calendar selection. Learn date input controls and calendar widget validation.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Date Picker Challenge - Calendar Selection Tutorial | Software Testing Pro",
+      "description": "Master date picker testing and calendar selection. Learn date input controls and calendar widget validation in automation.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.15-DatePicker.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.14-Keystroke.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.16-CaptureScreeshot.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Date Operations</h1>
+                <p class="lead">Master date selection automation! Input today's date precisely to demonstrate your automation can handle date inputs and temporal data.</p>
+
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="date-picker" class="label-left">Select current date:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <div class="date-picker-wrapper">
+                            <input type="date" id="date-picker" style="width: 150px;">
+                            <svg id="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M7 10h5v5H7zm6 0h5v5h-5zM7 16h5v5H7zm6 0h5v5h-5zM20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 22V8h16v14H4z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully selected today's date.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Selected Date does not match. <span style="color: black;">Expected:</span> <span id="expectedDate"></span> <span style="color: black;">Entered:</span> <span id="actualDate"></span></span></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const dateInput = document.getElementById('date-picker');
+        const calendarIcon = document.getElementById('calendar-icon');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedDateDisplay = document.getElementById('expectedDate');
+        const actualDateDisplay = document.getElementById('actualDate');
+        
+        let isPickerClicked = false;
+
+        // Function to format date to YYYY-MM-DD
+        function formatDate(date) {
+            const d = new Date(date);
+            const month = '' + (d.getMonth() + 1);
+            const day = '' + d.getDate();
+            const year = d.getFullYear();
+            
+            return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
+        }
+
+        // Get today's date in YYYY-MM-DD format
+        const today = formatDate(new Date());
+        expectedDateDisplay.textContent = today;
+
+        calendarIcon.addEventListener('click', () => {
+            isPickerClicked = true;
+            dateInput.showPicker();
+        });
+        
+		dateInput.addEventListener('change', () => {
+			const selectedDate = dateInput.value;
+            actualDateDisplay.textContent = selectedDate;
+
+			if (selectedDate === today) {
+				successMessage.style.display = 'flex';
+				successMessage.classList.add('success');
+				failureMessage.style.display = 'none';
+				failureMessage.classList.remove('failure');
+			} else {
+				successMessage.style.display = 'none';
+				successMessage.classList.remove('success');
+				failureMessage.style.display = 'flex';
+				failureMessage.classList.add('failure');
+			}
+
+			isPickerClicked = false; // Optional: reset if you still want to track clicks
+		});
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master infinite scroll implementation and dynamic content loading. Learn scroll event handling and lazy loading in automation.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Infinite Scroll Challenge - Content Loading Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Advanced/styles-A-3.21.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.21-InfiniteScroll.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Infinite Scroll Challenge - Content Loading Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master infinite scroll implementation and dynamic content loading. Learn scroll event handling and lazy loading in automation.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.21-InfiniteScroll.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Infinite Scroll Challenge - Content Loading Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master infinite scroll implementation and dynamic content loading. Learn scroll event handling and lazy loading.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Infinite Scroll Challenge - Content Loading Tutorial | Software Testing Pro",
+      "description": "Master infinite scroll implementation and dynamic content loading. Learn scroll event handling and lazy loading in automation.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.21-InfiniteScroll.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="A-3.20-AIQuiz.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="A-3.22-XLSWriteData.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card" style="max-height: 80vh; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <div class="card-content" style="padding: 20px; overflow-y: auto;">
+                <h1>Infinite Scroll Challenge</h1>
+                <p class="lead">Master infinite scroll! Scroll continuously to load all dynamic content and count the total images to prove your patience skills.</p>
+                <p id="instructions">Scroll down to load all images, then enter the total count.</p>
+                <div class="image-grid" id="image-grid"></div>
+                <div id="loader">Loading...</div>
+                <div id="verification-area">
+                    <label for="image-count-input"><b>All images loaded. How many are there?</b></label>
+                    <br><br>
+                    <input type="number" id="image-count-input" placeholder="Enter count">
+                    <button id="verify-btn">Verify</button>
+                    <div id="successMessage" class="message"></div>
+                    <div id="failureMessage" class="message"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const imageGrid = document.getElementById('image-grid');
+            const loader = document.getElementById('loader');
+            const verificationArea = document.getElementById('verification-area');
+            const verifyBtn = document.getElementById('verify-btn');
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+
+            // Hide messages on load
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
+            successMessage.classList.remove('success');
+            failureMessage.classList.remove('failure');
+
+            const BATCH_SIZE = 12;
+            const minBatches = 4; // 4 * 12 = 48 images
+            const maxBatches = 20; // 20 * 12 = 240 images
+            const randomBatchCount = Math.floor(Math.random() * (maxBatches - minBatches + 1)) + minBatches;
+            const MAX_IMAGES = randomBatchCount * BATCH_SIZE;
+
+            let imageCounter = 0;
+            let isLoading = false;
+
+            const imageLazyLoader = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+                        img.src = img.dataset.src;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            function loadMoreImages() {
+                if (isLoading || imageCounter >= MAX_IMAGES) return;
+
+                isLoading = true;
+                loader.style.display = 'block';
+
+                setTimeout(() => {
+                    for (let i = 0; i < BATCH_SIZE; i++) {
+                        if (imageCounter >= MAX_IMAGES) break;
+                        imageCounter++;
+                        const container = document.createElement('div');
+                        container.className = 'image-container';
+                        const img = document.createElement('img');
+                        img.dataset.src = `https://picsum.photos/400/300?random=${imageCounter}`;
+                        img.alt = `Image ${imageCounter}`;
+                        container.appendChild(img);
+                        imageGrid.appendChild(container);
+                        imageLazyLoader.observe(img);
+                    }
+
+                    isLoading = false;
+
+                    if (imageCounter >= MAX_IMAGES) {
+                        loader.style.display = 'none';
+                        verificationArea.style.display = 'block';
+                        scrollObserver.disconnect();
+                    }
+                }, 500);
+            }
+
+            const scrollObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMoreImages();
+                }
+            }, { threshold: 1.0 });
+
+            verifyBtn.addEventListener('click', () => {
+                const userInput = document.getElementById('image-count-input').value;
+                const userCount = parseInt(userInput, 10);
+
+                if (userCount === MAX_IMAGES) {
+                    successMessage.style.display = 'flex';
+                    successMessage.classList.add('success');
+                    failureMessage.style.display = 'none';
+                    failureMessage.classList.remove('failure');
+                    successMessage.textContent = 'Success! You entered the correct count.';
+                } else {
+                    successMessage.style.display = 'none';
+                    successMessage.classList.remove('success');
+                    failureMessage.style.display = 'flex';
+                    failureMessage.classList.add('failure');
+                    failureMessage.textContent = `Failure! Expected: ${MAX_IMAGES}, You entered: ${userCount || 0}.`;
+                }
+            });
+
+            loadMoreImages();
+            scrollObserver.observe(loader);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

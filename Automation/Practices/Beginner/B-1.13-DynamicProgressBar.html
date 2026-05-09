@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master progress bar testing and UI automation. Learn progress bar animations and completion validation in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Progress Bar Challenge - UI Animation Testing | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.13.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.13-DynamicProgressBar.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Progress Bar Challenge - UI Animation Testing | Software Testing Pro">
+    <meta property="og:description" content="Master progress bar testing and UI automation. Learn progress bar animations and completion validation in automation testing.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.13-DynamicProgressBar.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Progress Bar Challenge - UI Animation Testing | Software Testing Pro">
+    <meta name="twitter:description" content="Master progress bar testing and UI automation. Learn progress bar animations and completion validation.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Progress Bar Challenge - UI Animation Testing | Software Testing Pro",
+      "description": "Master progress bar testing and UI automation. Learn progress bar animations and completion validation in automation testing.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.13-DynamicProgressBar.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.12-FetchURL.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.14-Keystroke.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Dynamic Progress Bar Challenge</h1>
+                <p class="lead">Master timing and synchronization! Wait patiently for the progress bar to hit 100%, then strike the button to prove your automation precision.</p>
+                <div id="status">0%</div>
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <div class="button-enabled">
+                    <button id="action-button">Click Me After 100%!</button>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! Button was clicked after completion..</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you You clicked too early.</span></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const progressBar = document.getElementById('progress-bar');
+        const statusDisplay = document.getElementById('status');
+        const actionButton = document.getElementById('action-button');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        let width = 0;
+        let intervalId;
+
+        function frame() {
+            if (width >= 100) {
+                clearInterval(intervalId);
+                statusDisplay.textContent = "Complete!";
+            } else {
+                width++;
+                progressBar.style.width = width + '%';
+                statusDisplay.textContent = width + '%';
+            }
+        }
+
+        actionButton.addEventListener('click', () => {
+            if (width < 100) {
+                clearInterval(intervalId);
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                actionButton.disabled = true;
+            } else {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            }
+        });
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+
+        intervalId = setInterval(frame, 50);
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

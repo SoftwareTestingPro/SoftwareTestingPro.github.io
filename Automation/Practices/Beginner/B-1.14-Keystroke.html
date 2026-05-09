@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master keyboard testing and keystroke validation. Learn keyboard events and input validation in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Keystroke Challenge - Keyboard Event Testing | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.14.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.14-Keystroke.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Keystroke Challenge - Keyboard Event Testing | Software Testing Pro">
+    <meta property="og:description" content="Master keyboard testing and keystroke validation. Learn keyboard events and input validation in automation testing.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.14-Keystroke.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Keystroke Challenge - Keyboard Event Testing | Software Testing Pro">
+    <meta name="twitter:description" content="Master keyboard testing and keystroke validation. Learn keyboard events and input validation.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Keystroke Challenge - Keyboard Event Testing | Software Testing Pro",
+      "description": "Master keyboard testing and keystroke validation. Learn keyboard events and input validation in automation testing.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.14-Keystroke.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.13-DynamicProgressBar.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.15-DatePicker.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Keystroke Challenge</h1>
+                <p class="lead">Master keyboard automation! Press the exact key specified below to demonstrate your automation can handle keyboard interactions flawlessly.</p>
+
+                <div class="input-group" style="text-align: center;">
+                    <p>Press the "<strong id="random-key" style="font-size: 1.2em; color: var(--accent);"></strong>" key on your keyboard.</p>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully pressed the expected key.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Pressed Key Does not match. <span style="color: black;">Expected:</span> <span id="expectedKey"></span> <span style="color: black;">Entered:</span> <span id="actualKey"></span></span></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedKeyDisplay = document.getElementById('expectedKey');
+        const actualKeyDisplay = document.getElementById('actualKey');
+        const randomKeyDisplay = document.getElementById('random-key');
+
+        const keys = [
+            'Backspace', 'Tab', 'Enter', 'Shift', 'Control', 'Alt', 'CapsLock', 'Escape',
+            ' ', 'PageUp', 'PageDown', 'End', 'Home', 'ArrowLeft', 'ArrowUp',
+            'ArrowRight', 'ArrowDown', 'Insert', 'Delete', '0', '1', '2', '3', '4',
+            '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'Meta', 'ContextMenu', 'NumLock', 'ScrollLock', 'Pause', 'PrintScreen'
+        ];
+        
+        function getRandomKey() {
+            return keys[Math.floor(Math.random() * keys.length)];
+        }
+        
+        const randomKey = getRandomKey();
+        randomKeyDisplay.textContent = randomKey === ' ' ? 'Space' : randomKey;
+        expectedKeyDisplay.textContent = randomKey === ' ' ? 'Space' : randomKey;
+        
+        document.addEventListener('keydown', function(event) {
+            // Prevent browser shortcuts for keys like 'Control' or 'Alt'
+            event.preventDefault();
+
+            const pressedKey = event.key;
+            actualKeyDisplay.textContent = pressedKey === ' ' ? 'Space' : pressedKey;
+
+            if (pressedKey.toLowerCase() === randomKey.toLowerCase()) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            } else {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+            }
+        });
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

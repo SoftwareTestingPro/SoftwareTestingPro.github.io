@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master character pattern recognition skills. Learn odd one out identification and pattern analysis in automation testing.">
+  <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+  <title>Character Odd One Out Challenge - Pattern Recognition Tutorial | Software Testing Pro</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="stylesheet" href="../../assets/css/Advanced/styles-A-3.26.css">
+  <!-- Header and Footer CSS -->
+  <link rel="stylesheet" href="../../assets/css/header.css">
+  <link rel="stylesheet" href="../../assets/css/footer.css">
+  <script src="../../assets/components/components.js"></script>
+  <!-- Additional SEO Meta Tags -->
+  <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.26-CharOddOneOut.html">
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Character Odd One Out Challenge - Pattern Recognition Tutorial | Software Testing Pro">
+  <meta property="og:description" content="Master character pattern recognition skills. Learn odd one out identification and pattern analysis in automation testing.">
+  <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.26-CharOddOneOut.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <meta property="og:site_name" content="Software Testing Pro">
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Character Odd One Out Challenge - Pattern Recognition Tutorial | Software Testing Pro">
+  <meta name="twitter:description" content="Master character pattern recognition skills. Learn odd one out identification and pattern analysis in automation testing.">
+  <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalContent",
+    "headline": "Character Odd One Out Challenge - Pattern Recognition Tutorial | Software Testing Pro",
+    "description": "Master character pattern recognition skills. Learn odd one out identification and pattern analysis in automation testing.",
+    "url": "https://softwaretestingpro.github.io/Automation/Practices/Advanced/A-3.26-CharOddOneOut.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Software Testing Pro"
+    }
+  }
+  </script>
+  <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="A-3.25-DragableItemsXY.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="A-3.27-AudioOddOneOut.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+        <h1>Character Odd One Out</h1>
+        <p class="lead">Master character analysis! Identify the unique character among similar ones to prove your pattern recognition skills.</p>
+
+        <div class="buttons" id="buttonContainer"></div>
+        <div id="successMessage" class="message"></div>
+        <div id="failureMessage" class="message"></div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  const successMessage = document.getElementById('successMessage');
+  const failureMessage = document.getElementById('failureMessage');
+
+  // Hide messages on load
+  successMessage.style.display = 'none';
+  failureMessage.style.display = 'none';
+  successMessage.classList.remove('success');
+  failureMessage.classList.remove('failure');
+
+  const characters = ['A', 'B', 'C', 'D', 'E', 'F'];  // Example character options
+  const numbers = ['1', '2', '3', '4', '5', '6'];      // Example number options
+  const emojis = ['😊', '😂', '😎', '🤔', '😅'];       // Example emoji options
+  const specialChars = ['!', '@', '#', '$', '%', '^']; // Example special characters
+
+  // Randomly select a category for normal options
+  const categories = [characters, numbers, emojis, specialChars];
+  const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
+
+  // Pick random 3 items from the selected category
+  let options = [];
+  while (options.length < 3) {
+    const option = selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
+    if (!options.includes(option)) {
+      options.push(option);
+    }
+  }
+
+  // Pick a random odd one out from a different category
+  const oddOneCategory = categories.filter(category => category !== selectedCategory);
+  const oddOneOut = oddOneCategory[Math.floor(Math.random() * oddOneCategory.length)][Math.floor(Math.random() * 5)];
+
+  // Randomly insert the odd one out into the options
+  const oddOneIndex = Math.floor(Math.random() * 4);
+  options.splice(oddOneIndex, 0, oddOneOut);
+
+  // Add buttons to the DOM
+  const buttonContainer = document.getElementById('buttonContainer');
+  options.forEach((option, index) => {
+    const button = document.createElement('button');
+    button.innerText = option;
+    button.onclick = () => checkOddOneOut(index === oddOneIndex);
+    buttonContainer.appendChild(button);
+  });
+
+  function checkOddOneOut(isOddOneOut) {
+    if (isOddOneOut) {
+      successMessage.style.display = 'flex';
+      successMessage.classList.add('success');
+      failureMessage.style.display = 'none';
+      failureMessage.classList.remove('failure');
+      successMessage.textContent = 'Success! You found the odd one out!';
+    } else {
+      successMessage.style.display = 'none';
+      successMessage.classList.remove('success');
+      failureMessage.style.display = 'flex';
+      failureMessage.classList.add('failure');
+      failureMessage.textContent = 'Failure! Try again.';
+    }
+  }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

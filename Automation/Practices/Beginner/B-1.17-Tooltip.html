@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master tooltip testing and hover interactions. Learn tooltip validation and mouse event handling in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Tooltip Challenge - Hover Validation Testing | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.17.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.17-Tooltip.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Tooltip Challenge - Hover Validation Testing | Software Testing Pro">
+    <meta property="og:description" content="Master tooltip testing and hover interactions. Learn tooltip validation and mouse event handling in automation testing.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.17-Tooltip.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tooltip Challenge - Hover Validation Testing | Software Testing Pro">
+    <meta name="twitter:description" content="Master tooltip testing and hover interactions. Learn tooltip validation and mouse event handling.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Tooltip Challenge - Hover Validation Testing | Software Testing Pro",
+      "description": "Master tooltip testing and hover interactions. Learn tooltip validation and mouse event handling in automation testing.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.17-Tooltip.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="B-1.16-CaptureScreeshot.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous Task
+            </a>
+            <a href="B-1.18-PageSource.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Tooltip Validation</h1>
+                <p class="lead">Master tooltip interaction! Hover over the rainbow text to reveal hidden messages, then capture and input the tooltip text precisely.</p>
+
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="rainbow-text" data-tooltip="I am a Tooltip">
+                        Hover Me For Tooltip
+                    </div>
+                </div>
+
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="inputField" class="label-left">Enter the title of this webpage:</label>
+                    </div>
+
+                    <div class="input-group-right">
+                        <input type="text" id="inputField" placeholder="Enter the tooltip text here">
+                    </div>
+                </div>
+                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Tooltip matched.</span></div>
+                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Tooltip does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const inputField = document.getElementById('inputField');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const expectedValueDisplay = document.getElementById('expectedValue');
+        const actualValueDisplay = document.getElementById('actualValue');
+
+        const tooltipText = document.querySelector('.rainbow-text').getAttribute('data-tooltip');
+        expectedValueDisplay.textContent = tooltipText;
+
+        inputField.addEventListener('input', function() {
+            const userInput = inputField.value;
+            actualValueDisplay.textContent = userInput;
+
+            if (userInput === tooltipText) {
+                successMessage.style.display = 'flex';
+                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            } else if (userInput) {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
+                failureMessage.classList.add('failure');
+            } else {
+                successMessage.style.display = 'none';
+                successMessage.classList.remove('success');
+                failureMessage.style.display = 'none';
+                failureMessage.classList.remove('failure');
+            }
+        });
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

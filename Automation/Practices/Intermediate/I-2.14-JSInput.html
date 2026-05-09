@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master secure input field validation using JavaScript. Learn client-side validation and input sanitization in automation testing.">
+  <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+  <title>JavaScript Input Challenge - Secure Validation Tutorial | Software Testing Pro</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="stylesheet" href="../../assets/css/Intermediate/styles-I-2.14.css">
+  <!-- Header and Footer CSS -->
+  <link rel="stylesheet" href="../../assets/css/header.css">
+  <link rel="stylesheet" href="../../assets/css/footer.css">
+  <script src="../../assets/components/components.js"></script>
+  <!-- Additional SEO Meta Tags -->
+  <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.14-JSInput.html">
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="JavaScript Input Challenge - Secure Validation Tutorial | Software Testing Pro">
+  <meta property="og:description" content="Master secure input field validation using JavaScript. Learn client-side validation and input sanitization in automation testing.">
+  <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.14-JSInput.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <meta property="og:site_name" content="Software Testing Pro">
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JavaScript Input Challenge - Secure Validation Tutorial | Software Testing Pro">
+  <meta name="twitter:description" content="Master secure input field validation using JavaScript. Learn client-side validation and input sanitization.">
+  <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalContent",
+    "headline": "JavaScript Input Challenge - Secure Validation Tutorial | Software Testing Pro",
+    "description": "Master secure input field validation using JavaScript. Learn client-side validation and input sanitization in automation testing.",
+    "url": "https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.14-JSInput.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Software Testing Pro"
+    }
+  }
+  </script>
+  <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div class="content-wrapper">
+    <div class="card-nav">
+      <a href="I-2.13-BrowserPopUp.html" class="nav-btn nav-btn-prev">
+        <span class="nav-icon">←</span>
+        Previous
+      </a>
+      <a href="I-2.15-RandomPopUp.html" class="nav-btn nav-btn-next">
+        Next
+        <span class="nav-icon">→</span>
+      </a>
+    </div>
+
+    <main class="card">
+      <div class="card-content">
+        <h1>Javascript Input Field</h1>
+        <p class="lead">Master JavaScript injection! Bypass automation protections by using JavaScript execution to input text in this secured field.</p>
+
+          <div class="input-group-parent">
+              <div class="input-group-left">
+                  <label for="secureInput" class="label-left">Enter Your Country Name:</label>
+              </div>
+
+              <div class="input-group-right">
+                  <input type="text" id="secureInput" class="protected-input" name="user-input-name" placeholder="Type your country name...">
+                  <div class="shield" id="shield"></div>
+              </div>
+          </div>
+          
+        <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">
+            <span>You typed: </span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    const input = document.getElementById("secureInput");
+    const shield = document.getElementById("shield");
+    const successMessage = document.getElementById("successMessage");
+
+    // Block all key events unless shield is removed
+    input.addEventListener("keydown", (e) => {
+      if (shield.style.display !== "none") {
+        e.preventDefault();
+      }
+    });
+
+    // Remove shield on real mouse interaction
+    shield.addEventListener("mouseenter", () => {
+      shield.style.display = "none";
+      input.focus();
+    });
+
+    input.addEventListener("input", () => {
+      if (input.value) {
+        const span = successMessage.querySelector('span');
+        span.textContent = `Country name entered: ${input.value}`;
+        successMessage.style.display = 'flex';
+      } else {
+        successMessage.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master number sorting and data ordering techniques. Learn sorting algorithms and data validation in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Sort Numbers Challenge - Data Ordering Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Intermediate/styles-I-2.22.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+	<!-- Additional SEO Meta Tags -->
+	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+	<link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.22-SortNumbers.html">
+	<!-- Open Graph Tags -->
+	<meta property="og:title" content="Sort Numbers Challenge - Data Ordering Tutorial | Software Testing Pro">
+	<meta property="og:description" content="Master number sorting and data ordering techniques. Learn sorting algorithms and data validation in automation testing.">
+	<meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.22-SortNumbers.html">
+	<meta property="og:type" content="article">
+	<meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<meta property="og:site_name" content="Software Testing Pro">
+	<!-- Twitter Card Tags -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Sort Numbers Challenge - Data Ordering Tutorial | Software Testing Pro">
+	<meta name="twitter:description" content="Master number sorting and data ordering techniques. Learn sorting algorithms and data validation.">
+	<meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+	<!-- Structured Data -->
+	<script type="application/ld+json">
+	{
+	  "@context": "https://schema.org",
+	  "@type": "EducationalContent",
+	  "headline": "Sort Numbers Challenge - Data Ordering Tutorial | Software Testing Pro",
+	  "description": "Master number sorting and data ordering techniques. Learn sorting algorithms and data validation in automation testing.",
+	  "url": "https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.22-SortNumbers.html",
+	  "publisher": {
+	    "@type": "Organization",
+	    "name": "Software Testing Pro"
+	  }
+	}
+	</script>
+	<!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="I-2.21-ScrollableList.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Previous
+            </a>
+            <a href="I-2.23-SortCharacters.html" class="nav-btn nav-btn-next">
+                Next
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Number Sorting Game</h1>
+                <p class="lead">Master number sorting! Arrange the displayed numbers in ascending order and input them correctly to prove your logical sequencing skills.</p>
+
+                <div class="number-boxes" id="numberBoxes"></div>
+
+                <div class="input-boxes">
+                    <div class="input-box"><input type="text" maxlength="2" /></div>
+                    <div class="input-box"><input type="text" maxlength="2" /></div>
+                    <div class="input-box"><input type="text" maxlength="2" /></div>
+                    <div class="input-box"><input type="text" maxlength="2" /></div>
+                    <div class="input-box"><input type="text" maxlength="2" /></div>
+                </div>
+
+                <div class="message" id="successMessage">Success! The numbers are in ascending order.</div>
+                <div class="message" id="failureMessage">Failure! Please enter the correct numbers in ascending order.</div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+<script>
+    function generateRandomNumbers(count, min, max) {
+        const numbers = [];
+        while (numbers.length < count) {
+            const num = Math.floor(Math.random() * (max - min + 1)) + min;
+            if (!numbers.includes(num)) {
+                numbers.push(num);
+            }
+        }
+        return numbers;
+    }
+
+    function displayRandomNumbers() {
+        const numberBoxes = document.getElementById('numberBoxes');
+        const randomNumbers = generateRandomNumbers(5, 1, 99);
+        randomNumbers.forEach(num => {
+            const div = document.createElement('div');
+            div.classList.add('number-box');
+            div.textContent = num;
+            numberBoxes.appendChild(div);
+        });
+        return randomNumbers;
+    }
+
+    function checkSortedOrder(userInput, originalNumbers) {
+        const sortedOriginal = [...originalNumbers].sort((a, b) => a - b);
+        return userInput.every((num, index) => num === sortedOriginal[index]);
+    }
+
+    function addInputEventListeners(randomNumbers) {
+        const inputBoxes = document.querySelectorAll('.input-box input');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
+
+        inputBoxes.forEach(input => {
+            input.addEventListener('input', () => {
+                const userInput = Array.from(inputBoxes).map(input => parseInt(input.value));
+                const allInputsFilled = userInput.every(num => !isNaN(num));
+                
+                if (allInputsFilled) {
+                    // Check if all numbers are from the original set
+                    const validNumbers = userInput.every(num => randomNumbers.includes(num));
+                    // Check if numbers are in ascending order
+                    const correctOrder = checkSortedOrder(userInput, randomNumbers);
+                    
+                    if (validNumbers && correctOrder) {
+                        successMessage.style.display = 'block';
+                        failureMessage.style.display = 'none';
+                        // Disable all input fields
+                        inputBoxes.forEach(input => input.disabled = true);
+                    } else {
+                        successMessage.style.display = 'none';
+                        failureMessage.style.display = 'block';
+                    }
+                } else {
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const randomNumbers = displayRandomNumbers();
+        addInputEventListeners(randomNumbers);
+    });
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

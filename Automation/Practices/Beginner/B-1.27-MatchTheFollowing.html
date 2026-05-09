@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master drag and drop matching techniques. Learn connecting related items and validating matches in automation testing.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Match Following Challenge - Drag Drop Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.27.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.27-MatchTheFollowing.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Match Following Challenge - Drag Drop Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master drag and drop matching techniques. Learn connecting related items and validating matches in automation testing.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.27-MatchTheFollowing.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Match Following Challenge - Drag Drop Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master drag and drop matching techniques. Learn connecting related items and validating matches.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Match Following Challenge - Drag Drop Tutorial | Software Testing Pro",
+      "description": "Master drag and drop matching techniques. Learn connecting related items and validating matches in automation testing.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.27-MatchTheFollowing.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<!-- End Google Tag Manager -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="B-1.26-CaseValidation.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
+        <a href="B-1.28-OrderConfirmation.html" class="nav-btn nav-btn-next">
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Match the Following</h1>
+            <p class="lead">Master drag-and-drop automation! Drag items precisely to their matching categories to demonstrate advanced interaction skills.</p>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin: 20px 0;">
+                <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                    <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">ITEMS TO MATCH</h3>
+                    <div id="leftColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <!-- Left items will be inserted here -->
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                    <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">CATEGORIES</h3>
+                    <div id="rightColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div class="draggable-item" data-type="number" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Number</div>
+                        <div class="draggable-item" data-type="string" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">String</div>
+                        <div class="draggable-item" data-type="alphanumeric" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Alphanumeric</div>
+                    </div>
+                </div>
+            </div>
+            <div class="message" id="successMessage" role="status" aria-live="polite"><span>All category items matched successfully!</span></div>
+            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Category does not match for all items.</span></div>
+        </div>
+    </main>
+</div>
+
+    <div id="footer-placeholder"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(function() {
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        
+        // Hide messages on page load
+        successMessage.style.display = 'none';
+        successMessage.classList.remove('success');
+        failureMessage.style.display = 'none';
+        failureMessage.classList.remove('failure');
+
+        const items = [
+            Math.floor(Math.random() * 100), // Random number
+            getRandomString(5),               // Random string
+            getRandomAlphanumeric(5)          // Random alphanumeric
+        ];
+
+        // Shuffle items to display them in random order
+        items.sort(() => Math.random() - 0.5);
+
+        // Insert items into the left column
+        const leftColumn = $('#leftColumn');
+        items.forEach(item => {
+            const itemBox = $('<div></div>')
+                .text(item)
+                .attr('style', 'background: var(--card); border: 2px solid var(--accent); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;')
+                .addClass('draggable-item')
+                .draggable({
+                    revert: 'invalid',
+                    helper: 'clone',
+                    start: function(event, ui) {
+                        $(this).css('opacity', 0.5);
+                    },
+                    stop: function(event, ui) {
+                        $(this).css('opacity', 1);
+                    }
+                })
+                .hover(
+                    function() { $(this).css('transform', 'translateY(-2px)'); },
+                    function() { $(this).css('transform', 'translateY(0)'); }
+                );
+            leftColumn.append(itemBox);
+        });
+
+        // Add hover effects to drop targets
+        $('.draggable-item').hover(
+            function() { 
+                if (!$(this).hasClass('ui-droppable-disabled')) {
+                    $(this).css('transform', 'translateY(-2px)'); 
+                }
+            },
+            function() { 
+                $(this).css('transform', 'translateY(0)'); 
+            }
+        );
+
+        // Keep track of matched items
+        let matchedCount = 0;
+        let droppedCount = 0;
+
+        // Make right labels droppable
+        $('.draggable-item').droppable({
+            accept: '.draggable-item',
+            drop: function(event, ui) {
+                const leftItem = ui.draggable.text();
+                const rightLabelType = $(this).data('type');
+
+                const isNumber = !isNaN(leftItem);
+                const isString = /^[a-zA-Z]+$/.test(leftItem);
+                const isAlphanumeric = /^[A-Za-z0-9]+$/.test(leftItem);
+
+                ui.draggable.draggable('disable'); // Disable dragging for dropped item
+                ui.draggable.addClass('dropped-item'); // Add greyed out effect
+                droppedCount++;
+
+                // Check if the types match
+                if ((rightLabelType === 'number' && isNumber) ||
+                    (rightLabelType === 'string' && isString) ||
+                    (rightLabelType === 'alphanumeric' && isAlphanumeric)) {
+                    
+                    $(this).text(leftItem + ' ✓'); // Display match
+                    $(this).css('background', 'var(--success)'); 
+                    $(this).css('color', 'white');
+                    $(this).css('border-color', 'var(--success)');
+                    $(this).droppable('disable'); // Disable dropping on this label
+                    $(this).css('cursor', 'default');
+                    ui.draggable.css('cursor', 'default');
+                    matchedCount++;
+                } else {
+                    // Visual feedback for incorrect match, keep it
+                    $(this).text(leftItem + ' ✗'); // Display incorrect
+                    $(this).css('background', 'var(--danger)');
+                    $(this).css('color', 'white');
+                    $(this).css('border-color', 'var(--danger)');
+                    $(this).droppable('disable'); // Disable dropping on this label
+                    $(this).css('cursor', 'default');
+                    ui.draggable.css('cursor', 'default');
+                }
+
+                // Check if all items are dropped
+                if (droppedCount === items.length) {
+                    if (matchedCount === items.length) {
+                        successMessage.style.display = 'flex';
+                        successMessage.classList.add('success');
+                    } else {
+                        failureMessage.style.display = 'flex';
+                        failureMessage.classList.add('failure');
+                    }
+                }
+            }
+        });
+    });
+
+    function getRandomString(length) {
+        const characters = 'abcdefghijklmnopqrstuvwxyz';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    function getRandomAlphanumeric(length) {
+        const characters = 'ABCDEFGHabcdefgh0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

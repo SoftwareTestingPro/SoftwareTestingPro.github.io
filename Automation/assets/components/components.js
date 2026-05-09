@@ -8,24 +8,21 @@ document.addEventListener('DOMContentLoaded', function() {
 // Determine the correct path to header/footer based on current location
 function getBasePath() {
     const currentPath = window.location.pathname;
-    console.log('Current path:', currentPath);
+    const parts = currentPath.split('/').filter(segment => segment);
+    const automationIndex = parts.indexOf('Automation');
     
-    // Count the number of directory levels
-    const pathSegments = currentPath.split('/').filter(segment => segment);
-    console.log('Path segments:', pathSegments);
+    if (automationIndex === -1) return '';
     
-    // If we're in Automation/Beginner/, go up three levels to root
-    if (currentPath.includes('/Automation/Beginner/')) {
-        return '../../../';
+    // Number of segments after 'Automation' (minus the filename)
+    const depth = parts.length - 1 - automationIndex - 1;
+    
+    if (depth <= 0) return '';
+    
+    let path = '';
+    for (let i = 0; i < depth; i++) {
+        path += '../';
     }
-    // If we're in Automation/, go up two levels to root
-    else if (currentPath.includes('/Automation/')) {
-        return '../../';
-    }
-    // Default to root level
-    else {
-        return '';
-    }
+    return path;
 }
 
 function loadHeader() {
@@ -84,13 +81,13 @@ function loadHeader() {
                 }
                 
                 // Add mobile menu after header is loaded
-                document.body.insertAdjacentHTML('afterbegin', '<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="../Beginner/B-Intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="../Intermediate/I-Intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="../Advanced/A-Intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>');
+                document.body.insertAdjacentHTML('afterbegin', `<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Beginner/B-Intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Intermediate/I-Intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Advanced/A-Intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>`);
             })
             .catch(error => {
                 console.log('External header failed, keeping minimal header:', error.message);
                 
                 // Add mobile menu after header is loaded (fallback)
-                document.body.insertAdjacentHTML('afterbegin', '<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="../Beginner/B-Intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="../Intermediate/I-Intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="../Advanced/A-Intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>');
+                document.body.insertAdjacentHTML('afterbegin', `<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Beginner/B-Intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Intermediate/I-Intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Advanced/A-Intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>`);
             });
     } else {
         console.log('Header placeholder NOT found');
@@ -102,27 +99,45 @@ function loadFooter() {
     if (footerPlaceholder) {
         console.log('Footer placeholder found');
         
+        const basePath = getBasePath();
+        
         // Direct inline footer to ensure visibility
         footerPlaceholder.innerHTML = `
-            <footer style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: #ecf0f1; padding: 40px 0 20px; margin-top: 40px; width: 100%; display: block !important; visibility: visible !important;">
-                <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <footer style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: #ecf0f1; padding: 40px 0 20px; margin-top: 40px; width: 100%; display: block !important; visibility: visible !important; font-family: 'Inter', sans-serif;">
+                <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
                     <div>
-                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Learning Resources</h4>
+                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Main Pages</h4>
                         <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Selenium Documentation</a></li>
-                            <li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Playwright Docs</a></li>
+                            <li style="margin-bottom: 8px;"><a href="${basePath}index.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">🏠 Home</a></li>
+                            <li style="margin-bottom: 8px;"><a href="${basePath}faq.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">❓ FAQ</a></li>
+                            <li style="margin-bottom: 8px;"><a href="${basePath}developer.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">👨‍💻 About Developer</a></li>
                         </ul>
                     </div>
                     <div>
-                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Testing Tools</h4>
+                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Practice Platform</h4>
                         <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Cypress</a></li>
-                            <li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">TestCafe</a></li>
+                            <li style="margin-bottom: 8px;"><a href="${basePath}Practices/Beginner/B-Intro.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Beginner</a></li>
+                            <li style="margin-bottom: 8px;"><a href="${basePath}Practices/Intermediate/I-Intro.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Intermediate</a></li>
+                            <li style="margin-bottom: 8px;"><a href="${basePath}Practices/Advanced/A-Intro.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Advanced</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Legal & Info</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 8px;"><a href="${basePath}privacy.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">🔒 Privacy Policy</a></li>
+                            <li style="margin-bottom: 8px;"><a href="${basePath}terms.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">📋 Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Resources</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">📖 Selenium Docs</a></li>
+                            <li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">🌿 Cypress</a></li>
                         </ul>
                     </div>
                 </div>
                 <div style="max-width: 1200px; margin: 30px auto 0; padding: 20px; border-top: 1px solid #34495e; text-align: center;">
-                    <p style="margin: 0; font-size: 13px; color: #95a5a6;">&copy; 2024 Software Testing Pro. Educational content for automation testing.</p>
+                    <p style="margin: 0; font-size: 13px; color: #95a5a6;">&copy; 2026 Software Testing Pro. Educational content for automation testing.</p>
                 </div>
             </footer>
         `;
@@ -130,7 +145,6 @@ function loadFooter() {
         console.log('Footer set with inline content');
         
         // Try to load external footer
-        const basePath = getBasePath();
         console.log('Attempting to load external footer from:', basePath + 'footer.html');
         
         fetch(basePath + 'footer.html')

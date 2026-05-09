@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master browser alert types and testing techniques. Learn alerts, confirmations, prompts, and modal dialogs in automation.">
+    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
+    <title>Browser Alerts Challenge - Alert Dialog Tutorial | Software Testing Pro</title>
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/Intermediate/styles-I-2.10.css">
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <script src="../../assets/components/components.js"></script>
+    <!-- Additional SEO Meta Tags -->
+    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.10-Alerts.html">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Browser Alerts Challenge - Alert Dialog Tutorial | Software Testing Pro">
+    <meta property="og:description" content="Master browser alert types and testing techniques. Learn alerts, confirmations, prompts, and modal dialogs in automation.">
+    <meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.10-Alerts.html">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <meta property="og:site_name" content="Software Testing Pro">
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Browser Alerts Challenge - Alert Dialog Tutorial | Software Testing Pro">
+    <meta name="twitter:description" content="Master browser alert types and testing techniques. Learn alerts, confirmations, prompts, and modal dialogs.">
+    <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalContent",
+      "headline": "Browser Alerts Challenge - Alert Dialog Tutorial | Software Testing Pro",
+      "description": "Master browser alert types and testing techniques. Learn alerts, confirmations, prompts, and modal dialogs in automation.",
+      "url": "https://softwaretestingpro.github.io/Automation/Practices/Intermediate/I-2.10-Alerts.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Software Testing Pro"
+      }
+    }
+    </script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MCHF9RDWT6');
+    </script>
+    <!-- End Google Analytics -->
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+<div class="content-wrapper">
+    <div class="card-nav">
+        <a href="I-2.09-RandomButtons.html" class="nav-btn nav-btn-prev">
+            <span class="nav-icon">←</span>
+            Previous
+        </a>
+        <a href="I-2.11-Progressbar.html" class="nav-btn nav-btn-next">
+            Next
+            <span class="nav-icon">→</span>
+        </a>
+    </div>
+
+    <main class="card">
+        <div class="card-content">
+            <h1>Different Alerts</h1>
+            <p class="lead">Master alert handling! Interact with various alert types and perform the required actions to demonstrate your dialog management skills.</p>
+
+            <div class="button-group">
+                <button class="button alert-button" onclick="showAlert()">Show Alert</button>
+                <button class="button confirm-button" onclick="showConfirm()">Show Confirm</button>
+                <button class="button prompt-button" onclick="showPrompt()">Show Prompt</button>
+                <button class="button custom-button" onclick="showCustomAlert()">Show Custom Alert</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="footer-placeholder"></div>
+
+    <script>
+        function showAlert() {
+            alert('This is a standard alert!');
+        }
+
+        function showConfirm() {
+            const result = confirm('Do you confirm this action?');
+            if (result) {
+                alert('You confirmed the action.');
+            } else {
+                alert('You canceled the action.');
+            }
+        }
+
+        function showPrompt() {
+            const result = prompt('Please enter your name:', 'Your name here');
+            if (result !== null) {
+                alert('Hello, ' + result + '!');
+            } else {
+                alert('You canceled the prompt.');
+            }
+        }
+
+        function showCustomAlert() {
+            const customAlert = document.createElement('div');
+            customAlert.style.position = 'fixed';
+            customAlert.style.top = '50%';
+            customAlert.style.left = '50%';
+            customAlert.style.transform = 'translate(-50%, -50%)';
+            customAlert.style.padding = '20px';
+            customAlert.style.backgroundColor = '#f8d7da';
+            customAlert.style.color = '#721c24';
+            customAlert.style.border = '1px solid #f5c6cb';
+            customAlert.style.borderRadius = '5px';
+            customAlert.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+            customAlert.innerHTML = `
+                <strong>Custom Alert!</strong>
+                <p>This is a custom alert box.</p>
+                <button onclick="this.parentElement.remove()">Close</button>
+            `;
+            document.body.appendChild(customAlert);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
