@@ -73,8 +73,8 @@
                 <p class="lead">Master word segmentation! Split the displayed sentence into individual words and input them in correct sequence to prove your parsing skills.</p>
                 <div class="sentence" id="sentence"></div>
                 <div class="input-container" id="inputContainer"></div>
-                <div class="message" id="successMessage">Success! You've entered the correct words.</div>
-                <div class="message" id="errorMessage">Failure! The words are not correct.</div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You've entered all words in the correct sequence.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Please check the sequence of words.</div>
             </div>
         </main>
     </div>
@@ -128,17 +128,21 @@
         });
 
         const successMessage = document.getElementById('successMessage');
-        const errorMessage = document.getElementById('errorMessage');
+        const failureMessage = document.getElementById('failureMessage');
 
-        if (isCorrect && Array.from(inputs).every(input => input.value.trim() !== "")) {
-            successMessage.classList.add('success');
-            errorMessage.classList.remove('failure');
-        } else if (Array.from(inputs).every(input => input.value.trim() !== "")) {
-            successMessage.classList.remove('success');
-            errorMessage.classList.add('failure');
+        const allFilled = Array.from(inputs).every(input => input.value.trim() !== "");
+
+        if (allFilled) {
+            if (isCorrect) {
+                successMessage.style.display = 'flex';
+                failureMessage.style.display = 'none';
+            } else {
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'flex';
+            }
         } else {
-            successMessage.classList.remove('success');
-            errorMessage.classList.remove('failure');
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
         }
     }
 

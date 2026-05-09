@@ -76,7 +76,7 @@
                 <img id="flagImage" src="https://img1.hscicdn.com/image/upload/f_auto,t_ds_square_w_640,q_50/lsci/db/PICTURES/CMS/316400/316486.png" alt="Sachin Tendulkar">
                 <div class="image-overlay" id="imageOverlay"></div>
             </div>
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>He is Sachin Tendulkar, an Indian cricketer.</span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! He is Sachin Tendulkar, a legendary Indian cricketer.</div>
         </div>
     </main>
 </div>
@@ -90,7 +90,6 @@
 
     // Hide success message initially
     successMessage.style.display = 'none';
-    successMessage.classList.remove('success');
 
     imageContainer.addEventListener('mouseenter', () => {
         const link = document.createElement('a');
@@ -109,7 +108,6 @@
     function displaySuccessMessage(event) {
         event.preventDefault();
         successMessage.style.display = 'flex';
-        successMessage.classList.add('success');
     }
 </script>
 </body>

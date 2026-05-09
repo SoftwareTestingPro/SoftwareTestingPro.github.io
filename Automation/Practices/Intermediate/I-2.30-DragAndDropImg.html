@@ -80,7 +80,7 @@
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Taj-Mahal.jpg/1200px-Taj-Mahal.jpg" id="draggableImage" class="draggable-img" draggable="true">
                     </div>
                 </div>
-                <div id="successMessage" class="message success">Image dropped successfully!</div>
+                <div id="successMessage" class="message success" role="status" aria-live="polite">Correct! Image dropped successfully.</div>
             </div>
         </main>
     </div>
@@ -95,7 +95,6 @@
 
         // Hide message on load
         successMessage.style.display = 'none';
-        successMessage.classList.remove('success');
 
         draggableImage.addEventListener('dragstart', function(event) {
             event.dataTransfer.setData('text/plain', event.target.id);
@@ -118,7 +117,6 @@
             dropBox.classList.remove('over');
             dropBoxText.style.display = 'none';
             successMessage.style.display = 'flex';
-            successMessage.classList.add('success');
         });
     </script>
 </body>

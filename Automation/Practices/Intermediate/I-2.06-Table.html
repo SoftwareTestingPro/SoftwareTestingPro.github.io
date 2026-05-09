@@ -72,8 +72,8 @@
             <h1>Employee Data Table</h1>
             <p class="lead">Master table data analysis! Analyze employee records and select the highest earner to prove your data interpretation and validation skills.</p>
 
-            <div class="table-wrapper">
-                <table id="employeeTable">
+            <div class="table-responsive">
+                <table id="employeeTable" class="data-table compact">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -86,8 +86,11 @@
                     </tbody>
                 </table>
             </div>
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Congratulations! You clicked on employee with highest salary.</span></div>
-            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Sorry! The employee you clicked does not have highest salary.</span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Congratulations! You clicked on the employee with the highest salary.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! This employee does not have the highest salary.
+                <div class="detail" id="failureDetail"></div>
+            </div>
         </div>
     </main>
 </div>
@@ -164,16 +167,16 @@
                     <td>${employee.salary.toLocaleString('en-IN')} INR</td>
                 `;
                 row.addEventListener('click', () => {
+                    const failureDetail = document.getElementById('failureDetail');
                     if (index === highestSalaryIndex) {
                         successMessage.style.display = 'flex';
-                        successMessage.classList.add('success');
                         failureMessage.style.display = 'none';
-                        failureMessage.classList.remove('failure');
                     } else {
+                        const expectedName = employees[highestSalaryIndex].name;
+                        const expectedSalary = employees[highestSalaryIndex].salary.toLocaleString('en-IN');
+                        failureDetail.innerHTML = `Expected: ${expectedName} (${expectedSalary} INR) | Selected: ${employee.name}`;
                         failureMessage.style.display = 'flex';
-                        failureMessage.classList.add('failure');
                         successMessage.style.display = 'none';
-                        successMessage.classList.remove('success');
                     }
                 });
 

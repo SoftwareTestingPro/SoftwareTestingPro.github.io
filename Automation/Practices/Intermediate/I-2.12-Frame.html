@@ -76,9 +76,7 @@
                 <iframe src="about:blank" id="button-frame"></iframe>
             </div>
 
-            <div class="message" id="message" role="status" aria-live="polite">
-                <span>Success! You clicked the button within a frame.</span>
-            </div>
+            <div class="message success" id="message" role="status" aria-live="polite">Correct! You clicked the button within a frame.</div>
         </div>
     </main>
 </div>
@@ -139,7 +137,6 @@
         iframeDoc.getElementById('action-button').addEventListener('click', function() {
             const messageDiv = document.getElementById('message');
             messageDiv.style.display = 'flex';
-            messageDiv.classList.add('success');
         });
     </script>
 </body>

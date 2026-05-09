@@ -85,7 +85,7 @@
                     <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You've watched the entire video successfully!</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You've watched the entire video successfully.</div>
             </div>
         </main>
     </div>
@@ -98,7 +98,6 @@
 
     player.on('ended', () => {
         successMessage.style.display = 'flex';
-        successMessage.className = 'message success';
     });
 </script>
 </body>

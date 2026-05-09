@@ -76,8 +76,11 @@
                     <!-- Checkboxes will be inserted here by JavaScript -->
                 </div>
 
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — The required checkboxes are selected.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Selected:</span> <span id="actualValue"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The required checkboxes are selected.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! Selection does not match.
+                    <div class="detail">Expected: <span id="expectedValue"></span> | Selected: <span id="actualValue"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -146,14 +149,10 @@
 
             if (selectedHobbies.includes('Music') && selectedHobbies.includes(thirdOptionValue) &&
                 selectedHobbies.length === 2) {
-                successMessage.classList.add('success');
                 successMessage.style.display = 'flex';
-                failureMessage.classList.remove('failure');
                 failureMessage.style.display = 'none';
             } else {
-                successMessage.classList.remove('success');
                 successMessage.style.display = 'none';
-                failureMessage.classList.add('failure');
                 failureMessage.style.display = 'flex';
                 
                 // Populate expected and actual values

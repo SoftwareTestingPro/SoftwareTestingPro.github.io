@@ -102,7 +102,7 @@
                 </html>
             "></iframe>
         </div>
-        <div id="successMessage" class="message success"></div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Element successfully dropped in the target frame.</div>
         </div>
     </main>
 </div>
@@ -114,7 +114,6 @@
 
         // Hide message on load
         successMessage.style.display = 'none';
-        successMessage.classList.remove('success');
 
         // Drag and drop functionality (in the parent window to work between frames)
         function allowDrop(ev) {
@@ -136,8 +135,6 @@
 
             // Display success message
             successMessage.style.display = 'flex';
-            successMessage.classList.add('success');
-            successMessage.textContent = "Element successfully dropped!";
         }
     </script>
 

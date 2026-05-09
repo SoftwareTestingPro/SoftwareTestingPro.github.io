@@ -36,6 +36,7 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .content-wrapper {
@@ -43,8 +44,8 @@ main {
     flex-direction: column;
     width: 100%;
     max-width: var(--card-max-width);
-    margin: 0.25rem auto 4rem;
-    padding: 5px 20px 20px 20px;
+    margin: 0 auto 0;
+    padding: 5px 20px 5px 20px;
     box-sizing: border-box;
 }
 
@@ -53,13 +54,13 @@ main {
     background: var(--card);
     border-radius: var(--radius);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    height: 80vh;
+    height: 83vh;
     min-height: var(--card-min-height);
-    max-height: 80vh;
+    max-height: 83vh;
     overflow-y: auto;
     width: 100%;
     max-width: 100%;
@@ -67,9 +68,7 @@ main {
     order: 1;
 }
 
-.scrollable-card {
-    overflow-y: auto;
-}
+
 
 /* Custom Scrollbar Styles */
 .card::-webkit-scrollbar {
@@ -138,7 +137,7 @@ p.lead {
     font-size: 1.125rem;
     max-width: 600px;
     margin-top: 0;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
     margin-left: auto;
     margin-right: auto;
 }
@@ -180,10 +179,32 @@ p.lead {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     max-width: 450px;
-    margin: 2.5rem auto;
+    margin: 0.5rem auto 0;
     width: 100%;
+}
+
+.horizontal-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0.75rem auto;
+    width: 100%;
+    max-width: 600px;
+}
+
+.horizontal-form label {
+    font-weight: 700;
+    color: var(--foreground);
+    white-space: nowrap;
+    font-size: 0.95rem;
+}
+
+.horizontal-form input {
+    max-width: 300px;
+    margin-bottom: 0 !important;
 }
 
 .vertical-form .input-group {
@@ -233,7 +254,6 @@ textarea:focus {
 }
 
 /* Global Button Styling for Tasks */
-.task-button,
 .card-content button:not(.nav-btn):not(.tasks-overview-btn) {
     padding: 10px 20px;
     font-size: 1rem;
@@ -249,26 +269,14 @@ textarea:focus {
     font-weight: 500;
 }
 
-.task-button:hover,
 .card-content button:not(.nav-btn):not(.tasks-overview-btn):hover {
     background-color: #5a35a8;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(107, 33, 168, 0.2);
 }
 
-.task-button:active,
 .card-content button:not(.nav-btn):not(.tasks-overview-btn):active {
     transform: translateY(0);
-}
-
-.button-container, .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin: 2.5rem auto;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
 }
 
 .card-content button:disabled {
@@ -281,39 +289,81 @@ textarea:focus {
     opacity: 0.7;
 }
 
-/* Table Styling */
+/* Standardized Data Table Styling */
 .table-responsive {
     width: 100%;
     overflow-x: auto;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
 }
 
-table {
+.data-table {
     width: 100%;
-    border-collapse: collapse;
-    background: var(--card);
-    border-radius: 8px;
+    margin: 1rem auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-}
-
-th {
+.data-table th {
     background: #f8fafc;
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 0.875rem;
+    color: #475569;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.025em;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    padding: 10px 16px;
+    text-align: center;
+    border-bottom: 2px solid #f1f5f9;
 }
 
-tbody tr:hover {
-    background: #f1f5f9;
+.data-table td {
+    padding: 10px 16px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 0.95rem;
+    color: #1e293b;
+    font-weight: 500;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.data-table tr:hover td {
+    background-color: #f8fafc;
+}
+
+/* Compact variation for small summary tables */
+.data-table.compact {
+    max-width: 600px;
+    width: auto;
+    min-width: 300px;
+}
+
+.data-table th.sortable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+}
+
+.data-table th.sortable::after {
+    content: '↕';
+    position: absolute;
+    right: 12px;
+    opacity: 0.5;
+    font-size: 0.8rem;
+}
+
+.field-chip {
+    background: #f5f3ff;
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: inline-block;
+    border: 1px solid #ddd6fe;
 }
 
 /* Interactive Elements */
@@ -329,14 +379,6 @@ tbody tr:hover {
     border: 2px solid var(--border);
     border-radius: 8px;
     background: white;
-}
-
-.draggable-container {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    margin: 2rem 0;
 }
 
 .draggable {
@@ -1120,13 +1162,13 @@ tbody tr:hover {
 
 /* Scrollable Content (Terms & Conditions) */
 .terms {
-    height: 300px;
+    height: 200px;
     overflow-y: scroll;
-    padding: 2rem;
+    padding: 1.25rem;
     border: 2px solid #e2e8f0;
     border-radius: 16px;
     background: #f8fafc;
-    margin: 2rem auto;
+    margin: 1rem auto;
     width: 100%;
     max-width: 600px;
     text-align: left;
@@ -1389,7 +1431,7 @@ fieldset {
     margin: 0;
 }
 
-.radio-list, .checkbox-list, .checkbox-group, .radio-group {
+.radio-list, .checkbox-group, .radio-group {
     list-style: none;
     padding: 0;
     margin: 1.5rem auto;
@@ -1400,7 +1442,7 @@ fieldset {
     width: 100%;
 }
 
-.radio-item, .checkbox-item, .radio-list li, .checkbox-list li, .checkbox-group label, .radio-group label {
+.radio-item, .radio-list li, .checkbox-group label, .radio-group label {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1418,7 +1460,7 @@ fieldset {
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.radio-item:hover, .checkbox-item:hover, .radio-list li:hover, .checkbox-list li:hover, .checkbox-group label:hover, .radio-group label:hover {
+.radio-item:hover, .radio-list li:hover, .checkbox-group label:hover, .radio-group label:hover {
     background: white;
     border-color: var(--accent);
     transform: translateY(-2px);
@@ -1427,9 +1469,7 @@ fieldset {
 
 /* Base Custom Input Style */
 .radio-item input[type="radio"],
-.checkbox-item input[type="checkbox"],
 .radio-list li input[type="radio"],
-.checkbox-list li input[type="checkbox"],
 .checkbox-group label input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
@@ -1451,17 +1491,13 @@ fieldset {
     border-radius: 50%;
 }
 
-.checkbox-item input[type="checkbox"],
-.checkbox-list li input[type="checkbox"],
 .checkbox-group label input[type="checkbox"] {
     border-radius: 4px;
 }
 
 /* Selection Indicators */
 .radio-item input[type="radio"]::before,
-.checkbox-item input[type="checkbox"]::before,
 .radio-list li input[type="radio"]::before,
-.checkbox-list li input[type="checkbox"]::before,
 .checkbox-group label input[type="checkbox"]::before {
     content: "";
     transform: scale(0);
@@ -1481,8 +1517,6 @@ fieldset {
 }
 
 /* Checkbox Checkmark */
-.checkbox-item input[type="checkbox"]::before,
-.checkbox-list li input[type="checkbox"]::before,
 .checkbox-group label input[type="checkbox"]::before {
     width: 12px;
     height: 12px;
@@ -1490,22 +1524,18 @@ fieldset {
 }
 
 .radio-item input[type="radio"]:checked,
-.checkbox-item input[type="checkbox"]:checked,
 .radio-list li input[type="radio"]:checked,
-.checkbox-list li input[type="checkbox"]:checked,
 .checkbox-group label input[type="checkbox"]:checked {
     border-color: var(--accent);
 }
 
 .radio-item input[type="radio"]:checked::before,
-.checkbox-item input[type="checkbox"]:checked::before,
 .radio-list li input[type="radio"]:checked::before,
-.checkbox-list li input[type="checkbox"]:checked::before,
 .checkbox-group label input[type="checkbox"]:checked::before {
     transform: scale(1);
 }
 
-.radio-item label, .checkbox-item label, .radio-list li label, .checkbox-list li label, .radio-group label {
+.radio-item label, .radio-list li label, .radio-group label {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1517,13 +1547,8 @@ fieldset {
     white-space: nowrap;
 }
 
-/* Hide legacy custom spans that might interfere with alignment */
-.radio-custom, .checkbox-custom {
-    display: none !important;
-}
-
 @media (max-width: 600px) {
-    .radio-item, .checkbox-item, .radio-list li, .checkbox-list li {
+    .radio-item, .radio-list li {
         width: 100%;
     }
 }
@@ -1533,10 +1558,10 @@ fieldset {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: auto;
+    margin-top: 2px;
     width: 100%;
-    margin-bottom: 20px;
-    padding-top: 10px;
+    margin-bottom: 2px;
+    padding-top: 0;
     order: 2;
 }
 
@@ -1588,35 +1613,48 @@ fieldset {
     font-weight: bold;
 }
 
-/* Messages */
+/* Standardized Validation Messages */
 .message {
     display: none;
-    margin-top: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin: 1rem auto;
+    width: 100%;
+    max-width: 600px;
+    animation: slideIn 0.3s ease-out;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .message.success {
-    color: #22c55e;
-    display: flex;
-    align-items: center;
-}
-
-.message.success::before {
-    content: "✅ ";
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
 }
 
 .message.failure {
-    color: #ef4444;
-    display: flex;
-    align-items: center;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.message.failure::before {
-    content: "❌ ";
+.message .detail {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-weight: 500;
+    margin-top: 2px;
+    display: block;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 /* Task List Styles */
@@ -1689,23 +1727,4 @@ fieldset {
     .task-list {
         grid-template-columns: 1fr;
     }
-}
-
-/* Back to Top */
-.back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 45px;
-    height: 45px;
-    background: #0f0f23;
-    border: 2px solid #00ffff;
-    border-radius: 50%;
-    color: #00ffff;
-    cursor: pointer;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
 }

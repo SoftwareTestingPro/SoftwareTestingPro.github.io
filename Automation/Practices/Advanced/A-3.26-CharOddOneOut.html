@@ -73,8 +73,8 @@
         <p class="lead">Master character analysis! Identify the unique character among similar ones to prove your pattern recognition skills.</p>
 
         <div class="buttons" id="buttonContainer"></div>
-        <div id="successMessage" class="message"></div>
-        <div id="failureMessage" class="message"></div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You found the odd one out.</div>
+        <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! That is not the odd one out. Try again.</div>
         </div>
     </main>
 </div>
@@ -88,8 +88,6 @@
   // Hide messages on load
   successMessage.style.display = 'none';
   failureMessage.style.display = 'none';
-  successMessage.classList.remove('success');
-  failureMessage.classList.remove('failure');
 
   const characters = ['A', 'B', 'C', 'D', 'E', 'F'];  // Example character options
   const numbers = ['1', '2', '3', '4', '5', '6'];      // Example number options
@@ -129,16 +127,10 @@
   function checkOddOneOut(isOddOneOut) {
     if (isOddOneOut) {
       successMessage.style.display = 'flex';
-      successMessage.classList.add('success');
       failureMessage.style.display = 'none';
-      failureMessage.classList.remove('failure');
-      successMessage.textContent = 'Success! You found the odd one out!';
     } else {
       successMessage.style.display = 'none';
-      successMessage.classList.remove('success');
       failureMessage.style.display = 'flex';
-      failureMessage.classList.add('failure');
-      failureMessage.textContent = 'Failure! Try again.';
     }
   }
 </script>

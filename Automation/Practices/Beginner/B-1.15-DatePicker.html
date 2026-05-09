@@ -72,22 +72,20 @@
                 <h1>Date Operations</h1>
                 <p class="lead">Master date selection automation! Input today's date precisely to demonstrate your automation can handle date inputs and temporal data.</p>
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="date-picker" class="label-left">Select current date:</label>
-                    </div>
-
-                    <div class="input-group-right">
-                        <div class="date-picker-wrapper">
-                            <input type="date" id="date-picker" style="width: 150px;">
-                            <svg id="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M7 10h5v5H7zm6 0h5v5h-5zM7 16h5v5H7zm6 0h5v5h-5zM20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 22V8h16v14H4z"/>
-                            </svg>
-                        </div>
+                <div class="horizontal-form">
+                    <label for="date-picker">Select current date:</label>
+                    <div class="date-picker-wrapper">
+                        <input type="date" id="date-picker" style="width: 150px;">
+                        <svg id="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M7 10h5v5H7zm6 0h5v5h-5zM7 16h5v5H7zm6 0h5v5h-5zM20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM4 22V8h16v14H4z"/>
+                        </svg>
                     </div>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully selected today's date.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Selected Date does not match. <span style="color: black;">Expected:</span> <span id="expectedDate"></span> <span style="color: black;">Entered:</span> <span id="actualDate"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You successfully selected today's date.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! Selected Date does not match.
+                    <div class="detail">Expected: <span id="expectedDate"></span> | Entered: <span id="actualDate"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -129,14 +127,10 @@
 
 			if (selectedDate === today) {
 				successMessage.style.display = 'flex';
-				successMessage.classList.add('success');
 				failureMessage.style.display = 'none';
-				failureMessage.classList.remove('failure');
 			} else {
 				successMessage.style.display = 'none';
-				successMessage.classList.remove('success');
 				failureMessage.style.display = 'flex';
-				failureMessage.classList.add('failure');
 			}
 
 			isPickerClicked = false; // Optional: reset if you still want to track clicks

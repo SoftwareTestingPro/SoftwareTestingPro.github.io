@@ -74,8 +74,8 @@
                 <div class="button-enabled">
                     <button id="clickButton" type="button">Click Me</button>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully double-clicked the button.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you single clicked the button</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You successfully double-clicked the button.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! It looks like you single-clicked the button.</div>
             </div>
         </main>
     </div>
@@ -95,18 +95,14 @@
             clickTimeout = setTimeout(() => {
                 // If not double-clicked, show failure message
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
-                successMessage.style.display = 'none'; // Hide success message
-                successMessage.classList.remove('success');
+                successMessage.style.display = 'none';
             }, 250);
         });
 
         clickButton.addEventListener('dblclick', () => {
             clearTimeout(clickTimeout);
             successMessage.style.display = 'flex';
-            successMessage.classList.add('success');
-            failureMessage.style.display = 'none'; // Hide failure message
-            failureMessage.classList.remove('failure');
+            failureMessage.style.display = 'none';
         });
 
         //Hide messages initially

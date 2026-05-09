@@ -93,8 +93,8 @@
                     </div>
                 </div>
 
-                <div class="message" id="successMessage"></div>
-                <div class="message" id="failureMessage"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Your verification matches the PDF content.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Your verification does not match the PDF content.</div>
             </div>
         </div>
     </main>
@@ -176,8 +176,6 @@
         // Hide messages on page load
         document.getElementById('successMessage').style.display = 'none';
         document.getElementById('failureMessage').style.display = 'none';
-        document.getElementById('successMessage').classList.remove('success');
-        document.getElementById('failureMessage').classList.remove('failure');
         
         // Clear radio button selections
         document.querySelectorAll('input[name="verification"]').forEach(radio => radio.checked = false);
@@ -205,25 +203,11 @@
         const failureMessage = document.getElementById('failureMessage');
 
         if (isCorrect) {
-            successMessage.style.display = 'block';
-            successMessage.classList.add('success');
-            if (isInPDF) {
-                successMessage.textContent = 'Correct! The country is in the PDF.';
-            } else {
-                successMessage.textContent = 'Correct! The country is not in the PDF.';
-            }
+            successMessage.style.display = 'flex';
             failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
         } else {
             successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
-            failureMessage.style.display = 'block';
-            failureMessage.classList.add('failure');
-            if (isInPDF) {
-                failureMessage.textContent = 'Incorrect! The country is actually in the PDF.';
-            } else {
-                failureMessage.textContent = 'Incorrect! The country is actually not in the PDF.';
-            }
+            failureMessage.style.display = 'flex';
         }
         
         // Disable radio buttons after selection

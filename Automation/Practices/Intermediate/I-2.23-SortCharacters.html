@@ -82,8 +82,8 @@
                     <div class="input-box"><input type="text" maxlength="1" /></div>
                 </div>
 
-                <div class="message" id="successMessage">Success! The letters are in alphabetical order.</div>
-                <div class="message" id="failureMessage">Failure! Please enter the correct letters in alphabetical order.</div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The letters are in alphabetical order.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Please arrange all letters from the list in alphabetical order.</div>
             </div>
         </main>
     </div>
@@ -165,13 +165,13 @@
                     const correctOrder = checkAlphabeticalOrder(userInput, randomLetters);
                     
                     if (validLetters && correctOrder) {
-                        successMessage.style.display = 'block';
+                        successMessage.style.display = 'flex';
                         failureMessage.style.display = 'none';
                         // Disable all input fields
                         inputBoxes.forEach(input => input.disabled = true);
                     } else {
                         successMessage.style.display = 'none';
-                        failureMessage.style.display = 'block';
+                        failureMessage.style.display = 'flex';
                     }
                 } else {
                     successMessage.style.display = 'none';

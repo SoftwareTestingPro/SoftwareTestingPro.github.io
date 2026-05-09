@@ -77,8 +77,8 @@
                 <div class="button-enabled">
                     <button id="action-button">Click Me After 100%!</button>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! Button was clicked after completion..</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you You clicked too early.</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Success! Button was clicked after completion.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You clicked too early.</div>
             </div>
         </main>
     </div>
@@ -97,8 +97,6 @@
         // Hide messages on load
         successMessage.style.display = 'none';
         failureMessage.style.display = 'none';
-        successMessage.classList.remove('success');
-        failureMessage.classList.remove('failure');
 
         const randomDuration = Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000;
         const updateInterval = 100; // Check progress every 100ms
@@ -128,10 +126,7 @@
                     actionButton.style.display = 'none';
                     if (!buttonClicked) {
                         failureMessage.style.display = 'flex';
-                        failureMessage.classList.add('failure');
                         successMessage.style.display = 'none';
-                        successMessage.classList.remove('success');
-                        failureMessage.textContent = "Failure! You failed to click the button in time.";
                     }
                 }, 1000);
             }
@@ -143,17 +138,11 @@
                 clearInterval(intervalId);
                 progressBar.style.animationPlayState = 'paused'; // Pause the animation
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
-                failureMessage.textContent = "You clicked too early";
                 actionButton.disabled = true;
             } else {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
-                successMessage.textContent = "Success! Button was clicked after completion.";
             }
         });
 

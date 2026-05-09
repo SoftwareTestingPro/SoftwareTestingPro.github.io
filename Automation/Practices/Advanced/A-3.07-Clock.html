@@ -86,8 +86,11 @@
             <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" />
             <button id="submit-btn">Submit</button>
           </div>
-          <div id="successMessage" class="message" style="display: none;"></div>
-          <div id="failureMessage" class="message" style="display: none;"></div>
+          <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You entered the right time.</div>
+          <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+              Incorrect! The entered time does not match.
+              <div class="detail">Expected: <span id="expectedTime"></span> | Entered: <span id="actualTime"></span></div>
+          </div>
         </div>
       </div>
     </main>
@@ -110,6 +113,8 @@
       document.getElementById('hour').style.transform = `rotate(${hourDeg}deg)`;
     }
 
+    const expectedTimeStr = `${String(currentHours).padStart(2, '0')}:${String(currentMinutes).padStart(2, '0')}:${String(currentSeconds).padStart(2, '0')}`;
+
     function validateInput() {
       const input = document.getElementById('user-input');
       const successMessage = document.getElementById('successMessage');
@@ -118,8 +123,6 @@
       // Hide messages
       successMessage.style.display = 'none';
       failureMessage.style.display = 'none';
-      successMessage.classList.remove('success');
-      failureMessage.classList.remove('failure');
 
       const [hhStr, mmStr, ssStr] = input.value.split(':');
       const hh = parseInt(hhStr, 10);
@@ -133,26 +136,22 @@
         mm >= 0 && mm <= 59 &&
         ss >= 0 && ss <= 59)
       ) {
+        successMessage.style.display = 'none';
         failureMessage.style.display = 'flex';
-        failureMessage.classList.add('failure');
-        failureMessage.textContent = "Invalid format! Use HH:MM:SS where HH is 01–12 and MM/SS are 00–59.";
+        document.getElementById('expectedTime').textContent = "HH:MM:SS format";
+        document.getElementById('actualTime').textContent = input.value || "empty";
         return;
       }
 
       // Compare with clock time
-      const expectedHH = String(currentHours).padStart(2, '0');
-      const expectedMM = String(currentMinutes).padStart(2, '0');
-      const expectedSS = String(currentSeconds).padStart(2, '0');
-      const expectedTime = `${expectedHH}:${expectedMM}:${expectedSS}`;
-
-      if (input.value === expectedTime) {
+      if (input.value === expectedTimeStr) {
         successMessage.style.display = 'flex';
-        successMessage.classList.add('success');
-        successMessage.textContent = "✅ Correct! You entered the right time.";
+        failureMessage.style.display = 'none';
       } else {
+        successMessage.style.display = 'none';
         failureMessage.style.display = 'flex';
-        failureMessage.classList.add('failure');
-        failureMessage.textContent = `Incorrect! The actual time is ${expectedTime}`;
+        document.getElementById('expectedTime').textContent = expectedTimeStr;
+        document.getElementById('actualTime').textContent = input.value;
       }
     }
 

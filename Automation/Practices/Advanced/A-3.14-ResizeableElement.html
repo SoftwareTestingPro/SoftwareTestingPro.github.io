@@ -78,9 +78,7 @@
                     <div class="resize-handle" id="resizeHandle"></div>
                 </div>
 
-                <div class="message success" id="successMessage">
-                    Success! The element size is 256px x 256px.
-                </div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The element size is exactly 256px x 256px.</div>
             </div>
         </main>
     </div>
@@ -95,7 +93,6 @@
 
         // Hide message on load
         successMessage.style.display = 'none';
-        successMessage.classList.remove('success');
 
         function updateSizeDisplay() {
             const width = resizable.offsetWidth;
@@ -103,11 +100,6 @@
             sizeDisplay.textContent = `Size: ${width}px x ${height}px`;
             const isTargetSize = width === 256 && height === 256;
             successMessage.style.display = isTargetSize ? 'flex' : 'none';
-            if (isTargetSize) {
-                successMessage.classList.add('success');
-            } else {
-                successMessage.classList.remove('success');
-            }
         }
 
         new ResizeObserver(updateSizeDisplay).observe(resizable);

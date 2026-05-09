@@ -77,7 +77,7 @@
             <button onclick="document.getElementById('fileUpload').click()">Upload File</button>
         </div>
         <div class="file-path" id="filePath"></div>
-        <div class="message success" id="successMessage">File uploaded successfully!</div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! File uploaded successfully.</div>
     </div>
     </main>
 </div>
@@ -89,7 +89,6 @@
 
         // Hide message on load
         successMessage.style.display = 'none';
-        successMessage.classList.remove('success');
 
         document.getElementById('fileUpload').addEventListener('change', function(event) {
             const filePath = document.getElementById('filePath');
@@ -98,11 +97,9 @@
             if (file) {
                 filePath.textContent = `File Path: ${file.name}`;
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
             } else {
                 filePath.textContent = '';
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
             }
         });
     </script>

@@ -75,8 +75,8 @@
                 <div class="button-container" id="buttonContainer">
                     <!-- Buttons will be inserted here by JavaScript -->
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You clicked the enabled button.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>You clicked the disabled button.</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You clicked the enabled button.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You clicked a disabled button.</div>
             </div>
         </main>
     </div>
@@ -120,14 +120,10 @@
                 buttonWrapper.addEventListener('click', function() {
                     if (!button.disabled) {
                         successMessage.style.display = 'flex';
-                        successMessage.classList.add('success');
                         failureMessage.style.display = 'none';
-                        failureMessage.classList.remove('failure');
                     } else {
                         successMessage.style.display = 'none';
-                        successMessage.classList.remove('success');
                         failureMessage.style.display = 'flex';
-                        failureMessage.classList.add('failure');
                     }
                 });
 

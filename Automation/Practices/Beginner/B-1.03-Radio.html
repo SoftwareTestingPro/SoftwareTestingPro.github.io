@@ -76,32 +76,27 @@
                 <li>
                     <label>
                         <input type="radio" name="gender" value="male">
-                        <span class="radio-custom"></span>
                         Male
                     </label>
                 </li>
                 <li>
                     <label>
                         <input type="radio" name="gender" value="female">
-                        <span class="radio-custom"></span>
                         Female
                     </label>
                 </li>
                 <li>
                     <label>
                         <input type="radio" name="gender" value="other">
-                        <span class="radio-custom"></span>
                         Other
                     </label>
                 </li>
             </ul>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span>Correct! You selected the right option.</span>
-            </div>
-
-            <div class="message" id="failureMessage" role="status" aria-live="polite">
-                <span>Expected: Male, Selected: <span id="actualValue"></span></span>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You selected the right option.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! You selected the wrong option.
+                <div class="detail">Expected: Male | Selected: <span id="actualValue"></span></div>
             </div>
         </div>
     </main>
@@ -126,16 +121,12 @@
                 const selected = this.value;
                 if (selected === 'male') {
                     successMessage.style.display = 'flex';
-                    successMessage.classList.add('success');
                     failureMessage.style.display = 'none';
-                    failureMessage.classList.remove('failure');
                     actualValue.textContent = '';
                 } else {
                     successMessage.style.display = 'none';
-                    successMessage.classList.remove('success');
                     failureMessage.style.display = 'flex';
-                    failureMessage.classList.add('failure');
-                    actualValue.textContent = selected;
+                    actualValue.textContent = selected.charAt(0).toUpperCase() + selected.slice(1);
                 }
             });
         });

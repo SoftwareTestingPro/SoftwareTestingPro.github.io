@@ -90,8 +90,8 @@
                     </div>
                 </div>
             </div>
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>All category items matched successfully!</span></div>
-            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Category does not match for all items.</span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! All category items matched successfully.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Not all items are matched to their correct categories.</div>
         </div>
     </main>
 </div>
@@ -203,10 +203,10 @@
                 if (droppedCount === items.length) {
                     if (matchedCount === items.length) {
                         successMessage.style.display = 'flex';
-                        successMessage.classList.add('success');
+                        failureMessage.style.display = 'none';
                     } else {
+                        successMessage.style.display = 'none';
                         failureMessage.style.display = 'flex';
-                        failureMessage.classList.add('failure');
                     }
                 }
             }

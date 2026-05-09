@@ -80,8 +80,11 @@
                         <input type="text" id="user-input" name="user-input" placeholder="Enter fetched text here...">
                     </div>
                 </div>
-                <div id="successMessage" class="message"></div>
-                <div id="failureMessage" class="message"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The text matches.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The text does not match.
+                    <div class="detail">Expected: <span id="expectedText"></span> | Entered: <span id="actualText"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -97,29 +100,21 @@
             // Hide messages on load
             successMessage.style.display = 'none';
             failureMessage.style.display = 'none';
-            successMessage.classList.remove('success');
-            failureMessage.classList.remove('failure');
 
             userInput.addEventListener('input', () => {
                 const value = userInput.value;
 
                 if (value === 'amazon') {
                     successMessage.style.display = 'flex';
-                    successMessage.classList.add('success');
                     failureMessage.style.display = 'none';
-                    failureMessage.classList.remove('failure');
-                    successMessage.textContent = 'Success! You entered "amazon".';
                 } else if (value.trim() === '') {
                     successMessage.style.display = 'none';
                     failureMessage.style.display = 'none';
-                    successMessage.classList.remove('success');
-                    failureMessage.classList.remove('failure');
                 } else {
                     successMessage.style.display = 'none';
-                    successMessage.classList.remove('success');
                     failureMessage.style.display = 'flex';
-                    failureMessage.classList.add('failure');
-                    failureMessage.textContent = 'Failure! The entered text does not match.';
+                    document.getElementById('expectedText').textContent = 'amazon';
+                    document.getElementById('actualText').textContent = value;
                 }
             });
         });

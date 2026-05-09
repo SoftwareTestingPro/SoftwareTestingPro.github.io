@@ -75,8 +75,8 @@
         <ul id="animalList" class="list-container">
             <!-- List items will be inserted here by JavaScript -->
         </ul>
-        <div id="successMessage" class="message">Success! List is sorted.</div>
-        <div id="failureMessage" class="message">List is not yet sorted. Keep trying!</div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The list is sorted alphabetically.</div>
+        <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! The list is not yet sorted correctly. Keep trying!</div>
     </div>
     </main>
 </div>
@@ -107,9 +107,7 @@
 
             // Hide messages on load
             successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
             failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
 
             // Initialize SortableJS
             const sortable = Sortable.create(list, {
@@ -122,14 +120,12 @@
                     const sortedItems = [...items].sort();
                     if (JSON.stringify(items) === JSON.stringify(sortedItems)) {
                         successMessage.style.display = 'flex';
-                        successMessage.classList.add('success');
                         failureMessage.style.display = 'none';
                         sortable.option("disabled", true); // Disable dragging and sorting
                     } else {
                         // Show failure message only after first drag
                         if (hasDragged) {
                             failureMessage.style.display = 'flex';
-                            failureMessage.classList.add('failure');
                         }
                         successMessage.style.display = 'none';
                     }

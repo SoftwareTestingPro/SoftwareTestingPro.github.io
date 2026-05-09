@@ -73,7 +73,7 @@
             <p class="lead">Master data analysis! Analyze the train availability table and select the train with maximum seat capacity to prove your decision-making skills.</p>
 
             <div class="table-responsive">
-                <table>
+                <table class="data-table compact">
                 <thead>
                     <tr>
                         <th>Select</th>
@@ -117,8 +117,11 @@
             </table>
         </div>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — This train has the most number of seats available.</span></div>
-            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>This train does not have the most number of seats available.</span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! This train has the maximum seat capacity.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! This is not the train with maximum capacity.
+                <div class="detail" id="failureDetail"></div>
+            </div>
         </div>
     </main>
 </div>
@@ -169,17 +172,18 @@
         });
 
         const bestTrain = sortedData[0];
+        const failureDetail = document.getElementById('failureDetail');
 
         if (trainData === bestTrain) {
             successMessage.style.display = 'flex';
-            successMessage.classList.add('success');
             failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
         } else {
             successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
             failureMessage.style.display = 'flex';
-            failureMessage.classList.add('failure');
+            const trainNames = ['Express A', 'Express B', 'Express C', 'Express D', 'Express E'];
+            const expectedName = trainNames[seatData.indexOf(bestTrain)];
+            const actualName = trainNames[trainIndex];
+            failureDetail.innerHTML = `Expected: ${expectedName} | Selected: ${actualName}`;
         }
     }
     </script>

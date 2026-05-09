@@ -72,8 +72,8 @@
         <h1>Hidden Element Challenge</h1>
         <p class="lead">Master timing and reflexes! Wait for the hidden button to appear after countdown, then click instantly to prove your speed skills.</p>
         <div id="countdown">Time remaining: 5 seconds</div>
-            <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;"><span>Congratulations! Well done!</span></div>
-            <div class="message failure" id="failureMessage" role="status" aria-live="polite" style="display: none;"><span>Sorry, you missed clicking the button. Be fast!</span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You clicked the button successfully.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You missed clicking the button. Be fast!</div>
         </div>
     </main>
 </div>
@@ -92,8 +92,6 @@
             // Hide messages on load
             successMessage.style.display = 'none';
             failureMessage.style.display = 'none';
-            successMessage.classList.remove('success');
-            failureMessage.classList.remove('failure');
 
             // Countdown timer
             var countdownInterval = setInterval(function() {
@@ -128,9 +126,7 @@
                             button.parentNode.removeChild(button); // Remove button from DOM
                         }
                         failureMessage.style.display = 'flex';
-                        failureMessage.classList.add('failure');
                         successMessage.style.display = 'none';
-                        successMessage.classList.remove('success');
                     }
                 }, 2000);
 
@@ -142,9 +138,7 @@
                         button.parentNode.removeChild(button); // Remove button from DOM
                     }
                     successMessage.style.display = 'flex';
-                    successMessage.classList.add('success');
                     failureMessage.style.display = 'none';
-                    failureMessage.classList.remove('failure');
                 });
 
             }, 5000);

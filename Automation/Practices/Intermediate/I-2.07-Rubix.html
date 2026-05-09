@@ -72,8 +72,8 @@
                 <p class="lead">Master pattern recognition! Analyze the Rubik's cube and identify the uniquely colored block to prove your visual analysis skills.</p>
                 <div id="rubiks-cube"></div>
 
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Congratulations! You clicked the unique block!</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Try again!</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You clicked the unique block!</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Try again to find the unique block.</div>
             </div>
         </main>
     </div>
@@ -108,15 +108,11 @@
 
                 block.addEventListener('click', () => {
                     if (i === distinctIndex) {
-                        successMessage.style.display = 'block'; // Show success message
-                        successMessage.classList.add('success');
-                        failureMessage.style.display = 'none'; // Hide failure message
-                        failureMessage.classList.remove('failure');
+                        successMessage.style.display = 'flex';
+                        failureMessage.style.display = 'none';
                     } else {
-                        successMessage.style.display = 'none'; // Hide success message
-                        successMessage.classList.remove('success');
-                        failureMessage.style.display = 'block'; // Show failure message
-                        failureMessage.classList.add('failure');
+                        successMessage.style.display = 'none';
+                        failureMessage.style.display = 'flex';
                     }
                 });
                 rubiksCube.appendChild(block);

@@ -77,7 +77,7 @@
             <div id="vertical" class="draggable vertical">Y</div>
             <div id="combinedBox" class="combined-box"></div>
         </div>
-        <div id="successMessage" class="message success">Success!</div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You have perfectly overlapped X and Y.</div>
     </div>
     </main>
 </div>
@@ -95,7 +95,6 @@
 
             // Hide message on load
             successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
 
             const positionElements = () => {
                 if (successDisplayed) return;
@@ -130,7 +129,6 @@
 
                 if (isExactlyOnTop) {
                     successMessage.style.display = 'flex';
-                    successMessage.classList.add('success');
                     horizontalElement.style.display = 'none';
                     verticalElement.style.display = 'none';
                     

@@ -73,8 +73,8 @@
         <p class="lead">Master audio discrimination! Listen carefully to all sounds and identify the unique one to prove your auditory pattern recognition skills.</p>
 
         <div class="buttons" id="buttonContainer"></div>
-        <div id="successMessage" class="message success"></div>
-        <div id="failureMessage" class="message failure"></div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You found the odd sound out.</div>
+        <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! That is not the odd sound out. Try again.</div>
         </div>
     </main>
 </div>
@@ -88,8 +88,6 @@
   // Hide messages on load
   successMessage.style.display = 'none';
   failureMessage.style.display = 'none';
-  successMessage.classList.remove('success');
-  failureMessage.classList.remove('failure');
 
   // Local sound files
   const sounds = [
@@ -131,16 +129,10 @@
     button.addEventListener('click', () => {
       if (sound === oddSound) {
         successMessage.style.display = 'flex';
-        successMessage.classList.add('success');
         failureMessage.style.display = 'none';
-        failureMessage.classList.remove('failure');
-        successMessage.textContent = 'Success! You found the odd sound out!';
       } else {
         successMessage.style.display = 'none';
-        successMessage.classList.remove('success');
         failureMessage.style.display = 'flex';
-        failureMessage.classList.add('failure');
-        failureMessage.textContent = 'Failure! Try again.';
       }
     });
 

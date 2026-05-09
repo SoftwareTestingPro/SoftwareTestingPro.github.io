@@ -105,13 +105,8 @@
 
                 <button id="acceptButton" disabled>I Accept</button>
 
-                <div class="message success" id="successMessage">
-                    Success! Terms accepted.
-                </div>
-
-                <div class="message failure" id="failureMessage">
-                    Failure! Terms not accepted.
-                </div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Terms and conditions have been accepted.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Terms and conditions must be accepted.</div>
             </div>
         </main>
     </div>
@@ -137,11 +132,10 @@
         });
 
         acceptButton.addEventListener('click', () => {
-            acceptButton.classList.add('clicked');
             acceptButton.textContent = 'Accepted'; // Update button text
 
             // Show success message since terms were accepted
-            successMessage.style.display = 'block';
+            successMessage.style.display = 'flex';
             failureMessage.style.display = 'none';
         });
     </script>

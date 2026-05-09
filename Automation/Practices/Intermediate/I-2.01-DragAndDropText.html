@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! The square box has been dropped.</span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Success! The text has been dropped correctly.</div>
         </div>
     </main>
 </div>
@@ -95,7 +95,6 @@
 
     // Hide success message initially
     successMessage.style.display = 'none';
-    successMessage.classList.remove('success');
 
     draggableText.addEventListener('dragstart', (event) => {
         event.dataTransfer.setData('text/plain', event.target.id);
@@ -120,7 +119,6 @@
 
         // Show success message
         successMessage.style.display = 'flex';
-        successMessage.classList.add('success');
     });
 </script>
 </body>

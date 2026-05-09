@@ -75,8 +75,11 @@
                 <div id="calendar"></div>
             </div>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You clicked the first Wednesday.</span></div>
-            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect. <span style="color: black;">Expected:</span> <span id="expectedDate"></span> <span style="color: black;">Selected:</span> <span id="enteredDate"></span></span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You clicked the first Wednesday.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! The selected date is wrong.
+                <div class="detail">Expected: <span id="expectedDate"></span> | Selected: <span id="enteredDate"></span></div>
+            </div>
         </div>
     </main>
 </div>
@@ -106,7 +109,7 @@
             var year = randomYear;
 
             var header = '<div class="calendar-header">' + monthName + ' ' + year + '</div>';
-            var calendar = '<table class="calendar-table">';
+            var calendar = '<table class="data-table compact">';
             calendar += '<thead><tr>';
             calendar += '<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>';
             calendar += '</tr></thead><tbody>';

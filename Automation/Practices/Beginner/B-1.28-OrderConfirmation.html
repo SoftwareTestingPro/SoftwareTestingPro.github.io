@@ -73,16 +73,15 @@
             <p class="lead">Master data extraction! Locate and input the exact order number from randomly displayed details to prove your information gathering skills.</p>
             <!-- Order details will be populated here by JavaScript -->
             <div id="orderSummary"></div>
-            <div class="input-group-parent">
-                <div class="input-group-left">
-                    <label for="orderInput" class="label-left">Enter Order Number:</label>
-                </div>
-                <div class="input-group-right">
-                    <input type="text" id="orderInput" name="orderInput" placeholder="Order Number" aria-describedby="orderMessage">
-                </div>
+            <div class="horizontal-form">
+                <label for="orderInput">Enter Order Number:</label>
+                <input type="text" id="orderInput" name="orderInput" placeholder="Order Number" aria-describedby="orderMessage">
             </div>
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! Order number matches.</span></div>
-            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! Order number does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Order number matches.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! Order number does not match.
+                <div class="detail">Expected: <span id="expectedValue"></span> | Entered: <span id="actualValue"></span></div>
+            </div>
         </div>
     </main>
 </div>
@@ -120,29 +119,29 @@
     let orderNumber;  // Declare a global variable to store the order number
     function populateOrderSummary() {
         orderNumber = generateRandomNumber();
-        const orderTotal = generateRandomCost();
+        const orderCost = generateRandomCost();
         const productName = productNames[Math.floor(Math.random() * productNames.length)];
 
         const orderItems = [
             `<tr>
-                <td id="${generateRandomId()}" class="key">Order Number:</td>
-                <td id="${generateRandomId()}" class="value">${orderNumber}</td>
+                <td><span class="field-chip">Order Number</span></td>
+                <td id="orderNumberVal">${orderNumber}</td>
              </tr>`,
             `<tr>
-                <td id="${generateRandomId()}" class="key">Order Total:</td>
-                <td id="${generateRandomId()}" class="value">${orderTotal}</td>
+                <td><span class="field-chip">Order Total</span></td>
+                <td>${orderCost}</td>
              </tr>`,
             `<tr>
-                <td id="${generateRandomId()}" class="key">Product Name:</td>
-                <td id="${generateRandomId()}" class="value">${productName}</td>
+                <td><span class="field-chip">Product Name</span></td>
+                <td>${productName}</td>
              </tr>`
         ];
 
         shuffle(orderItems);
 
         const tableHtml = `
-            <div class="table-responsive" style="margin-bottom: 2rem;">
-                <table>
+            <div class="table-responsive">
+                <table class="data-table compact">
                     <thead>
                         <tr>
                             <th>Field Name</th>
@@ -169,21 +168,15 @@
 
         if (input == orderNumber) {
             successMessage.style.display = 'flex';
-            successMessage.classList.add('success');
             failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
         } else if (input === "") {
             successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
             failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
         } else {
             expectedValue.textContent = orderNumber;
             actualValue.textContent = input;
             successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
             failureMessage.style.display = 'flex';
-            failureMessage.classList.add('failure');
         }
     });
 

@@ -75,7 +75,8 @@
                     <!-- Random names with radio buttons will be generated here -->
                 </form>
 
-                <div id="message" class="message"></div>
+                <div id="successMessage" class="message success" style="display: none;">Correct! You selected the youngest person.</div>
+                <div id="failureMessage" class="message failure" style="display: none;">Incorrect! That is not the youngest person.</div>
             </div>
         </main>
     </div>
@@ -124,13 +125,14 @@
             // Add event listener for user selection
             radioGroup.addEventListener('change', function(event) {
                 const selectedPerson = event.target.value;
-                const messageElement = document.getElementById('message');
+                const successMessage = document.getElementById('successMessage');
+                const failureMessage = document.getElementById('failureMessage');
                 if (selectedPerson === youngestPerson) {
-                    messageElement.textContent = 'Success! You selected the youngest person.';
-                    messageElement.className = 'message success';
+                    successMessage.style.display = 'flex';
+                    failureMessage.style.display = 'none';
                 } else {
-                    messageElement.textContent = 'Failure! That is not the youngest person.';
-                    messageElement.className = 'message failure';
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'flex';
                 }
             });
         }

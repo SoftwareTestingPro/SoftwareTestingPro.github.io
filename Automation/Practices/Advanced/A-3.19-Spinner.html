@@ -85,12 +85,10 @@
           </div>
       </div>
 
-      <div class="message success" id="successMessage" style="display: none;">
-        Success! You entered the correct name.
-      </div>
-
-      <div class="message failure" id="failureMessage" style="display: none;">
-        Please spin the wheel first!
+      <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You entered the correct name.</div>
+      <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+          Incorrect! The name does not match.
+          <div class="detail">Expected: <span id="expectedName"></span> | Entered: <span id="actualName"></span></div>
       </div>
       </div>
     </main>
@@ -168,8 +166,6 @@
 
               successMessage.style.display = 'none';
               failureMessage.style.display = 'none';
-              failureMessage.textContent = 'Please spin the wheel first!';
-              failureMessage.style.color = 'orange';
               nameInput.value = '';
             }
           }, 10);
@@ -186,26 +182,25 @@
           }
 
           if (!selectedName) {
-            failureMessage.textContent = "Please spin the wheel first!";
-            failureMessage.style.color = "orange";
-            failureMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'flex';
+            document.getElementById('expectedName').textContent = "Spin required";
+            document.getElementById('actualName').textContent = "No spin yet";
             return;
           }
 
           if (inputValue === selectedValue) {
-            successMessage.style.display = 'block';
+            successMessage.style.display = 'flex';
             failureMessage.style.display = 'none';
           } else {
-            failureMessage.textContent = "Try again. That's not the selected name.";
-            failureMessage.style.color = "red";
-            failureMessage.style.display = 'block';
             successMessage.style.display = 'none';
+            failureMessage.style.display = 'flex';
+            document.getElementById('expectedName').textContent = selectedName;
+            document.getElementById('actualName').textContent = nameInput.value;
           }
         });
     </script>
 </body>
-</html>
-
 
 
 

@@ -72,42 +72,47 @@
         <h1>Excel Read Data Challenge</h1>
         <p class="lead">Master Excel data extraction! Read the data from the previously created Excel file and input it correctly to demonstrate your spreadsheet reading skills.</p>
 
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Position</th>
-            </tr>
-            <tr>
-                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
-                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
-                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
-            </tr>
-            <tr>
-                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
-                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
-                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
-            </tr>
-            <tr>
-                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
-                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
-                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
-            </tr>
-            <tr>
-                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
-                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
-                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
-            </tr>
-            <tr>
-                <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
-                <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
-                <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
-            </tr>
-        </table>
+        <div class="table-responsive">
+            <table class="data-table compact">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                        <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                        <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                        <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                        <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                        <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                        <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                        <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                        <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" placeholder="Enter Name" aria-label="Name"></td>
+                        <td><input type="text" placeholder="Enter Department" aria-label="Department"></td>
+                        <td><input type="text" placeholder="Enter Position" aria-label="Position"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         
-        <div id="success-message" class="message" style="display: none;">Excellent! You've successfully entered all the correct data from the Excel file.</div>
-        
-        <div id="failure-message" class="message" style="display: none;">The data entered doesn't match the expected Excel data. Please check the values and try again.</div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You have successfully entered all the data from the Excel file.</div>
+        <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! The data entered does not match the expected values. Please try again.</div>
         
         </div>
     </main>
@@ -127,8 +132,8 @@ const expectedData = [
 
 function validateInputs() {
     const inputs = document.querySelectorAll('input[type="text"]');
-    const successMessage = document.getElementById('success-message');
-    const failureMessage = document.getElementById('failure-message');
+    const successMessage = document.getElementById('successMessage');
+    const failureMessage = document.getElementById('failureMessage');
     
     // Check if all inputs are filled
     let allFilled = true;
@@ -162,16 +167,21 @@ function validateInputs() {
     
     // Show appropriate message
     if (isCorrect) {
-        successMessage.style.display = 'block';
+        successMessage.style.display = 'flex';
         failureMessage.style.display = 'none';
     } else {
         successMessage.style.display = 'none';
-        failureMessage.style.display = 'block';
+        failureMessage.style.display = 'flex';
     }
 }
 
 // Add event listeners to all input fields
 document.addEventListener('DOMContentLoaded', function() {
+    const successMessage = document.getElementById('successMessage');
+    const failureMessage = document.getElementById('failureMessage');
+    successMessage.style.display = 'none';
+    failureMessage.style.display = 'none';
+
     const inputs = document.querySelectorAll('input[type="text"]');
     inputs.forEach(input => {
         input.addEventListener('input', validateInputs);

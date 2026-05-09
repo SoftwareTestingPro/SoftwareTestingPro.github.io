@@ -72,17 +72,18 @@
                 <h1>Autocomplete Challenge</h1>
                 <p class="lead" id="labelText"></p>
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="searchInput" class="label-left">Enter search term:</label>
-                    </div>
-                    <div class="input-group-right" style="position: relative;">
-                        <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing...">
+                <div class="horizontal-form">
+                    <label for="searchInput">Enter search term:</label>
+                    <div style="position: relative; flex: 1;">
+                        <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing..." style="width: 100%;">
                         <div id="results" class="dropdown"></div>
                     </div>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully selected the auto-complete suggestion.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Selection does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You successfully selected the auto-complete suggestion.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! Selection does not match.
+                    <div class="detail">Expected: <span id="expectedValue"></span> | Entered: <span id="actualValue"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -137,16 +138,12 @@
 
             if (item === randomItem) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 expectedValue.textContent = randomItem;
                 actualValue.textContent = item;
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
             }
 
             document.getElementById('searchInput').value = item;

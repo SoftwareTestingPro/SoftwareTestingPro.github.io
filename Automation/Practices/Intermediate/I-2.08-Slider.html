@@ -74,8 +74,11 @@
                     <input type="range" min="1" max="10" value="5" class="slider" id="valueSlider">
                     <div class="slider-value" id="sliderValue">5</div>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Congratulations! You selected the value 8!</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Try again! The selected value is not 8.</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You selected the value 8.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The selected value is not 8.
+                    <div class="detail">Expected: 8 | Entered: <span id="actualValue"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -92,14 +95,11 @@
             sliderValue.textContent = value;
             if (value === 8) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
+                document.getElementById('actualValue').textContent = value;
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
             }
         }
 

@@ -82,7 +82,7 @@
                     <button id="submitEmail">Send OTP</button>
                 </div>
 
-                <div class="message send-success" id="sendSuccessMessage">
+                <div class="message info" id="sendSuccessMessage" role="status" aria-live="polite">
                     OTP sent successfully! Check your email for the code.
                 </div>
 
@@ -93,12 +93,8 @@
                     </div>
                 </div>
 
-                <div class="message" id="successMessage">
-                    Success! The OTP matches. 
-                </div>
-                <div class="message" id="failureMessage">
-                    Incorrect OTP. Please try again. 
-                </div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The OTP matches.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! The OTP does not match. Please try again.</div>
             </div>
         </main>
     </div>
@@ -118,9 +114,6 @@
         successMessage.style.display = 'none';
         failureMessage.style.display = 'none';
         sendSuccessMessage.style.display = 'none';
-        successMessage.classList.remove('success');
-        failureMessage.classList.remove('failure');
-        sendSuccessMessage.classList.remove('send-success');
 
         function generateOTP() {
             return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
@@ -153,8 +146,7 @@
                 // Show OTP input field
                 document.getElementById('otpSection').style.display = 'block';
                 // Show send success message
-                sendSuccessMessage.style.display = 'block';
-                sendSuccessMessage.classList.add('send-success');
+                sendSuccessMessage.style.display = 'flex';
             }, function(error) {
                 console.log('Failed to send email:', error);
                 alert('Failed to send OTP email. Please check your email address and try again.');
@@ -165,14 +157,10 @@
             const enteredOTP = document.getElementById('otpInput').value;
             if (enteredOTP === generatedOTP) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
             }
         });
     </script>

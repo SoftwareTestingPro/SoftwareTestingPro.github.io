@@ -75,7 +75,11 @@
 
                 <input type="color" id="color-input" value="#ffffff">
 
-                <div id="message-display"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You matched the color perfectly.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The selected color does not match.
+                    <div class="detail">Expected: <span id="expectedColor"></span> | Selected: <span id="actualColor"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -111,23 +115,28 @@
             }
 
             colorInput.value = "#ffffff";
-            messageDisplay.textContent = '';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('failureMessage').style.display = 'none';
         }
 
         function checkAnswer() {
             const selectedColorHex = colorInput.value.toUpperCase();
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
 
             if (selectedColorHex === expectedColorHex) {
-                messageDisplay.textContent = 'Success! You matched the color.';
-                messageDisplay.className = 'message-display success';
+                successMessage.style.display = 'flex';
+                failureMessage.style.display = 'none';
             } else {
                 let yourChoiceDisplay = selectedColorHex;
                 // If the challenge was in RGB, show the user's choice in RGB too
                 if (targetColorDisplay.textContent.startsWith('rgb')) {
                     yourChoiceDisplay = hexToRgb(selectedColorHex);
                 }
-                messageDisplay.textContent = `Failure! Expected: ${targetColorDisplay.textContent}, Your choice: ${yourChoiceDisplay}`;
-                messageDisplay.className = 'message-display failure';
+                document.getElementById('expectedColor').textContent = targetColorDisplay.textContent;
+                document.getElementById('actualColor').textContent = yourChoiceDisplay;
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'flex';
             }
         }
 

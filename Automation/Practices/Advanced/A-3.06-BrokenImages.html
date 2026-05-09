@@ -73,16 +73,15 @@
         <p class="lead">Master image validation! Identify and count all broken images among the displayed flags to prove your error detection skills.</p>
 
         <section class="images-container" id="images-container" aria-live="polite"></section>
-            <div class="input-group-parent">
-                <div class="input-group-left">
-                    <label for="user-input" class="label-left">Enter count of broken images:</label>
-                </div>
-                <div class="input-group-right">
-                    <input type="text" id="user-input" name="user-input" placeholder="Image Count">
-                </div>
+            <div class="horizontal-form">
+                <label for="user-input">Enter count of broken images:</label>
+                <input type="text" id="user-input" name="user-input" placeholder="Image Count">
             </div>
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
-            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You identified the correct count of broken images.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! The entered count does not match.
+                <div class="detail">Expected: <span id="expectedValue"></span> | Entered: <span id="actualValue"></span></div>
+            </div>
         </div>
     </main>
 </div>
@@ -149,20 +148,17 @@
 
         document.getElementById('user-input').addEventListener('input', function() {
             const userInput = parseInt(this.value, 10);
-
             if (userInput === brokenImageCount) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
-                successMessage.textContent = 'Success! You entered the correct value.';
-            } else {
+            } else if (!isNaN(userInput)) {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
                 document.getElementById('expectedValue').textContent = brokenImageCount.toString();
                 document.getElementById('actualValue').textContent = userInput.toString();
+            } else {
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
             }
         });
     </script>

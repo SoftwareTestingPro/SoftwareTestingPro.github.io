@@ -75,8 +75,8 @@
                     <!-- Checkboxes will be generated here -->
                 </div>
                 <button class="validate-btn" onclick="validateSelection()">Validate Selection</button>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You selected all uppercase items correctly.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! Please select only the uppercase items.</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You selected all uppercase items correctly.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Please select only the uppercase items.</div>
             </div>
         </main>
     </div>
@@ -142,14 +142,10 @@
             
             if (isValid) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
             }
         }
     </script>

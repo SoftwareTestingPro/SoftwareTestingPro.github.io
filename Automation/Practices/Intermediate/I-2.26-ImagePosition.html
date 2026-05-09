@@ -88,7 +88,8 @@
                     </label>
                 </div>
 
-                <div id="message" class="message"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You identified the image on the left correctly.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! That is not the image displayed on the left.</div>
             </div>
         </main>
     </div>
@@ -120,25 +121,28 @@
             radioButtons.forEach(radio => radio.checked = false);
 
             // Clear any previous message
-            document.getElementById('message').textContent = '';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('failureMessage').style.display = 'none';
         }
 
         // Function to check user's answer
         function checkAnswer() {
             const selectedValue = document.querySelector('input[name="imageChoice"]:checked')?.value;
             const leftImageName = document.getElementById('image1').dataset.name;
-            const messageElement = document.getElementById('message');
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
 
             if (selectedValue) {
                 if (selectedValue === leftImageName) {
-                    messageElement.textContent = 'Success! You identified the image correctly.';
-                    messageElement.className = 'message success';
+                    successMessage.style.display = 'flex';
+                    failureMessage.style.display = 'none';
                 } else {
-                    messageElement.textContent = 'Failure! You identified the image incorrectly.';
-                    messageElement.className = 'message failure';
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'flex';
                 }
             } else {
-                messageElement.textContent = ''; // Clear message if no selection
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
             }
         }
 

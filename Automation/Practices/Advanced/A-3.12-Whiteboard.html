@@ -76,7 +76,8 @@
                 <button onclick="checkShape()">Test Your Shape</button>
                 <button onclick="clearCanvas()">Clear Canvas</button>
             </div>
-            <div id="message" class="message"></div>
+            <div id="successMessage" class="message success" role="status" aria-live="polite">Correct! That looks like a square.</div>
+            <div id="failureMessage" class="message failure" role="status" aria-live="polite"></div>
         </div>
     </main>
 </div>
@@ -86,9 +87,14 @@
     <script>
         const canvas = document.getElementById('whiteboard');
         const ctx = canvas.getContext('2d');
-        const message = document.getElementById('message');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
         let isDrawing = false;
         let path = [];
+
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
 
         function getPos(canvas, evt) {
             const rect = canvas.getBoundingClientRect();
@@ -128,9 +134,9 @@
 
         function checkShape() {
             if (path.length < 50) {
-                message.textContent = "It doesn't look like a square. The drawing is too small.";
-                message.classList.add('failure');
-                message.classList.remove('success');
+                failureMessage.textContent = "Incorrect! It doesn't look like a square. The drawing is too small.";
+                failureMessage.style.display = 'flex';
+                successMessage.style.display = 'none';
             } else {
                 const minX = Math.min(...path.map(p => p.x));
                 const maxX = Math.max(...path.map(p => p.x));
@@ -155,15 +161,14 @@
                 const cornerCount = detectCorners(path);
 
                 if (isSquareLike && isClosed && curvature < 0.3) {
-                    message.textContent = "Success! That looks like a square.";
-                    message.classList.add('success');
-                    message.classList.remove('failure');
+                    successMessage.style.display = 'flex';
+                    failureMessage.style.display = 'none';
                 } else {
                     // Generate funny feedback based on what was actually drawn
                     const feedback = identifyShape(curvature, aspectRatio, irregularity, cornerCount);
-                    message.textContent = feedback;
-                    message.classList.add('failure');
-                    message.classList.remove('success');
+                    failureMessage.textContent = "Incorrect! " + feedback;
+                    failureMessage.style.display = 'flex';
+                    successMessage.style.display = 'none';
                 }
             }
         }
@@ -171,8 +176,8 @@
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             path = [];
-            message.textContent = '';
-            message.classList.remove('success', 'failure');
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
         }
 
         function calculateCurvature(path) {

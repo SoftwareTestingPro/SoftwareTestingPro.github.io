@@ -68,8 +68,8 @@
 
         <button onclick="getLocation()">Click Here</button>
         <div id="location-info"></div>
-        <div id="successMessage" class="message success"></div>
-        <div id="failureMessage" class="message failure"></div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Location details have been retrieved.</div>
+        <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Location details could not be retrieved.</div>
     </div>
     </main>
 </div>
@@ -83,8 +83,6 @@
         // Hide messages on load
         successMessage.style.display = 'none';
         failureMessage.style.display = 'none';
-        successMessage.classList.remove('success');
-        failureMessage.classList.remove('failure');
 
         function getLocation() {
             if (navigator.geolocation) {
@@ -111,10 +109,7 @@
             document.getElementById('location-label').textContent = 'Below are your location details';
             document.querySelector('button').remove();
             successMessage.style.display = 'flex';
-            successMessage.classList.add('success');
             failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
-            successMessage.textContent = 'Success! Location details have been retrieved.';
         }
 
         function showError(error) {

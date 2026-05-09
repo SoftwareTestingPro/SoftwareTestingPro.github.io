@@ -72,67 +72,69 @@
         <h1>Sortable Table Challenge</h1>
         <p class="lead">Master table sorting! Sort the table columns correctly and verify the data arrangement to demonstrate your data organization skills.</p>
 
-        <table id="employeeTable">
-            <thead>
-                <tr>
-                    <th class="sortable" onclick="sortTable(0)">Name</th>
-                    <th class="sortable" onclick="sortTable(1)">Designation</th>
-                    <th class="sortable" onclick="sortTable(2)">Salary</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>John</td>
-                    <td>Engineer</td>
-                    <td>$120,000</td>
-                </tr>
-                <tr>
-                    <td>Jane</td>
-                    <td>Manager</td>
-                    <td>$95,000</td>
-                </tr>
-                <tr>
-                    <td>Emily</td>
-                    <td>Specialist</td>
-                    <td>$80,000</td>
-                </tr>
-                <tr>
-                    <td>Michael</td>
-                    <td>Associate</td>
-                    <td>$70,000</td>
-                </tr>
-                <tr>
-                    <td>Lisa</td>
-                    <td>Scientist</td>
-                    <td>$110,000</td>
-                </tr>
-                <tr>
-                    <td>Chris</td>
-                    <td>Assistant</td>
-                    <td>$65,000</td>
-                </tr>
-                <tr>
-                    <td>Olivia</td>
-                    <td>Recruiter</td>
-                    <td>$85,000</td>
-                </tr>
-                <tr>
-                    <td>James</td>
-                    <td>Manager</td>
-                    <td>$105,000</td>
-                </tr>
-                <tr>
-                    <td>Alice</td>
-                    <td>Analyst</td>
-                    <td>$95,000</td>
-                </tr>
-                <tr>
-                    <td>David</td>
-                    <td>SEO</td>
-                    <td>$90,000</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="employeeTable" class="data-table compact">
+                <thead>
+                    <tr>
+                        <th class="sortable" onclick="sortTable(0)">Name</th>
+                        <th class="sortable" onclick="sortTable(1)">Designation</th>
+                        <th class="sortable" onclick="sortTable(2)">Salary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John</td>
+                        <td>Engineer</td>
+                        <td>$120,000</td>
+                    </tr>
+                    <tr>
+                        <td>Jane</td>
+                        <td>Manager</td>
+                        <td>$95,000</td>
+                    </tr>
+                    <tr>
+                        <td>Emily</td>
+                        <td>Specialist</td>
+                        <td>$80,000</td>
+                    </tr>
+                    <tr>
+                        <td>Michael</td>
+                        <td>Associate</td>
+                        <td>$70,000</td>
+                    </tr>
+                    <tr>
+                        <td>Lisa</td>
+                        <td>Scientist</td>
+                        <td>$110,000</td>
+                    </tr>
+                    <tr>
+                        <td>Chris</td>
+                        <td>Assistant</td>
+                        <td>$65,000</td>
+                    </tr>
+                    <tr>
+                        <td>Olivia</td>
+                        <td>Recruiter</td>
+                        <td>$85,000</td>
+                    </tr>
+                    <tr>
+                        <td>James</td>
+                        <td>Manager</td>
+                        <td>$105,000</td>
+                    </tr>
+                    <tr>
+                        <td>Alice</td>
+                        <td>Analyst</td>
+                        <td>$95,000</td>
+                    </tr>
+                    <tr>
+                        <td>David</td>
+                        <td>SEO</td>
+                        <td>$90,000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     </main>
 </div>

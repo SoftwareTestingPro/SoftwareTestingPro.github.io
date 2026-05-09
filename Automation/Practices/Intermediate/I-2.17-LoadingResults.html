@@ -75,9 +75,10 @@
 
                 <div class="thumbnails" id="thumbnailContainer"></div>
 
-                <div class="input-container" id="inputContainer">
-                    <div id="inputFields"></div>
-                    <div id="message" class="message"></div>
+                <div class="input-container" id="inputContainer" style="display: none;">
+                    <div id="inputFields" class="horizontal-form" style="display: flex; flex-direction: column; gap: 15px;"></div>
+                    <div class="message success" id="successMessage" role="status" aria-live="polite">Success! All ISBNs are correct.</div>
+                    <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Some ISBNs do not match.</div>
                 </div>
             </div>
         </main>
@@ -135,9 +136,14 @@
                     inputContainer.style.display = 'block';
                     generatedISBNs.forEach((isbn, index) => {
                         const row = document.createElement('div');
+                        row.className = 'horizontal-form-row'; // Custom row wrapper
+                        row.style.display = 'flex';
+                        row.style.alignItems = 'center';
+                        row.style.gap = '10px';
+                        row.style.width = '100%';
                         row.innerHTML = `
-                            <label for="input-${index}">ISBN ${index + 1}:</label>
-                            <input type="text" id="input-${index}" placeholder="Enter ISBN">
+                            <label for="input-${index}" style="min-width: 100px;">ISBN ${index + 1}:</label>
+                            <input type="text" id="input-${index}" placeholder="Enter ISBN" style="flex: 1;">
                         `;
                         inputFields.appendChild(row);
                     });
@@ -150,20 +156,31 @@
 
             function validateInputs() {
                 let allCorrect = true;
-                document.querySelectorAll('.input-container input').forEach((input, index) => {
+                const inputs = document.querySelectorAll('.input-container input');
+                inputs.forEach((input, index) => {
                     if (input.value !== generatedISBNs[index]) {
                         allCorrect = false;
                     }
                 });
 
-                if (allCorrect) {
-                    messageElement.innerHTML = '<div class="success">Success! All ISBNs are correct.</div>';
-                } else {
-                    messageElement.innerHTML = '<div class="failure">Failure! Some ISBNs are incorrect.</div>';
-                }
+                const successMessage = document.getElementById('successMessage');
+                const failureMessage = document.getElementById('failureMessage');
 
-                // Show the message element
-                messageElement.style.display = 'block';
+                // Check if all fields are filled
+                const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
+
+                if (allFilled) {
+                    if (allCorrect) {
+                        successMessage.style.display = 'flex';
+                        failureMessage.style.display = 'none';
+                    } else {
+                        successMessage.style.display = 'none';
+                        failureMessage.style.display = 'flex';
+                    }
+                } else {
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'none';
+                }
             }
 
             // Initialize

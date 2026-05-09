@@ -76,7 +76,12 @@
                     <label for="inputField">After the alert appears, enter the duration (in seconds) it took to display:</label>
                     <input type="number" id="inputField" name="inputField" min="1" step="1">
                 </div>
-                <div id="result"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The alert timing was calculated accurately.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The calculated timing does not match.
+                    <div class="detail">Expected: <span id="expectedTimeDetail"></span>s | Entered: <span id="enteredTimeDetail"></span>s</div>
+                </div>
+                <div class="message warning" id="warningMessage" role="status" aria-live="polite">Please click the button above and wait for the alert to appear first!</div>
             </div>
         </main>
     </div>
@@ -95,10 +100,13 @@
             button.disabled = true;
             button.textContent = 'Waiting for alert...';
             
-            // Reset result message and flag
-            const resultDiv = document.getElementById('result');
-            resultDiv.textContent = '';
-            resultDiv.className = '';
+            // Reset messages and flag
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+            const warningMessage = document.getElementById('warningMessage');
+            successMessage.style.display = 'none';
+            failureMessage.style.display = 'none';
+            warningMessage.style.display = 'none';
             alertDisplayed = false;
 
             const randomTime = Math.floor(Math.random() * 26) + 5; // Random time between 5 and 30 seconds
@@ -135,38 +143,46 @@
         });
 
         // Add input validation handler
-        document.getElementById('inputField').addEventListener('input', function(e) {
-            const userInput = e.target.value;
-            
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
+            const warningMessage = document.getElementById('warningMessage');
+
             if (!alertDisplayed && userInput) {
                 // User entered input before alert appeared
-                document.getElementById('result').textContent = 'Please click the button above and wait for the alert to appear first!';
-                document.getElementById('result').className = '';
+                warningMessage.style.display = 'flex';
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
             } else if (alertDisplayed && userInput) {
                 // Alert has appeared, validate the input
+                warningMessage.style.display = 'none';
                 validateInput(userInput);
             } else if (!userInput) {
                 // Clear result when input is empty
-                document.getElementById('result').textContent = '';
-                document.getElementById('result').className = '';
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
+                warningMessage.style.display = 'none';
             }
         });
 
         function validateInput(userInput) {
             const inputNum = parseInt(userInput);
-            const resultDiv = document.getElementById('result');
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
 
             if (!isNaN(inputNum)) {
                 if (inputNum === expectedTime) {
-                    resultDiv.textContent = `Success! The alert appeared after ${expectedTime} seconds.`;
-                    resultDiv.className = 'success';
+                    successMessage.textContent = `Correct! The alert appeared after ${expectedTime} seconds.`;
+                    successMessage.style.display = 'flex';
+                    failureMessage.style.display = 'none';
                 } else {
-                    resultDiv.textContent = `Failure! You calculated ${inputNum} seconds, but it actually took ${expectedTime} seconds.`;
-                    resultDiv.className = 'failure';
+                    document.getElementById('expectedTimeDetail').textContent = expectedTime;
+                    document.getElementById('enteredTimeDetail').textContent = inputNum;
+                    successMessage.style.display = 'none';
+                    failureMessage.style.display = 'flex';
                 }
             } else {
-                resultDiv.textContent = 'Please enter a valid number in seconds.';
-                resultDiv.className = '';
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
             }
         }
     </script>

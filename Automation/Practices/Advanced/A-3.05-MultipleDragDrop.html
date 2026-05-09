@@ -83,7 +83,8 @@
         <img src="https://picsum.photos/200/100" alt="Image 4" width="200" height="100" draggable="true" id="img4">
     </div>
 
-    <div class="message" id="message"></div>
+    <div class="message success" id="successMessage" role="status" aria-live="polite">All images successfully dropped!</div>
+    <div class="message info" id="infoMessage" role="status" aria-live="polite"></div>
         </div>
     </main>
 </div>
@@ -99,11 +100,9 @@
         ];
 
         const dropContainer = document.getElementById('dropContainer');
-        const messageDiv = document.getElementById('message');
-        let droppedCount = 0;
-
-        // Hide message on load
-        messageDiv.style.display = 'none';
+        // Hide messages on load
+        successMessage.style.display = 'none';
+        infoMessage.style.display = 'none';
 
         // Separate the first image
         const firstImage = images[0];
@@ -147,12 +146,13 @@
                         dropZone.innerHTML = '';
                         dropZone.appendChild(draggedImage);
                         droppedCount++;
-                        messageDiv.style.display = 'flex';
-                        messageDiv.textContent = `Successfully dropped ${droppedCount} of 4 images.`;
-
+                        
                         if (droppedCount === 4) {
-                            messageDiv.textContent = 'All images successfully dropped!';
-                            messageDiv.classList.add('success');
+                            infoMessage.style.display = 'none';
+                            successMessage.style.display = 'flex';
+                        } else {
+                            infoMessage.style.display = 'flex';
+                            infoMessage.textContent = `Progress: ${droppedCount} of 4 images dropped.`;
                         }
                     } else {
                         alert('This drop zone already has an image.');

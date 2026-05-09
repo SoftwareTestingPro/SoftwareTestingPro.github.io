@@ -78,8 +78,11 @@
                 </ul>
             </fieldset>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — The radio button for India has been selected.</span></div>
-            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span> India</span> <span style="color: black;">Selected:</span> <span id="selectedCountry"></span></span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The radio button for India has been selected.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! Selection does not match.
+                <div class="detail">Expected: India | Selected: <span id="selectedCountry"></span></div>
+            </div>
         </div>
     </main>
 </div>
@@ -131,9 +134,7 @@
 
         function clearMessages(){
             document.getElementById('successMessage').style.display = 'none';
-            document.getElementById('successMessage').classList.remove('success');
             document.getElementById('failureMessage').style.display = 'none';
-            document.getElementById('failureMessage').classList.remove('failure');
             document.getElementById('selectedCountry').textContent = '';
         }
 
@@ -148,14 +149,10 @@
 
             if(name === 'India'){
                 document.getElementById('successMessage').style.display = 'flex';
-                document.getElementById('successMessage').classList.add('success');
                 document.getElementById('failureMessage').style.display = 'none';
-                document.getElementById('failureMessage').classList.remove('failure');
             } else {
                 document.getElementById('successMessage').style.display = 'none';
-                document.getElementById('successMessage').classList.remove('success');
                 document.getElementById('failureMessage').style.display = 'flex';
-                document.getElementById('failureMessage').classList.add('failure');
             }
         }
 

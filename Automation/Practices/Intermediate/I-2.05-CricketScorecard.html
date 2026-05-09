@@ -72,8 +72,8 @@
             <h1>Top 5 Indian Batsmen</h1>
             <p class="lead">Master sports data analysis! Identify the top scorer and find Sachin's runs from the cricket statistics to prove your data extraction skills.</p>
 
-            <div class="table-responsive" style="margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
-                <table>
+            <div class="table-responsive">
+                <table class="data-table compact">
                     <thead>
                         <tr>
                             <th>Player Name</th>
@@ -86,22 +86,15 @@
                 </table>
             </div>
 
-            <div class="input-group-parent">
-                <div class="input-group-left">
-                    <label for="inputField1" class="label-left">Enter name of top scorer:</label>
-                </div>
-
-                <div class="input-group-right">
-                    <input type="text" id="inputField1" name="user-input-name" placeholder="Type your name...">
-                </div>
+            <div class="horizontal-form">
+                <label for="inputField1">Enter name of top scorer:</label>
+                <input type="text" id="inputField1" name="user-input-name" placeholder="Type your name...">
             </div>
 
-            <div class="message" id="successMessage1" role="status" aria-live="polite">
-                <span>Correct! The top scorer is correctly identified.</span>
-            </div>
-
-            <div class="message" id="failureMessage1" role="status" aria-live="polite">
-                <span id="topScorerError">Incorrect! Please try again.</span>
+            <div class="message success" id="successMessage1" role="status" aria-live="polite">Correct! The top scorer is correctly identified.</div>
+            <div class="message failure" id="failureMessage1" role="status" aria-live="polite">
+                Incorrect! Please try again.
+                <div class="detail" id="topScorerError"></div>
             </div>
 
             </div>
@@ -154,15 +147,11 @@
             // Validate top scorer
             if (enteredTopScorer === topScorer) {
                 successMessage1.style.display = 'flex';
-                successMessage1.classList.add('success');
                 failureMessage1.style.display = 'none';
-                failureMessage1.classList.remove('failure');
             } else if (enteredTopScorer) {
-                topScorerError.textContent = `Incorrect! The top scorer is ${topScorer} with ${scores[topScorer]} runs.`;
+                topScorerError.innerHTML = `Expected: ${topScorer} (${scores[topScorer]} runs) | Selected: ${enteredTopScorer}`;
                 successMessage1.style.display = 'none';
-                successMessage1.classList.remove('success');
                 failureMessage1.style.display = 'flex';
-                failureMessage1.classList.add('failure');
             }
         }
 

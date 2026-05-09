@@ -76,8 +76,11 @@
                 <div id="target-area">
                     Right-Click Me
                 </div>
-                <div id="successMessage" class="message success"></div>
-                <div id="failureMessage" class="message failure"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You selected the correct menu option.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The selected option does not match.
+                    <div class="detail">Expected: <span id="expectedOption"></span> | Selected: <span id="actualOption"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -106,16 +109,12 @@
         // Hide messages on load
         successMessage.style.display = 'none';
         failureMessage.style.display = 'none';
-        successMessage.classList.remove('success');
-        failureMessage.classList.remove('failure');
 
         function initializeChallenge() {
             targetOption = menuOptions[Math.floor(Math.random() * menuOptions.length)];
             instructionDisplay.textContent = `Right-click the box and select: "${targetOption}"`;
             successMessage.style.display = 'none';
             failureMessage.style.display = 'none';
-            successMessage.classList.remove('success');
-            failureMessage.classList.remove('failure');
         }
 
         targetArea.addEventListener('contextmenu', (e) => {
@@ -132,16 +131,12 @@
         function menuAction(selectedAction) {
             if (selectedAction === targetOption) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
-                successMessage.textContent = 'Success! You selected the correct option.';
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
-                failureMessage.textContent = `Failure! You selected "${selectedAction}", but the correct option was "${targetOption}".`;
+                document.getElementById('expectedOption').textContent = targetOption;
+                document.getElementById('actualOption').textContent = selectedAction;
             }
             contextMenu.style.display = 'none';
         }

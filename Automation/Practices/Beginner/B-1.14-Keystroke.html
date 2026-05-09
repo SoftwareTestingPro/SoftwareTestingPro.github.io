@@ -75,8 +75,11 @@
                 <div class="input-group" style="text-align: center;">
                     <p>Press the "<strong id="random-key" style="font-size: 1.2em; color: var(--accent);"></strong>" key on your keyboard.</p>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully pressed the expected key.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Pressed Key Does not match. <span style="color: black;">Expected:</span> <span id="expectedKey"></span> <span style="color: black;">Entered:</span> <span id="actualKey"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You successfully pressed the expected key.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! Pressed Key does not match.
+                    <div class="detail">Expected: <span id="expectedKey"></span> | Entered: <span id="actualKey"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -116,14 +119,10 @@
 
             if (pressedKey.toLowerCase() === randomKey.toLowerCase()) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
             }
         });
 

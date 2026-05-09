@@ -72,18 +72,16 @@
                 <h1>URL Matching</h1>
                 <p class="lead">Conquer URL extraction! Capture and input the complete webpage URL to demonstrate your automation can read browser address information.</p>
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="urlInput" class="label-left">Enter the URL of this webpage:</label>
-                    </div>
-
-                    <div class="input-group-right">
-                        <input type="text" id="urlInput" placeholder="Enter URL here">
-                    </div>
+                <div class="horizontal-form">
+                    <label for="urlInput">Enter the URL of this webpage:</label>
+                    <input type="text" id="urlInput" placeholder="Enter URL here">
                 </div>
 
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered URL is correct.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The entered URL is correct.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The URL does not match.
+                    <div class="detail">Expected: <span id="expectedValue"></span> | Entered: <span id="actualValue"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -105,20 +103,14 @@
 
             if (userInput === '') {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
                 actualValueDisplay.textContent = '';
             } else if (userInput === currentUrl) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
                 actualValueDisplay.textContent = userInput;
             }
         }

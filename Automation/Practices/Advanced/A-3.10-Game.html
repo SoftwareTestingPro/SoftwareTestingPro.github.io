@@ -78,7 +78,7 @@
       </div>
 
     <canvas id="gameCanvas"></canvas>
-    <div class="message success" id="successMessage">Congratulations! You reached the top platform!</div>
+    <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You reached the top platform successfully.</div>
   </div>
     </main>
   </div>
@@ -92,7 +92,6 @@
 
     // Hide message on load
     successMessage.style.display = 'none';
-    successMessage.classList.remove('success');
 
     // Set canvas resolution based on display size
     function setCanvasSize() {
@@ -215,11 +214,6 @@
       });
 
       successMessage.style.display = topPlatformReached ? 'flex' : 'none';
-      if (topPlatformReached) {
-        successMessage.classList.add('success');
-      } else {
-        successMessage.classList.remove('success');
-      }
 
       requestAnimationFrame(gameLoop);
     }

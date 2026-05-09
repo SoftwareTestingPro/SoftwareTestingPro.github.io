@@ -86,8 +86,8 @@
                     <button onclick="checkAnswer(true)" style="padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">Yes</button>
                     <button onclick="checkAnswer(false)" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">No</button>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct!</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect!</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The comparison is accurate.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Please analyze the texts again.</div>
             </div>
         </main>
     </div>
@@ -116,14 +116,10 @@
 
             if (isSuccess) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
             }
         }
 

@@ -71,26 +71,19 @@
                 <h1>Input Fields Example</h1>
                 <p class="lead">Master text replication! Copy the exact text from the source input field to demonstrate your data transfer and validation skills.</p>
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="inputField1">Copy text from following Input Field:</label>
-                    </div>
-
-                    <div class="input-group-right">
-                        <input type="text" id="inputField1" readonly>
-                    </div>
+                <div class="horizontal-form">
+                    <label for="inputField1">Copy text from following Input Field:</label>
+                    <input type="text" id="inputField1" readonly>
                 </div>
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="inputField2">Paste copied text in following Input Field:</label>
-                    </div>
-
-                    <div class="input-group-right">
-                        <input type="text" id="inputField2">
-                    </div>
+                <div class="horizontal-form">
+                    <label for="inputField2">Paste copied text in following Input Field:</label>
+                    <input type="text" id="inputField2">
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The entered text matches the source.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The text does not match.
+                    <div class="detail">Expected: <span id="expectedValue"></span> | Entered: <span id="actualValue"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -109,16 +102,19 @@
             inputField1.value = Math.random().toString(36).substring(3);
 
             inputField2.addEventListener('input', () => {
-                if (inputField2.value === inputField1.value) {
-                    successMessage.style.display = 'block';
+                const val2 = inputField2.value;
+                const val1 = inputField1.value;
+                if (val2 === '') {
+                    successMessage.style.display = 'none';
                     failureMessage.style.display = 'none';
-                    expectedValue.textContent = inputField1.value;
-                    actualValue.textContent = inputField2.value;
+                } else if (val2 === val1) {
+                    successMessage.style.display = 'flex';
+                    failureMessage.style.display = 'none';
                 } else {
                     successMessage.style.display = 'none';
-                    failureMessage.style.display = 'block';
-                    expectedValue.textContent = inputField1.value;
-                    actualValue.textContent = inputField2.value;
+                    failureMessage.style.display = 'flex';
+                    expectedValue.textContent = val1;
+                    actualValue.textContent = val2;
                 }
             });
         });

@@ -74,18 +74,16 @@
 
                 <img id="image" src="" alt="Random Image" style="display: block; margin: 0 auto 20px auto;">
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="imageURL" class="label-left">Enter the source URL of this image:</label>
-                    </div>
-
-                    <div class="input-group-right">
-                        <input type="text" id="imageURL" placeholder="Enter the image URL here" aria-describedby="imageMessage">
-                    </div>
+                <div class="horizontal-form">
+                    <label for="imageURL">Enter the source URL of this image:</label>
+                    <input type="text" id="imageURL" placeholder="Enter the image URL here" aria-describedby="imageMessage">
                 </div>
 
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Source URL Successfully verified.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Source URL Does not match. <span style="color: black;">Expected:</span> <span id="expectedUrl"></span> <span style="color: black;">Entered:</span> <span id="actualUrl"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Source URL successfully verified.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! Source URL does not match.
+                    <div class="detail">Expected: <span id="expectedUrl"></span> | Entered: <span id="actualUrl"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -128,15 +126,11 @@
             } else if (inputUrl === correctUrl) {
                 // Success case
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 // Failure case
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
                 actualUrlDisplay.textContent = inputUrl;
             }
         }

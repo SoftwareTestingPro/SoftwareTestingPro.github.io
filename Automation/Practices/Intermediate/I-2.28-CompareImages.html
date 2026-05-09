@@ -81,7 +81,8 @@
           <button onclick="checkAnswer(false)">No</button>
         </div>
 
-        <div class="message" id="message"></div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Your comparison is accurate.</div>
+        <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Your comparison does not match the images.</div>
       </div>
     </main>
   </div>
@@ -128,19 +129,20 @@
         areSame = false;
       }
 
-      document.getElementById('message').textContent = '';
+      document.getElementById('successMessage').style.display = 'none';
+      document.getElementById('failureMessage').style.display = 'none';
     }
 
     function checkAnswer(userSaysSame) {
-      const message = document.getElementById('message');
+      const successMessage = document.getElementById('successMessage');
+      const failureMessage = document.getElementById('failureMessage');
+
       if (userSaysSame === areSame) {
-        message.textContent = 'Success! You got it right.';
-        message.classList.add('success');
-        message.classList.remove('failure');
+        successMessage.style.display = 'flex';
+        failureMessage.style.display = 'none';
       } else {
-        message.textContent = 'Failure! That was incorrect.';
-        message.classList.add('failure');
-        message.classList.remove('success');
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'flex';
       }
     }
 

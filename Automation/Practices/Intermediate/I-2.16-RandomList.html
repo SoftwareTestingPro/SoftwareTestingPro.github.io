@@ -71,24 +71,17 @@
                 <h1>Random Household Items</h1>
                 <p class="lead">Master dynamic counting! Count all household items displayed below and input the exact total to prove your element enumeration skills.</p>
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="userInput">Enter the count of household items displayed below:</label>
-                    </div>
-
-                    <div class="input-group-right">
-                        <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
-                    </div>
+                <div class="horizontal-form">
+                    <label for="userInput">Enter the count of household items displayed below:</label>
+                    <input type="text" id="userInput" placeholder="Enter the count of household items displayed below">
                 </div>
 
                 <ul class="item-list" id="itemList"></ul>
 
-                <div class="message" id="successMessage">
-                    Correct! The number matches the count of household items.
-                </div>
-
-                <div class="message" id="failureMessage">
-                    Incorrect! The number does not match the count of household items.
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The number matches the count of household items.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The count does not match.
+                    <div class="detail">Expected: <span id="expectedCount"></span> | Entered: <span id="actualCount"></span></div>
                 </div>
             </div>
         </main>
@@ -148,11 +141,13 @@
 
             if (!isNaN(inputValue)) {
                 if (inputValue === itemCount) {
-                    successMessage.style.display = 'block';
+                    successMessage.style.display = 'flex';
                     failureMessage.style.display = 'none';
                 } else {
+                    document.getElementById('expectedCount').textContent = itemCount;
+                    document.getElementById('actualCount').textContent = inputValue;
                     successMessage.style.display = 'none';
-                    failureMessage.style.display = 'block';
+                    failureMessage.style.display = 'flex';
                 }
             } else {
                 successMessage.style.display = 'none';

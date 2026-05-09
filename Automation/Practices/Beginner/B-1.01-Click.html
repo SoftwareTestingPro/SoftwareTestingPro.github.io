@@ -76,7 +76,7 @@
                 <button id="clickButton" type="button">Click Me</button>
             </div>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite">You successfully clicked the button.</div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You successfully clicked the button.</div>
         </div>
     </main>
 </div>
@@ -93,7 +93,6 @@
 
     clickButton.addEventListener('click', function() {
         successMessage.style.display = 'flex';
-        successMessage.classList.add('success');
     });
 </script>
 </body>

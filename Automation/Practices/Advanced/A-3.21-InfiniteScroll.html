@@ -79,8 +79,11 @@
                     <br><br>
                     <input type="number" id="image-count-input" placeholder="Enter count">
                     <button id="verify-btn">Verify</button>
-                    <div id="successMessage" class="message"></div>
-                    <div id="failureMessage" class="message"></div>
+                    <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You counted all images successfully.</div>
+                    <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                        Incorrect! The image count does not match.
+                        <div class="detail">Expected: <span id="expectedCount"></span> | Entered: <span id="actualCount"></span></div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -100,8 +103,6 @@
             // Hide messages on load
             successMessage.style.display = 'none';
             failureMessage.style.display = 'none';
-            successMessage.classList.remove('success');
-            failureMessage.classList.remove('failure');
 
             const BATCH_SIZE = 12;
             const minBatches = 4; // 4 * 12 = 48 images
@@ -165,16 +166,12 @@
 
                 if (userCount === MAX_IMAGES) {
                     successMessage.style.display = 'flex';
-                    successMessage.classList.add('success');
                     failureMessage.style.display = 'none';
-                    failureMessage.classList.remove('failure');
-                    successMessage.textContent = 'Success! You entered the correct count.';
                 } else {
                     successMessage.style.display = 'none';
-                    successMessage.classList.remove('success');
                     failureMessage.style.display = 'flex';
-                    failureMessage.classList.add('failure');
-                    failureMessage.textContent = `Failure! Expected: ${MAX_IMAGES}, You entered: ${userCount || 0}.`;
+                    document.getElementById('expectedCount').textContent = MAX_IMAGES;
+                    document.getElementById('actualCount').textContent = userCount || 0;
                 }
             });
 

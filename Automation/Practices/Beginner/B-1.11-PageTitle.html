@@ -86,8 +86,11 @@
                         >
                     </div>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered page title is correct.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedTitle"></span> <span style="color: black;">Entered:</span> <span id="actualTitle"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The entered page title is correct.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The title does not match.
+                    <div class="detail">Expected: <span id="expectedTitle"></span> | Entered: <span id="actualTitle"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -110,24 +113,15 @@
             const userInput = inputField.value.trim();
 
             if (userInput === '') {
-                // Clear messages if input is empty
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
                 actualTitleDisplay.textContent = '';
             } else if (userInput === pageTitle) {
-                // Success case
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
-                // Failure case
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
                 actualTitleDisplay.textContent = userInput;
             }
         }

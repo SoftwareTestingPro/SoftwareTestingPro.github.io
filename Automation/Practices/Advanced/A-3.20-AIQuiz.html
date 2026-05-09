@@ -92,7 +92,8 @@
                     <label for="option4">Option 4</label>
                 </div>
             </div>
-            <div id="message" class="message"></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You selected the right answer.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! That is not the right answer. Try again.</div>
             </div>
     </main>
 </div>
@@ -331,18 +332,22 @@
 
             inputElements.forEach(input => {
                 input.addEventListener('change', () => {
-                    const message = document.getElementById('message');
+                    const successMessage = document.getElementById('successMessage');
+                    const failureMessage = document.getElementById('failureMessage');
                     if (input.getAttribute('data-correct') === 'true') {
-                        message.textContent = "🎉 Correct! 🎉";
-                        message.className = "message success";
+                        successMessage.style.display = 'flex';
+                        failureMessage.style.display = 'none';
                     } else {
-                        message.textContent = "Incorrect. Try again!";
-                        message.className = "message failure";
+                        successMessage.style.display = 'none';
+                        failureMessage.style.display = 'flex';
                     }
-                    message.style.display = 'block';
                 });
             });
         }
+
+        // Hide messages on load
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('failureMessage').style.display = 'none';
 
         const question = getRandomQuestion();
         displayQuestion(question);

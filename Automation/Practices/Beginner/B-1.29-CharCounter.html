@@ -72,16 +72,15 @@
                 <h1>Character Count Challenge</h1>
                 <p class="lead">Master character counting precision! Analyze the displayed quote and input the exact count of alphabetic characters to prove your text processing skills.</p>
                 <textarea id="text-input" rows="5" readonly disabled style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; background: var(--bg); resize: none;"></textarea>
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="character-count" class="label-left">Character Count:</label>
-                    </div>
-                    <div class="input-group-right">
-                        <input type="text" id="character-count" name="character-count" placeholder="Enter count">
-                    </div>
+                <div class="horizontal-form">
+                    <label for="character-count">Character Count:</label>
+                    <input type="text" id="character-count" name="character-count" placeholder="Enter count">
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You counted the characters accurately.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Count does not match. <span style="color: black;">Expected:</span> <span id="expectedCount"></span> <span style="color: black;">Entered:</span> <span id="actualCount"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You counted the characters accurately.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! Count does not match.
+                    <div class="detail">Expected: <span id="expectedCount"></span> | Entered: <span id="actualCount"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -121,18 +120,12 @@
             const actualCount = countAlphabeticChars(quote);
             const userCount = parseInt(characterCountInput.value);
 
-            // Hide messages initially
-            successMessage.style.display = 'none';
-            successMessage.classList.remove('success');
-            failureMessage.style.display = 'none';
-            failureMessage.classList.remove('failure');
-
             if (userCount === actualCount) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
+                failureMessage.style.display = 'none';
             } else {
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
+                successMessage.style.display = 'none';
                 
                 // Populate expected and actual values
                 expectedCountDisplay.textContent = actualCount;

@@ -71,20 +71,15 @@
         <h1>Javascript Input Field</h1>
         <p class="lead">Master JavaScript injection! Bypass automation protections by using JavaScript execution to input text in this secured field.</p>
 
-          <div class="input-group-parent">
-              <div class="input-group-left">
-                  <label for="secureInput" class="label-left">Enter Your Country Name:</label>
-              </div>
-
-              <div class="input-group-right">
-                  <input type="text" id="secureInput" class="protected-input" name="user-input-name" placeholder="Type your country name...">
+          <div class="horizontal-form">
+              <label for="secureInput">Enter Your Country Name:</label>
+              <div style="position: relative; flex: 1;">
+                  <input type="text" id="secureInput" class="protected-input" name="user-input-name" placeholder="Type your country name..." style="width: 100%;">
                   <div class="shield" id="shield"></div>
               </div>
           </div>
           
-        <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">
-            <span>You typed: </span>
-        </div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">Correct! Country name entered successfully.</div>
       </div>
     </main>
   </div>
@@ -111,8 +106,7 @@
 
     input.addEventListener("input", () => {
       if (input.value) {
-        const span = successMessage.querySelector('span');
-        span.textContent = `Country name entered: ${input.value}`;
+        successMessage.textContent = `Correct! Country name entered: ${input.value}`;
         successMessage.style.display = 'flex';
       } else {
         successMessage.style.display = 'none';

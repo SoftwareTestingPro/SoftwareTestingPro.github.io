@@ -75,17 +75,16 @@
                     <button onclick="openQuoteWindow()">Get a Random Life Quote</button>
                 </div>
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="userInput" class="label-left">Enter the quote:</label>
-                    </div>
-
-                    <div class="input-group-right" style="width: 900px;">
-                        <input type="text" id="userInput" placeholder="Enter the quote here" disabled>
-                    </div>
+                <div class="horizontal-form">
+                    <label for="userInput">Enter the quote:</label>
+                    <input type="text" id="userInput" placeholder="Enter the quote here" disabled>
                 </div>
 
-                <div class="message" id="result"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The entered text matches the quote.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The entered text does not match.
+                    <div class="detail">Expected: <span id="expectedQuote"></span> | Entered: <span id="actualQuote"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -146,23 +145,27 @@
     inputField.value = '';
     inputField.focus();
 
-    const resultDiv = document.getElementById('result');
-    resultDiv.textContent = '';
-    resultDiv.className = 'message';
+    const successMessage = document.getElementById('successMessage');
+    const failureMessage = document.getElementById('failureMessage');
+    successMessage.style.display = 'none';
+    failureMessage.style.display = 'none';
 }
         document.getElementById('userInput').addEventListener('input', function() {
             const userInput = document.getElementById('userInput').value;
-            const resultDiv = document.getElementById('result');
+            const successMessage = document.getElementById('successMessage');
+            const failureMessage = document.getElementById('failureMessage');
 
             if (userInput === displayedQuote) {
-                resultDiv.textContent = `Success! The entered text matches the quote.`;
-                resultDiv.className = 'message success';
+                successMessage.style.display = 'flex';
+                failureMessage.style.display = 'none';
             } else if (userInput) {
-                resultDiv.textContent = `Failure! You entered "${userInput}", but the quote is "${displayedQuote}".`;
-                resultDiv.className = 'message failure';
+                document.getElementById('expectedQuote').textContent = displayedQuote;
+                document.getElementById('actualQuote').textContent = userInput;
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'flex';
             } else {
-                resultDiv.textContent = '';
-                resultDiv.className = 'message';
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
             }
         });
     </script>

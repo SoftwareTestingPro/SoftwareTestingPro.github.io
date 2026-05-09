@@ -72,8 +72,8 @@
                 <h1>Color Odd One Out Game</h1>
                 <p class="lead">Master visual pattern recognition! Identify and select the uniquely colored tile among identical ones to prove your observation skills.</p>
                 <div class="buttons" id="buttonContainer"></div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct! You found the odd colored tile.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Incorrect! That's not the odd one out. Try again.</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You found the odd colored tile.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! That's not the odd one out. Try again.</div>
             </div>
         </main>
     </div>
@@ -118,14 +118,10 @@
         function checkOddOneOut(isOddOneOut) {
             if (isOddOneOut) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
             }
         }
     </script>

@@ -75,16 +75,15 @@
         <section class="qr-container">
             <img id="qr" src="../../img/qr.jpg" alt="QR Code">
         </section>
-            <div class="input-group-parent">
-                <div class="input-group-left">
-                    <label for="user-input" class="label-left">Enter the scanned text:</label>
-                </div>
-                <div class="input-group-right">
-                    <input type="text" id="user-input" name="user-input" placeholder="Decoded text">
-                </div>
+            <div class="horizontal-form">
+                <label for="user-input">Enter the scanned text:</label>
+                <input type="text" id="user-input" name="user-input" placeholder="Decoded text">
             </div>
-            <div class="message" id="successMessage" role="status" aria-live="polite"><span>Correct — the entered text matches the source.</span></div>
-            <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The entered text matches the source.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! The entered text does not match.
+                <div class="detail">Expected: <span id="expectedValue"></span> | Entered: <span id="actualValue"></span></div>
+            </div>
         </div>
     </main>
 </div>
@@ -107,19 +106,13 @@
 
             if (userInput === '') {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else if (userInput === correctValue) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
                 expectedValue.textContent = correctValue;
                 actualValue.textContent = userInput;
             }

@@ -78,8 +78,8 @@
                 <div class="button-enabled">
                     <button id="action-button">Click Me After 100%!</button>
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Success! Button was clicked after completion..</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Oops.. Looks like you You clicked too early.</span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Button was clicked after completion.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You clicked too early.</div>
             </div>
         </main>
     </div>
@@ -110,15 +110,11 @@
             if (width < 100) {
                 clearInterval(intervalId);
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 actionButton.disabled = true;
             } else {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             }
         });
 

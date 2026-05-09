@@ -71,7 +71,7 @@
                 <h1>Signature Pad</h1>
                 <p class="lead">Master canvas automation! Create a signature on the digital pad to demonstrate your drawing and canvas interaction skills.</p>
                 <canvas id="signature-pad"></canvas>
-                <div id="message"></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Signature captured successfully.</div>
             </div>
         </main>
     </div>
@@ -81,7 +81,9 @@
     <script>
         const canvas = document.getElementById('signature-pad');
         const ctx = canvas.getContext('2d');
-        const message = document.getElementById('message');
+        const successMessage = document.getElementById('successMessage');
+        // Hide message on load
+        successMessage.style.display = 'none';
         let isDrawing = false;
         let hasDrawn = false;
 

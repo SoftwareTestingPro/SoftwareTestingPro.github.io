@@ -78,17 +78,15 @@
                     </div>
                 </div>
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="inputField" class="label-left">Enter the title of this webpage:</label>
-                    </div>
-
-                    <div class="input-group-right">
-                        <input type="text" id="inputField" placeholder="Enter the tooltip text here">
-                    </div>
+                <div class="horizontal-form">
+                    <label for="inputField">Enter the tooltip text:</label>
+                    <input type="text" id="inputField" placeholder="Enter the tooltip text here">
                 </div>
-                <div class="message" id="successMessage" role="status" aria-live="polite"><span>Tooltip matched.</span></div>
-                <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Tooltip does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Tooltip text matched.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! Tooltip text does not match.
+                    <div class="detail">Expected: <span id="expectedValue"></span> | Entered: <span id="actualValue"></span></div>
+                </div>
             </div>
         </main>
     </div>
@@ -111,19 +109,13 @@
 
             if (userInput === tooltipText) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else if (userInput) {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
             } else {
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             }
         });
 

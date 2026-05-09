@@ -71,22 +71,15 @@
                 <h1>Date</h1>
                 <p class="lead">Master date formatting! Input today's date in precise YYYY-MM-DD format to demonstrate your date handling and validation skills.</p>
 
-                <div class="input-group-parent">
-                    <div class="input-group-left">
-                        <label for="dateInput" class="label-left">Enter current date in YYYY-MM-DD Format:</label>
-                    </div>
-
-                    <div class="input-group-right">
-                        <input type="text" id="dateInput" placeholder="Enter date here">
-                    </div>
+                <div class="horizontal-form">
+                    <label for="dateInput">Enter current date in YYYY-MM-DD Format:</label>
+                    <input type="text" id="dateInput" placeholder="Enter date here">
                 </div>
 
-                <div class="message success" id="successMessage">
-                    Success! The date matches.
-                </div>
-
-                <div class="message failure" id="failureMessage">
-                    Incorrect date. Please try again.
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The date matches.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                    Incorrect! The date does not match.
+                    <div class="detail">Expected: <span id="expectedDate"></span> | Entered: <span id="actualDate"></span></div>
                 </div>
             </div>
         </main>
@@ -105,12 +98,18 @@
         failureMessage.style.display = 'none';
 
         inputField.addEventListener('input', () => {
-            if (inputField.value.trim() === today) {
-                successMessage.style.display = 'block';
+            const userInput = inputField.value.trim();
+            if (userInput === today) {
+                successMessage.style.display = 'flex';
                 failureMessage.style.display = 'none';
+            } else if (userInput) {
+                document.getElementById('expectedDate').textContent = today;
+                document.getElementById('actualDate').textContent = userInput;
+                successMessage.style.display = 'none';
+                failureMessage.style.display = 'flex';
             } else {
                 successMessage.style.display = 'none';
-                failureMessage.style.display = 'block';
+                failureMessage.style.display = 'none';
             }
         });
     </script>

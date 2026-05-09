@@ -76,26 +76,19 @@
                 <!-- Buttons will be added here dynamically -->
             </div>
 
-            <div class="input-group-parent">
-                <div class="input-group-left">
-                    <label for="inputField" class="label-left">Enter total number of buttons:</label>
-                </div>
-
-                <div class="input-group-right">
-                    <input type="text" id="inputField" placeholder="Enter number of buttons..." maxlength="10">
-                </div>
+            <div class="horizontal-form">
+                <label for="inputField">Enter total number of buttons:</label>
+                <input type="text" id="inputField" placeholder="Enter number of buttons..." maxlength="10">
             </div>
 
             <div class="input-group">
 
             </div>
 
-            <div class="message" id="successMessage" role="status" aria-live="polite">
-                <span>Correct! The count of buttons match the input value.</span>
-            </div>
-
-            <div class="message" id="failureMessage" role="status" aria-live="polite">
-                <span>Incorrect. <span style="color: black;">Expected:</span> <span id="expectedCount"></span> <span style="color: black;">Entered:</span> <span id="enteredCount"></span></span>
+            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The count of buttons matches the input value.</div>
+            <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+                Incorrect! Button count does not match.
+                <div class="detail">Expected: <span id="expectedCount"></span> | Entered: <span id="enteredCount"></span></div>
             </div>
         </div>
     </main>
@@ -178,14 +171,10 @@
 
             if (Number.isInteger(userInput) && userInput === buttonCount) {
                 successMessage.style.display = 'flex';
-                successMessage.classList.add('success');
                 failureMessage.style.display = 'none';
-                failureMessage.classList.remove('failure');
             } else {
-                failureMessage.style.display = 'flex';
-                failureMessage.classList.add('failure');
                 successMessage.style.display = 'none';
-                successMessage.classList.remove('success');
+                failureMessage.style.display = 'flex';
                 enteredCount.textContent = isNaN(userInput) ? '(none)' : userInput;
             }
         });
