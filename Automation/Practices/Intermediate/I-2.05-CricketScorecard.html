@@ -7,7 +7,7 @@
   <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
   <title>Cricket Scorecard Challenge - Table Data Tutorial | Software Testing Pro</title>
   <link rel="stylesheet" href="../../assets/css/styles.css">
-  <link rel="stylesheet" href="../../assets/css/Intermediate/styles-I-2.05.css">
+  
   <!-- Header and Footer CSS -->
   <link rel="stylesheet" href="../../assets/css/header.css">
   <link rel="stylesheet" href="../../assets/css/footer.css">
@@ -72,9 +72,19 @@
             <h1>Top 5 Indian Batsmen</h1>
             <p class="lead">Master sports data analysis! Identify the top scorer and find Sachin's runs from the cricket statistics to prove your data extraction skills.</p>
 
-            <ul class="list-group batsmen-grid" id="batsmenList">
-                <!-- Populated by JavaScript -->
-            </ul>
+            <div class="table-responsive" style="margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Player Name</th>
+                            <th>Runs Scored</th>
+                        </tr>
+                    </thead>
+                    <tbody id="batsmenBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
 
             <div class="input-group-parent">
                 <div class="input-group-left">
@@ -110,7 +120,7 @@
         'MS Dhoni'
       ];
 
-      const batsmenList = document.getElementById('batsmenList');
+      const batsmenBody = document.getElementById('batsmenBody');
         const inputField1 = document.getElementById('inputField1');
         const successMessage1 = document.getElementById('successMessage1');
         const failureMessage1 = document.getElementById('failureMessage1');
@@ -128,15 +138,13 @@
         const randomScore = Math.floor(Math.random() * 200) + 1;
         scores[batsman] = randomScore;
 
-        const listItem = document.createElement('li');
-        listItem.className = 'list-group-item';
-
-        listItem.innerHTML = `
-                <span class="player-name">${batsman}</span>
-                <span class="player-score">${randomScore}</span>
+        const row = document.createElement('tr');
+        row.innerHTML = `
+                <td>${batsman}</td>
+                <td style="font-weight: 700; color: var(--accent);">${randomScore}</td>
             `;
 
-            batsmenList.appendChild(listItem);
+            batsmenBody.appendChild(row);
       });
 
       function validateInputs() {
@@ -163,6 +171,7 @@
   </script>
 </body>
 </html>
+
 
 
 

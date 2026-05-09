@@ -7,7 +7,7 @@
     <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
     <title>Autocomplete Challenge - Auto-Suggest Tutorial | Software Testing Pro</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
-    <link rel="stylesheet" href="../../assets/css/Beginner/styles-B-1.19.css">
+    
     <!-- Header and Footer CSS -->
     <link rel="stylesheet" href="../../assets/css/header.css">
     <link rel="stylesheet" href="../../assets/css/footer.css">
@@ -72,16 +72,14 @@
                 <h1>Autocomplete Challenge</h1>
                 <p class="lead" id="labelText"></p>
 
-                <div style="position: relative;">
-                    <div class="input-group-parent">
-                        <div class="input-group-left">
-                            <label for="searchInput" class="label-left">Enter search term:</label>
-                        </div>
-                        <div class="input-group-right">
-                            <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing...">
-                        </div>
+                <div class="input-group-parent">
+                    <div class="input-group-left">
+                        <label for="searchInput" class="label-left">Enter search term:</label>
                     </div>
-                    <div id="results" class="dropdown"></div>
+                    <div class="input-group-right" style="position: relative;">
+                        <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing...">
+                        <div id="results" class="dropdown"></div>
+                    </div>
                 </div>
                 <div class="message" id="successMessage" role="status" aria-live="polite"><span>You successfully selected the auto-complete suggestion.</span></div>
                 <div class="message" id="failureMessage" role="status" aria-live="polite"><span>Selection does not match. <span style="color: black;">Expected:</span> <span id="expectedValue"></span> <span style="color: black;">Entered:</span> <span id="actualValue"></span></span></div>
@@ -171,6 +169,7 @@
     </script>
 </body>
 </html>
+
 
 
 
