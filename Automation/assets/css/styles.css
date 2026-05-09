@@ -279,14 +279,16 @@ textarea:focus {
     transform: translateY(0);
 }
 
-.card-content button:disabled {
-    background-color: #f1f5f9;
+.card-content button:disabled,
+.card-content button:not(.nav-btn):not(.tasks-overview-btn):disabled {
+    background-color: #e2e8f0;
     color: #94a3b8;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #cbd5e1;
     cursor: not-allowed;
     box-shadow: none !important;
     transform: none !important;
     opacity: 0.7;
+    pointer-events: none;
 }
 
 /* Standardized Data Table Styling */
@@ -1309,7 +1311,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 100%;
+    width: fit-content;
 }
 
 #calendar-icon {
@@ -1384,11 +1386,10 @@ textarea:focus {
     left: 50%;
     transform: translateX(-50%) translateY(10px);
     background: #1e293b;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
     font-size: 0.875rem;
     font-weight: 500;
+    color: white;
+    -webkit-text-fill-color: initial;
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
@@ -1656,11 +1657,70 @@ fieldset {
     font-weight: 500;
     margin-top: 2px;
     display: block;
+    word-break: break-all;
+    overflow-wrap: anywhere;
 }
 
 @keyframes slideIn {
     from { transform: translateY(10px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+/* Odd One Out Challenge Styling */
+.odd-one-out-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    justify-items: center;
+    margin: 2.5rem auto;
+    width: 100%;
+    max-width: 500px;
+}
+
+.odd-one-out-grid button {
+    min-width: 140px;
+    min-height: 100px;
+    padding: 20px 28px;
+    border-radius: 16px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.15), 0 4px 8px -2px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.odd-one-out-grid button:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.odd-one-out-grid button:active {
+    transform: translateY(-2px) scale(0.97);
+}
+
+/* Math variant: styled boxes with accent background */
+.odd-one-out-grid.math-variant button {
+    background: #f8fafc;
+    color: #1e293b;
+    border: 2px solid #e2e8f0;
+    text-shadow: none;
+    font-size: 1.15rem;
+    font-weight: 700;
+    min-width: 160px;
+}
+
+.odd-one-out-grid.math-variant button:hover {
+    background: #f5f3ff;
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 20px 30px -5px rgba(107, 33, 168, 0.15);
 }
 
 /* Task List Styles */

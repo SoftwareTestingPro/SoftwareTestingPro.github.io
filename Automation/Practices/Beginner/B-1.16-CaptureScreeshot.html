@@ -71,7 +71,6 @@
             <div class="card-content">
                 <h1>Capturing Screenshots</h1>
                 <p class="lead">Master screenshot automation! Capture three types: element screenshots, viewport captures, and full page scrolls to prove your visual testing prowess.</p>
-                <div id="timer">5</div>
                 <div id="flagsContainer"></div>
             </div>
         </main>
@@ -80,7 +79,6 @@
     <div id="footer-placeholder"></div>
 
     <script>
-        const timer = document.getElementById('timer');
         const flagsContainer = document.getElementById('flagsContainer');
         const contentContainer = document.getElementById('contentContainer');
 
@@ -97,8 +95,6 @@
             "https://flagcdn.com/w320/ru.png"  // Russia
         ];
 
-        // Instantly display the flag
-        timer.classList.add('hidden');
         displayFlags(1);
 
         function displayFlags(number) {

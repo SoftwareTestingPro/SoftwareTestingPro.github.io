@@ -111,9 +111,6 @@
                 button.className = generateRandomString(5);
                 button.name = generateRandomString(6);
                 button.disabled = i !== enabledIndex;
-                if (button.disabled) {
-                    button.style.pointerEvents = 'none';
-                }
 
                 buttonWrapper.appendChild(button);
 

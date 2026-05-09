@@ -72,11 +72,11 @@
                 <h1>Autocomplete Challenge</h1>
                 <p class="lead" id="labelText"></p>
 
-                <div class="horizontal-form">
+                <div class="horizontal-form" style="position: relative;">
                     <label for="searchInput">Enter search term:</label>
-                    <div style="position: relative; flex: 1;">
-                        <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing..." style="width: 100%;">
-                        <div id="results" class="dropdown"></div>
+                    <div style="position: relative; width: 300px;">
+                        <input type="text" class="input-field" id="searchInput" onkeyup="displayResults()" placeholder="Start typing..." style="width: 100%; max-width: 300px;">
+                        <div id="results" class="dropdown" style="max-width: 300px;"></div>
                     </div>
                 </div>
                 <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You successfully selected the auto-complete suggestion.</div>
