@@ -5,6 +5,10 @@ User-agent: *
 # Explicitly Allow Sitemaps and Root
 Allow: /sitemap.xml
 Allow: /sitemap_index.xml
+Allow: /sitemap-main.xml
+Allow: /sitemap-automation.xml
+Allow: /sitemap-healthcare.xml
+Allow: /sitemap-quiz.xml
 Allow: /
 
 # Technical & Private Folders

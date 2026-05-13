@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>https://softwaretestingpro.github.io/sitemap.xml</loc>
+    <loc>https://softwaretestingpro.github.io/sitemap-main.xml</loc>
+    <lastmod>2026-05-13</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://softwaretestingpro.github.io/sitemap-automation.xml</loc>
+    <lastmod>2026-05-13</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://softwaretestingpro.github.io/sitemap-healthcare.xml</loc>
+    <lastmod>2026-05-13</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://softwaretestingpro.github.io/sitemap-quiz.xml</loc>
     <lastmod>2026-05-13</lastmod>
   </sitemap>
 </sitemapindex>
