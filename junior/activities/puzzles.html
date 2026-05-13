@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match | Junior Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/junior.css">
+    <style>
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 20px auto;
+            perspective: 1000px;
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            background: var(--kid-blue);
+            border-radius: 15px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card .front, .memory-card .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border-radius: 15px;
+        }
+
+        .memory-card .front {
+            background: var(--kid-white);
+            transform: rotateY(180deg);
+        }
+
+        .memory-card .back {
+            background: var(--kid-blue);
+            color: white;
+            font-size: 2rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--kid-purple);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            background: var(--kid-white);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 0 var(--kid-shadow);
+        }
+
+        @media (max-width: 500px) {
+            .puzzle-container {
+                gap: 10px;
+            }
+            .memory-card .front, .memory-card .back {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">⬅️ Back</a>
+    
+    <div class="container">
+        <header>
+            <h1>Puzzle Palace 🧩</h1>
+            <p>Find all the matching pairs to win!</p>
+        </header>
+
+        <div class="stats-bar">
+            <span>Moves: <span id="moves">0</span></span>
+            <span>Matches: <span id="matches">0/8</span></span>
+        </div>
+
+        <div class="puzzle-container" id="gameBoard">
+            <!-- Cards will be generated here -->
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-kid" onclick="resetGame()">New Game</button>
+        </div>
+    </div>
+
+    <script>
+        const emojis = ['🐶', '🐱', '🐘', '🦄', '🦒', '🦁', '🐼', '🐯'];
+        let cards = [...emojis, ...emojis];
+        let flippedCards = [];
+        let matchedCount = 0;
+        let moves = 0;
+        let isLockBoard = false;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function createBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+            shuffle(cards);
+
+            cards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.emoji = emoji;
+                card.innerHTML = `
+                    <div class="front">${emoji}</div>
+                    <div class="back">❓</div>
+                `;
+                card.addEventListener('click', flipCard);
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (isLockBoard) return;
+            if (this === flippedCards[0]) return;
+
+            this.classList.add('flipped');
+            flippedCards.push(this);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('moves').textContent = moves;
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            const isMatch = card1.dataset.emoji === card2.dataset.emoji;
+
+            if (isMatch) {
+                disableCards();
+                matchedCount++;
+                document.getElementById('matches').textContent = `${matchedCount}/8`;
+                if (matchedCount === 8) {
+                    setTimeout(() => alert(`Great job! You won in ${moves} moves! 🎉`), 500);
+                }
+            } else {
+                unflipCards();
+            }
+        }
+
+        function disableCards() {
+            flippedCards.forEach(card => card.removeEventListener('click', flipCard));
+            flippedCards = [];
+        }
+
+        function unflipCards() {
+            isLockBoard = true;
+            setTimeout(() => {
+                flippedCards.forEach(card => card.classList.remove('flipped'));
+                flippedCards = [];
+                isLockBoard = false;
+            }, 1000);
+        }
+
+        function resetGame() {
+            moves = 0;
+            matchedCount = 0;
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('matches').textContent = '0/8';
+            flippedCards = [];
+            isLockBoard = false;
+            createBoard();
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>

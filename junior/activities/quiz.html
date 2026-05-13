@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Master | Junior Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/junior.css">
+    <style>
+        .quiz-box {
+            background: white;
+            border-radius: 30px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .question-text {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--kid-purple);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .option-btn {
+            padding: 1.5rem;
+            font-size: 1.2rem;
+            background: var(--kid-bg);
+            border: 4px solid var(--kid-blue);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-weight: 600;
+        }
+        .option-btn:hover {
+            transform: scale(1.05);
+            background: #e1f5fe;
+        }
+        .option-btn.correct {
+            background: var(--kid-green);
+            border-color: #7ab317;
+            color: white;
+        }
+        .option-btn.wrong {
+            background: var(--kid-pink);
+            border-color: #d66d8b;
+            color: white;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            background: var(--kid-white);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 0 var(--kid-shadow);
+        }
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 2rem;
+        }
+        .result-screen {
+            text-align: center;
+        }
+        .result-screen h2 {
+            font-size: 3rem;
+            color: var(--kid-pink);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">⬅️ Back</a>
+    
+    <div class="container">
+        <header>
+            <h1>Quiz Master 🏆</h1>
+            <p>Answer questions and earn shiny stars!</p>
+        </header>
+
+        <div class="quiz-box" id="quizBox">
+            <div id="gameContent">
+                <div class="question-text" id="questionText">Loading...</div>
+                <div class="options-grid" id="optionsGrid"></div>
+            </div>
+            <div id="resultScreen" class="result-screen" style="display: none;">
+                <h2 id="resultTitle">You did it! 🎉</h2>
+                <div class="stars-container" id="finalStars"></div>
+                <p style="font-size: 1.5rem; margin: 1rem 0;" id="finalScoreText"></p>
+                <button class="btn-kid" onclick="location.reload()">Play Again!</button>
+            </div>
+        </div>
+
+        <div class="stars-container" id="liveStars"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                "question": "Which planet is known as the Red Planet? 🚀",
+                "options": ["Earth", "Mars", "Jupiter", "Venus"],
+                "correctAnswer": "Mars",
+                "explanation": "Mars looks red because of the iron in its soil!"
+            },
+            {
+                "question": "What is 12 + 15? 🔢",
+                "options": ["25", "27", "30", "22"],
+                "correctAnswer": "27",
+                "explanation": "Great job! 12 plus 15 equals 27."
+            },
+            {
+                "question": "Which animal is known as the 'King of the Jungle'? 🦁",
+                "options": ["Tiger", "Elephant", "Lion", "Giraffe"],
+                "correctAnswer": "Lion",
+                "explanation": "Roar! The Lion is the king."
+            },
+            {
+                "question": "How many states are there in India? 🇮🇳",
+                "options": ["25", "28", "29", "30"],
+                "correctAnswer": "28",
+                "explanation": "India has 28 beautiful states."
+            },
+            {
+                "question": "Which part of a plant grows under the ground? 🌱",
+                "options": ["Flower", "Stem", "Leaf", "Root"],
+                "correctAnswer": "Root",
+                "explanation": "Roots help the plant drink water from the soil."
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+
+        function initQuiz() {
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentIndex >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const q = questions[currentIndex];
+            document.getElementById('questionText').textContent = q.question;
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(opt, btn);
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, btn) {
+            const q = questions[currentIndex];
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selected === q.correctAnswer) {
+                btn.classList.add('correct');
+                score++;
+                addStar();
+            } else {
+                btn.classList.add('wrong');
+                // Show correct one
+                allBtns.forEach(b => {
+                    if (b.textContent === q.correctAnswer) b.classList.add('correct');
+                });
+            }
+
+            setTimeout(() => {
+                currentIndex++;
+                showQuestion();
+            }, 2000);
+        }
+
+        function addStar() {
+            const star = document.createElement('span');
+            star.textContent = '⭐';
+            document.getElementById('liveStars').appendChild(star);
+        }
+
+        function showResults() {
+            document.getElementById('gameContent').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            document.getElementById('finalScoreText').textContent = `You got ${score} out of ${questions.length} right!`;
+            
+            const finalStars = document.getElementById('finalStars');
+            for(let i=0; i<score; i++) {
+                const star = document.createElement('span');
+                star.textContent = '⭐';
+                finalStars.appendChild(star);
+            }
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+:root {
+    --kid-yellow: #ffecb3;
+    --kid-pink: #ff85a2;
+    --kid-blue: #70d6ff;
+    --kid-green: #a0e426;
+    --kid-purple: #9b59b6;
+    --kid-bg: #fffcf2;
+    --kid-text: #2d3436;
+    --kid-white: #ffffff;
+    --kid-shadow: rgba(0, 0, 0, 0.1);
+    --font-main: 'Fredoka', 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--kid-bg);
+    color: var(--kid-text);
+    font-family: var(--font-main);
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* Playful Background Elements */
+body::before {
+    content: '★';
+    position: fixed;
+    top: 5%;
+    left: 5%;
+    font-size: 2rem;
+    color: var(--kid-yellow);
+    opacity: 0.3;
+    z-index: -1;
+}
+
+body::after {
+    content: '●';
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    font-size: 3rem;
+    color: var(--kid-blue);
+    opacity: 0.2;
+    z-index: -1;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: var(--kid-white);
+    border-radius: 30px;
+    box-shadow: 0 10px 0 var(--kid-yellow);
+}
+
+header h1 {
+    font-size: 3rem;
+    color: var(--kid-pink);
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    font-size: 1.2rem;
+    color: #636e72;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.nav-card {
+    background: var(--kid-white);
+    border-radius: 30px;
+    padding: 2rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--kid-text);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px var(--kid-shadow);
+    border: 5px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-card:hover {
+    transform: translateY(-10px) rotate(2deg);
+    border-color: var(--kid-blue);
+}
+
+.card-icon {
+    font-size: 4rem;
+    background: var(--kid-bg);
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.nav-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.nav-card p {
+    font-size: 1rem;
+    color: #636e72;
+}
+
+/* Activity Specific Colors */
+.card-learning { border-bottom: 10px solid var(--kid-green); }
+.card-creative { border-bottom: 10px solid var(--kid-pink); }
+.card-puzzles { border-bottom: 10px solid var(--kid-yellow); }
+.card-goals { border-bottom: 10px solid var(--kid-purple); }
+
+/* Buttons */
+.btn-kid {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+    background: var(--kid-blue);
+    color: white;
+    box-shadow: 0 6px 0 #4da3cc;
+}
+
+.btn-kid:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #4da3cc;
+}
+
+/* Animations */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.bounce {
+    animation: bounce 2s infinite;
+}
+
+@media (max-width: 600px) {
+    header h1 { font-size: 2rem; }
+    .nav-card { padding: 1.5rem; }
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Quest | Junior Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/junior.css">
+    <style>
+        .quest-container {
+            background: white;
+            border-radius: 30px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .quest-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 1rem;
+            background: var(--kid-bg);
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 3px solid transparent;
+        }
+        .quest-item:hover {
+            transform: scale(1.02);
+            border-color: var(--kid-blue);
+        }
+        .quest-item.completed {
+            background: #d4edda;
+            border-color: var(--kid-green);
+            opacity: 0.8;
+        }
+        .checkbox {
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--kid-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: white;
+            flex-shrink: 0;
+        }
+        .quest-item.completed .checkbox {
+            background: var(--kid-green);
+            border-color: var(--kid-green);
+            color: white;
+        }
+        .quest-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--kid-text);
+        }
+        .quest-item.completed .quest-text {
+            text-decoration: line-through;
+            color: #636e72;
+        }
+        .badge-wall {
+            margin-top: 3rem;
+            text-align: center;
+        }
+        .badge-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .badge {
+            width: 80px;
+            height: 80px;
+            background: #f1f2f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            filter: grayscale(1);
+            opacity: 0.3;
+            transition: all 0.5s;
+        }
+        .badge.unlocked {
+            filter: grayscale(0);
+            opacity: 1;
+            background: var(--kid-yellow);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 236, 179, 0.6);
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            background: var(--kid-white);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 0 var(--kid-shadow);
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">⬅️ Back</a>
+    
+    <div class="container">
+        <header>
+            <h1>Daily Quest 🏆</h1>
+            <p>Complete your tasks to earn shiny badges!</p>
+        </header>
+
+        <div class="quest-container">
+            <div class="quest-item" onclick="toggleQuest(this, 'badge-1')">
+                <div class="checkbox"></div>
+                <div class="quest-text">Read a book for 20 minutes 📖</div>
+            </div>
+            <div class="quest-item" onclick="toggleQuest(this, 'badge-2')">
+                <div class="checkbox"></div>
+                <div class="quest-text">Practice Math for 15 minutes 🔢</div>
+            </div>
+            <div class="quest-item" onclick="toggleQuest(this, 'badge-3')">
+                <div class="checkbox"></div>
+                <div class="quest-text">Help around the house 🏠</div>
+            </div>
+            <div class="quest-item" onclick="toggleQuest(this, 'badge-4')">
+                <div class="checkbox"></div>
+                <div class="quest-text">Learn 5 new English words 🔤</div>
+            </div>
+        </div>
+
+        <div class="badge-wall">
+            <h2>Your Trophy Room</h2>
+            <div class="badge-grid">
+                <div class="badge" id="badge-1">📚</div>
+                <div class="badge" id="badge-2">📐</div>
+                <div class="badge" id="badge-3">🌟</div>
+                <div class="badge" id="badge-4">🎓</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleQuest(element, badgeId) {
+            element.classList.toggle('completed');
+            const badge = document.getElementById(badgeId);
+            const isCompleted = element.classList.contains('completed');
+            
+            if (isCompleted) {
+                element.querySelector('.checkbox').textContent = '✓';
+                badge.classList.add('unlocked');
+                confettiEffect();
+            } else {
+                element.querySelector('.checkbox').textContent = '';
+                badge.classList.remove('unlocked');
+            }
+        }
+
+        function confettiEffect() {
+            // Simple animation for unlocking
+            const colors = ['#ff85a2', '#70d6ff', '#a0e426', '#ffecb3'];
+            for(let i=0; i<10; i++) {
+                const dot = document.createElement('div');
+                dot.style.position = 'fixed';
+                dot.style.width = '10px';
+                dot.style.height = '10px';
+                dot.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                dot.style.left = Math.random() * 100 + 'vw';
+                dot.style.top = '-10px';
+                dot.style.borderRadius = '50%';
+                dot.style.zIndex = '1000';
+                dot.style.transition = 'all 2s';
+                document.body.appendChild(dot);
+                
+                setTimeout(() => {
+                    dot.style.top = '110vh';
+                    dot.style.transform = `translateX(${(Math.random() - 0.5) * 200}px) rotate(${Math.random() * 360}deg)`;
+                }, 10);
+                
+                setTimeout(() => dot.remove(), 2100);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Canvas | Junior Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/junior.css">
+    <style>
+        .canvas-container {
+            background: white;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        canvas {
+            background: #fff;
+            border: 5px solid var(--kid-yellow);
+            border-radius: 20px;
+            cursor: crosshair;
+            max-width: 100%;
+            touch-action: none;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .color-btn:hover { transform: scale(1.2); }
+        .color-btn.active { border-color: #2d3436; }
+        
+        .tool-bar {
+            background: var(--kid-bg);
+            padding: 15px;
+            border-radius: 50px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            background: var(--kid-white);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 0 var(--kid-shadow);
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">⬅️ Back</a>
+    
+    <div class="container">
+        <header>
+            <h1>Magic Canvas 🎨</h1>
+            <p>Draw anything you can imagine!</p>
+        </header>
+
+        <div class="canvas-container">
+            <div class="tool-bar">
+                <div class="controls colors">
+                    <div class="color-btn active" style="background: #2d3436;" data-color="#2d3436"></div>
+                    <div class="color-btn" style="background: #ff85a2;" data-color="#ff85a2"></div>
+                    <div class="color-btn" style="background: #70d6ff;" data-color="#70d6ff"></div>
+                    <div class="color-btn" style="background: #a0e426;" data-color="#a0e426"></div>
+                    <div class="color-btn" style="background: #ffecb3;" data-color="#ffecb3"></div>
+                    <div class="color-btn" style="background: #9b59b6;" data-color="#9b59b6"></div>
+                </div>
+                <div class="controls size">
+                    <input type="range" id="sizeRange" min="2" max="20" value="5">
+                </div>
+                <button class="btn-kid" id="clearBtn" style="background: var(--kid-pink); box-shadow: 0 6px 0 #d66d8b;">Clear</button>
+            </div>
+            <canvas id="paintCanvas" width="800" height="500"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('paintCanvas');
+        const ctx = canvas.getContext('2d');
+        const clearBtn = document.getElementById('clearBtn');
+        const sizeRange = document.getElementById('sizeRange');
+        const colorBtns = document.querySelectorAll('.color-btn');
+
+        let isDrawing = false;
+        let currentColor = '#2d3436';
+        let currentSize = 5;
+
+        // Set canvas size for mobile
+        function resizeCanvas() {
+            if (window.innerWidth < 850) {
+                canvas.width = window.innerWidth - 60;
+                canvas.height = 400;
+            }
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.lineWidth = currentSize;
+            ctx.strokeStyle = currentColor;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDrawing(e); });
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                colorBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentColor = btn.dataset.color;
+            });
+        });
+
+        sizeRange.addEventListener('input', (e) => currentSize = e.target.value);
+        clearBtn.addEventListener('click', () => {
+            if(confirm('Are you sure you want to clear your drawing?')) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        });
+    </script>
+</body>
+</html>
