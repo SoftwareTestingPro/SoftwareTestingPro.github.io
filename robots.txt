@@ -1,4 +1,11 @@
+Sitemap: https://softwaretestingpro.github.io/sitemap.xml
+
 User-agent: *
+
+# Explicitly Allow Sitemaps and Root
+Allow: /sitemap.xml
+Allow: /sitemap_index.xml
+Allow: /
 
 # Technical & Private Folders
 Disallow: /.git/
@@ -18,7 +25,6 @@ Disallow: /*.zip$
 Disallow: /*.pdf$
 
 # Allowed Main Sections & Root Pages
-Allow: /
 Allow: /automation/
 Allow: /healthcare/
 Allow: /quiz/
@@ -27,6 +33,3 @@ Allow: /privacy.html
 Allow: /terms.html
 Allow: /disclosure.html
 Allow: /faq.html
-
-# Sitemaps
-Sitemap: https://softwaretestingpro.github.io/sitemap.xml
