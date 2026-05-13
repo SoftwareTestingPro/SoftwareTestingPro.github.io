@@ -9,7 +9,6 @@ Allow: /sitemap-main.xml
 Allow: /sitemap-automation.xml
 Allow: /sitemap-healthcare.xml
 Allow: /sitemap-quiz.xml
-Allow: /sitemap-junior.xml
 Allow: /
 
 # Technical & Private Folders
@@ -19,7 +18,6 @@ Disallow: /.project/
 Disallow: /healthcare/sql/
 Disallow: /healthcare/app/
 Disallow: /quiz/data/
-Disallow: /junior/data/
 
 # Automation Project Internal Assets
 Disallow: /automation/assets/
@@ -34,7 +32,6 @@ Disallow: /*.pdf$
 Allow: /automation/
 Allow: /healthcare/
 Allow: /quiz/
-Allow: /junior/
 Allow: /developer.html
 Allow: /privacy.html
 Allow: /terms.html
