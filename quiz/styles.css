@@ -23,9 +23,12 @@ body {
     background: var(--bg);
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    padding: 0;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
     color: #111827;
+    box-sizing: border-box;
 }
 
 #header-placeholder {
@@ -716,11 +719,11 @@ button:focus {
     position: relative;
     background: var(--card);
     border-radius: var(--radius);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin: 5rem auto 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin: 0 auto;
     width: 100%;
     max-width: var(--card-max-width, 800px);
-    padding: 1rem 1.5rem;
+    padding: 2rem;
     text-align: left;
     height: auto;
     overflow: visible;
@@ -729,89 +732,19 @@ button:focus {
 /* Responsive Quiz Design */
 @media (max-width: 768px) {
     .quiz-container {
-        height: auto;
         margin: 1rem auto;
-        padding: 1rem;
+        padding: 1.5rem;
         max-width: 95%;
-        overflow: visible;
-    }
-    
-    .quiz-header-compact {
-        margin-bottom: 0.5rem;
-    }
-}
-    
-    .question {
-        font-size: 1.1rem;
-        margin-top: 1.5rem;
-        margin-bottom: 0.8rem;
-    }
-    
-    .option {
-        padding: 0.8rem;
-        font-size: 0.9rem;
-    }
-    
-    .quiz-header-compact {
-        flex-direction: column;
-        gap: 0.5rem;
-        padding: 1rem;
-        align-items: flex-start;
-    }
-    
-        
-    .quiz-header-compact .quiz-stats {
-        position: static;
-        transform: none;
-        order: -1;
-        align-self: center;
-    }
-    
-    .quiz-header-compact .question-counter {
-        position: static;
-        order: 3;
-        align-self: flex-end;
-        width: 100%;
-        text-align: right;
-    }
-    
-    .topic-info {
-        order: 2;
-        align-self: flex-start;
-        width: 100%;
-        position: relative;
-        z-index: 10;
-        display: flex;
-        flex-wrap: nowrap;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .topic-info span {
-        flex: 0 1 auto;
-        min-width: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: calc(100% - 80px);
-    }
-    
-    .btn-change-topic {
-        position: relative;
-        z-index: 20;
-        pointer-events: auto;
-        flex-shrink: 0;
-        margin-left: 0;
-        flex: 0 0 auto;
     }
 }
 
 @media (max-width: 480px) {
     .quiz-container {
-        height: 85vh;
-        margin: 7.5vh auto 0;
-        padding: 0.75rem;
-        border-radius: 8px;
+        height: auto;
+        min-height: calc(100vh - 40px);
+        margin: 20px auto;
+        padding: 1rem;
+        border-radius: 12px;
     }
     
     .question {
@@ -1027,30 +960,29 @@ button:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
     background: #f8f9fa;
-    border-radius: 6px;
-    position: relative;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.quiz-header-compact .topic-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 auto;
+    min-width: 140px;
 }
 
 .quiz-header-compact .quiz-stats {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
+    flex: 0 0 auto;
 }
 
 .quiz-header-compact .question-counter {
-    position: absolute;
-    right: 0.5rem;
-    z-index: 2;
-}
-
-.quiz-header-compact .question-counter #questionNumber {
-    color: #6c757d;
-    font-weight: 600;
-    font-size: 0.85rem;
+    flex: 0 0 auto;
     text-align: right;
 }
 
@@ -1672,5 +1604,46 @@ button:focus {
         flex-direction: column;
         text-align: center;
         gap: 0.5rem;
+    }
+
+    /* Added Tweaks */
+    .topic-selector {
+        padding: 1.5rem 1rem;
+    }
+    
+    .quiz-container {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .topic-info span {
+        font-size: 0.8rem;
+    }
+
+    .buttons {
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .feature-item h3 {
+        font-size: 0.9rem;
+    }
+
+    .topic-dropdown {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .score-summary {
+        padding: 1rem;
+    }
+
+    .statistics h3, .chart-container h3, .question-details h3 {
+        font-size: 1.25rem;
     }
 }
