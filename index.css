@@ -38,7 +38,7 @@ body::before {
     width: 100%;
     height: 100%;
     background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 10% 10%, rgba(129, 140, 248, 0.1) 0%, transparent 40%);
+                radial-gradient(circle at 10% 10%, rgba(129, 140, 248, 0.1) 0%, transparent 40%);
     z-index: -1;
     pointer-events: none;
 }
@@ -52,8 +52,7 @@ header {
 header h1 {
     font-size: 3.5rem;
     font-weight: 800;
-    color: var(--accent-blue);
-    /* Fallback for accessibility scanners */
+    color: var(--accent-blue); /* Fallback for accessibility scanners */
     background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -92,8 +91,8 @@ header p {
 .project-card:hover {
     transform: translateY(-10px);
     border-color: var(--accent-blue);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
-        0 0 20px rgba(56, 189, 248, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                0 0 20px rgba(56, 189, 248, 0.2);
 }
 
 .card-image {
@@ -152,36 +151,17 @@ header p {
 
 /* Animations */
 @keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive Scaling */
 @media (max-width: 768px) {
-    header h1 {
-        font-size: 2.5rem;
-    }
-
-    .projects-grid {
-        grid-template-columns: 1fr;
-    }
+    header h1 { font-size: 2.5rem; }
+    .projects-grid { grid-template-columns: 1fr; }
 }
