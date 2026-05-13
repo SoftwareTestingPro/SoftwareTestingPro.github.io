@@ -65,7 +65,7 @@ Whether you're preparing for interviews, learning Selenium, Playwright, or impro
 ### 1. **Automation Testing** (90 Tasks)
 The heart of the platform with three difficulty levels:
 
-#### 📌 **Beginner** - B-1.01 to B-1.30
+#### 📌 **Beginner** - b-1.01 to b-1.30
 Essential web automation skills:
 - Basic clicks and text input
 - Button states and form submission
@@ -77,7 +77,7 @@ Essential web automation skills:
 - Page titles and source inspection
 - And more...
 
-#### 📌 **Intermediate** - I-2.01 to I-2.30
+#### 📌 **Intermediate** - i-2.01 to i-2.30
 Complex interactions and data manipulation:
 - Drag and drop (text and files)
 - Calendar and train booking
@@ -91,7 +91,7 @@ Complex interactions and data manipulation:
 - JavaScript input execution
 - And more...
 
-#### 📌 **Advanced** - A-3.01 to A-3.30
+#### 📌 **Advanced** - a-3.01 to a-3.30
 Real-world scenarios:
 - Hidden element detection
 - File downloads and verification
@@ -107,7 +107,7 @@ Real-world scenarios:
 - URL/QR code downloads
 - Signature pad
 - Image comparison
-- AI-powered quiz
+- Ai-powered quiz
 - Infinite scroll
 - Video/audio handling
 - And more...
@@ -175,17 +175,17 @@ Fun programming and logic challenges:
 
 ### Recommended Learning Path
 **Beginner:**
-1. Start with Automation → Beginner (B-1.01 to B-1.10)
+1. Start with Automation → Beginner (b-1.01 to b-1.10)
 2. Take Basic Java Quiz
 3. Explore JavaScript Quiz
 
 **Intermediate:**
-1. Complete Automation → Intermediate (I-2.01 to I-2.15)
+1. Complete Automation → Intermediate (i-2.01 to i-2.15)
 2. Learn API Testing basics
 3. Take Selenium Quiz
 
 **Advanced:**
-1. Master Automation → Advanced (A-3.01 to A-3.20)
+1. Master Automation → Advanced (a-3.01 to a-3.20)
 2. Dive into Rest-Assured and Postman
 3. Explore Performance Testing
 
@@ -282,7 +282,7 @@ Have questions or need help?
 
 - **Email**: [Contact Us](mailto:contact@softwaretestingpro.com)
 - **Form**: [Contact Form](https://forms.gle/GFYLiy6VJ8b2BEKj6)
-- **About Developer**: [Meet the Creator](https://softwaretestingpro.github.io/Developer.html)
+- **About Developer**: [Meet the Creator](https://softwaretestingpro.github.io/developer.html)
 
 ---
 

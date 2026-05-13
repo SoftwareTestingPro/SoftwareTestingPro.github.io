@@ -1,0 +1,38 @@
+User-agent: *
+Allow: /
+Crawl-delay: 1
+
+# Block unnecessary crawling of asset folders
+User-agent: *
+Disallow: /automation/assets/css/
+Disallow: /automation/assets/js/
+Disallow: /automation/assets/images/
+Disallow: /automation/assets/components/
+Disallow: /automation/img/
+
+# Allow important content
+User-agent: *
+Allow: /automation/
+Allow: /quiz/
+Allow: /developer.html
+Allow: /privacy.html
+Allow: /terms.html
+
+# Sitemaps
+Sitemap: https://softwaretestingpro.github.io/sitemap.xml
+
+# Additional SEO directives
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Prioritize crawling of main content
+User-agent: *
+Allow: /*.html$
+Allow: /$
+Disallow: /*.css$
+Disallow: /*.js$
+Disallow: /*.json$
+

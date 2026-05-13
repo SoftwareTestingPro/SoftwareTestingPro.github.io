@@ -15,11 +15,11 @@
 	<!-- Additional SEO Meta Tags -->
 	<meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
 	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-	<link rel="canonical" href="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.02-Input.html">
+	<link rel="canonical" href="https://softwaretestingpro.github.io/automation/practices/beginner/b-1.02-input.html">
 	<!-- Open Graph Tags -->
 	<meta property="og:title" content="Input Validation Challenge - Form Testing Tutorial | Software Testing Pro">
 	<meta property="og:description" content="Master input validation and form testing. Learn text input testing and data validation in automation with this tutorial.">
-	<meta property="og:url" content="https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.02-Input.html">
+	<meta property="og:url" content="https://softwaretestingpro.github.io/automation/practices/beginner/b-1.02-input.html">
 	<meta property="og:type" content="article">
 	<meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
 	<meta property="og:site_name" content="Software Testing Pro">
@@ -35,7 +35,7 @@
 	  "@type": "EducationalContent",
 	  "headline": "Input Validation Challenge - Form Testing Tutorial | Software Testing Pro",
 	  "description": "Master input validation and form testing. Learn text input testing and data validation in automation with this tutorial.",
-	  "url": "https://softwaretestingpro.github.io/Automation/Practices/Beginner/B-1.02-Input.html",
+	  "url": "https://softwaretestingpro.github.io/automation/practices/beginner/b-1.02-input.html",
 	  "publisher": {
 	    "@type": "Organization",
 	    "name": "Software Testing Pro"
@@ -57,11 +57,11 @@
 
 <div class="content-wrapper">
     <div class="card-nav">
-        <a href="B-1.01-Click.html" class="nav-btn nav-btn-prev">
+        <a href="b-1.01-click.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
             Previous Task
         </a>
-        <a href="B-1.03-Radio.html" class="nav-btn nav-btn-next">
+        <a href="b-1.03-radio.html" class="nav-btn nav-btn-next">
             Next Task
             <span class="nav-icon">→</span>
         </a>
@@ -120,7 +120,7 @@
 
     // Add event listeners for each input
     document.getElementById('user-input-name').addEventListener('input', function() {
-        validateInput('user-input-name', /^[A-Za-z]+$/, 'nameSuccessMessage', 'nameFailureMessage');
+        validateInput('user-input-name', /^[a-Za-z]+$/, 'nameSuccessMessage', 'nameFailureMessage');
     });
 
     document.getElementById('user-input-age').addEventListener('input', function() {
@@ -131,7 +131,7 @@
         validateInput('text-input', /^text within double quotes$/, 'textSuccessMessage', 'textFailureMessage');
     });
 
-    // Hide messages initially (following B-1.11 pattern)
+    // Hide messages initially (following b-1.11 pattern)
     document.getElementById('nameSuccessMessage').style.display = 'none';
     document.getElementById('nameFailureMessage').style.display = 'none';
     document.getElementById('ageSuccessMessage').style.display = 'none';
@@ -141,6 +141,8 @@
 </script>
 </body>
 </html>
+
+
 
 
 

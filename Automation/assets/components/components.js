@@ -6,14 +6,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Determine the correct path to header/footer based on current location
+// Determine the correct path to header/footer based on current location
 function getBasePath() {
-    const currentPath = window.location.pathname;
+    const currentPath = window.location.pathname.toLowerCase();
     const parts = currentPath.split('/').filter(segment => segment);
-    const automationIndex = parts.indexOf('Automation');
+    const automationIndex = parts.indexOf('automation');
     
-    if (automationIndex === -1) return '';
+    // If we're not in the automation folder (e.g. root), return 'automation/' 
+    // to reach header.html, assets, etc.
+    if (automationIndex === -1) return 'automation/';
     
-    // Number of segments after 'Automation' (minus the filename)
+    // Number of segments after 'automation' (minus the filename)
     const depth = parts.length - 1 - automationIndex - 1;
     
     if (depth <= 0) return '';
@@ -28,141 +31,60 @@ function getBasePath() {
 function loadHeader() {
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (headerPlaceholder) {
-        console.log('Header placeholder found');
-        
-        // Set minimal header immediately to prevent empty state
         const basePath = getBasePath();
-        headerPlaceholder.innerHTML = `
-            <header class="site-header">
-                <div class="header-content">
-                    <a href="${basePath}index.html" class="home-link" title="Home">
-                        <svg class="home-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                        </svg>
-                        <span class="home-text">Home</span>
-                    </a>
-                    <button class="hamburger" onclick="toggleMenu()">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-            </header>
-        `;
-        
-        console.log('Minimal header set immediately');
-        
-        // Try to load external header
-        console.log('Attempting to load external header from:', basePath + 'header.html');
         
         fetch(basePath + 'header.html')
             .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.text();
             })
             .then(html => {
-                console.log('External header loaded successfully');
-                // Only replace if external header is valid and has content
                 if (html && html.includes('site-header')) {
-                    console.log('Replacing with external header');
                     headerPlaceholder.innerHTML = html;
                     
-                    // Update home link dynamically for external header
-                    const homeLink = headerPlaceholder.querySelector('.home-link');
-                    if (homeLink) {
-                        homeLink.href = basePath + 'index.html';
-                    }
-                } else {
-                    console.log('External header invalid, keeping minimal header');
+                    const links = headerPlaceholder.querySelectorAll('a');
+                    links.forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href && !href.startsWith('http') && !href.startsWith('/')) {
+                            link.href = basePath + href;
+                        }
+                    });
                 }
                 
-                // Add mobile menu after header is loaded
-                document.body.insertAdjacentHTML('afterbegin', `<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Beginner/B-Intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Intermediate/I-Intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Advanced/A-Intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>`);
+                // Add mobile menu
+                const menuHtml = `<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="${basePath}practices/beginner/b-intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="${basePath}practices/intermediate/i-intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="${basePath}practices/advanced/a-intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>`;
+                document.body.insertAdjacentHTML('afterbegin', menuHtml);
             })
             .catch(error => {
-                console.log('External header failed, keeping minimal header:', error.message);
-                
-                // Add mobile menu after header is loaded (fallback)
-                document.body.insertAdjacentHTML('afterbegin', `<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Beginner/B-Intro.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Intermediate/I-Intro.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="${basePath}Practices/Advanced/A-Intro.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>`);
+                console.log('External header failed:', error.message);
             });
-    } else {
-        console.log('Header placeholder NOT found');
     }
 }
 
 function loadFooter() {
     const footerPlaceholder = document.getElementById('footer-placeholder');
     if (footerPlaceholder) {
-        console.log('Footer placeholder found');
-        
         const basePath = getBasePath();
-        
-        // Direct inline footer to ensure visibility
-        footerPlaceholder.innerHTML = `
-            <footer style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: #ecf0f1; padding: 40px 0 20px; margin-top: 40px; width: 100%; display: block !important; visibility: visible !important; font-family: 'Inter', sans-serif;">
-                <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
-                    <div>
-                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Main Pages</h4>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="${basePath}index.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">🏠 Home</a></li>
-                            <li style="margin-bottom: 8px;"><a href="${basePath}faq.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">❓ FAQ</a></li>
-                            <li style="margin-bottom: 8px;"><a href="${basePath}developer.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">👨‍💻 About Developer</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Practice Platform</h4>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="${basePath}Practices/Beginner/B-Intro.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Beginner</a></li>
-                            <li style="margin-bottom: 8px;"><a href="${basePath}Practices/Intermediate/I-Intro.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Intermediate</a></li>
-                            <li style="margin-bottom: 8px;"><a href="${basePath}Practices/Advanced/A-Intro.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">Advanced</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Legal & Info</h4>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="${basePath}privacy.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">🔒 Privacy Policy</a></li>
-                            <li style="margin-bottom: 8px;"><a href="${basePath}terms.html" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">📋 Terms of Service</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="color: #3498db; margin-bottom: 15px; font-size: 16px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Resources</h4>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">📖 Selenium Docs</a></li>
-                            <li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #bdc3c7; text-decoration: none; font-size: 14px;">🌿 Cypress</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div style="max-width: 1200px; margin: 30px auto 0; padding: 20px; border-top: 1px solid #34495e; text-align: center;">
-                    <p style="margin: 0; font-size: 13px; color: #95a5a6;">&copy; 2026 Software Testing Pro. Educational content for automation testing.</p>
-                </div>
-            </footer>
-        `;
-        
-        console.log('Footer set with inline content');
-        
-        // Try to load external footer
-        console.log('Attempting to load external footer from:', basePath + 'footer.html');
         
         fetch(basePath + 'footer.html')
             .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.text();
             })
             .then(html => {
-                console.log('External footer loaded, replacing inline');
                 footerPlaceholder.innerHTML = html;
+                
+                const links = footerPlaceholder.querySelectorAll('a');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href && !href.startsWith('http') && !href.startsWith('/')) {
+                        link.href = basePath + href;
+                    }
+                });
             })
             .catch(error => {
-                console.log('External footer failed, keeping inline footer:', error.message);
+                console.log('External footer failed:', error.message);
             });
-    } else {
-        console.log('Footer placeholder NOT found');
     }
 }
 
