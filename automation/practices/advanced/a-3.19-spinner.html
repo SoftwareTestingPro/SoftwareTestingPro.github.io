@@ -78,14 +78,13 @@
           <button id="spinButton">SPIN</button>
       </div>
   
-      <div class="vertical-form">
-          <div class="input-group">
-              <label for="nameInput">Enter the selected name:</label>
-              <input type="text" id="nameInput" class="form-control" placeholder="Type name here">
-          </div>
+      <div class="horizontal-form">
+          <label for="nameInput">Enter the selected name:</label>
+          <input type="text" id="nameInput" class="form-control" placeholder="Type name here">
       </div>
 
       <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You entered the correct name.</div>
+      <div class="message warning" id="warningMessage" role="status" aria-live="polite">Please spin the wheel first!</div>
       <div class="message failure" id="failureMessage" role="status" aria-live="polite">
           Incorrect! The name does not match.
           <div class="detail">Expected: <span id="expectedName"></span> | Entered: <span id="actualName"></span></div>
@@ -101,6 +100,7 @@
         const spinButton = document.getElementById('spinButton');
         const nameInput = document.getElementById('nameInput');
         const successMessage = document.getElementById('successMessage');
+        const warningMessage = document.getElementById('warningMessage');
         const failureMessage = document.getElementById('failureMessage');
 
         const names = ['Sushil', 'Deepika', 'Kavya', 'Jyoti', 'Avinash', 'Riddhima', 'Saroj', 'Rivansh'];
@@ -195,6 +195,7 @@
               selectedName = shuffledNames[selectedSegment];
 
               successMessage.style.display = 'none';
+              warningMessage.style.display = 'none';
               failureMessage.style.display = 'none';
               nameInput.value = '';
             }
@@ -207,23 +208,25 @@
 
           if (inputValue === '') {
             successMessage.style.display = 'none';
+            warningMessage.style.display = 'none';
             failureMessage.style.display = 'none';
             return;
           }
 
           if (!selectedName) {
             successMessage.style.display = 'none';
-            failureMessage.style.display = 'flex';
-            document.getElementById('expectedName').textContent = "Spin required";
-            document.getElementById('actualName').textContent = "No spin yet";
+            failureMessage.style.display = 'none';
+            warningMessage.style.display = 'flex';
             return;
           }
 
           if (inputValue === selectedValue) {
             successMessage.style.display = 'flex';
+            warningMessage.style.display = 'none';
             failureMessage.style.display = 'none';
           } else {
             successMessage.style.display = 'none';
+            warningMessage.style.display = 'none';
             failureMessage.style.display = 'flex';
             document.getElementById('expectedName').textContent = selectedName;
             document.getElementById('actualName').textContent = nameInput.value;
