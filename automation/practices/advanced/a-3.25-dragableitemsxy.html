@@ -51,6 +51,88 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
+    <style>
+        .container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #f8fafc;
+            border: 3px dashed #e2e8f0;
+            border-radius: 20px;
+            margin: 2.5rem 0;
+            overflow: hidden;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .draggable {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.75rem;
+            color: white;
+            cursor: grab;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            user-select: none;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            z-index: 10;
+        }
+
+        .draggable:active {
+            cursor: grabbing;
+            transform: scale(1.08);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+        }
+
+        .horizontal {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .vertical {
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .combined-box {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.75rem;
+            color: white;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+            animation: success-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 30;
+        }
+
+        @keyframes success-pop {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .draggable::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            bottom: 10px;
+        }
+
+        .horizontal::after { width: 30px; }
+    </style>
 </head>
 <body>
 <div id="header-placeholder"></div>
@@ -59,10 +141,10 @@
     <div class="card-nav">
         <a href="a-3.24-sortitems.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
-            Previous
+            Previous Task
         </a>
         <a href="a-3.26-charoddoneout.html" class="nav-btn nav-btn-next">
-            Next
+            Next Task
             <span class="nav-icon">→</span>
         </a>
     </div>
@@ -78,6 +160,7 @@
             <div id="combinedBox" class="combined-box"></div>
         </div>
         <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You have perfectly overlapped X and Y.</div>
+            <div id="failureMessage" class="message failure" role="status" aria-live="polite">Incorrect! Please try again.</div>
     </div>
     </main>
 </div>

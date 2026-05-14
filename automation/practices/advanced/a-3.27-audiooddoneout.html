@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="../../assets/css/header.css">
   <link rel="stylesheet" href="../../assets/css/footer.css">
   <script src="../../assets/components/components.js"></script>
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- Additional SEO Meta Tags -->
   <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -51,6 +53,44 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
+    <style>
+        .odd-one-out-grid.audio-variant {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .odd-one-out-grid.audio-variant button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px -5px rgba(107, 33, 168, 0.4);
+        }
+        .odd-one-out-grid.audio-variant button:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 30px -8px rgba(107, 33, 168, 0.5);
+            background: #7e22ce; /* Slightly lighter purple on hover */
+        }
+        .odd-one-out-grid.audio-variant button:active {
+            transform: translateY(-4px) scale(0.95);
+        }
+        .play-icon {
+            font-size: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Offset play icon slightly to the right for better visual balance */
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
 <div id="header-placeholder"></div>
@@ -59,10 +99,10 @@
     <div class="card-nav">
         <a href="a-3.26-charoddoneout.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
-            Previous
+            Previous Task
         </a>
         <a href="a-3.28-draganddropwithinframes.html" class="nav-btn nav-btn-next">
-            Next
+            Next Task
             <span class="nav-icon">→</span>
         </a>
     </div>
@@ -72,7 +112,7 @@
         <h1>Audio Odd One Out</h1>
         <p class="lead">Master audio discrimination! Listen carefully to all sounds and identify the unique one to prove your auditory pattern recognition skills.</p>
 
-        <div class="buttons" id="buttonContainer"></div>
+        <div class="odd-one-out-grid audio-variant" id="buttonContainer"></div>
         <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You found the odd sound out.</div>
         <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! That is not the odd sound out. Try again.</div>
         </div>
@@ -112,11 +152,10 @@
   const buttonContainer = document.getElementById('buttonContainer');
   soundButtons.forEach(sound => {
     const button = document.createElement('button');
-    button.classList.add('sound-button');
 
     const playIcon = document.createElement('div');
     playIcon.classList.add('play-icon');
-    playIcon.innerHTML = '▶️'; // Play icon for the button
+    playIcon.innerHTML = '<i class="fas fa-play"></i>'; // FontAwesome play icon
 
     button.appendChild(playIcon);
 

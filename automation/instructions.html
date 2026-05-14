@@ -49,72 +49,273 @@
     <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: auto !important;
+            display: block !important;
+            overflow-x: hidden;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+
+        html::-webkit-scrollbar, 
+        body::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+
+        body {
+            min-height: 100vh;
+            display: block !important;
+            background: var(--bg);
+        }
+
+        main {
+            display: block !important;
+            flex: none !important;
+        }
+
+        .content-wrapper {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: block !important;
+            padding: 20px;
+        }
+
+        .card-content {
+            padding: 0;
+            text-align: center !important;
+            align-items: center !important;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(107, 33, 168, 0.85), rgba(76, 29, 149, 0.95)), url('assets/images/hero-bg.png');
+            background-size: cover;
+            background-position: center;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-radius: 32px;
+            color: white;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(107, 33, 168, 0.3);
+            width: 100%;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem !important;
+            color: white !important;
+            background: none !important;
+            -webkit-text-fill-color: white !important;
+            margin-bottom: 1rem;
+            font-weight: 800 !important;
+        }
+
+        .hero-section p {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-size: 1.25rem !important;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .instruction-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .instruction-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            text-align: center !important;
+        }
+
+        .instruction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .instruction-card h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: center !important;
+            justify-content: center !important;
+        }
+
+        .instruction-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center !important;
+        }
+
+        .instruction-card li {
+            padding: 0.85rem 0;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex !important;
+            align-items: flex-start !important;
+            justify-content: center !important;
+            gap: 12px;
+            line-height: 1.6;
+            text-align: center !important;
+            font-size: 1.05rem;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .instruction-card li i {
+            margin-top: 4px;
+            min-width: 20px;
+            color: var(--success);
+        }
+
+        .instruction-card li:last-child {
+            border-bottom: none;
+        }
+
+        .do-dont-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .do-card { border-top: 4px solid var(--success); }
+        .dont-card { border-top: 4px solid var(--danger); }
+
+        .level-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .level-btn {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 2px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .level-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(107, 33, 168, 0.1);
+        }
+
+        .level-btn.beginner:hover { border-color: #10b981; color: #10b981; }
+        .level-btn.intermediate:hover { border-color: #f59e0b; color: #f59e0b; }
+        .level-btn.advanced:hover { border-color: #ef4444; color: #ef4444; }
+
+        @media (max-width: 768px) {
+            .instruction-grid, .do-dont-grid, .level-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <div id="header-placeholder"></div>
 
 <div class="content-wrapper">
-    <div class="card-nav">
-        <a href="index.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Automation Home
-        </a>
-        <a href="practices/beginner/b-intro.html" class="nav-btn nav-btn-next">
-            Start Beginner
-            <span class="nav-icon">→</span>
-        </a>
-    </div>
-
-    <main class="card scrollable-card">
+    <main class="card" style="background: transparent; border: none; box-shadow: none; height: auto; max-height: none; overflow: visible;">
         <div class="card-content">
-            <h1>Instructions for Software Testing Automation Practice Platform</h1>
-            <p class="lead">Welcome to Software Testing Pro's comprehensive automation practice platform. This guide will help you get started with practicing software automation testing using various scenarios and tools.</p>
+            
+            <header class="hero-section">
+                <h1>Platform Instructions</h1>
+                <p class="lead">Follow these guidelines to maximize your learning and build robust, industry-standard automation suites.</p>
+            </header>
 
-            <h2>Platform Instructions</h2>
-            <ul>
-                <li><strong>Empower Your Learning:</strong> This platform bridges the gap for automation enthusiasts by providing a dedicated space to practice diverse real-world scenarios that are often missing from standard tutorials.</li>
-                <li><strong>Tool Agnostic Approach:</strong> Leverage any programming language and automation framework of your choice, including Selenium, Cypress, Playwright, TestComplete, and more – true flexibility for modern testing.</li>
-                <li><strong>Project Setup:</strong> Initialize a new project in your preferred IDE to establish a structured testing environment.</li>
-                <li><strong>Organized Architecture:</strong> Create dedicated packages or modules for each skill level: Beginner, Intermediate, and Advanced to maintain clean, scalable code.</li>
-                <li><strong>Modular Development:</strong> Keep automation scripts organized within their respective proficiency packages for optimal maintainability and collaboration.</li>
-                <li><strong>Adaptive Learning:</strong> Choose challenges that align with your current expertise level and progressively build your automation mastery.</li>
-                <li><strong>Validation Excellence:</strong> Verify successful automation by asserting success messages – a critical step in ensuring test reliability.</li>
-                <li><strong>Mobile Testing Support:</strong> Extend your skills to mobile automation using physical devices, emulators, or simulators for comprehensive test coverage.</li>
-                <li><strong>Problem-Solving Mindset:</strong> When encountering obstacles, utilize online resources, documentation, and community forums to develop independent troubleshooting skills.</li>
-                <li><strong>Best Practices Integration:</strong> Incorporate industry standards like Page Object Model, data-driven testing, and cross-browser validation in your implementations.</li>
-                <li><strong>Continuous Improvement:</strong> After completing challenges, review your code for optimization opportunities and refactor for better performance.</li>
-            </ul>
+            <section class="instruction-grid">
+                <div class="instruction-card">
+                    <h3><i class="fas fa-rocket"></i> Getting Started</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Choose your IDE and initialize a structured testing project.</li>
+                        <li><i class="fas fa-check"></i> Organize your code by proficiency levels (Beginner, Intermediate, Advanced).</li>
+                        <li><i class="fas fa-check"></i> Select challenges that match your current expertise and scale up.</li>
+                    </ul>
+                </div>
+                <div class="instruction-card">
+                    <h3><i class="fas fa-tools"></i> Tool Agnostic</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Use any automation tool/framework and language of your choice: Selenium, Playwright, Cypress, Cucumber, Serenity, TestNG, JUnit, Pytest, etc.</li>
+                        <li><i class="fas fa-check"></i> Focus on core automation principles applicable across all tools.</li>
+                        <li><i class="fas fa-check"></i> Build modular, reusable scripts for long-term maintainability.</li>
+                    </ul>
+                </div>
+            </section>
 
-            <h2>Do's and Don'ts</h2>
-            <h3>Do's</h3>
-            <ul>
-                <li><strong>Plan Strategically:</strong> Always analyze the challenge requirements and plan your automation approach before coding.</li>
-                <li><strong>Write Maintainable Code:</strong> Use descriptive variable names, add comments, and follow coding best practices for long-term sustainability.</li>
-                <li><strong>Test Thoroughly:</strong> Execute tests across multiple browsers, devices, and scenarios to ensure robust functionality.</li>
-                <li><strong>Learn Continuously:</strong> Explore new automation techniques, frameworks, and tools to stay ahead in the evolving testing landscape.</li>
-                <li><strong>Document Your Work:</strong> Maintain clear test documentation and results for better collaboration and knowledge sharing.</li>
-                <li><strong>Debug Systematically:</strong> Use debugging tools, logs, and breakpoints to identify and resolve issues efficiently.</li>
-                <li><strong>Collaborate Actively:</strong> Engage with the testing community, share solutions, and learn from peer experiences.</li>
-            </ul>
-            <h3>Don'ts</h3>
-            <ul>
-                <li><strong>Avoid Hardcoding:</strong> Never hardcode values that could change; use configuration files or environment variables instead.</li>
-                <li><strong>Don't Ignore Waits:</strong> Failing to implement proper waits can lead to flaky tests – always synchronize your automation properly.</li>
-                <li><strong>Skip Error Handling:</strong> Don't write code without exception handling; robust tests anticipate and manage failures gracefully.</li>
-                <li><strong>Avoid Over-Reliance on UI:</strong> Don't depend solely on UI elements; incorporate API testing and database validations for comprehensive coverage.</li>
-                <li><strong>Don't Rush Implementation:</strong> Quality over speed – take time to understand requirements and implement reliable solutions.</li>
-                <li><strong>Neglect Maintenance:</strong> Don't abandon test suites; regularly update and refactor them as applications evolve.</li>
-                <li><strong>Ignore Performance:</strong> Don't write inefficient tests; optimize locators, reduce unnecessary operations, and monitor execution times.</li>
-            </ul>
+            <section class="animated-section">
+                <div class="do-dont-grid">
+                    <div class="instruction-card do-card">
+                        <h3><i class="fas fa-thumbs-up" style="color: var(--success);"></i> The Do's</h3>
+                        <ul>
+                            <li>Plan Strategically: Analyze requirements before writing a single line of code.</li>
+                            <li>Write Clean Code: Use descriptive names and the Page Object Model pattern.</li>
+                            <li>Synchronize properly: Use robust wait strategies to eliminate test flakiness.</li>
+                            <li>Assert everything: Always verify success messages to ensure reliability.</li>
+                        </ul>
+                    </div>
+                    <div class="instruction-card dont-card">
+                        <h3><i class="fas fa-thumbs-down" style="color: var(--danger);"></i> The Don'ts</h3>
+                        <ul>
+                            <li>No Hardcoding: Never hardcode environment-specific data or locators.</li>
+                            <li>Don't ignore UI: But also incorporate API and DB validations for full coverage.</li>
+                            <li>No "Sleep" commands: Avoid static waits; use dynamic expected conditions instead.</li>
+                            <li>Don't neglect maintenance: Refactor your suites as the application evolves.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
 
-            <h2>Start Practicing</h2>
-            <p>Choose your starting level:</p>
-            <div class="links-container">
-                <a href="practices/beginner/b-intro.html" class="level-link">Beginner Level</a>
-                <a href="practices/intermediate/i-intro.html" class="level-link">Intermediate Level</a>
-                <a href="practices/advanced/a-intro.html" class="level-link">Advanced Level</a>
-            </div>
+            <section class="start-section" style="text-align: center; margin-bottom: 5rem;">
+                <h2 style="margin-bottom: 2rem;">Ready to Start?</h2>
+                <div class="level-selector">
+                    <a href="practices/beginner/b-1.01-click.html" class="level-btn beginner">
+                        <i class="fas fa-seedling" style="font-size: 2rem; display: block; margin-bottom: 1rem; color: #10b981;"></i>
+                        Beginner Level
+                    </a>
+                    <a href="practices/intermediate/i-2.01-draganddroptext.html" class="level-btn intermediate">
+                        <i class="fas fa-star" style="font-size: 2rem; display: block; margin-bottom: 1rem; color: #f59e0b;"></i>
+                        Intermediate Level
+                    </a>
+                    <a href="practices/advanced/a-3.01-hiddenelement.html" class="level-btn advanced">
+                        <i class="fas fa-trophy" style="font-size: 2rem; display: block; margin-bottom: 1rem; color: #ef4444;"></i>
+                        Advanced Level
+                    </a>
+                </div>
+            </section>
+
         </div>
     </main>
 </div>

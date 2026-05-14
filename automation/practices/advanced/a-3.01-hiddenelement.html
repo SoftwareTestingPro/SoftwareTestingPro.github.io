@@ -1,32 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation in automation.">
+    <meta name="description"
+        content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation in automation.">
     <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
     <title>Hidden Element Challenge - Element Visibility Tutorial | Software Testing Pro</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
-    
+
     <!-- Header and Footer CSS -->
     <link rel="stylesheet" href="../../assets/css/header.css">
     <link rel="stylesheet" href="../../assets/css/footer.css">
     <script src="../../assets/components/components.js"></script>
     <!-- Additional SEO Meta Tags -->
-    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="keywords"
+        content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://softwaretestingpro.github.io/automation/practices/advanced/a-3.01-hiddenelement.html">
+    <link rel="canonical"
+        href="https://softwaretestingpro.github.io/automation/practices/advanced/a-3.01-hiddenelement.html">
     <!-- Open Graph Tags -->
     <meta property="og:title" content="Hidden Element Challenge - Element Visibility Tutorial | Software Testing Pro">
-    <meta property="og:description" content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation in automation.">
-    <meta property="og:url" content="https://softwaretestingpro.github.io/automation/practices/advanced/a-3.01-hiddenelement.html">
+    <meta property="og:description"
+        content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation in automation.">
+    <meta property="og:url"
+        content="https://softwaretestingpro.github.io/automation/practices/advanced/a-3.01-hiddenelement.html">
     <meta property="og:type" content="article">
     <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
     <meta property="og:site_name" content="Software Testing Pro">
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Hidden Element Challenge - Element Visibility Tutorial | Software Testing Pro">
-    <meta name="twitter:description" content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation.">
+    <meta name="twitter:description"
+        content="Master hidden element testing and visibility control. Learn CSS display properties and element state validation.">
     <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -45,43 +52,48 @@
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-MCHF9RDWT6');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
 </head>
-<body>
-<div id="header-placeholder"></div>
 
-<div class="content-wrapper">
-    <div class="card-nav">
-        <a href="a-intro.html" class="nav-btn nav-btn-prev">
-            <span class="nav-icon">←</span>
-            Back to Introduction
-        </a>
-        <a href="a-3.02-download.html" class="nav-btn nav-btn-next">
-            Next
-            <span class="nav-icon">→</span>
-        </a>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="content-wrapper">
+        <div class="card-nav">
+            <a href="../../instructions.html" class="nav-btn nav-btn-prev">
+                <span class="nav-icon">←</span>
+                Back to Instructions
+            </a>
+            <a href="a-3.02-download.html" class="nav-btn nav-btn-next">
+                Next Task
+                <span class="nav-icon">→</span>
+            </a>
+        </div>
+
+        <main class="card">
+            <div class="card-content">
+                <h1>Hidden Element Challenge</h1>
+                <p class="lead">Master timing and reflexes! A button appears for a very short duration on the screen
+                    and then disappears. You need to Wait for the button to appear after countdown, then click
+                    instantly to prove your speed skills.</p>
+                <div id="countdown">Time remaining: 5 seconds</div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You clicked
+                    the button successfully.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You missed
+                    clicking the button. Be fast!</div>
+            </div>
+        </main>
     </div>
 
-    <main class="card">
-        <div class="card-content">
-        <h1>Hidden Element Challenge</h1>
-        <p class="lead">Master timing and reflexes! Wait for the hidden button to appear after countdown, then click instantly to prove your speed skills.</p>
-        <div id="countdown">Time remaining: 5 seconds</div>
-            <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You clicked the button successfully.</div>
-            <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You missed clicking the button. Be fast!</div>
-        </div>
-    </main>
-</div>
-
-<div id="footer-placeholder"></div>
+    <div id="footer-placeholder"></div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             var labelText = document.getElementById('labelText');
             var countdown = document.getElementById('countdown');
             var successMessage = document.getElementById('successMessage');
@@ -94,7 +106,7 @@
             failureMessage.style.display = 'none';
 
             // Countdown timer
-            var countdownInterval = setInterval(function() {
+            var countdownInterval = setInterval(function () {
                 timeLeft--;
                 countdown.textContent = `Time remaining: ${timeLeft} seconds`;
                 if (timeLeft <= 0) {
@@ -103,7 +115,7 @@
             }, 1000);
 
             // After 5 seconds, hide the label and create the button
-            setTimeout(function() {
+            setTimeout(function () {
                 countdown.style.display = 'none';
 
                 // Create the button element
@@ -119,7 +131,7 @@
                 button.style.display = 'block';
 
                 // After 1 second, hide the button if not clicked
-                setTimeout(function() {
+                setTimeout(function () {
                     if (!buttonClicked) {
                         button.style.display = 'none';
                         if (button.parentNode) {
@@ -131,7 +143,7 @@
                 }, 2000);
 
                 // If the button is clicked, show the success message
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     buttonClicked = true;
                     button.style.display = 'none';
                     if (button.parentNode) {
@@ -145,17 +157,5 @@
         });
     </script>
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -57,13 +57,13 @@
     <div class="content-wrapper">
         <div class="card-nav">
             <a href="a-3.02-download.html" class="nav-btn nav-btn-prev">
-                <span class="nav-icon">←</span>
-                Previous
-            </a>
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
             <a href="a-3.04-readqr.html" class="nav-btn nav-btn-next">
-                Next
-                <span class="nav-icon">→</span>
-            </a>
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
         </div>
 
         <main class="card">
@@ -72,6 +72,7 @@
                 <p class="lead">Master canvas automation! Create a signature on the digital pad to demonstrate your drawing and canvas interaction skills.</p>
                 <canvas id="signature-pad"></canvas>
                 <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Signature captured successfully.</div>
+            <div id="failureMessage" class="message failure" role="status" aria-live="polite">Incorrect! Please try again.</div>
             </div>
         </main>
     </div>
@@ -130,7 +131,7 @@
 
                 if (!hasDrawn) {
                     hasDrawn = true;
-                    message.textContent = "Success! Signature captured.";
+                    successMessage.style.display = "flex";
                 }
             }
         }
@@ -165,7 +166,7 @@
 
                 if (!hasDrawn) {
                     hasDrawn = true;
-                    message.textContent = "Success! Signature captured.";
+                    successMessage.style.display = "flex";
                 }
             }
         }

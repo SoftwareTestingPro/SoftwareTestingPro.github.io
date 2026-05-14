@@ -51,6 +51,67 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
+    <style>
+        .list-container {
+            list-style: none;
+            padding: 0;
+            margin: 2rem auto;
+            max-width: 450px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .list-item {
+            padding: 1.25rem 1.5rem;
+            background: white;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            color: #1e293b;
+            user-select: none;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:hover {
+            background: #f8fafc;
+            color: var(--accent);
+        }
+
+        .list-item:active {
+            cursor: grabbing;
+        }
+
+        .drag-handle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+
+        .sortable-ghost {
+            opacity: 0.2;
+            background: var(--accent) !important;
+        }
+
+        .sortable-chosen {
+            background: #fdf2ff;
+        }
+
+        .sortable-drag {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-radius: 12px;
+            opacity: 1 !important;
+        }
+    </style>
 </head>
 <body>
 <div id="header-placeholder"></div>
@@ -59,10 +120,10 @@
     <div class="card-nav">
         <a href="a-3.23-xlsreaddata.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
-            Previous
+            Previous Task
         </a>
         <a href="a-3.25-dragableitemsxy.html" class="nav-btn nav-btn-next">
-            Next
+            Next Task
             <span class="nav-icon">→</span>
         </a>
     </div>
@@ -96,8 +157,11 @@
             const list = document.getElementById('animalList');
             shuffledItems.forEach(item => {
                 const li = document.createElement('li');
-                li.textContent = item;
                 li.className = 'list-item';
+                li.innerHTML = `
+                    <i class="fas fa-grip-vertical drag-handle"></i>
+                    <span>${item}</span>
+                `;
                 list.appendChild(li);
             });
 
@@ -111,12 +175,15 @@
 
             // Initialize SortableJS
             const sortable = Sortable.create(list, {
-                animation: 150,
+                animation: 250,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
                 onEnd: function(evt) {
                     hasDragged = true;
                     
                     // Check if list is sorted
-                    const items = Array.from(list.children).map(li => li.textContent);
+                    const items = Array.from(list.children).map(li => li.querySelector('span').textContent);
                     const sortedItems = [...items].sort();
                     if (JSON.stringify(items) === JSON.stringify(sortedItems)) {
                         successMessage.style.display = 'flex';

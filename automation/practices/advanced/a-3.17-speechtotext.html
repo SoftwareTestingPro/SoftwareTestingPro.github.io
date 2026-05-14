@@ -59,13 +59,13 @@
     <div class="content-wrapper">
         <div class="card-nav">
             <a href="a-3.16-reademailcontent.html" class="nav-btn nav-btn-prev">
-                <span class="nav-icon">←</span>
-                Previous
-            </a>
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
             <a href="a-3.18-imagetotext.html" class="nav-btn nav-btn-next">
-                Next
-                <span class="nav-icon">→</span>
-            </a>
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
         </div>
 
         <main class="card">
@@ -74,7 +74,9 @@
             <p class="lead">Master speech recognition! Listen carefully to the audio and input the exact spoken text to demonstrate your audio processing skills.</p>
 
                 <span class="label-hint">Click icon to play audio</span>
-                <i class="fas fa-play icon-button" id="iconButton"></i>
+                <div class="icon-button" id="iconButton" role="button" aria-label="Play audio">
+                    <i class="fas fa-play"></i>
+                </div>
                 <div class="input-container">
                     <label for="userInput">Enter the spoken text:</label>
                     <input type="text" id="userInput" placeholder="Input what you heard...">
@@ -106,21 +108,22 @@
             let isPlaying = false;
 
             iconButton.addEventListener('click', () => {
+                const icon = iconButton.querySelector('i');
                 if (!isPlaying) {
-                    iconButton.classList.remove('fa-play');
-                    iconButton.classList.add('fa-stop');
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-stop');
                     speechSynthesis.speak(utterance);
                     isPlaying = true;
 
                     utterance.onend = () => {
-                        iconButton.classList.remove('fa-stop');
-                        iconButton.classList.add('fa-play');
+                        icon.classList.remove('fa-stop');
+                        icon.classList.add('fa-play');
                         isPlaying = false;
                     };
                 } else {
                     speechSynthesis.cancel();
-                    iconButton.classList.remove('fa-stop');
-                    iconButton.classList.add('fa-play');
+                    icon.classList.remove('fa-stop');
+                    icon.classList.add('fa-play');
                     isPlaying = false;
                 }
             });
@@ -129,10 +132,10 @@
                 const inputText = userInput.value.trim().toLowerCase();
                 const correctText = "the recording has been started";
 
-                if (inputText === '') {
+                if (userInput.value.trim() === '') {
                     successMessage.style.display = 'none';
                     failureMessage.style.display = 'none';
-                } else if (inputText === correctText) {
+                } else if (userInput.value.trim().toLowerCase() === correctText.toLowerCase()) {
                     successMessage.style.display = 'flex';
                     failureMessage.style.display = 'none';
                 } else {

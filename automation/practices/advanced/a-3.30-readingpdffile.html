@@ -52,6 +52,53 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
+    <style>
+        .validation-section {
+            display: none;
+            margin-top: 2.5rem;
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .validation-section.active {
+            display: block;
+        }
+        .country-display {
+            padding: 2.5rem;
+            background: #f8fafc;
+            border-radius: 20px;
+            border: 3px dashed #e2e8f0;
+            text-align: center;
+            margin-bottom: 2rem;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .country-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.4;
+        }
+        .country-name strong {
+            color: var(--accent);
+            font-size: 1.75rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+        .radio-group {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #downloadBtn {
+            min-width: 280px;
+            padding: 1.25rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 10px 15px -3px rgba(107, 33, 168, 0.2);
+        }
+    </style>
 </head>
 <body>
 <div id="header-placeholder"></div>
@@ -60,10 +107,10 @@
     <div class="card-nav">
         <a href="a-3.29-dynamicprogressbar.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
-            Previous
+            Previous Task
         </a>
         <a href="../../congratulations.html" class="nav-btn nav-btn-next">
-            View Achievement
+            Next Task
             <span class="nav-icon">→</span>
         </a>
     </div>
@@ -71,10 +118,13 @@
     <main class="card">
         <div class="card-content">
             <h1>PDF File Reader</h1>
-            <p class="lead">Master PDF content validation! Download and examine the countries PDF, then verify if the displayed country appears in the document to prove your document processing skills.</p>
+            <p class="lead">Master PDF automation! Download the dynamically generated country list, then verify if the specified target country exists within the document's content to prove your data extraction skills.</p>
 
-            <div class="button-group">
-                <button id="downloadBtn" onclick="generateAndDownloadPDF()">Download Countries PDF</button>
+            <div class="button-group" style="text-align: center; margin: 2rem 0;">
+                <button id="downloadBtn" class="btn" onclick="generateAndDownloadPDF()">
+                    <i class="fas fa-file-pdf" style="margin-right: 10px;"></i>
+                    Download Countries PDF
+                </button>
             </div>
 
             <div class="validation-section" id="validationSection">
@@ -83,18 +133,22 @@
                 </div>
 
                 <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" id="yes" name="verification" value="yes">
-                        <label for="yes">Yes, country is in the PDF</label>
+                    <div class="radio-item">
+                        <label>
+                            <input type="radio" id="yes" name="verification" value="yes">
+                            <span>Yes, country is in the PDF</span>
+                        </label>
                     </div>
-                    <div class="radio-option">
-                        <input type="radio" id="no" name="verification" value="no">
-                        <label for="no">No, country is not in the PDF</label>
+                    <div class="radio-item">
+                        <label>
+                            <input type="radio" id="no" name="verification" value="no">
+                            <span>No, country is not in the PDF</span>
+                        </label>
                     </div>
                 </div>
 
-                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Your verification matches the PDF content.</div>
-                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! Your verification does not match the PDF content.</div>
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Excellent! Your extraction logic correctly verified the country's presence within the PDF document.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Validation failed! Your verification does not match the actual contents of the generated PDF. Please re-examine the document.</div>
             </div>
         </div>
     </main>
@@ -170,7 +224,7 @@
             selectedCountry = countriesNotInPDF[Math.floor(Math.random() * countriesNotInPDF.length)];
         }
 
-        document.getElementById('randomCountry').textContent = `Is ${selectedCountry} displayed in downloaded PDF file?`;
+        document.getElementById('randomCountry').innerHTML = `Is this country displayed in the downloaded PDF? <strong>${selectedCountry}</strong>`;
         document.getElementById('validationSection').classList.add('active');
         
         // Hide messages on page load

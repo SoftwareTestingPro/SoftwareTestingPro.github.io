@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
+<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
     <loc>https://softwaretestingpro.github.io/automation/faq.html</loc>
     <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -159,16 +159,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url><url>
-    <loc>https://softwaretestingpro.github.io/automation/practices/beginner/b-intro.html</loc>
-    <lastmod>2026-05-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url><url>
-    <loc>https://softwaretestingpro.github.io/automation/practices/beginner/b-tasks.html</loc>
-    <lastmod>2026-05-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url><url>
     <loc>https://softwaretestingpro.github.io/automation/practices/intermediate/i-2.01-draganddroptext.html</loc>
     <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -319,16 +309,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url><url>
-    <loc>https://softwaretestingpro.github.io/automation/practices/intermediate/i-intro.html</loc>
-    <lastmod>2026-05-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url><url>
-    <loc>https://softwaretestingpro.github.io/automation/practices/intermediate/i-tasks.html</loc>
-    <lastmod>2026-05-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url><url>
     <loc>https://softwaretestingpro.github.io/automation/practices/advanced/a-3.01-hiddenelement.html</loc>
     <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -478,14 +458,5 @@
     <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url><url>
-    <loc>https://softwaretestingpro.github.io/automation/practices/advanced/a-intro.html</loc>
-    <lastmod>2026-05-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url><url>
-    <loc>https://softwaretestingpro.github.io/automation/practices/advanced/a-tasks.html</loc>
-    <lastmod>2026-05-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url></urlset>
+  </url>
+</urlset>

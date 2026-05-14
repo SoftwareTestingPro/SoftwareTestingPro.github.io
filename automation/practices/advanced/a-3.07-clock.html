@@ -60,10 +60,10 @@
     <div class="card-nav">
         <a href="a-3.06-brokenimages.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
-            Previous
+            Previous Task
         </a>
         <a href="a-3.08-shapesoddoneout.html" class="nav-btn nav-btn-next">
-            Next
+            Next Task
             <span class="nav-icon">→</span>
         </a>
     </div>
@@ -71,7 +71,7 @@
     <main class="card">
       <div class="card-content">
       <h1>Analog Clock Challenge</h1>
-      <p class="lead">Master time reading! Read the analog clock precisely and input the exact time in HH:MM:SS format to prove your observation skills.</p>
+      <p class="lead">Master time reading! Read the analog clock precisely and input the exact time in <strong>12-hour HH:MM:SS format</strong> (01:00:00 to 12:59:59) to prove your skills.</p>
 
         <div class="clock">
           <div class="hand hour" id="hour"></div>
@@ -80,17 +80,15 @@
           <div class="center-point"></div>
         </div>
 
-        <div class="input-container">
-          <label for="user-input">Enter time in HH:MM:SS format (12-hour)</label>
-          <div class="input-wrapper">
-            <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" />
-            <button id="submit-btn">Submit</button>
-          </div>
-          <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You entered the right time.</div>
-          <div class="message failure" id="failureMessage" role="status" aria-live="polite">
-              Incorrect! The entered time does not match.
-              <div class="detail">Expected: <span id="expectedTime"></span> | Entered: <span id="actualTime"></span></div>
-          </div>
+        <div class="horizontal-form">
+          <label for="user-input">Enter time (12-hour):</label>
+          <input type="text" id="user-input" placeholder="HH:MM:SS" maxlength="8" style="max-width: 150px;" />
+          <button id="submit-btn">Submit</button>
+        </div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You entered the right time.</div>
+        <div class="message failure" id="failureMessage" role="status" aria-live="polite">
+          Incorrect! The entered time does not match.
+          <div class="detail">Expected: <span id="expectedTime"></span> | Entered: <span id="actualTime"></span></div>
         </div>
       </div>
     </main>
@@ -138,8 +136,8 @@
       ) {
         successMessage.style.display = 'none';
         failureMessage.style.display = 'flex';
-        document.getElementById('expectedTime').textContent = "HH:MM:SS format";
-        document.getElementById('actualTime').textContent = input.value || "empty";
+        failureMessage.innerHTML = `Incorrect format! Please enter a valid 12-hour time between 01:00:00 and 12:59:59.
+                                    <div class="detail">Entered: <span id="actualTime">${input.value || "empty"}</span></div>`;
         return;
       }
 
@@ -150,8 +148,8 @@
       } else {
         successMessage.style.display = 'none';
         failureMessage.style.display = 'flex';
-        document.getElementById('expectedTime').textContent = expectedTimeStr;
-        document.getElementById('actualTime').textContent = input.value;
+        failureMessage.innerHTML = `Incorrect time! The entered time does not match the clock.
+                                    <div class="detail">Expected: <span id="expectedTime">${expectedTimeStr}</span> | Entered: <span id="actualTime">${input.value}</span></div>`;
       }
     }
 

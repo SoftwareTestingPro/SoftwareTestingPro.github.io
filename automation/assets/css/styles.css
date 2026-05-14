@@ -135,7 +135,8 @@ main {
 
 p.lead {
     font-size: 1.125rem;
-    max-width: 600px;
+    width: 90%;
+    max-width: 800px;
     margin-top: 0;
     margin-bottom: 0.75rem;
     margin-left: auto;
@@ -618,11 +619,14 @@ textarea:focus {
     background: white;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
                 inset 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
 .clock::before {
     content: '';
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     background: repeating-conic-gradient(from 0deg, #e2e8f0 0deg 1deg, transparent 1deg 30deg);
@@ -954,7 +958,7 @@ textarea:focus {
 /* Game Component Styling */
 #gameCanvas {
     width: 100%;
-    height: 400px;
+    height: 300px;
     background: #f8fafc;
     border: 3px solid #e2e8f0;
     border-radius: 24px;
@@ -1443,7 +1447,7 @@ fieldset {
     width: 100%;
 }
 
-.radio-item, .radio-list li, .checkbox-group label, .radio-group label {
+.radio-item, .radio-list li {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1461,7 +1465,7 @@ fieldset {
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.radio-item:hover, .radio-list li:hover, .checkbox-group label:hover, .radio-group label:hover {
+.radio-item:hover, .radio-list li:hover {
     background: white;
     border-color: var(--accent);
     transform: translateY(-2px);
@@ -1509,31 +1513,58 @@ fieldset {
 /* Radio Dot */
 .radio-item input[type="radio"]::before,
 .radio-list li input[type="radio"]::before {
+    content: "";
     width: 100%;
     height: 100%;
     max-width: 10px;
     max-height: 10px;
     border-radius: 50%;
-    box-shadow: inset 1em 1em var(--accent);
+    background-color: var(--accent);
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.radio-item input[type="radio"]:checked::before,
+.radio-list li input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
+.radio-item:has(input:checked) {
+    background: #f5f3ff;
+    border-color: var(--accent);
 }
 
 /* Checkbox Checkmark */
 .checkbox-group label input[type="checkbox"]::before {
+    content: "";
     width: 12px;
     height: 12px;
+    background-color: var(--accent);
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .radio-item input[type="radio"]:checked,
 .radio-list li input[type="radio"]:checked,
 .checkbox-group label input[type="checkbox"]:checked {
+    background-color: var(--accent);
     border-color: var(--accent);
 }
 
-.radio-item input[type="radio"]:checked::before,
-.radio-list li input[type="radio"]:checked::before,
+/* Checkbox Checkmark (White on Purple) */
 .checkbox-group label input[type="checkbox"]:checked::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
     transform: scale(1);
+}
+
+/* Radio Circle (ensure no dot, just solid fill) */
+.radio-item input[type="radio"]:checked::before {
+    display: none;
 }
 
 .radio-item label, .radio-list li label, .radio-group label {
@@ -1667,6 +1698,7 @@ fieldset {
 }
 
 /* Odd One Out Challenge Styling */
+/* Standard Odd One Out Grid */
 .odd-one-out-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1678,32 +1710,104 @@ fieldset {
 }
 
 .odd-one-out-grid button {
+    width: 100%;
     min-width: 140px;
-    min-height: 100px;
+    min-height: 120px;
     padding: 20px 28px;
-    border-radius: 16px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    border: 3px solid #f0f0f0;
+    background: white;
     cursor: pointer;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.15), 0 4px 8px -2px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .odd-one-out-grid button:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.1);
+    border-color: #4a90e2;
 }
 
 .odd-one-out-grid button:active {
-    transform: translateY(-2px) scale(0.97);
+    transform: translateY(-2px) scale(0.98);
 }
+
+.shape {
+    width: 60px;
+    height: 60px;
+    background: #4a90e2;
+}
+
+.shape.circle {
+    border-radius: 50%;
+}
+
+.shape.square {
+    border-radius: 4px;
+}
+
+.shape.triangle {
+    width: 0;
+    height: 0;
+    background: transparent;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 60px solid #4a90e2;
+}
+
+.shape.hexagon {
+    width: 60px;
+    height: 35px;
+    background: #4a90e2;
+    position: relative;
+}
+
+.shape.hexagon::before,
+.shape.hexagon::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+}
+
+.shape.hexagon::before {
+    bottom: 100%;
+    border-bottom: 17.5px solid #4a90e2;
+}
+
+.shape.hexagon::after {
+    top: 100%;
+    border-top: 17.5px solid #4a90e2;
+}
+
+.odd-one-out-grid.text-variant button {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #4a90e2;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.odd-one-out-grid.audio-variant button {
+    font-size: 3rem;
+    color: #4a90e2;
+}
+
+.play-icon {
+    transition: transform 0.3s ease;
+}
+
+.odd-one-out-grid.audio-variant button:hover .play-icon {
+    transform: scale(1.2);
+}
+
+
+
 
 /* Math variant: styled boxes with accent background */
 .odd-one-out-grid.math-variant button {

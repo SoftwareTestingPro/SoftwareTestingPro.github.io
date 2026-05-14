@@ -59,10 +59,10 @@
     <div class="card-nav">
         <a href="a-3.18-imagetotext.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
-            Previous
+            Previous Task
         </a>
         <a href="a-3.20-aiquiz.html" class="nav-btn nav-btn-next">
-            Next
+            Next Task
             <span class="nav-icon">→</span>
         </a>
     </div>
@@ -148,12 +148,42 @@
 
         drawWheel();
 
+        // Dynamic Audio Generation
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTick() {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+
         spinButton.addEventListener('click', () => {
           let spinSpeed = 10;
+          let lastTickSegment = -1;
+          
+          // Ensure audio context is resumed (browsers block auto-play)
+          if (audioCtx.state === 'suspended') {
+              audioCtx.resume();
+          }
+
           const spin = setInterval(() => {
             ctx.clearRect(0, 0, 350, 350);
             currentRotation += spinSpeed * (Math.PI / 180);
             drawWheel();
+            
+            // Play tick sound when a new segment passes the pointer
+            const currentSegment = Math.floor((currentRotation % (2 * Math.PI)) / anglePerSegment);
+            if (currentSegment !== lastTickSegment) {
+                playTick();
+                lastTickSegment = currentSegment;
+            }
+
             spinSpeed *= 0.98;
 
             if (spinSpeed < 0.5) {

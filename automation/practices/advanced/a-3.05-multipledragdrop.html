@@ -59,10 +59,10 @@
     <div class="card-nav">
         <a href="a-3.04-readqr.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
-            Previous
+            Previous Task
         </a>
         <a href="a-3.06-brokenimages.html" class="nav-btn nav-btn-next">
-            Next
+            Next Task
             <span class="nav-icon">→</span>
         </a>
     </div>
@@ -84,6 +84,7 @@
     </div>
 
     <div class="message success" id="successMessage" role="status" aria-live="polite">All images successfully dropped!</div>
+            <div id="failureMessage" class="message failure" role="status" aria-live="polite">Incorrect! Please try again.</div>
     <div class="message info" id="infoMessage" role="status" aria-live="polite"></div>
         </div>
     </main>
@@ -100,8 +101,15 @@
         ];
 
         const dropContainer = document.getElementById('dropContainer');
+        const successMessage = document.getElementById('successMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const infoMessage = document.getElementById('infoMessage');
+        
+        let droppedCount = 0;
+
         // Hide messages on load
         successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
         infoMessage.style.display = 'none';
 
         // Separate the first image
@@ -146,6 +154,7 @@
                         dropZone.innerHTML = '';
                         dropZone.appendChild(draggedImage);
                         droppedCount++;
+                        failureMessage.style.display = 'none';
                         
                         if (droppedCount === 4) {
                             infoMessage.style.display = 'none';
@@ -155,10 +164,12 @@
                             infoMessage.textContent = `Progress: ${droppedCount} of 4 images dropped.`;
                         }
                     } else {
-                        alert('This drop zone already has an image.');
+                        failureMessage.style.display = 'flex';
+                        failureMessage.textContent = 'This drop zone already has an image.';
                     }
                 } else {
-                    alert('This image doesn’t match the drop area size.');
+                    failureMessage.style.display = 'flex';
+                    failureMessage.textContent = 'This image doesn’t match the drop area size.';
                 }
             });
         });

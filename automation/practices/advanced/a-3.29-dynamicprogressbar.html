@@ -51,6 +51,42 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
+    <style>
+        #progress-bar-container {
+            width: 100%;
+            height: 16px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 2.5rem 0;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.06);
+        }
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            width: 0;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+            transition: none; /* Let animation handle it */
+        }
+        .button-enabled {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+        }
+        #action-button {
+            min-width: 250px;
+            padding: 1rem 2rem;
+            font-weight: 700;
+            letter-spacing: 0.025em;
+        }
+        .message.timeout {
+            background: #fff7ed;
+            color: #c2410c;
+            border-color: #fdba74;
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -58,27 +94,31 @@
     <div class="content-wrapper">
         <div class="card-nav">
             <a href="a-3.28-draganddropwithinframes.html" class="nav-btn nav-btn-prev">
-                <span class="nav-icon">←</span>
-                Previous
-            </a>
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
             <a href="a-3.30-readingpdffile.html" class="nav-btn nav-btn-next">
-                Next
-                <span class="nav-icon">→</span>
-            </a>
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
         </div>
 
         <main class="card">
             <div class="card-content">
                 <h1>Dynamic Progress Bar Challenge</h1>
-                <p class="lead">Master advanced timing! Wait for the progress bar to complete exactly at 100%, then click instantly to prove your precision skills.</p>
+                <p class="lead">Master advanced timing! Wait for the progress bar to reach 100%, then click the button within 1 second to succeed.</p>
+                
                 <div id="progress-bar-container">
                     <div id="progress-bar"></div>
                 </div>
-                <div class="button-enabled">
-                    <button id="action-button">Click Me After 100%!</button>
+
+                <div class="button-enabled" id="button-container">
+                    <button id="action-button" class="btn">Click Me After 100%!</button>
                 </div>
-                <div class="message success" id="successMessage" role="status" aria-live="polite">Success! Button was clicked after completion.</div>
-                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You clicked too early.</div>
+
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Success! You clicked at the perfect time.</div>
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You clicked too early. Wait for 100%.</div>
+                <div class="message timeout" id="timeoutMessage" role="status" aria-live="polite">You failed to click the button in time! It disappeared after 1 second.</div>
             </div>
         </main>
     </div>
@@ -90,63 +130,73 @@
         const actionButton = document.getElementById('action-button');
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
+        const timeoutMessage = document.getElementById('timeoutMessage');
+        
         let progress = 0;
         let intervalId;
         let buttonClicked = false;
+        let isComplete = false;
 
         // Hide messages on load
         successMessage.style.display = 'none';
         failureMessage.style.display = 'none';
+        timeoutMessage.style.display = 'none';
 
-        const randomDuration = Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000;
-        const updateInterval = 100; // Check progress every 100ms
-
-        // Dynamically create and inject the CSS animation
-        const animationName = 'progress-animation';
-        const styleSheet = document.createElement('style');
-        styleSheet.innerHTML = `
-            @keyframes ${animationName} {
-                from { width: 0; }
-                to { width: 100%; }
-            }
-        `;
-        document.head.appendChild(styleSheet);
+        const randomDuration = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
+        const updateInterval = 50;
 
         // Apply the animation
+        const animationName = 'progress-animation';
+        const styleSheet = document.createElement('style');
+        styleSheet.innerHTML = `@keyframes ${animationName} { from { width: 0; } to { width: 100%; } }`;
+        document.head.appendChild(styleSheet);
         progressBar.style.animation = `${animationName} ${randomDuration}ms linear forwards`;
 
+        const startTime = Date.now();
+
         function checkProgress() {
-            // Calculate the elapsed time
-            const elapsedTime = (Date.now() - startTime);
+            if (buttonClicked) return;
+
+            const elapsedTime = Date.now() - startTime;
             progress = Math.min(100, (elapsedTime / randomDuration) * 100);
 
-            if (progress >= 100) {
+            if (progress >= 100 && !isComplete) {
+                isComplete = true;
                 clearInterval(intervalId);
+                
+                // Keep button for exactly 1 second
                 setTimeout(() => {
-                    actionButton.style.display = 'none';
                     if (!buttonClicked) {
-                        failureMessage.style.display = 'flex';
+                        actionButton.style.display = 'none';
+                        timeoutMessage.style.display = 'flex';
                         successMessage.style.display = 'none';
+                        failureMessage.style.display = 'none';
                     }
                 }, 1000);
             }
         }
 
         actionButton.addEventListener('click', () => {
+            if (buttonClicked) return;
             buttonClicked = true;
-            if (progress < 100) {
+
+            if (!isComplete) {
                 clearInterval(intervalId);
-                progressBar.style.animationPlayState = 'paused'; // Pause the animation
+                progressBar.style.animationPlayState = 'paused';
                 failureMessage.style.display = 'flex';
                 successMessage.style.display = 'none';
+                timeoutMessage.style.display = 'none';
                 actionButton.disabled = true;
             } else {
                 successMessage.style.display = 'flex';
                 failureMessage.style.display = 'none';
+                timeoutMessage.style.display = 'none';
+                // Success! Keep the button visible but maybe change its state
+                actionButton.textContent = 'Completed!';
+                actionButton.classList.add('success');
             }
         });
 
-        const startTime = Date.now();
         intervalId = setInterval(checkProgress, updateInterval);
     </script>
 </body>

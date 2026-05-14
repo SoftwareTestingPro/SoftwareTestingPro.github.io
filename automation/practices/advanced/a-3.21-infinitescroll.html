@@ -51,6 +51,51 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
+    <style>
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 2rem 0;
+            width: 100%;
+        }
+        .image-container {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #f1f5f9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container img.loaded {
+            opacity: 1;
+        }
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+        #loader {
+            text-align: center;
+            padding: 2rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        #verification-area {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 2px dashed #e2e8f0;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -58,27 +103,27 @@
     <div class="content-wrapper">
         <div class="card-nav">
             <a href="a-3.20-aiquiz.html" class="nav-btn nav-btn-prev">
-                <span class="nav-icon">←</span>
-                Previous
-            </a>
+            <span class="nav-icon">←</span>
+            Previous Task
+        </a>
             <a href="a-3.22-xlswritedata.html" class="nav-btn nav-btn-next">
-                Next
-                <span class="nav-icon">→</span>
-            </a>
+            Next Task
+            <span class="nav-icon">→</span>
+        </a>
         </div>
 
-        <main class="card" style="max-height: 80vh; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <main class="card" style="max-height: 80vh; overflow-y: auto;">
             <div class="card-content" style="padding: 20px; overflow-y: auto;">
                 <h1>Infinite Scroll Challenge</h1>
-                <p class="lead">Master infinite scroll! Scroll continuously to load all dynamic content and count the total images to prove your patience skills.</p>
-                <p id="instructions">Scroll down to load all images, then enter the total count.</p>
+                <p class="lead">Master infinite scroll! Scroll continuously until all images are loaded. Once all images are loaded, enter count in input field displayed below images.</p>                
                 <div class="image-grid" id="image-grid"></div>
                 <div id="loader">Loading...</div>
                 <div id="verification-area">
-                    <label for="image-count-input"><b>All images loaded. How many are there?</b></label>
-                    <br><br>
-                    <input type="number" id="image-count-input" placeholder="Enter count">
-                    <button id="verify-btn">Verify</button>
+                    <div class="horizontal-form">
+                        <label for="image-count-input">All images loaded. How many are there?</label>
+                        <input type="number" id="image-count-input" placeholder="Enter count">
+                        <button id="verify-btn">Verify</button>
+                    </div>
                     <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You counted all images successfully.</div>
                     <div class="message failure" id="failureMessage" role="status" aria-live="polite">
                         Incorrect! The image count does not match.

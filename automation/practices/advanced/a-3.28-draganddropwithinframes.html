@@ -51,6 +51,35 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
+    <style>
+        .iframe-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+            height: 350px;
+        }
+        .iframe-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .iframe-label {
+            font-weight: 700;
+            color: var(--muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            background: #f8fafc;
+            box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.06);
+        }
+    </style>
 </head>
 <body>
 <div id="header-placeholder"></div>
@@ -59,10 +88,10 @@
     <div class="card-nav">
         <a href="a-3.27-audiooddoneout.html" class="nav-btn nav-btn-prev">
             <span class="nav-icon">←</span>
-            Previous
+            Previous Task
         </a>
         <a href="a-3.29-dynamicprogressbar.html" class="nav-btn nav-btn-next">
-            Next
+            Next Task
             <span class="nav-icon">→</span>
         </a>
     </div>
@@ -70,39 +99,92 @@
     <main class="card">
         <div class="card-content">
         <h1>Drag and Drop with Frames</h1>
-        <p class="lead">Master cross-frame dragging! Drag the element from left frame to right frame container to demonstrate your iframe communication skills.</p>
+        <p class="lead">Master cross-frame dragging! Drag the element from the source frame on the left to the target container in the frame on the right.</p>
 
-        <div class="iframe-container">
-            <iframe id="frame1" srcdoc="
-                <!DOCTYPE html>
-                <html lang='en'>
-                <head>
-                    <link rel='stylesheet' href='../assets/css/advanced/styles-a-3.28.css'>
-                </head>
-                <body class='frame-body'>
-                    <div class='frame-container'>					
-                        <div id='drag1' class='frame-draggable' draggable='true' ondragstart='parent.drag(event)'>Drag Me</div>
-                    </div>
-                </body>
-                </html>
-            "></iframe>
-            <iframe id="frame2" srcdoc="
-                <!DOCTYPE html>
-                <html lang='en'>
-                <head>
-                    <link rel='stylesheet' href='../assets/css/advanced/styles-a-3.28.css'>
-                </head>
-                <body class='frame-body'>
-                    <div class='frame-container'>
-                        <div id='dropContainer' class='frame-dropContainer' ondrop='parent.drop(event)' ondragover='parent.allowDrop(event)'>
+        <div class="iframe-grid">
+            <div class="iframe-wrapper">
+                <div class="iframe-label">Source Frame</div>
+                <iframe id="frame1" srcdoc="
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'>
+                        <style>
+                            body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; background: transparent; }
+                            .frame-draggable {
+                                padding: 16px 32px;
+                                background: #6b21a8;
+                                color: white;
+                                border-radius: 12px;
+                                cursor: grab;
+                                font-weight: 700;
+                                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                user-select: none;
+                            }
+                            .frame-draggable:active { cursor: grabbing; transform: scale(0.98); }
+                        </style>
+                    </head>
+                    <body>
+                        <div id='drag1' class='frame-draggable' draggable='true' ondragstart='parent.drag(event)'>
+                            <i class='fas fa-grip-vertical'></i> Drag Me
+                        </div>
+                    </body>
+                    </html>
+                "></iframe>
+            </div>
+            <div class="iframe-wrapper">
+                <div class="iframe-label">Target Frame</div>
+                <iframe id="frame2" srcdoc="
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; background: transparent; }
+                            .frame-dropContainer {
+                                width: 220px;
+                                height: 160px;
+                                border: 3px dashed #cbd5e1;
+                                border-radius: 20px;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                color: #94a3b8;
+                                font-weight: 600;
+                                transition: all 0.3s ease;
+                                background: white;
+                                gap: 10px;
+                            }
+                            .frame-dropContainer.drag-over {
+                                border-color: #6b21a8;
+                                background: #fdf2ff;
+                                color: #6b21a8;
+                            }
+                            /* Style for the element after it is dropped */
+                            .frame-draggable {
+                                padding: 16px 32px;
+                                background: #6b21a8;
+                                color: white;
+                                border-radius: 12px;
+                                font-weight: 700;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div id='dropContainer' class='frame-dropContainer' ondrop='parent.drop(event)' ondragover='parent.allowDrop(event)' ondragenter='this.classList.add(&quot;drag-over&quot;)' ondragleave='this.classList.remove(&quot;drag-over&quot;)'>
+                            <i class='fas fa-download' style='font-size: 2rem; margin-bottom: 5px;'></i>
                             Drop Here
                         </div>
-                    </div>
-                </body>
-                </html>
-            "></iframe>
+                    </body>
+                    </html>
+                "></iframe>
+            </div>
         </div>
         <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! Element successfully dropped in the target frame.</div>
+            <div id="failureMessage" class="message failure" role="status" aria-live="polite">Incorrect! Please try again.</div>
         </div>
     </main>
 </div>
