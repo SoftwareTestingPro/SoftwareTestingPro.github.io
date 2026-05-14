@@ -1283,8 +1283,49 @@ button:focus {
 }
 
 #performanceChart {
-    max-width: 100%;
+    max-width: 200px;
     height: auto;
+}
+
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+.legend-color.correct {
+    background: #28a745;
+}
+
+.legend-color.incorrect {
+    background: #dc3545;
+}
+
+.legend-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4b5563;
 }
 
 /* Question Review */
@@ -1394,10 +1435,7 @@ button:focus {
         padding: 1rem;
     }
     
-    #performanceChart {
-        width: 150px;
-        height: 150px;
-    }
+
 }
 
 /* Welcome Content Styles */

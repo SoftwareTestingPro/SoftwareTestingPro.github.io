@@ -157,7 +157,19 @@
         <!-- Pie Chart -->
         <div class="chart-container">
             <h3>Performance Overview</h3>
-            <canvas id="performanceChart" width="200" height="200"></canvas>
+            <div class="chart-wrapper">
+                <canvas id="performanceChart" width="200" height="200"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color correct"></span>
+                        <span class="legend-label">Correct: <span id="chartCorrectCount">0</span></span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color incorrect"></span>
+                        <span class="legend-label">Incorrect: <span id="chartIncorrectCount">0</span></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Question Details -->
@@ -514,13 +526,15 @@
         const canvas = document.getElementById('performanceChart');
         const ctx = canvas.getContext('2d');
         const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const radius = 80;
+        const centerY = canvas.height / 2; // Center it fully now
+        const radius = 90; // Slightly larger since we have more room
 
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const total = correct + incorrect;
+        if (total === 0) return;
+
         const correctAngle = (correct / total) * 2 * Math.PI;
         const incorrectAngle = (incorrect / total) * 2 * Math.PI;
 
@@ -540,17 +554,9 @@
         ctx.fillStyle = '#dc3545';
         ctx.fill();
 
-        // Draw legend
-        ctx.fillStyle = '#28a745';
-        ctx.fillRect(10, canvas.height - 30, 15, 15);
-        ctx.fillStyle = '#333';
-        ctx.font = '12px Arial';
-        ctx.fillText(`Correct: ${correct}`, 30, canvas.height - 18);
-
-        ctx.fillStyle = '#dc3545';
-        ctx.fillRect(100, canvas.height - 30, 15, 15);
-        ctx.fillStyle = '#333';
-        ctx.fillText(`Incorrect: ${incorrect}`, 120, canvas.height - 18);
+        // Update HTML legend
+        document.getElementById('chartCorrectCount').textContent = correct;
+        document.getElementById('chartIncorrectCount').textContent = incorrect;
     }
 
     function displayQuestionReview() {
