@@ -35,16 +35,15 @@
     <style>
         :root {
             --primary: #6366f1;
-            --primary-dark: #4f46e5;
             --secondary: #8b5cf6;
-            --accent: #ec4899;
-            --dark: #1e293b;
-            --gray: #64748b;
-            --light-gray: #f1f5f9;
-            --white: #ffffff;
-            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            --shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            --accent: #10b981;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         * {
@@ -55,552 +54,495 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
             min-height: 100vh;
-            color: var(--dark);
+            color: var(--text-main);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 4rem 2rem;
+        }
+
+        /* Glassmorphism utility */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Hero Section */
         .hero {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 3rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-lg);
+            padding: 4rem;
+            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 4rem;
+            align-items: center;
             position: relative;
-            overflow: hidden;
         }
 
-        .hero::before {
+        .hero::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--gradient);
+            top: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.2;
+            z-index: -1;
         }
 
-        .hero-header {
+        .hero-title h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero-title .subtitle {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
-        .hero-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            flex: 1;
-            gap: 1.5rem;
+        .hero-title .subtitle::before {
+            content: '';
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
         }
 
         .hero-actions {
             display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
+            gap: 1.25rem;
+            margin-top: 2.5rem;
         }
 
-        .hero-title {
-            flex: 1;
-            min-width: 250px;
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .hero-image-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
         }
 
         .hero-image {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
             object-fit: cover;
-            border: 5px solid var(--white);
-            box-shadow: var(--shadow-lg);
-            transition: transform 0.3s ease;
-            flex-shrink: 0;
-            margin: 0;
+            border: 2px solid var(--glass-border);
+            animation: morph 8s ease-in-out infinite;
         }
 
-        .hero-image:hover {
-            transform: scale(1.05);
+        @keyframes morph {
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+            100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
         }
 
-        .hero-title h1 {
+        /* Stats Grid */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .stat-number {
             font-size: 3rem;
             font-weight: 800;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero-title .subtitle {
-            font-size: 1.25rem;
-            color: var(--gray);
-            font-weight: 500;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .btn-secondary {
-            background: var(--light-gray);
-            color: var(--dark);
-        }
-
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        /* Stats Section */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            display: block;
         }
 
         .stat-label {
-            color: var(--gray);
+            color: var(--text-muted);
+            font-size: 0.9rem;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             margin-top: 0.5rem;
         }
 
-        /* Resume Content Section */
+        /* Sections */
         .resume-section {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: var(--shadow-lg);
-            margin-bottom: 2rem;
+            padding: 3.5rem;
+            margin-bottom: 3rem;
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--light-gray);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
 
         .section-icon {
-            width: 48px;
-            height: 48px;
+            width: 60px;
+            height: 60px;
             background: var(--gradient);
-            border-radius: 12px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--white);
-            font-size: 1.25rem;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3);
         }
 
         .section-title {
-            font-size: 1.75rem;
+            font-size: 2.25rem;
             font-weight: 700;
-            color: var(--dark);
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .resume-content {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.8;
-            color: var(--dark);
+        .expertise-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
 
-        .resume-content p {
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background: var(--light-gray);
-            border-radius: 8px;
+        .expertise-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: 16px;
             border-left: 4px solid var(--primary);
+            transition: transform 0.3s ease;
         }
 
-        .resume-content p:first-child {
-            background: var(--light-gray);
-            color: var(--dark);
-            font-weight: 600;
-            border-left: 4px solid var(--primary);
+        .expertise-item:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         /* Skills Grid */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
 
         .skill-category {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
+            padding: 2rem;
         }
 
         .skill-category h3 {
             color: var(--primary);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
         .skill-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .skill-tag {
-            background: var(--light-gray);
-            color: var(--dark);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            border: 1px solid var(--glass-border);
             transition: all 0.3s ease;
         }
 
         .skill-tag:hover {
-            background: var(--gradient);
-            color: var(--white);
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        /* Contact Section */
-        .contact-section {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-        }
-
-        .contact-links {
-            display: flex;
-            justify-content: center;
+        /* Contact Area */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
+            margin-top: 3rem;
         }
 
-        .contact-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--gray);
+        .contact-card {
+            padding: 2rem;
+            text-align: center;
             text-decoration: none;
-            transition: color 0.3s ease;
+            color: var(--text-main);
         }
 
-        .contact-link:hover {
+        .contact-card i {
+            font-size: 2rem;
             color: var(--primary);
+            margin-bottom: 1rem;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
+        .contact-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+        }
 
-            .hero, .resume-section, .contact-section {
-                padding: 2rem 1.5rem;
+        /* Mobile Adjustments */
+        @media (max-width: 992px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 3rem 2rem;
             }
-
-            .hero-title h1 {
-                font-size: 2rem;
-            }
-
             .hero-header {
                 flex-direction: column;
-                text-align: center;
-                gap: 1.5rem;
             }
-
-            .hero-content {
-                justify-content: center;
+            .hero-image-container {
+                margin: 0 auto;
+                order: -1;
             }
-
             .hero-actions {
                 justify-content: center;
             }
-
+            .hero-title .subtitle {
+                justify-content: center;
+            }
+            .hero-title .subtitle::before {
+                display: none;
+            }
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
-
-            .skills-grid {
+            .expertise-list {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+        @media (max-width: 640px) {
+            .hero-title h1 {
+                font-size: 2.5rem;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .stats {
+                grid-template-columns: 1fr;
             }
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        /* Print Styles */
-        @media print {
-            body {
-                background: var(--white);
+            .resume-section {
+                padding: 2rem;
             }
-
-            .hero-actions, .contact-section {
-                display: none;
-            }
-
-            .hero, .resume-section {
-                box-shadow: none;
-                border: 1px solid var(--border-color);
+            .hero-actions {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div id="header-placeholder"></div>
     
     <div class="container">
         <!-- Hero Section -->
-        <section class="hero fade-in-up">
-            <div class="hero-header">
-                <div class="hero-content">
-                    <div class="hero-title">
-                        <h1>Sushil Kumar Singh</h1>
-                        <p class="subtitle">Senior Software Development Engineer in Test | INDIA</p>
-                    </div>
-                    <div class="hero-actions">
-                        <a href="mailto:sushilsingh7688@gmail.com" class="btn btn-primary" onclick="window.location.href='mailto:sushilsingh7688@gmail.com'; return false;">
-                            <i class="fas fa-envelope"></i> Contact Me
-                        </a>
+        <section class="hero glass-card">
+            <div class="hero-content">
+                <div class="hero-title">
+                    <div class="subtitle">SDET & Automation Architect</div>
+                    <h1>Sushil Kumar Singh</h1>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px;">
+                        Crafting high-performance test automation frameworks and ensuring digital quality for 15+ years. Specialist in SDLC optimization and CI/CD excellence.
+                    </p>
+                </div>
+                <div class="hero-actions">
+                    <a href="mailto:sushilsingh7688@gmail.com" class="btn btn-primary" onclick="window.location.href='mailto:sushilsingh7688@gmail.com'; return false;">
+                        <i class="fas fa-envelope"></i> Hire Me
+                    </a>
+                    <div style="display: flex; gap: 0.75rem;">
                         <a href="https://linkedin.com/in/ssingh7688/" target="_blank" class="btn btn-secondary">
-                            <i class="fab fa-linkedin"></i> LinkedIn
+                            <i class="fab fa-linkedin"></i>
                         </a>
                         <a href="https://github.com/SoftwareTestingPro" target="_blank" class="btn btn-secondary">
-                            <i class="fab fa-github"></i> GitHub
+                            <i class="fab fa-github"></i>
                         </a>
                     </div>
                 </div>
+            </div>
+            <div class="hero-image-container">
                 <img src="automation/img/dev.jpg" alt="Sushil Singh" class="hero-image">
             </div>
         </section>
 
         <!-- Stats Section -->
-        <section class="stats fade-in-up">
-            <div class="stat-card">
-                <div class="stat-number">15+</div>
-                <div class="stat-label">Years Experience</div>
+        <section class="stats">
+            <div class="stat-card glass-card">
+                <span class="stat-number">15+</span>
+                <span class="stat-label">Years of Mastery</span>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">SDET</div>
-                <div class="stat-label">Current Role</div>
+            <div class="stat-card glass-card">
+                <span class="stat-number">90+</span>
+                <span class="stat-label">Projects Guided</span>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">6+</div>
-                <div class="stat-label">Frameworks</div>
+            <div class="stat-card glass-card">
+                <span class="stat-number">12+</span>
+                <span class="stat-label">Global Tools</span>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">CI/CD</div>
-                <div class="stat-label">DevOps Expert</div>
+            <div class="stat-card glass-card">
+                <span class="stat-number">SDET</span>
+                <span class="stat-label">Engineering DNA</span>
             </div>
         </section>
 
-        <!-- Resume Content Section -->
-        <section class="resume-section fade-in-up">
+        <!-- About Section -->
+        <section class="resume-section glass-card">
             <div class="section-header">
-                <div class="section-icon">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <h2 class="section-title">About Me</h2>
+                <div class="section-icon"><i class="fas fa-user-astronaut"></i></div>
+                <h2 class="section-title">The Expert Profile</h2>
             </div>
-            <div class="resume-content">
-                <p><strong>ABOUT ME</strong><br>I'm a passionate Software Development Engineer in Test (SDET) with over 15 years of experience in software quality assurance and test automation. I specialize in designing and implementing robust automated test frameworks that ensure application reliability and performance across multiple platforms.</p>
-                <p><strong>MY EXPERTISE</strong><br>•I excel in creating scalable test automation solutions using modern frameworks like Selenium, Playwright, Cypress, and Cucumber BDD<br>•I have extensive experience in API testing and integration using REST Assured and Postman<br>•I'm proficient in setting up and managing CI/CD pipelines with Jenkins and AWS CodeBuild<br>•I love working with cross-functional teams in agile environments to deliver high-quality software<br>•I'm passionate about mentoring junior engineers and sharing knowledge about best practices in test automation</p>
-                <p><strong>MY APPROACH</strong><br>I believe in a holistic approach to quality assurance that combines technical expertise with strategic thinking. My focus is on building maintainable, scalable test automation frameworks that not only catch bugs but also prevent them. I stay updated with the latest tools and technologies to ensure our testing strategies are always cutting-edge and effective.</p>
+            <div style="margin-bottom: 3rem;">
+                <p style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 2rem;">
+                    I transform complex testing challenges into streamlined, automated workflows. My mission is to bridge the gap between rapid development and rock-solid reliability.
+                </p>
+                <div class="expertise-list">
+                    <div class="expertise-item">
+                        <strong style="color: var(--primary); display: block; margin-bottom: 0.5rem;">Architecture First</strong>
+                        I design scalable test automation solutions using Selenium, Playwright, and Cypress that evolve with your product.
+                    </div>
+                    <div class="expertise-item">
+                        <strong style="color: var(--primary); display: block; margin-bottom: 0.5rem;">API Excellence</strong>
+                        Master of REST Assured and Postman for deep-layer integration testing and contract validation.
+                    </div>
+                    <div class="expertise-item">
+                        <strong style="color: var(--primary); display: block; margin-bottom: 0.5rem;">DevOps Synergy</strong>
+                        Setting up seamless CI/CD pipelines with Jenkins and AWS to ensure quality at every commit.
+                    </div>
+                    <div class="expertise-item">
+                        <strong style="color: var(--primary); display: block; margin-bottom: 0.5rem;">Mobile Innovation</strong>
+                        Expertise in Flutter and Dart automation for high-performance cross-platform mobile application testing.
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Skills Section -->
-        <section class="resume-section fade-in-up">
+        <section class="resume-section glass-card">
             <div class="section-header">
-                <div class="section-icon">
-                    <i class="fas fa-code"></i>
-                </div>
-                <h2 class="section-title">Technical Expertise</h2>
+                <div class="section-icon"><i class="fas fa-terminal"></i></div>
+                <h2 class="section-title">Tech Stack</h2>
             </div>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3>🚀 Test Automation</h3>
+                    <h3><i class="fas fa-rocket"></i> Core Automation</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">Selenium</span>
-                        <span class="skill-tag">Cucumber BDD</span>
-                        <span class="skill-tag">Serenity</span>
                         <span class="skill-tag">Playwright</span>
-                        <span class="skill-tag">Rest Assured API</span>
-                        <span class="skill-tag">TestNG</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>🔧 Frameworks (Secondary)</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">JUnit</span>
-                        <span class="skill-tag">SilkTest</span>
-                        <span class="skill-tag">Postman</span>
-                        <span class="skill-tag">BrowserStack</span>
                         <span class="skill-tag">Cypress</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>💻 Programming Languages</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">TypeScript</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>📁 Version Control</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Git Bash</span>
-                        <span class="skill-tag">GitHub Desktop</span>
-                        <span class="skill-tag">SVN</span>
-                        <span class="skill-tag">BitBucket</span>
-                        <span class="skill-tag">TFS</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>📊 Test Management Tools</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">JIRA</span>
-                        <span class="skill-tag">TestRail</span>
-                        <span class="skill-tag">Zephyr</span>
-                        <span class="skill-tag">TestLink</span>
-                        <span class="skill-tag">XRay</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>🔧 Build & Other Tools</h3>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Maven</span>
-                        <span class="skill-tag">Jenkins</span>
-                        <span class="skill-tag">Silk4J</span>
-                        <span class="skill-tag">POM Methods</span>
                         <span class="skill-tag">Appium</span>
+                        <span class="skill-tag">Rest Assured</span>
+                        <span class="skill-tag">Cucumber BDD</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-mobile-alt"></i> Mobile & Modern</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Flutter</span>
+                        <span class="skill-tag">Dart</span>
+                        <span class="skill-tag">TypeScript</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">Java</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-tools"></i> Engineering Tools</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Jenkins</span>
+                        <span class="skill-tag">Maven</span>
+                        <span class="skill-tag">Git/GitHub</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">JIRA</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section class="contact-section fade-in-up">
-            <div class="section-header" style="justify-content: center; border: none;">
-                <div class="section-icon">
-                    <i class="fas fa-user"></i>
-                </div>
-                <h2 class="section-title">Get In Touch</h2>
+        <section class="resume-section glass-card" style="text-align: center;">
+            <div class="section-header" style="justify-content: center;">
+                <h2 class="section-title">Let's Build Quality</h2>
             </div>
-            <p style="color: var(--gray); margin-bottom: 1rem;">Let's connect and discuss opportunities in test automation and quality engineering</p>
-            <div class="contact-links">
-                <a href="mailto:sushilsingh7688@gmail.com" class="contact-link" onclick="window.location.href='mailto:sushilsingh7688@gmail.com'; return false;">
-                    <i class="fas fa-envelope"></i> sushilsingh7688@gmail.com
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Available for strategic consulting and senior SDET opportunities.</p>
+            <div class="contact-grid">
+                <a href="mailto:sushilsingh7688@gmail.com" class="contact-card glass-card">
+                    <i class="fas fa-envelope"></i>
+                    <div style="font-weight: 600;">Email</div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">sushilsingh7688@gmail.com</div>
                 </a>
-                <a href="tel:+919718214423" class="contact-link">
-                    <i class="fas fa-phone"></i> +91 9718214423
+                <a href="https://linkedin.com/in/ssingh7688/" target="_blank" class="contact-card glass-card">
+                    <i class="fab fa-linkedin"></i>
+                    <div style="font-weight: 600;">LinkedIn</div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">Connect Professionally</div>
                 </a>
-                <a href="https://linkedin.com/in/ssingh7688/" target="_blank" class="contact-link">
-                    <i class="fab fa-linkedin"></i> LinkedIn
-                </a>
-                <a href="https://github.com/SoftwareTestingPro" target="_blank" class="contact-link">
-                    <i class="fab fa-github"></i> GitHub
+                <a href="tel:+919718214423" class="contact-card glass-card">
+                    <i class="fas fa-phone"></i>
+                    <div style="font-weight: 600;">Call</div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">+91 9718214423</div>
                 </a>
             </div>
         </section>
     </div>
 
     <script>
-        // Add smooth scroll behavior
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Add intersection observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
+        // Intersection Observer for scroll animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -608,18 +550,15 @@
                     entry.target.style.transform = 'translateY(0)';
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            observer.observe(el);
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(40px)';
+            card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(card);
         });
-
     </script>
-    
-    <!-- Footer -->
     <div id="footer-placeholder"></div>
 </body>
 </html>
