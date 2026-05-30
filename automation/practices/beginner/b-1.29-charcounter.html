@@ -71,7 +71,7 @@
             <div class="card-content">
                 <h1>Character Count Challenge</h1>
                 <p class="lead">Master character counting precision! Analyze the displayed quote and input the exact count of alphabetic characters to prove your text processing skills.</p>
-                <textarea id="text-input" rows="5" readonly disabled style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; background: var(--bg); resize: none;"></textarea>
+                <textarea id="text-input" rows="5" readonly style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; background: var(--bg); resize: none; color: #1e293b; font-weight: 500; font-size: 1rem;"></textarea>
                 <div class="horizontal-form">
                     <label for="character-count">Character Count:</label>
                     <input type="text" id="character-count" name="character-count" placeholder="Enter count">
@@ -103,7 +103,7 @@
 
         // Function to count alphabetic characters only
         function countAlphabeticChars(text) {
-            return (text.match(/[a-za-Z]/g) || []).length;
+            return (text.match(/[a-zA-Z]/g) || []).length;
         }
 
         // Function to set random quote
@@ -133,17 +133,15 @@
             }
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            setRandomQuote();
-            
-            // Add event listeners
-            characterCountInput.addEventListener('input', verifyCount);
+        // Initialize immediately
+        setRandomQuote();
+        
+        // Add event listeners
+        characterCountInput.addEventListener('input', verifyCount);
 
-            // Hide messages initially
-            successMessage.style.display = 'none';
-            failureMessage.style.display = 'none';
-        });
+        // Hide messages initially
+        successMessage.style.display = 'none';
+        failureMessage.style.display = 'none';
     </script>
 </body>
 </html>

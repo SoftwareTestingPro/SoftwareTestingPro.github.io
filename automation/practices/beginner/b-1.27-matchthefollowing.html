@@ -51,8 +51,71 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<!-- End Google Tag Manager -->
+    <style>
+        .drag-box {
+            background: var(--card);
+            border: 2px solid var(--accent);
+            padding: 15px;
+            border-radius: var(--radius);
+            cursor: grab;
+            text-align: center;
+            width: 150px;
+            font-weight: 600;
+            color: #1e293b;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            user-select: none;
+        }
+        
+        .drag-box:active {
+            cursor: grabbing;
+        }
+
+        .drag-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(107, 33, 168, 0.1);
+        }
+
+        .category-box {
+            background: var(--card);
+            border: 2px solid var(--border);
+            padding: 15px;
+            border-radius: var(--radius);
+            text-align: center;
+            width: 150px;
+            font-weight: 600;
+            color: #1e293b;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+
+        .category-box.drag-over {
+            border-color: var(--accent);
+            background: #f5f3ff;
+            transform: scale(1.05);
+        }
+
+        .dropped-item {
+            opacity: 0.5;
+            cursor: default !important;
+            pointer-events: none;
+            background: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        .success-match {
+            background: var(--success) !important;
+            color: white !important;
+            border-color: var(--success) !important;
+        }
+
+        .danger-match {
+            background: var(--danger) !important;
+            color: white !important;
+            border-color: var(--danger) !important;
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -74,19 +137,19 @@
             <h1>Match the Following</h1>
             <p class="lead">Master drag-and-drop automation! Drag items precisely to their matching categories to demonstrate advanced interaction skills.</p>
 
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin: 20px 0;">
-                <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+            <div style="display: flex; justify-content: center; align-items: flex-start; gap: 60px; margin: 20px 0; flex-wrap: wrap; width: 100%;">
+                <div style="display: flex; flex-direction: column; align-items: center; min-width: 200px;">
                     <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">ITEMS TO MATCH</h3>
-                    <div id="leftColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <div id="leftColumn" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
                         <!-- Left items will be inserted here -->
                     </div>
                 </div>
-                <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                <div style="display: flex; flex-direction: column; align-items: center; min-width: 200px;">
                     <h3 style="margin-bottom: 15px; color: var(--muted); font-size: 14px;">CATEGORIES</h3>
-                    <div id="rightColumn" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                        <div class="draggable-item" data-type="number" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Number</div>
-                        <div class="draggable-item" data-type="string" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">String</div>
-                        <div class="draggable-item" data-type="alphanumeric" style="background: var(--card); border: 2px solid var(--border); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;">Alphanumeric</div>
+                    <div id="rightColumn" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                        <div class="category-box" data-type="number">Number</div>
+                        <div class="category-box" data-type="string">String</div>
+                        <div class="category-box" data-type="alphanumeric">Alphanumeric</div>
                     </div>
                 </div>
             </div>
@@ -98,106 +161,85 @@
 
     <div id="footer-placeholder"></div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script>
-    $(function() {
+    document.addEventListener('DOMContentLoaded', () => {
         const successMessage = document.getElementById('successMessage');
         const failureMessage = document.getElementById('failureMessage');
         
-        // Hide messages on page load
         successMessage.style.display = 'none';
         failureMessage.style.display = 'none';
 
         const items = [
-            Math.floor(Math.random() * 100), // Random number
-            getRandomString(5),               // Random string
-            getRandomAlphanumeric(5)          // Random alphanumeric
+            { value: Math.floor(Math.random() * 100), type: 'number' },
+            { value: getRandomString(5), type: 'string' },
+            { value: getRandomAlphanumeric(5), type: 'alphanumeric' }
         ];
 
-        // Shuffle items to display them in random order
+        // Shuffle items to display in random order
         items.sort(() => Math.random() - 0.5);
 
-        // Insert items into the left column
-        const leftColumn = $('#leftColumn');
-        items.forEach(item => {
-            const itemBox = $('<div></div>')
-                .text(item)
-                .attr('style', 'background: var(--card); border: 2px solid var(--accent); padding: 15px; border-radius: var(--radius); cursor: pointer; text-align: center; width: 120px; transition: all 0.3s ease;')
-                .addClass('draggable-item')
-                .draggable({
-                    revert: 'invalid',
-                    helper: 'clone',
-                    start: function(event, ui) {
-                        $(this).css('opacity', 0.5);
-                    },
-                    stop: function(event, ui) {
-                        $(this).css('opacity', 1);
-                    }
-                })
-                .hover(
-                    function() { $(this).css('transform', 'translateY(-2px)'); },
-                    function() { $(this).css('transform', 'translateY(0)'); }
-                );
-            leftColumn.append(itemBox);
+        const leftColumn = document.getElementById('leftColumn');
+        items.forEach((item, index) => {
+            const itemBox = document.createElement('div');
+            itemBox.id = 'drag-' + index;
+            itemBox.className = 'drag-box';
+            itemBox.draggable = true;
+            itemBox.textContent = item.value;
+            itemBox.dataset.type = item.type;
+            
+            itemBox.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', itemBox.id);
+                itemBox.style.opacity = '0.5';
+            });
+            
+            itemBox.addEventListener('dragend', () => {
+                itemBox.style.opacity = '1';
+            });
+            
+            leftColumn.appendChild(itemBox);
         });
 
-        // Add hover effects to drop targets
-        $('.draggable-item').hover(
-            function() { 
-                if (!$(this).hasClass('ui-droppable-disabled')) {
-                    $(this).css('transform', 'translateY(-2px)'); 
-                }
-            },
-            function() { 
-                $(this).css('transform', 'translateY(0)'); 
-            }
-        );
-
-        // Keep track of matched items
+        // Track matches
         let matchedCount = 0;
         let droppedCount = 0;
 
-        // Make right labels droppable
-        $('.draggable-item').droppable({
-            accept: '.draggable-item',
-            drop: function(event, ui) {
-                const leftItem = ui.draggable.text();
-                const rightLabelType = $(this).data('type');
+        const targets = document.querySelectorAll('.category-box');
+        targets.forEach(target => {
+            target.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                target.classList.add('drag-over');
+            });
 
-                const isNumber = !isNaN(leftItem);
-                const isString = /^[a-za-Z]+$/.test(leftItem);
-                const isAlphanumeric = /^[a-Za-z0-9]+$/.test(leftItem);
+            target.addEventListener('dragleave', () => {
+                target.classList.remove('drag-over');
+            });
 
-                ui.draggable.draggable('disable'); // Disable dragging for dropped item
-                ui.draggable.addClass('dropped-item'); // Add greyed out effect
+            target.addEventListener('drop', (e) => {
+                e.preventDefault();
+                target.classList.remove('drag-over');
+
+                const draggedId = e.dataTransfer.getData('text/plain');
+                const draggedEl = document.getElementById(draggedId);
+                if (!draggedEl) return;
+
+                const leftType = draggedEl.dataset.type;
+                const rightType = target.dataset.type;
+
+                // Disable dragging of dropped item
+                draggedEl.draggable = false;
+                draggedEl.classList.add('dropped-item');
                 droppedCount++;
 
-                // Check if the types match
-                if ((rightLabelType === 'number' && isNumber) ||
-                    (rightLabelType === 'string' && isString) ||
-                    (rightLabelType === 'alphanumeric' && isAlphanumeric)) {
-                    
-                    $(this).text(leftItem + ' ✓'); // Display match
-                    $(this).css('background', 'var(--success)'); 
-                    $(this).css('color', 'white');
-                    $(this).css('border-color', 'var(--success)');
-                    $(this).droppable('disable'); // Disable dropping on this label
-                    $(this).css('cursor', 'default');
-                    ui.draggable.css('cursor', 'default');
+                if (leftType === rightType) {
+                    target.textContent = draggedEl.textContent + ' ✓';
+                    target.classList.add('success-match');
                     matchedCount++;
                 } else {
-                    // Visual feedback for incorrect match, keep it
-                    $(this).text(leftItem + ' ✗'); // Display incorrect
-                    $(this).css('background', 'var(--danger)');
-                    $(this).css('color', 'white');
-                    $(this).css('border-color', 'var(--danger)');
-                    $(this).droppable('disable'); // Disable dropping on this label
-                    $(this).css('cursor', 'default');
-                    ui.draggable.css('cursor', 'default');
+                    target.textContent = draggedEl.textContent + ' ✗';
+                    target.classList.add('danger-match');
                 }
 
-                // Check if all items are dropped
+                // Check if match process finished
                 if (droppedCount === items.length) {
                     if (matchedCount === items.length) {
                         successMessage.style.display = 'flex';
@@ -207,7 +249,7 @@
                         failureMessage.style.display = 'flex';
                     }
                 }
-            }
+            });
         });
     });
 

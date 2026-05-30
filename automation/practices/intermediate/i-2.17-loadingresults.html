@@ -69,9 +69,9 @@
         <main class="card">
             <div class="card-content">
                 <h1>Thumbnails with ISBN Data</h1>
-                <p class="lead">Master data collection! Capture ISBN numbers from displayed thumbnails and store them for input on the final page to prove your memory skills.</p>
+                <p class="lead">Master data collection! Capture ISBN numbers from displayed thumbnails and store them for input on the final page to prove your data capture skills.</p>
 
-                <div id="thumbnailsLabel" class="instruction-text">Get ready to observe the thumbnails and their ISBN numbers...</div>
+                <div id="thumbnailsLabel" class="instruction-text">Get ready to observe the thumbnails and their ISBN numbers... Starting in <span id="countdown" style="font-weight: 700; color: var(--accent);">10</span> seconds.</div>
 
                 <div class="thumbnails" id="thumbnailContainer"></div>
 
@@ -184,13 +184,22 @@
             }
 
             // Initialize
-            setTimeout(() => {
-                thumbnailsLabel.style.opacity = '0';
-                setTimeout(() => {
-                    thumbnailsLabel.style.display = 'none';
-                    displayThumbnail(0);
-                }, 1000);
-            }, 10000);
+            let timeLeft = 10;
+            const countdownEl = document.getElementById('countdown');
+            const countdownInterval = setInterval(() => {
+                timeLeft--;
+                if (countdownEl) {
+                    countdownEl.textContent = timeLeft;
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    thumbnailsLabel.style.opacity = '0';
+                    setTimeout(() => {
+                        thumbnailsLabel.style.display = 'none';
+                        displayThumbnail(0);
+                    }, 1000);
+                }
+            }, 1000);
         });
     </script>
 </body>

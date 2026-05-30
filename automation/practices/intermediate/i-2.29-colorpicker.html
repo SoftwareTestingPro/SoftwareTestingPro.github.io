@@ -12,6 +12,58 @@
     <link rel="stylesheet" href="../../assets/css/header.css">
     <link rel="stylesheet" href="../../assets/css/footer.css">
     <script src="../../assets/components/components.js"></script>
+    <style>
+        #target-color-display {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent, #6b21a8);
+            background: #f8fafc;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 1.5rem auto;
+            border: 2px dashed var(--accent, #6b21a8);
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        #color-input {
+            width: 100px;
+            height: 100px;
+            border: 4px solid #cbd5e1;
+            outline: none;
+            cursor: pointer;
+            border-radius: 50%;
+            overflow: hidden;
+            background: transparent;
+            margin: 1.5rem auto;
+            display: block;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+        }
+        #color-input:hover {
+            transform: scale(1.08);
+            border-color: var(--accent, #6b21a8);
+        }
+        #color-input::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        #color-input::-webkit-color-swatch {
+            border: 4px solid white;
+            border-radius: 50%;
+        }
+        .instruction-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin: 1rem auto;
+            max-width: 500px;
+        }
+    </style>
     <!-- Additional SEO Meta Tags -->
     <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -68,12 +120,13 @@
 
         <main class="card">
             <div class="card-content">
-                <h1>Color Picker Challenge</h1>
-                <p class="lead">Master color selection! Match the displayed hex color precisely using the color picker to prove your color recognition and selection skills.</p>
-
-                <div id="target-color-display">#RRGGBB</div>
-
-                <input type="color" id="color-input" value="#ffffff">
+                 <h1>Color Picker Challenge</h1>
+                 <p class="lead">Master color selection! Click the large circular color picker below, then select or enter the exact color value shown in the badge above.</p>
+ 
+                 <div id="target-color-display">#RRGGBB</div>
+ 
+                 <div style="font-weight: 700; color: var(--muted); margin-top: 1rem; margin-bottom: 0.5rem;">Click to Pick Color:</div>
+                 <input type="color" id="color-input" value="#ffffff" aria-label="Color input picker">
 
                 <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You matched the color perfectly.</div>
                 <div class="message failure" id="failureMessage" role="status" aria-live="polite">

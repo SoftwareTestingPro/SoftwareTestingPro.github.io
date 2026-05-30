@@ -71,9 +71,9 @@
                 <h1>Find the Youngest Person</h1>
                 <p class="lead">Master age analysis! Analyze the person details and select the youngest individual to prove your data interpretation and comparison skills.</p>
 
-                <form class="radio-group" id="radioGroup">
+                <ul class="radio-list" id="radioList" style="width: 100%; max-width: 500px; margin: 2rem auto; text-align: left;">
                     <!-- Random names with radio buttons will be generated here -->
-                </form>
+                </ul>
 
                 <div id="successMessage" class="message success" style="display: none;">Correct! You selected the youngest person.</div>
                 <div id="failureMessage" class="message failure" style="display: none;">Incorrect! That is not the youngest person.</div>
@@ -107,10 +107,11 @@
 
             const youngestPerson = sortedByAge[0].name;
 
-            const radioGroup = document.getElementById('radioGroup');
-            radioGroup.innerHTML = '';
+            const radioList = document.getElementById('radioList');
+            radioList.innerHTML = '';
 
             nameDOBs.forEach(person => {
+                const li = document.createElement('li');
                 const label = document.createElement('label');
                 const radio = document.createElement('input');
                 radio.type = 'radio';
@@ -118,12 +119,13 @@
                 radio.value = person.name;
 
                 label.appendChild(radio);
-                label.appendChild(document.createTextNode(`${person.name} (DOB: ${person.dob.toLocaleString('en-IN')})`));
-                radioGroup.appendChild(label);
+                label.appendChild(document.createTextNode(` ${person.name} (DOB: ${person.dob.toLocaleString('en-IN')})`));
+                li.appendChild(label);
+                radioList.appendChild(li);
             });
 
             // Add event listener for user selection
-            radioGroup.addEventListener('change', function(event) {
+            radioList.addEventListener('change', function(event) {
                 const selectedPerson = event.target.value;
                 const successMessage = document.getElementById('successMessage');
                 const failureMessage = document.getElementById('failureMessage');

@@ -51,6 +51,76 @@
       gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
+    <style>
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 180px;
+            height: auto;
+            min-height: 54px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .checkbox-group label:hover {
+            background: white;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkbox-group label input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e1;
+            margin: 0;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease;
+            background-color: white;
+            flex-shrink: 0;
+            border-radius: 4px;
+        }
+
+        .checkbox-group label input[type="checkbox"]::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent);
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+            transform: scale(0);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .checkbox-group label input[type="checkbox"]:checked {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .checkbox-group label input[type="checkbox"]:checked::before {
+            background-color: white;
+            transform: scale(1);
+        }
+
+        .checkbox-group label:has(input:checked) {
+            background: #f5f3ff;
+            border-color: var(--accent);
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>

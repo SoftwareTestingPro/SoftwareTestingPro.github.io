@@ -82,9 +82,9 @@
                     and then disappears. You need to Wait for the button to appear after countdown, then click
                     instantly to prove your speed skills.</p>
                 <div id="countdown">Time remaining: 5 seconds</div>
-                <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! You clicked
+                <div class="message success" id="successMessage" role="status" aria-live="polite">Passed ! You clicked
                     the button successfully.</div>
-                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Incorrect! You missed
+                <div class="message failure" id="failureMessage" role="status" aria-live="polite">Failed ! You missed
                     clicking the button. Be fast!</div>
             </div>
         </main>
@@ -99,7 +99,10 @@
             var successMessage = document.getElementById('successMessage');
             var failureMessage = document.getElementById('failureMessage');
             var buttonClicked = false;
-            var timeLeft = 5;
+            var timeLeft = Math.floor(Math.random() * (10 - 3 + 1)) + 3;
+
+            // Update initial countdown text
+            countdown.textContent = `Time remaining: ${timeLeft} seconds`;
 
             // Hide messages on load
             successMessage.style.display = 'none';
@@ -114,7 +117,7 @@
                 }
             }, 1000);
 
-            // After 5 seconds, hide the label and create the button
+            // After randomized timeLeft seconds, hide the label and create the button
             setTimeout(function () {
                 countdown.style.display = 'none';
 
@@ -153,7 +156,7 @@
                     failureMessage.style.display = 'none';
                 });
 
-            }, 5000);
+            }, timeLeft * 1000);
         });
     </script>
 </body>

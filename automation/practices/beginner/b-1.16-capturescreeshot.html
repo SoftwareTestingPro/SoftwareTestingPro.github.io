@@ -1,32 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Master screenshot capture and image testing. Learn page screenshots and visual element validation in automation testing.">
+    <meta name="description"
+        content="Master screenshot capture and image testing. Learn page screenshots and visual element validation in automation testing.">
     <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
     <title>Screenshot Challenge - Image Capture Testing | Software Testing Pro</title>
     <link rel="stylesheet" href="../../assets/css/styles.css">
-    
+
     <!-- Header and Footer CSS -->
     <link rel="stylesheet" href="../../assets/css/header.css">
     <link rel="stylesheet" href="../../assets/css/footer.css">
     <script src="../../assets/components/components.js"></script>
     <!-- Additional SEO Meta Tags -->
-    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
+    <meta name="keywords"
+        content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://softwaretestingpro.github.io/automation/practices/beginner/b-1.16-capturescreeshot.html">
+    <link rel="canonical"
+        href="https://softwaretestingpro.github.io/automation/practices/beginner/b-1.16-capturescreeshot.html">
     <!-- Open Graph Tags -->
     <meta property="og:title" content="Screenshot Challenge - Image Capture Testing | Software Testing Pro">
-    <meta property="og:description" content="Master screenshot capture and image testing. Learn page screenshots and visual element validation in automation testing.">
-    <meta property="og:url" content="https://softwaretestingpro.github.io/automation/practices/beginner/b-1.16-capturescreeshot.html">
+    <meta property="og:description"
+        content="Master screenshot capture and image testing. Learn page screenshots and visual element validation in automation testing.">
+    <meta property="og:url"
+        content="https://softwaretestingpro.github.io/automation/practices/beginner/b-1.16-capturescreeshot.html">
     <meta property="og:type" content="article">
     <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
     <meta property="og:site_name" content="Software Testing Pro">
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Screenshot Challenge - Image Capture Testing | Software Testing Pro">
-    <meta name="twitter:description" content="Master screenshot capture and image testing. Learn page screenshots and visual element validation.">
+    <meta name="twitter:description"
+        content="Master screenshot capture and image testing. Learn page screenshots and visual element validation.">
     <meta name="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -45,13 +52,14 @@
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-MCHF9RDWT6');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-MCHF9RDWT6');
     </script>
     <!-- End Google Analytics -->
 </head>
+
 <body>
     <div id="header-placeholder"></div>
 
@@ -70,7 +78,9 @@
         <main class="card">
             <div class="card-content">
                 <h1>Capturing Screenshots</h1>
-                <p class="lead">Master screenshot automation! Capture three types: element screenshots, viewport captures, and full page scrolls to prove your visual testing prowess.</p>
+                <br>1. Capture flag element screenshot<br>
+                <br>2. Capture viewport screenshot<br>
+                <br>3. Capture fullpage screenshot<br>
                 <div id="flagsContainer"></div>
             </div>
         </main>
@@ -109,7 +119,7 @@
                 img.style.border = '1px solid #ccc';
                 img.classList.add('hidden');
                 flagsContainer.appendChild(img);
-                
+
                 setTimeout(() => {
                     img.classList.remove('hidden');
                     img.classList.add('visible');
@@ -118,17 +128,5 @@
         }
     </script>
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
