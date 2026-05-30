@@ -140,6 +140,8 @@
             // Send OTP email using EmailJS
             emailjs.send("service_7z2h26s", "template_svo6wdd", {
                 to_email: email,
+                receiver_email: email,
+                email: email,
                 otp: generatedOTP,
             }).then(function(response) {
                 console.log('Email sent successfully:', response);

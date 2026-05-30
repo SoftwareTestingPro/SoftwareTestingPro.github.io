@@ -73,11 +73,10 @@
         <p class="lead">Master file download automation! Download the test file and input the exact download duration to prove your file handling skills.</p>
         <a href="../../assets/sample-100mb-file.zip" download class="download-btn">Click here to download a file</a>
         <div class="horizontal-form">
-            <label for="user-input">Enter duration (In Seconds):</label>
+            <label for="user-input">Enter duration file took to download (In Seconds):</label>
             <input type="text" id="user-input" name="user-input" placeholder="Duration in seconds" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
-        <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">Correct! Duration entered. (Note: System cannot verify exact machine duration but assumes successful fetch).</div>
-            <div id="failureMessage" class="message failure" role="status" aria-live="polite">Incorrect! Please try again.</div>
+        <div class="message success" id="successMessage" role="status" aria-live="polite" style="display: none;">I cannot verify exact machine duration but assume you fetched successfully.</div>
         </div>
     </main>
 </div>
