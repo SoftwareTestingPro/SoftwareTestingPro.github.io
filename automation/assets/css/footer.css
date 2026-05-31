@@ -168,6 +168,7 @@
 .footer-links {
     display: flex;
     gap: 20px;
+    align-items: center;
 }
 
 .footer-links a {
@@ -200,6 +201,21 @@
 
 .footer-links a:hover::before {
     width: 100%;
+}
+
+/* Visitor Counter Widget Styling */
+.footer-visitor-widget {
+    color: #bdc3c7;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    padding: 2px 0;
+    user-select: none;
+}
+
+.footer-visitor-widget #visitor-count {
+    color: #00ffff;
+    font-weight: 700;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
 }
 
 /* Responsive Design */

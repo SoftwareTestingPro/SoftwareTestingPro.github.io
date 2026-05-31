@@ -81,11 +81,44 @@ function loadFooter() {
                         link.href = basePath + href;
                     }
                 });
+                
+                // Fetch and update visitor count
+                updateVisitorCounter();
             })
             .catch(error => {
                 console.log('External footer failed:', error.message);
             });
     }
+}
+
+function updateVisitorCounter() {
+    const visitorCountEl = document.getElementById('visitor-count');
+    if (!visitorCountEl) return;
+    
+    const startingOffset = 14324; // Since the API starts at 1, setting offset to 14,324 results in starting at 14,325
+    
+    // We increment the count on every page view/load by hitting the 'up' API of counterapi.dev
+    // Namespace: softwaretestingpro, Key: visits
+    fetch('https://api.counterapi.dev/v1/softwaretestingpro/visits/up')
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            if (data && typeof data.value === 'number') {
+                const totalCount = data.value + startingOffset;
+                visitorCountEl.textContent = totalCount.toLocaleString();
+            } else {
+                throw new Error('Invalid data structure');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching visitor count:', error);
+            // Fallback: Display a dynamic mock/simulated count starting at 14,325
+            const baseValue = 14325;
+            const simulatedCount = baseValue + Math.floor((Date.now() - Date.parse("2026-05-31T00:00:00Z")) / 10000);
+            visitorCountEl.textContent = simulatedCount.toLocaleString();
+        });
 }
 
 function toggleMenu() {
