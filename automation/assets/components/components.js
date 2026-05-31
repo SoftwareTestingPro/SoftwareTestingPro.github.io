@@ -49,7 +49,143 @@ function loadHeader() {
                 }
                 
                 // Add mobile menu (links are relative to root directory, so prefix with automation/)
-                const menuHtml = `<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="${basePath}automation/practices/beginner/b-1.01-click.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="${basePath}automation/practices/intermediate/i-2.01-draganddroptext.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="${basePath}automation/practices/advanced/a-3.01-hiddenelement.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>`;
+                const menuHtml = `
+<style>
+    .mobile-menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 10, 20, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 10000;
+        transition: all 0.3s ease;
+    }
+    .mobile-menu-card {
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        background: #0f0f23;
+        border: 1px solid rgba(0, 255, 255, 0.4);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.15), inset 0 0 10px rgba(0, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 24px;
+        width: 300px;
+        font-family: 'Outfit', sans-serif;
+        color: #ffffff;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .mobile-menu-card h4 {
+        color: #ff00ff;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 0;
+        margin-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+        padding-bottom: 6px;
+        text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+    }
+    .mobile-menu-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 20px 0;
+    }
+    .mobile-menu-list:last-child {
+        margin-bottom: 0;
+    }
+    .mobile-menu-list li {
+        margin-bottom: 8px;
+    }
+    .mobile-menu-item {
+        color: #e2e8f0;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .mobile-menu-item:hover {
+        color: #00ffff;
+        text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
+        transform: translateX(4px);
+    }
+    .mobile-dropdown-arrow {
+        font-size: 10px;
+        margin-left: auto;
+        transition: transform 0.2s ease;
+        color: rgba(0, 255, 255, 0.7);
+    }
+    .mobile-dropdown-menu {
+        display: none;
+        list-style: none;
+        padding-left: 16px;
+        margin-top: 4px;
+        border-left: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    .mobile-dropdown-menu li {
+        margin-bottom: 6px;
+    }
+    .mobile-submenu-item {
+        color: #94a3b8;
+        text-decoration: none;
+        display: block;
+        padding: 4px 0;
+        font-size: 13px;
+        transition: all 0.2s ease;
+    }
+    .mobile-submenu-item:hover {
+        color: #ff00ff;
+        text-shadow: 0 0 8px rgba(255, 0, 255, 0.8);
+        transform: translateX(4px);
+    }
+</style>
+<div id="mobile-menu" class="mobile-menu-overlay">
+    <div class="mobile-menu-card">
+        <h4>Modules &amp; Apps</h4>
+        <ul class="mobile-menu-list">
+            <li>
+                <div onclick="event.stopPropagation(); toggleAutomationDropdown()" class="mobile-menu-item">
+                    <span>🤖 Automation Hub</span>
+                    <span id="auto-arrow" class="mobile-dropdown-arrow">&#9654;</span>
+                </div>
+                <ul id="automation-dropdown" class="mobile-dropdown-menu">
+                    <li><a href="${basePath}automation/index.html" class="mobile-submenu-item">Overview Dashboard</a></li>
+                    <li><a href="${basePath}automation/practices/beginner/b-1.01-click.html" class="mobile-submenu-item">Beginner Tasks</a></li>
+                    <li><a href="${basePath}automation/practices/intermediate/i-2.01-draganddroptext.html" class="mobile-submenu-item">Intermediate Tasks</a></li>
+                    <li><a href="${basePath}automation/practices/advanced/a-3.01-hiddenelement.html" class="mobile-submenu-item">Advanced Tasks</a></li>
+                </ul>
+            </li>
+            <li><a href="${basePath}compiler/index.html" class="mobile-menu-item">💻 DevCompiler IDE</a></li>
+            <li><a href="${basePath}quiz/index.html" class="mobile-menu-item">📝 Quiz Master</a></li>
+            <li>
+                <div onclick="event.stopPropagation(); toggleHealthcareDropdown()" class="mobile-menu-item">
+                    <span>💠 Shukla Healthcare</span>
+                    <span id="health-arrow" class="mobile-dropdown-arrow">&#9654;</span>
+                </div>
+                <ul id="healthcare-dropdown" class="mobile-dropdown-menu">
+                    <li><a href="${basePath}healthcare/index.html" class="mobile-submenu-item">Landing Portal</a></li>
+                    <li><a href="${basePath}healthcare/app/index.html" class="mobile-submenu-item">SQL Practice Studio</a></li>
+                </ul>
+            </li>
+            <li><a href="${basePath}library-api/index.html" class="mobile-menu-item">📚 Library API Sandbox</a></li>
+        </ul>
+        
+        <h4>General Links</h4>
+        <ul class="mobile-menu-list">
+            <li><a href="${basePath}index.html" class="mobile-menu-item">🏠 Portfolio Home</a></li>
+            <li><a href="${basePath}developer.html" class="mobile-menu-item">👨‍💻 About Developer</a></li>
+            <li><a href="${basePath}automation/faq.html" class="mobile-menu-item">❓ FAQ Help</a></li>
+        </ul>
+    </div>
+</div>`;
                 document.body.insertAdjacentHTML('afterbegin', menuHtml);
             })
             .catch(error => {
@@ -132,9 +268,33 @@ function toggleMenu() {
 }
 
 function closeMenuOnOutsideClick(event) {
-    const menuContent = document.querySelector('.menu-content');
-    if (!menuContent.contains(event.target)) {
+    const menuContent = document.querySelector('.mobile-menu-card');
+    if (menuContent && !menuContent.contains(event.target)) {
         toggleMenu();
+    }
+}
+
+function toggleAutomationDropdown() {
+    const dropdown = document.getElementById('automation-dropdown');
+    const arrow = document.getElementById('auto-arrow');
+    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+        dropdown.style.display = 'block';
+        arrow.style.transform = 'rotate(90deg)';
+    } else {
+        dropdown.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+    }
+}
+
+function toggleHealthcareDropdown() {
+    const dropdown = document.getElementById('healthcare-dropdown');
+    const arrow = document.getElementById('health-arrow');
+    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+        dropdown.style.display = 'block';
+        arrow.style.transform = 'rotate(90deg)';
+    } else {
+        dropdown.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
     }
 }
 
