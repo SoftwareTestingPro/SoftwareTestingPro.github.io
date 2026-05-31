@@ -10,8 +10,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Main Style Sheet -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- Cache-Control Meta Tags -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- Main Style Sheet with Dynamic Cache Busting -->
+    <script>
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'styles.css?v=' + Date.now();
+        document.head.appendChild(link);
+    </script>
     <!-- Monaco Editor Loader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
     <!-- TypeScript Compiler for Browser-side compiling -->
@@ -32,6 +41,7 @@
                 <div class="control-group">
                     <label for="language-select"><i class="fa-solid fa-code"></i> Language</label>
                     <select id="language-select">
+                        <option value="" disabled selected>Select</option>
                         <option value="javascript">JavaScript</option>
                         <option value="typescript">TypeScript</option>
                         <option value="python">Python 3 (Pyodide)</option>
@@ -106,7 +116,11 @@
         </main>
     </div>
 
-    <!-- Core App Logic -->
-    <script src="app.js"></script>
+    <!-- Core App Logic with Dynamic Cache Busting -->
+    <script>
+        const script = document.createElement('script');
+        script.src = 'app.js?v=' + Date.now();
+        document.body.appendChild(script);
+    </script>
 </body>
 </html>

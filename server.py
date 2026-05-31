@@ -126,6 +126,90 @@ class LibraryAPIRequestHandler(http.server.SimpleHTTPRequestHandler):
             
             return self.send_json(201, new_book)
             
+        elif path == '/compiler/api/v1/compile-java':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            
+            try:
+                payload = json.loads(post_data.decode('utf-8'))
+                code = payload.get('code', '')
+            except Exception:
+                return self.send_json(400, {"error": "Bad Request", "message": "Invalid JSON payload."})
+            
+            if not code:
+                return self.send_json(400, {"error": "Bad Request", "message": "Code is required."})
+            
+            import re
+            import subprocess
+            class_name = "Main"
+            match = re.search(r'public\s+class\s+([a-zA-Z0-9_$]+)', code)
+            if not match:
+                match = re.search(r'class\s+([a-zA-Z0-9_$]+)', code)
+            if match:
+                class_name = match.group(1)
+                
+            # Automatically inject common RestAssured/Hamcrest imports if they are referenced but not imported
+            injected_imports = []
+            if "RestAssured" in code and "import io.restassured.RestAssured" not in code:
+                injected_imports.append("import io.restassured.RestAssured;")
+            if "Response" in code and "import io.restassured.response.Response" not in code:
+                injected_imports.append("import io.restassured.response.Response;")
+            if "RequestSpecification" in code and "import io.restassured.specification.RequestSpecification" not in code:
+                injected_imports.append("import io.restassured.specification.RequestSpecification;")
+            if any(term in code for term in ["equalTo", "hasItems", "Matchers"]) and "import static org.hamcrest.Matchers" not in code:
+                injected_imports.append("import static org.hamcrest.Matchers.*;")
+                
+            if injected_imports:
+                package_match = re.search(r'^\s*package\s+[\w.]+;', code, re.MULTILINE)
+                if package_match:
+                    pos = package_match.end()
+                    code = code[:pos] + "\n" + "\n".join(injected_imports) + "\n" + code[pos:]
+                else:
+                    code = "\n".join(injected_imports) + "\n" + code
+
+            compiler_dir = os.path.join(os.path.dirname(__file__), 'compiler')
+            temp_dir = os.path.join(compiler_dir, 'temp')
+            lib_dir = os.path.join(compiler_dir, 'lib')
+            
+            os.makedirs(temp_dir, exist_ok=True)
+            os.makedirs(lib_dir, exist_ok=True)
+            
+            java_file = os.path.join(temp_dir, f"{class_name}.java")
+            with open(java_file, 'w', encoding='utf-8') as f:
+                f.write(code)
+                
+            classpath = f'"{lib_dir}/*";"{temp_dir}"'
+            compile_cmd = f'javac -cp {classpath} -d "{temp_dir}" "{java_file}"'
+            
+            compile_proc = subprocess.run(compile_cmd, shell=True, capture_output=True, text=True)
+            if compile_proc.returncode != 0:
+                try: os.remove(java_file)
+                except: pass
+                return self.send_json(200, {
+                    "status": "1",
+                    "compiler_message": compile_proc.stderr,
+                    "program_output": "",
+                    "program_error": compile_proc.stderr
+                })
+                
+            run_cmd = f'java -cp {classpath} {class_name}'
+            run_proc = subprocess.run(run_cmd, shell=True, capture_output=True, text=True)
+            
+            try:
+                os.remove(java_file)
+                class_file = os.path.join(temp_dir, f"{class_name}.class")
+                if os.path.exists(class_file):
+                    os.remove(class_file)
+            except:
+                pass
+                
+            return self.send_json(200, {
+                "status": str(run_proc.returncode),
+                "compiler_message": "Compilation successful!\n" + compile_proc.stderr,
+                "program_output": run_proc.stdout,
+                "program_error": run_proc.stderr
+            })
+
         self.send_response(405)
         self.end_headers()
 

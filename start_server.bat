@@ -7,7 +7,7 @@ echo Waiting for server to initialize...
 timeout /t 2 /nobreak > nul
 
 echo Launching Chrome...
-start chrome "http://localhost:8000"
+start chrome --incognito "http://localhost:8000"
 
 echo Server is running at http://localhost:8000
 echo Close the "Website Server" window to stop the server.

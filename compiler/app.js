@@ -1,155 +1,18 @@
-// Default templates for each language
 const TEMPLATES = {
-    javascript: `// DevCompiler - JavaScript Playground
-// Write your JavaScript code here and click "Run Code"
-
-console.log("Hello from JavaScript!");
-
-const numbers = [1, 2, 3, 4, 5];
-const doubled = numbers.map(n => n * 2);
-console.log("Doubled array:", doubled);
-
-// Example of warnings and errors
-console.warn("This is a warning log!");
-console.error("This is an error log!");
-`,
-    typescript: `// DevCompiler - TypeScript Playground
-// Fully supported transpilation and typing in the browser!
-
-interface User {
-    id: number;
-    name: string;
-    role: 'admin' | 'user';
-}
-
-class SystemManager {
-    private users: User[] = [];
-
-    addUser(user: User): void {
-        this.users.push(user);
-        console.log(\`Added user: \${user.name} (\${user.role})\`);
-    }
-
-    listAdmins(): string[] {
-        return this.users
-            .filter(u => u.role === 'admin')
-            .map(u => u.name);
-    }
-}
-
-const manager = new SystemManager();
-manager.addUser({ id: 1, name: "Alice", role: "admin" });
-manager.addUser({ id: 2, name: "Bob", role: "user" });
-
-console.log("Admins on the system:", manager.listAdmins());
-`,
-    python: `# DevCompiler - Python 3 (Pyodide WebAssembly)
-# True Python environment running fully locally in your browser!
-
-print("Hello from WebAssembly-powered Python!")
-
-# List comprehension
-squared_evens = [x**2 for x in range(10) if x % 2 == 0]
-print(f"Squared even numbers: {squared_evens}")
-
-# Class and inheritance example
-class Animal:
-    def __init__(self, name):
-        self.name = name
-    def speak(self):
-        return f"{self.name} makes a sound."
-
-class Dog(Animal):
-    def speak(self):
-        return f"{self.name} barks!"
-
-buddy = Dog("Buddy")
-print(buddy.speak())
-`,
-    html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>DevCompiler HTML Preview</title>
-    <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            max-width: 400px;
-        }
-        h1 {
-            color: #6366f1;
-            margin-top: 0;
-        }
-        button {
-            background: #6366f1;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        button:hover {
-            background: #4f46e5;
-            transform: scale(1.05);
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Hello World!</h1>
-        <p>This is a live preview. Edit the HTML/CSS/JS and run it again to see real-time updates.</p>
-        <button onclick="showAlert()">Click Me</button>
-    </div>
-
-    <script>
-        function showAlert() {
-            alert("Hello from interactive Live Preview!");
-        }
-    </script>
-</body>
-</html>
-`,
-    java: `// DevCompiler - Java (OpenJDK Compiler via Wandbox)
-// Write your standard Java class here (usually public class Main)
-
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello from real Java compiler running in the cloud!");
-        
-        int a = 15;
-        int b = 30;
-        int sum = a + b;
-        System.out.printf("Sum of %d and %d is: %d\n", a, b, sum);
-    }
-}
-`
+    '': `// Please select a language from the dropdown above to start coding...`,
+    javascript: ``,
+    typescript: ``,
+    python: ``,
+    html: ``,
+    java: ``
 };
 
 // Global State
 let editorInstance = null;
-let currentLanguage = 'javascript';
+let currentLanguage = '';
 let pyodideInstance = null;
 let isPyodideLoading = false;
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
 // Saved code sessions during switching
 const sessions = { ...TEMPLATES };
@@ -246,13 +109,15 @@ function appendLog(content, type = 'log') {
     const entry = document.createElement('div');
     entry.className = `log-entry ${type}`;
     
-    const prefix = document.createElement('span');
-    prefix.className = 'prefix';
-    prefix.textContent = `[${type}]`;
+    if (type !== 'log') {
+        const prefix = document.createElement('span');
+        prefix.className = 'prefix';
+        prefix.textContent = `[${type}]`;
+        entry.appendChild(prefix);
+    }
     
     const textNode = document.createTextNode(typeof content === 'object' ? JSON.stringify(content) : content);
     
-    entry.appendChild(prefix);
     entry.appendChild(textNode);
     consoleLogs.appendChild(entry);
     
@@ -285,6 +150,11 @@ function buildConsoleInterceptor() {
 // Execute Code Action logic
 async function runCode() {
     if (!editorInstance) return;
+
+    if (!currentLanguage) {
+        alert("Please select a language from the dropdown before running code!");
+        return;
+    }
     
     const code = editorInstance.getValue();
     const startTime = performance.now();
@@ -443,22 +313,60 @@ function executeHTML(code) {
 }
 
 // Real Java Compilation and Execution via Wandbox API
+// Real Java Compilation and Execution via Wandbox API (with local fallback for Custom Jars / REST Assured)
 async function executeJava(code) {
     switchTab('console-tab');
     clearLogs();
     
-    appendLog('Sending code to OpenJDK cloud compiler...', 'system');
-    
-    try {
-        const payload = {
-            compiler: "openjdk-head",
-            code: code,
-            codes: [
-                {
-                    file: "Main.java",
-                    code: code
+    // 1. If running locally, compile & run on the local JVM (supports lib/* classpath for REST Assured)
+    if (isLocal) {
+        appendLog('Compiling Java locally... (Supports custom Jars in compiler/lib/)', 'system');
+        try {
+            const response = await fetch('/compiler/api/v1/compile-java', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: code })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.compiler_message) {
+                    appendLog(result.compiler_message, result.status !== "0" ? 'error' : 'system');
                 }
-            ]
+                if (result.program_output) {
+                    result.program_output.split('\n').forEach(line => {
+                        if (line) appendLog(line, 'log');
+                    });
+                }
+                if (result.program_error) {
+                    result.program_error.split('\n').forEach(line => {
+                        if (line) appendLog(line, 'error');
+                    });
+                }
+                return;
+            }
+        } catch (localErr) {
+            console.warn('Local Java compiler failed, falling back to Wandbox cloud...', localErr);
+        }
+    }
+
+    // 2. Cloud Fallback (Wandbox)
+    if (code.includes('RestAssured') || code.includes('io.restassured')) {
+        appendLog('Error: REST Assured is not supported on the public cloud compiler.', 'error');
+        appendLog('To compile and run REST Assured code, please run this application locally using start_server.bat so it can access the local classpath libraries in compiler/lib/.', 'warn');
+        return;
+    }
+
+    appendLog('Sending code to OpenJDK cloud compiler...', 'system');
+    try {
+        // Remove "public" modifier from the class declaration to bypass Java's strict filename match on the remote server
+        const processedCode = code.replace(/public\s+class\s+/g, 'class ');
+
+        const payload = {
+            compiler: "openjdk-jdk-22+36",
+            code: processedCode
         };
         
         const response = await fetch('https://wandbox.org/api/compile.json', {
