@@ -16,4 +16,12 @@
     <loc>https://softwaretestingpro.github.io/sitemap-quiz.xml</loc>
     <lastmod>2026-05-13</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://softwaretestingpro.github.io/sitemap-compiler.xml</loc>
+    <lastmod>2026-05-31</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://softwaretestingpro.github.io/sitemap-library-api.xml</loc>
+    <lastmod>2026-05-31</lastmod>
+  </sitemap>
 </sitemapindex>
