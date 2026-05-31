@@ -38,6 +38,14 @@ const outputPane = document.querySelector('.output-pane');
 require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' } });
 
 require(['vs/editor/editor.main'], function() {
+    // Ignore "Cannot find name" (2304) and "Cannot find module" (2307) errors for both JavaScript and TypeScript in Monaco's editor linter
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+        diagnosticCodesToIgnore: [2304, 2307]
+    });
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        diagnosticCodesToIgnore: [2304, 2307]
+    });
+
     // Create the Monaco Editor
     editorInstance = monaco.editor.create(document.getElementById('monaco-editor-container'), {
         value: sessions[currentLanguage],
@@ -189,9 +197,53 @@ async function runCode() {
 }
 
 // Javascript sandbox execution engine
-function executeJS(code) {
+async function executeJS(code) {
     switchTab('console-tab');
     clearLogs();
+    
+    const isPlaywright = code.includes('playwright') || 
+                         code.includes('@playwright/test') ||
+                         code.includes('chromium') ||
+                         code.includes('firefox') ||
+                         code.includes('webkit');
+    
+    if (isPlaywright) {
+        if (isLocal) {
+            appendLog('Executing Playwright JavaScript test locally via Node.js...', 'system');
+            try {
+                const response = await fetch('/compiler/api/v1/run-local', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ language: 'javascript', code: code })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.program_output) {
+                        result.program_output.split('\n').forEach(line => {
+                            if (line) appendLog(line, 'log');
+                        });
+                    }
+                    if (result.program_error) {
+                        result.program_error.split('\n').forEach(line => {
+                            if (line) appendLog(line, 'error');
+                        });
+                    }
+                    appendLog(`Execution finished with exit code: ${result.status}`, result.status === '0' ? 'system' : 'error');
+                } else {
+                    appendLog('Local runner returned an error status.', 'error');
+                }
+            } catch (err) {
+                appendLog('Failed to connect to local compiler server: ' + err.message, 'error');
+            }
+        } else {
+            appendLog('Error: Playwright browser automation is not supported on public cloud hosts.', 'error');
+            appendLog('To run Playwright tests, please download the project and run locally via start_server.bat.', 'warn');
+        }
+        return;
+    }
     
     appendLog('Executing JavaScript...', 'system');
     
@@ -219,7 +271,7 @@ function executeJS(code) {
 }
 
 // Typescript compiler execution engine
-function executeTS(code) {
+async function executeTS(code) {
     switchTab('console-tab');
     clearLogs();
     
@@ -238,7 +290,7 @@ function executeTS(code) {
         }).outputText;
         
         appendLog('Compilation successful! Executing...', 'system');
-        executeJS(compiledJS);
+        await executeJS(compiledJS);
     } catch (err) {
         appendLog(err, 'error');
     }
@@ -247,6 +299,51 @@ function executeTS(code) {
 // WebAssembly Python runner engine
 async function executePython(code) {
     switchTab('console-tab');
+    clearLogs();
+    
+    const isPlaywright = code.includes('playwright');
+    
+    // 1. If running locally, compile & run on the local Python interpreter
+    if (isLocal) {
+        appendLog('Executing Python script locally on system...', 'system');
+        if (isPlaywright) {
+            appendLog('(Supports Playwright browser automation)', 'info');
+        }
+        try {
+            const response = await fetch('/compiler/api/v1/run-local', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ language: 'python', code: code })
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                if (result.program_output) {
+                    result.program_output.split('\n').forEach(line => {
+                        if (line) appendLog(line, 'log');
+                    });
+                }
+                if (result.program_error) {
+                    result.program_error.split('\n').forEach(line => {
+                        if (line) appendLog(line, 'error');
+                    });
+                }
+                appendLog(`Execution finished with exit code: ${result.status}`, result.status === '0' ? 'system' : 'error');
+                return;
+            }
+        } catch (localErr) {
+            console.warn('Local Python interpreter failed, falling back to browser Pyodide WebAssembly...', localErr);
+        }
+    }
+    
+    // 2. Cloud Fallback (Pyodide)
+    if (isPlaywright) {
+        appendLog('Error: Playwright browser automation is not supported on the browser-side Pyodide WebAssembly sandbox.', 'error');
+        appendLog('To run Python Playwright tests, please launch the application locally using start_server.bat.', 'warn');
+        return;
+    }
     
     if (!pyodideInstance) {
         if (isPyodideLoading) {
@@ -271,7 +368,6 @@ async function executePython(code) {
         }
     }
     
-    clearLogs();
     appendLog('Executing Python code via Pyodide...', 'system');
     
     try {
@@ -356,6 +452,11 @@ async function executeJava(code) {
     if (code.includes('RestAssured') || code.includes('io.restassured')) {
         appendLog('Error: REST Assured is not supported on the public cloud compiler.', 'error');
         appendLog('To compile and run REST Assured code, please run this application locally using start_server.bat so it can access the local classpath libraries in compiler/lib/.', 'warn');
+        return;
+    }
+    if (code.includes('WebDriver') || code.includes('ChromeDriver') || code.includes('org.openqa.selenium')) {
+        appendLog('Error: Selenium is not supported on the public cloud compiler.', 'error');
+        appendLog('To compile and run Selenium code, please run this application locally using start_server.bat so it can access the local classpath libraries in compiler/lib/.', 'warn');
         return;
     }
 

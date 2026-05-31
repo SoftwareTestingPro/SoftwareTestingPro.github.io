@@ -148,7 +148,7 @@ class LibraryAPIRequestHandler(http.server.SimpleHTTPRequestHandler):
             if match:
                 class_name = match.group(1)
                 
-            # Automatically inject common RestAssured/Hamcrest imports if they are referenced but not imported
+            # Automatically inject common RestAssured/Hamcrest/Selenium imports if they are referenced but not imported
             injected_imports = []
             if "RestAssured" in code and "import io.restassured.RestAssured" not in code:
                 injected_imports.append("import io.restassured.RestAssured;")
@@ -158,6 +158,18 @@ class LibraryAPIRequestHandler(http.server.SimpleHTTPRequestHandler):
                 injected_imports.append("import io.restassured.specification.RequestSpecification;")
             if any(term in code for term in ["equalTo", "hasItems", "Matchers"]) and "import static org.hamcrest.Matchers" not in code:
                 injected_imports.append("import static org.hamcrest.Matchers.*;")
+                
+            # Selenium Auto-Imports
+            if "WebDriver" in code and "import org.openqa.selenium.WebDriver" not in code:
+                injected_imports.append("import org.openqa.selenium.WebDriver;")
+            if "ChromeDriver" in code and "import org.openqa.selenium.chrome.ChromeDriver" not in code:
+                injected_imports.append("import org.openqa.selenium.chrome.ChromeDriver;")
+            if "ChromeOptions" in code and "import org.openqa.selenium.chrome.ChromeOptions" not in code:
+                injected_imports.append("import org.openqa.selenium.chrome.ChromeOptions;")
+            if "By" in code and "import org.openqa.selenium.By" not in code:
+                injected_imports.append("import org.openqa.selenium.By;")
+            if "WebElement" in code and "import org.openqa.selenium.WebElement" not in code:
+                injected_imports.append("import org.openqa.selenium.WebElement;")
                 
             if injected_imports:
                 package_match = re.search(r'^\s*package\s+[\w.]+;', code, re.MULTILINE)
@@ -208,6 +220,76 @@ class LibraryAPIRequestHandler(http.server.SimpleHTTPRequestHandler):
                 "compiler_message": "Compilation successful!\n" + compile_proc.stderr,
                 "program_output": run_proc.stdout,
                 "program_error": run_proc.stderr
+            })
+            
+        elif path == '/compiler/api/v1/run-local':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            
+            try:
+                payload = json.loads(post_data.decode('utf-8'))
+                language = payload.get('language', '')
+                code = payload.get('code', '')
+            except Exception:
+                return self.send_json(400, {"error": "Bad Request", "message": "Invalid JSON payload."})
+            
+            if not code or not language:
+                return self.send_json(400, {"error": "Bad Request", "message": "Language and Code are required."})
+                
+            compiler_dir = os.path.join(os.path.dirname(__file__), 'compiler')
+            temp_dir = os.path.join(compiler_dir, 'temp')
+            os.makedirs(temp_dir, exist_ok=True)
+            
+            import subprocess
+            import uuid
+            
+            unique_id = str(uuid.uuid4())[:8]
+            
+            if language == 'javascript':
+                file_ext = 'js'
+                cmd = 'node'
+                
+                # Auto-inject Playwright require if referenced but not imported
+                injected_js = []
+                if any(term in code for term in ["chromium", "firefox", "webkit"]) and "require('playwright')" not in code and 'from "playwright"' not in code and 'from \'playwright\'' not in code:
+                    injected_js.append("const { chromium, firefox, webkit } = require('playwright');")
+                
+                if injected_js:
+                    code = "\n".join(injected_js) + "\n" + code
+                    
+                # Auto-invoke main() if defined but not called
+                if ("function main(" in code or "async function main(" in code) and "main()" not in code:
+                    code = code + "\n\nmain();\n"
+            elif language == 'python':
+                file_ext = 'py'
+                cmd = 'python'
+            else:
+                return self.send_json(400, {"error": "Bad Request", "message": "Unsupported language for local runner."})
+                
+            temp_file = os.path.join(temp_dir, f"temp_{unique_id}.{file_ext}")
+            
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                f.write(code)
+                
+            run_cmd = f'{cmd} "{temp_file}"'
+            run_proc = subprocess.run(run_cmd, shell=True, capture_output=True, text=True)
+            
+            try:
+                os.remove(temp_file)
+            except:
+                pass
+                
+            program_error = run_proc.stderr
+            if "is not recognized as an internal or external command" in program_error or "not found" in program_error.lower():
+                if cmd == 'node':
+                    program_error += "\n[DevCompiler Hint] Node.js was not found on your system. To execute JavaScript/TypeScript Playwright tests, please install Node.js (https://nodejs.org/) and add it to your system PATH."
+                elif cmd == 'python':
+                    program_error += "\n[DevCompiler Hint] Python was not found on your system. Please install Python (https://python.org/) and add it to your system PATH."
+            
+            return self.send_json(200, {
+                "status": str(run_proc.returncode),
+                "program_output": run_proc.stdout,
+                "program_error": program_error
             })
 
         self.send_response(405)
