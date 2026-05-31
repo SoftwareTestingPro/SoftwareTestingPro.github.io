@@ -1,18 +1,27 @@
 [
+{
+    "id": 1,
+    "title": "The Great Indian History",
+    "author": "Harivansh Rai Bachchan",
+    "subject": "History",
+    "pages": 120,
+    "price": 14.5,
+    "published_year": 1980
+  },
   {
     "id": 2,
-    "title": "Computing Singularity & Black Holes",
-    "subject": "Technology",
-    "author": "Stephen Hawking",
-    "pages": 280,
-    "price": 19.99,
-    "published_year": 2012
+    "title": "The Secret Adventure",
+    "subject": "Fiction",
+    "author": "Prem Ji",
+    "pages": 24,
+    "price": 12.99,
+    "published_year": 2000
   },
   {
     "id": 3,
     "title": "On the Shoulders of Giants",
-    "subject": "History",
     "author": "Stephen Hawking",
+    "subject": "History",
     "pages": 320,
     "price": 24.5,
     "published_year": 2002
@@ -28,9 +37,9 @@
   },
   {
     "id": 5,
-    "title": "My Brief History",
-    "subject": "Biography",
+    "title": "My Brief History Part 1",
     "author": "Stephen Hawking",
+    "subject": "Biography",
     "pages": 144,
     "price": 15.0,
     "published_year": 2013

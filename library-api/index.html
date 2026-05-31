@@ -20,7 +20,6 @@
                 <i class="fa-solid fa-book-bookmark logo-icon"></i>
                 <h1>Library API Sandbox</h1>
             </div>
-            <p>Select your search parameters and click <strong>Fetch Books</strong> to query the catalog. View parameters in your browser's <strong>Network Tab</strong>.</p>
         </header>
 
         <!-- Filters Form Panel -->
@@ -29,49 +28,14 @@
             <div class="auth-panel" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color);">
                 <h3 class="section-title" style="margin-bottom: 16px;"><i class="fa-solid fa-lock"></i> API Request Security</h3>
                 <div class="auth-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: end;">
-                    <!-- Auth Toggle Segment -->
-                    <div class="filter-group">
-                        <label><i class="fa-solid fa-key"></i> Authentication Mode</label>
-                        <div class="auth-toggle-buttons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background-color: var(--bg-primary); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color);">
-                            <button id="btn-auth-basic" type="button" class="auth-toggle-btn active">Basic Auth</button>
-                            <button id="btn-auth-oauth" type="button" class="auth-toggle-btn">OAuth 2.0</button>
-                        </div>
-                    </div>
-
                     <!-- Basic Auth Inputs -->
-                    <div id="auth-fields-basic" class="auth-fields-group" style="display: contents;">
-                        <div class="filter-group">
-                            <label for="auth-username">Username</label>
-                            <input type="text" id="auth-username" placeholder="library_admin" value="library_admin">
-                        </div>
-                        <div class="filter-group">
-                            <label for="auth-password">Password</label>
-                            <input type="password" id="auth-password" placeholder="admin_secure_123" value="admin_secure_123">
-                        </div>
-                    </div>
-
-                    <!-- OAuth Bearer Input -->
-                    <div id="auth-fields-oauth" class="auth-fields-group hidden" style="display: none;">
-                        <div class="filter-group">
-                            <label for="auth-token">Bearer Token</label>
-                            <input type="text" id="auth-token" placeholder="lib_bearer_token_98765" value="lib_bearer_token_98765">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Custom Request Headers & Body -->
-                <div class="custom-headers-section" style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
                     <div class="filter-group">
-                        <label for="custom-header-key"><i class="fa-solid fa-sliders"></i> Custom Header Name</label>
-                        <input type="text" id="custom-header-key" placeholder="X-Custom-Client">
+                        <label for="auth-username">Username</label>
+                        <input type="text" id="auth-username" placeholder="library_admin" value="library_admin">
                     </div>
                     <div class="filter-group">
-                        <label for="custom-header-value"><i class="fa-solid fa-quote-right"></i> Custom Header Value</label>
-                        <input type="text" id="custom-header-value" placeholder="PlaywrightRunner">
-                    </div>
-                    <div class="filter-group">
-                        <label for="custom-request-body"><i class="fa-solid fa-code"></i> Request Body (Simulated POST/PUT)</label>
-                        <input type="text" id="custom-request-body" placeholder='{"action": "read_catalog"}'>
+                        <label for="auth-password">Password</label>
+                        <input type="password" id="auth-password" placeholder="admin_secure_123" value="admin_secure_123">
                     </div>
                 </div>
             </div>
@@ -79,7 +43,7 @@
             <!-- HTTP Method Selector Segment -->
             <div class="method-selector" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color);">
                 <h3 class="section-title" style="margin-bottom: 16px;"><i class="fa-solid fa-code-fork"></i> API Request Method</h3>
-                <div class="method-toggle-buttons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; max-width: 680px;">
+                <div class="method-toggle-buttons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; max-width: 720px;">
                     <button id="btn-method-get" type="button" class="method-toggle-btn active">GET - Fetch Books</button>
                     <button id="btn-method-post" type="button" class="method-toggle-btn">POST - Add Book</button>
                     <button id="btn-method-put" type="button" class="method-toggle-btn">PUT - Update Book</button>
@@ -156,13 +120,13 @@
                     <!-- Title -->
                     <div class="filter-group">
                         <label for="post-title"><i class="fa-solid fa-heading"></i> Book Title</label>
-                        <input type="text" id="post-title" placeholder="The Pragmatic Programmer">
+                        <input type="text" id="post-title" placeholder="e.g. Book Name">
                     </div>
 
                     <!-- Author -->
                     <div class="filter-group">
                         <label for="post-author"><i class="fa-solid fa-user-pen"></i> Author</label>
-                        <input type="text" id="post-author" placeholder="Andy Hunt">
+                        <input type="text" id="post-author" placeholder="e.g. Author">
                     </div>
 
                     <!-- Subject -->
@@ -181,19 +145,19 @@
                     <!-- Pages -->
                     <div class="filter-group">
                         <label for="post-pages"><i class="fa-solid fa-file-lines"></i> Page Count</label>
-                        <input type="number" id="post-pages" placeholder="352" min="1">
+                        <input type="number" id="post-pages" placeholder="e.g. Pages" min="1">
                     </div>
 
                     <!-- Price -->
                     <div class="filter-group">
                         <label for="post-price"><i class="fa-solid fa-dollar-sign"></i> Price</label>
-                        <input type="number" id="post-price" placeholder="45.00" min="0.01" step="0.01">
+                        <input type="number" id="post-price" placeholder="e.g. Price" min="0.01" step="0.01">
                     </div>
 
                     <!-- Published Year -->
                     <div class="filter-group">
                         <label for="post-year"><i class="fa-solid fa-calendar-days"></i> Published Year</label>
-                        <input type="number" id="post-year" placeholder="1999" min="1900" max="2026">
+                        <input type="number" id="post-year" placeholder="e.g. Year" min="1900" max="2026">
                     </div>
                 </div>
             </div>
@@ -201,21 +165,26 @@
             <!-- PUT Method Form container -->
             <div id="section-put-fields" class="hidden">
                 <h3 class="section-title" style="margin-bottom: 16px;"><i class="fa-solid fa-pen-to-square"></i> Update Book Details Parameters</h3>
-                <div class="filter-group" style="margin-bottom: 20px; max-width: 240px;">
+                <div class="filter-group" style="margin-bottom: 20px; max-width: 320px;">
                     <label for="put-id"><i class="fa-solid fa-hashtag"></i> Book ID to Update</label>
-                    <input type="number" id="put-id" placeholder="e.g. 5" min="1">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="put-id" placeholder="e.g. 5" min="1" style="flex: 1;">
+                        <button id="btn-put-fetch" type="button" class="btn" style="padding: 10px 16px; background-color: var(--accent-color); color: var(--bg-primary); border-radius: 8px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap;">
+                            <i class="fa-solid fa-download"></i> Fetch
+                        </button>
+                    </div>
                 </div>
                 <div class="filters-grid">
                     <!-- Title -->
                     <div class="filter-group">
                         <label for="put-title"><i class="fa-solid fa-heading"></i> Book Title</label>
-                        <input type="text" id="put-title" placeholder="The Pragmatic Programmer">
+                        <input type="text" id="put-title" placeholder="e.g. Book Name">
                     </div>
 
                     <!-- Author -->
                     <div class="filter-group">
                         <label for="put-author"><i class="fa-solid fa-user-pen"></i> Author</label>
-                        <input type="text" id="put-author" placeholder="Andy Hunt">
+                        <input type="text" id="put-author" placeholder="e.g. Author">
                     </div>
 
                     <!-- Subject -->
@@ -234,19 +203,19 @@
                     <!-- Pages -->
                     <div class="filter-group">
                         <label for="put-pages"><i class="fa-solid fa-file-lines"></i> Page Count</label>
-                        <input type="number" id="put-pages" placeholder="352" min="1">
+                        <input type="number" id="put-pages" placeholder="e.g. Pages" min="1">
                     </div>
 
                     <!-- Price -->
                     <div class="filter-group">
                         <label for="put-price"><i class="fa-solid fa-dollar-sign"></i> Price</label>
-                        <input type="number" id="put-price" placeholder="45.00" min="0.01" step="0.01">
+                        <input type="number" id="put-price" placeholder="e.g. Price" min="0.01" step="0.01">
                     </div>
 
                     <!-- Published Year -->
                     <div class="filter-group">
                         <label for="put-year"><i class="fa-solid fa-calendar-days"></i> Published Year</label>
-                        <input type="number" id="put-year" placeholder="1999" min="1900" max="2026">
+                        <input type="number" id="put-year" placeholder="e.g. Year" min="1900" max="2026">
                     </div>
                 </div>
             </div>

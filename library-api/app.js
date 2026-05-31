@@ -34,18 +34,13 @@ const putYear = document.getElementById('put-year');
 const deleteId = document.getElementById('delete-id');
 
 // Authentication & Custom Headers DOM Elements
-const btnAuthBasic = document.getElementById('btn-auth-basic');
-const btnAuthOauth = document.getElementById('btn-auth-oauth');
-const fieldsBasic = document.getElementById('auth-fields-basic');
-const fieldsOauth = document.getElementById('auth-fields-oauth');
-
 const inputUsername = document.getElementById('auth-username');
 const inputPassword = document.getElementById('auth-password');
-const inputToken = document.getElementById('auth-token');
 
-const customHeaderKey = document.getElementById('custom-header-key');
-const customHeaderValue = document.getElementById('custom-header-value');
-const customRequestBody = document.getElementById('custom-request-body');
+// Static Request Custom Headers & Body
+const STATIC_CUSTOM_HEADER_KEY = 'X-Custom-Client';
+const STATIC_CUSTOM_HEADER_VALUE = 'PlaywrightRunner';
+const STATIC_CUSTOM_REQUEST_BODY = '{"action": "read_catalog"}';
 
 // HTTP Method DOM Elements
 const btnMethodGet = document.getElementById('btn-method-get');
@@ -57,10 +52,19 @@ const sectionPostFields = document.getElementById('section-post-fields');
 const sectionPutFields = document.getElementById('section-put-fields');
 const sectionDeleteFields = document.getElementById('section-delete-fields');
 
-let activeAuthMode = 'basic'; // 'basic' or 'oauth'
+
 let activeMethodMode = 'get'; // 'get', 'post', 'put', 'delete'
 
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+// Register Service Worker simulation on GitHub Pages (when isLocal is false)
+if (!isLocal && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('Service Worker registered successfully:', reg.scope))
+            .catch(err => console.error('Service Worker registration failed:', err));
+    });
+}
 
 // Global session book database cache
 let sessionBooks = [];
@@ -68,22 +72,13 @@ let sessionBooks = [];
 // Load the initial database at startup
 async function loadInitialDatabase() {
     try {
-        if (!isLocal) {
-            const localData = localStorage.getItem('library_books');
-            if (localData) {
-                sessionBooks = JSON.parse(localData);
-                resultsCount.textContent = sessionBooks.length;
-                renderBooks(sessionBooks);
-                return;
+        const response = await fetch('./api/v1/books.json', {
+            headers: {
+                'Authorization': 'Basic bGlicmFyeV9hZG1pbjphZG1pbl9zZWN1cmVfMTIz'
             }
-        }
-        
-        const response = await fetch('./api/v1/books.json');
+        });
         if (response.ok) {
             sessionBooks = await response.json();
-            if (!isLocal) {
-                localStorage.setItem('library_books', JSON.stringify(sessionBooks));
-            }
             resultsCount.textContent = sessionBooks.length;
             renderBooks(sessionBooks);
         }
@@ -107,6 +102,29 @@ function resetMethodUI() {
     // Reset any custom button backgrounds
     fetchBtn.style.background = '';
     fetchBtn.style.color = '';
+
+    // Clear all inputs across all tabs when method is changed
+    const inputsToClear = [
+        filterSubject, filterAuthor, filterMinPages, filterMaxPages,
+        filterMinPrice, filterMaxPrice, filterMinYear, filterMaxYear,
+        postTitle, postAuthor, postSubject, postPages, postPrice, postYear,
+        putId, putTitle, putAuthor, putSubject, putPages, putPrice, putYear,
+        deleteId
+    ];
+
+    inputsToClear.forEach(input => {
+        if (input) {
+            input.value = '';
+        }
+    });
+
+    // Reset table records and results count
+    booksList.innerHTML = `
+        <tr>
+            <td colspan="7" class="placeholder-row">Set parameters and click "Fetch Books" to display records.</td>
+        </tr>
+    `;
+    resultsCount.textContent = '0';
 }
 
 btnMethodGet.addEventListener('click', () => {
@@ -157,62 +175,31 @@ btnMethodDelete.addEventListener('click', () => {
     fetchBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i> Delete Book`;
 });
 
-// Auth Toggle button logic
-btnAuthBasic.addEventListener('click', () => {
-    activeAuthMode = 'basic';
-    btnAuthBasic.classList.add('active');
-    btnAuthOauth.classList.remove('active');
-    fieldsBasic.style.display = 'contents';
-    fieldsOauth.style.display = 'none';
-});
 
-btnAuthOauth.addEventListener('click', () => {
-    activeAuthMode = 'oauth';
-    btnAuthOauth.classList.add('active');
-    btnAuthBasic.classList.remove('active');
-    fieldsOauth.style.display = 'contents';
-    fieldsBasic.style.display = 'none';
-});
 
 // Main Action Trigger (Fetch / Add)
 fetchBtn.addEventListener('click', async () => {
     // Perform Authentication Validation first!
     let authHeaderValue = '';
-    if (activeAuthMode === 'basic') {
-        const username = inputUsername.value.trim();
-        const password = inputPassword.value.trim();
-        
-        if (username !== "library_admin" || password !== "admin_secure_123") {
-            renderError("401 Unauthorized", "Basic Authentication Failed: Invalid Username or Password.", "Verify credentials match: Username 'library_admin' & Password 'admin_secure_123'.");
-            return;
-        }
-        
-        const encoded = btoa(`${username}:${password}`);
-        authHeaderValue = `Basic ${encoded}`;
-    } else {
-        const token = inputToken.value.trim();
-        
-        if (token !== "lib_bearer_token_98765") {
-            renderError("401 Unauthorized", "OAuth 2.0 Authentication Failed: Invalid Bearer Token.", "Verify token matches: 'lib_bearer_token_98765'.");
-            return;
-        }
-        
-        authHeaderValue = `Bearer ${token}`;
+    const username = inputUsername.value.trim();
+    const password = inputPassword.value.trim();
+    
+    if (username !== "library_admin" || password !== "admin_secure_123") {
+        renderError("401 Unauthorized", "Basic Authentication Failed: Invalid Username or Password.", "Verify credentials match: Username 'library_admin' & Password 'admin_secure_123'.");
+        return;
     }
+    
+    const encoded = btoa(`${username}:${password}`);
+    authHeaderValue = `Basic ${encoded}`;
 
     // Construct Headers
     const headers = {
         'Authorization': authHeaderValue,
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        [STATIC_CUSTOM_HEADER_KEY]: STATIC_CUSTOM_HEADER_VALUE,
+        'X-Request-Body': STATIC_CUSTOM_REQUEST_BODY
     };
-
-    // Append optional custom header
-    const headerKey = customHeaderKey.value.trim();
-    const headerValue = customHeaderValue.value.trim();
-    if (headerKey && headerValue) {
-        headers[headerKey] = headerValue;
-    }
 
     if (activeMethodMode === 'get') {
         await handleGetRequest(headers);
@@ -333,20 +320,13 @@ async function handlePostRequest(headers) {
             body: JSON.stringify(newBook)
         });
 
-        if (isLocal) {
-            if (!response.ok) {
-                throw new Error(`Server returned HTTP ${response.status}`);
-            }
-            const savedBook = await response.json();
-            // sync our global session state
-            sessionBooks.unshift(savedBook);
-            newBook.id = savedBook.id; // ensure ID matches the database
-        } else {
-            // Hosted static site: prepend to sessionBooks & update localStorage
-            newBook.id = sessionBooks.length > 0 ? Math.max(...sessionBooks.map(b => b.id)) + 1 : 1;
-            sessionBooks.unshift(newBook);
-            localStorage.setItem('library_books', JSON.stringify(sessionBooks));
+        if (!response.ok) {
+            throw new Error(`Server returned HTTP ${response.status}`);
         }
+        const savedBook = await response.json();
+        // sync our global session state
+        sessionBooks.unshift(savedBook);
+        newBook.id = savedBook.id; // ensure ID matches the database
 
         // Render success feedback in UI table
         booksList.innerHTML = `
@@ -421,17 +401,11 @@ async function handlePutRequest(headers) {
             body: JSON.stringify(updatedBook)
         });
 
-        if (isLocal) {
-            if (!response.ok) {
-                throw new Error(`Server returned HTTP ${response.status}`);
-            }
-            const savedBook = await response.json();
-            sessionBooks[bookIndex] = savedBook;
-        } else {
-            // Update in sessionBooks and localStorage
-            sessionBooks[bookIndex] = updatedBook;
-            localStorage.setItem('library_books', JSON.stringify(sessionBooks));
+        if (!response.ok) {
+            throw new Error(`Server returned HTTP ${response.status}`);
         }
+        const savedBook = await response.json();
+        sessionBooks[bookIndex] = savedBook;
 
         // Render success feedback in UI table
         booksList.innerHTML = `
@@ -492,16 +466,10 @@ async function handleDeleteRequest(headers) {
             headers: headers
         });
 
-        if (isLocal) {
-            if (!response.ok) {
-                throw new Error(`Server returned HTTP ${response.status}`);
-            }
-            sessionBooks.splice(bookIndex, 1);
-        } else {
-            // Delete from sessionBooks and localStorage
-            sessionBooks.splice(bookIndex, 1);
-            localStorage.setItem('library_books', JSON.stringify(sessionBooks));
+        if (!response.ok) {
+            throw new Error(`Server returned HTTP ${response.status}`);
         }
+        sessionBooks.splice(bookIndex, 1);
 
         // Render success feedback in UI table
         booksList.innerHTML = `
@@ -568,6 +536,55 @@ function renderError(status, message, suggestion) {
         </tr>
     `;
     resultsCount.textContent = '0';
+}
+
+// PUT Fetch logic to auto-populate book details
+const btnPutFetch = document.getElementById('btn-put-fetch');
+if (btnPutFetch) {
+    btnPutFetch.addEventListener('click', () => {
+        const id = parseInt(putId.value);
+        if (isNaN(id)) {
+            renderError("400 Bad Request", "Please enter a valid numeric Book ID to fetch details.", "Verify the input is a positive number.");
+            return;
+        }
+
+        const book = sessionBooks.find(b => b.id === id);
+        if (!book) {
+            renderError("404 Not Found", `Book with ID ${id} was not found in the current session catalog.`, "Verify the ID is correct.");
+            return;
+        }
+
+        // Auto-populate input fields
+        putTitle.value = book.title;
+        putAuthor.value = book.author;
+        putSubject.value = book.subject;
+        putPages.value = book.pages;
+        putPrice.value = book.price;
+        putYear.value = book.published_year;
+
+        // Render success message inside the table/results count
+        booksList.innerHTML = `
+            <tr>
+                <td colspan="7" class="placeholder-row" style="color: var(--accent-color); padding: 20px;">
+                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 4px;"><i class="fa-solid fa-circle-info"></i> Book Details Populated</div>
+                    <div style="font-size: 13px;">Auto-populated details for book ID ${id}. You can modify any values and click "Update Book".</div>
+                </td>
+            </tr>
+        `;
+        resultsCount.textContent = '1';
+    });
+}
+
+// Clear fields below Book ID to Update when the ID value is modified
+if (putId) {
+    putId.addEventListener('input', () => {
+        putTitle.value = '';
+        putAuthor.value = '';
+        putSubject.value = '';
+        putPages.value = '';
+        putPrice.value = '';
+        putYear.value = '';
+    });
 }
 
 // Initialize App
