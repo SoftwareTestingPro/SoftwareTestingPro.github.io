@@ -95,6 +95,12 @@
             const messageElement = document.getElementById('message');
 
             const generatedISBNs = [];
+            const localImages = [
+                '../../img/1026-150x150.jpg',
+                '../../img/22-150x150.jpg',
+                '../../img/468-150x150.jpg',
+                '../../img/766-150x150.jpg'
+            ];
 
             function generateRandomISBN() {
                 return `978-${Math.floor(Math.random() * 10)}-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9 + 1)}`;
@@ -112,7 +118,7 @@
                 const thumbnail = document.createElement('div');
                 thumbnail.className = 'thumbnail';
                 thumbnail.innerHTML = `
-                    <img src="https://picsum.photos/150/150?random=${index + 1}" alt="Thumbnail ${index + 1}">
+                    <img src="${localImages[index]}" alt="Thumbnail ${index + 1}">
                     <div class="isbn" id="isbn-${index}">ISBN: ${randomISBN}</div>
                 `;
                 thumbnailContainer.appendChild(thumbnail);

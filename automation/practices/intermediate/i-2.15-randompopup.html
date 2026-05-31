@@ -50,7 +50,20 @@
       gtag('js', new Date());
       gtag('config', 'G-MCHF9RDWT6');
     </script>
-    <!-- End Google Analytics -->
+    <style>
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 1.5rem auto;
+        }
+        #inputField {
+            width: 75px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -74,7 +87,7 @@
                 <a href="#" class="button" id="alertButton">Click to Generate Alert and Wait</a>
                 <div class="input-group">
                     <label for="inputField">After the alert appears, enter the duration (in seconds) it took to display:</label>
-                    <input type="number" id="inputField" name="inputField" min="1" step="1">
+                    <input type="number" id="inputField" name="inputField" min="1" max="99" oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);" step="1">
                 </div>
                 <div class="message success" id="successMessage" role="status" aria-live="polite">Correct! The alert timing was calculated accurately.</div>
                 <div class="message failure" id="failureMessage" role="status" aria-live="polite">
