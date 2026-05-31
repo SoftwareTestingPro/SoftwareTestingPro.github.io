@@ -23,10 +23,19 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.portfolio-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    overflow-x: hidden;
+    width: 100%;
 }
 
 /* Background Animation */
@@ -43,13 +52,13 @@ body::before {
     pointer-events: none;
 }
 
-header {
+.portfolio-header {
     text-align: center;
     margin-bottom: 4rem;
     animation: fadeInDown 1s ease-out;
 }
 
-header h1 {
+.portfolio-header h1 {
     font-size: 3.5rem;
     font-weight: 800;
     color: var(--accent-blue); /* Fallback for accessibility scanners */
@@ -60,7 +69,7 @@ header h1 {
     letter-spacing: -0.02em;
 }
 
-header p {
+.portfolio-header p {
     font-size: 1.25rem;
     color: var(--text-muted);
     max-width: 600px;
@@ -162,6 +171,6 @@ header p {
 
 /* Responsive Scaling */
 @media (max-width: 768px) {
-    header h1 { font-size: 2.5rem; }
+    .portfolio-header h1 { font-size: 2.5rem; }
     .projects-grid { grid-template-columns: 1fr; }
 }

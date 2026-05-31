@@ -28,10 +28,16 @@ body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    padding: 40px 20px;
+    margin: 0;
+    padding: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     min-height: 100vh;
+}
+
+#header-placeholder, #footer-placeholder {
+    width: 100%;
 }
 
 .library-container {
@@ -40,9 +46,10 @@ body {
     display: flex;
     flex-direction: column;
     gap: 32px;
+    padding: 40px 20px;
 }
 
-header {
+.library-container header {
     text-align: center;
 }
 
@@ -66,7 +73,7 @@ header {
     filter: drop-shadow(0 2px 8px var(--accent-glow));
 }
 
-header p {
+.library-container header p {
     font-size: 14px;
     color: var(--text-secondary);
     max-width: 600px;
@@ -74,7 +81,7 @@ header p {
     line-height: 1.5;
 }
 
-header strong {
+.library-container header strong {
     color: var(--accent-color);
 }
 

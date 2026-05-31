@@ -13,9 +13,17 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-body.dark-theme { background-color: var(--sidebar-bg); color: var(--text-primary); overflow: hidden; height: 100vh; }
+body.dark-theme { 
+    background-color: var(--sidebar-bg); 
+    color: var(--text-primary); 
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
-.app-container { display: flex; height: 100vh; }
+.app-container { display: flex; flex: 1; min-height: calc(100vh - 56px); }
 
 /* Sidebar */
 .sidebar {
@@ -24,9 +32,6 @@ body.dark-theme { background-color: var(--sidebar-bg); color: var(--text-primary
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    position: sticky;
-    top: 0;
 }
 
 .sidebar-content {
@@ -98,7 +103,7 @@ body.dark-theme { background-color: var(--sidebar-bg); color: var(--text-primary
 #total-rows-info { font-size: 12px; color: var(--text-secondary); }
 
 /* Main Content Area */
-.content-view { flex: 1; background: var(--bg-dark); padding: 32px; overflow-y: auto; height: 100vh; position: relative; }
+.content-view { flex: 1; background: var(--bg-dark); padding: 32px; position: relative; }
 
 /* Custom Scrollbar for Premium Look */
 ::-webkit-scrollbar { width: 6px; height: 6px; }

@@ -27,8 +27,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.0.4/typescript.min.js"></script>
     <!-- Pyodide for Browser-side Python compiling -->
     <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+    <!-- Header and Footer CSS -->
+    <link rel="stylesheet" href="/automation/assets/css/header.css">
+    <link rel="stylesheet" href="/automation/assets/css/footer.css">
 </head>
 <body>
+    <div id="header-placeholder"></div>
     <div class="app-container">
         <!-- Premium Navigation Header -->
         <header class="app-header">
@@ -122,5 +126,7 @@
         script.src = 'app.js?v=' + Date.now();
         document.body.appendChild(script);
     </script>
+    <div id="footer-placeholder"></div>
+    <script src="/automation/assets/components/components.js"></script>
 </body>
 </html>

@@ -8,18 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
 // Determine the correct path to header/footer based on current location
 // Determine the correct path to header/footer based on current location
 function getBasePath() {
-    const currentPath = window.location.pathname.toLowerCase();
-    const parts = currentPath.split('/').filter(segment => segment);
-    const automationIndex = parts.indexOf('automation');
+    const pathname = window.location.pathname;
+    const parts = pathname.split('/').filter(segment => segment);
     
-    // If we're not in the automation folder (e.g. root), return 'automation/' 
-    // to reach header.html, assets, etc.
-    if (automationIndex === -1) return 'automation/';
+    let depth = parts.length;
+    if (parts.length > 0 && parts[parts.length - 1].includes('.')) {
+        depth -= 1;
+    }
     
-    // Number of segments after 'automation' (minus the filename)
-    const depth = parts.length - 1 - automationIndex - 1;
-    
-    if (depth <= 0) return '';
+    if (depth <= 0) return './';
     
     let path = '';
     for (let i = 0; i < depth; i++) {
@@ -51,8 +48,8 @@ function loadHeader() {
                     });
                 }
                 
-                // Add mobile menu
-                const menuHtml = `<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="${basePath}practices/beginner/b-1.01-click.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="${basePath}practices/intermediate/i-2.01-draganddroptext.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="${basePath}practices/advanced/a-3.01-hiddenelement.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>`;
+                // Add mobile menu (links are relative to root directory, so prefix with automation/)
+                const menuHtml = `<div id="mobile-menu" class="mobile-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;"><div class="menu-content" style="position: absolute; top: 60px; right: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 300px;"><h4>Main Navigation</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="${basePath}automation/practices/beginner/b-1.01-click.html" style="color: #333; text-decoration: none;">Beginner</a></li><li style="margin-bottom: 8px;"><a href="${basePath}automation/practices/intermediate/i-2.01-draganddroptext.html" style="color: #333; text-decoration: none;">Intermediate</a></li><li style="margin-bottom: 8px;"><a href="${basePath}automation/practices/advanced/a-3.01-hiddenelement.html" style="color: #333; text-decoration: none;">Advanced</a></li></ul><h4>Learning Resources</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.selenium.dev/documentation/" target="_blank" style="color: #333; text-decoration: none;">Selenium Documentation</a></li><li style="margin-bottom: 8px;"><a href="https://playwright.dev/docs/intro" target="_blank" style="color: #333; text-decoration: none;">Playwright Docs</a></li></ul><h4>Testing Tools</h4><ul style="list-style: none; padding: 0;"><li style="margin-bottom: 8px;"><a href="https://www.cypress.io/" target="_blank" style="color: #333; text-decoration: none;">Cypress</a></li><li style="margin-bottom: 8px;"><a href="https://testcafe.io/" target="_blank" style="color: #333; text-decoration: none;">TestCafe</a></li></ul></div></div>`;
                 document.body.insertAdjacentHTML('afterbegin', menuHtml);
             })
             .catch(error => {

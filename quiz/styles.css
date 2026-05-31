@@ -15,19 +15,26 @@
 }
 
 html, body {
-    height: 100%;
     margin: 0;
+    padding: 0;
 }
 
 body {
     background: var(--bg);
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    color: #111827;
+    box-sizing: border-box;
+}
+
+.quiz-page-wrapper {
+    flex: 1;
+    display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    padding: 1rem;
-    color: #111827;
+    padding: 2rem 1rem;
+    width: 100%;
     box-sizing: border-box;
 }
 

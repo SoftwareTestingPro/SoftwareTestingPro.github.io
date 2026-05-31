@@ -9,88 +9,92 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="automation/assets/css/header.css">
+    <link rel="stylesheet" href="automation/assets/css/footer.css">
 </head>
 <body>
-    <header>
-        <h1>Our Portfolio</h1>
-        <p>A showcase of cutting-edge solutions in automation, healthcare, and interactive learning.</p>
-    </header>
+    <div id="header-placeholder"></div>
+    <div class="portfolio-container">
+        <div class="portfolio-header">
+            <h1>Our Portfolio</h1>
+            <p>A showcase of cutting-edge solutions in automation, compilers, APIs, healthcare, and interactive learning.</p>
+        </div>
 
-    <main class="projects-grid">
-        <!-- Automation Project -->
-        <a href="automation/index.html" class="project-card" id="project-automation">
-            <div class="card-image">
-                <img src="images/automation.png" alt="Automation Testing Project">
-            </div>
-            <div class="card-content">
-                <h2>Automation Hub</h2>
-                <p>A comprehensive ecosystem for modern software testing, featuring advanced automation frameworks and best practices.</p>
-            </div>
-            <div class="card-footer">
-                Explore Project <span>&rarr;</span>
-            </div>
-        </a>
+        <main class="projects-grid">
+            <!-- Automation Project -->
+            <a href="automation/index.html" class="project-card" id="project-automation">
+                <div class="card-image">
+                    <img src="images/automation.png" alt="Automation Testing Project">
+                </div>
+                <div class="card-content">
+                    <h2>Automation Hub</h2>
+                    <p>A comprehensive ecosystem for modern software testing, featuring advanced automation frameworks and best practices.</p>
+                </div>
+                <div class="card-footer">
+                    Explore Project <span>&rarr;</span>
+                </div>
+            </a>
 
-        <!-- Healthcare Project -->
-        <a href="healthcare/index.html" class="project-card" id="project-healthcare">
-            <div class="card-image">
-                <img src="images/healthcare.png" alt="Healthcare Management Project">
-            </div>
-            <div class="card-content">
-                <h2>HealthSync</h2>
-                <p>A streamlined healthcare management platform designed for efficiency, patient care, and seamless data integration.</p>
-            </div>
-            <div class="card-footer">
-                Explore Project <span>&rarr;</span>
-            </div>
-        </a>
+            <!-- Healthcare Project -->
+            <a href="healthcare/index.html" class="project-card" id="project-healthcare">
+                <div class="card-image">
+                    <img src="images/healthcare.png" alt="Healthcare Management Project">
+                </div>
+                <div class="card-content">
+                    <h2>HealthSync</h2>
+                    <p>A streamlined healthcare management platform designed for efficiency, patient care, and seamless data integration.</p>
+                </div>
+                <div class="card-footer">
+                    Explore Project <span>&rarr;</span>
+                </div>
+            </a>
 
-        <!-- Quiz Project -->
-        <a href="quiz/index.html" class="project-card" id="project-quiz">
-            <div class="card-image">
-                <img src="images/quiz.png" alt="Interactive Quiz Project">
-            </div>
-            <div class="card-content">
-                <h2>Quiz Master</h2>
-                <p>An engaging interactive quiz platform built to challenge knowledge and provide a dynamic learning experience.</p>
-            </div>
-            <div class="card-footer">
-                Explore Project <span>&rarr;</span>
-            </div>
-        </a>
+            <!-- Quiz Project -->
+            <a href="quiz/index.html" class="project-card" id="project-quiz">
+                <div class="card-image">
+                    <img src="images/quiz.png" alt="Interactive Quiz Project">
+                </div>
+                <div class="card-content">
+                    <h2>Quiz Master</h2>
+                    <p>An engaging interactive quiz platform built to challenge knowledge and provide a dynamic learning experience.</p>
+                </div>
+                <div class="card-footer">
+                    Explore Project <span>&rarr;</span>
+                </div>
+            </a>
 
-        <!-- Compiler Project -->
-        <a href="compiler/index.html" class="project-card" id="project-compiler">
-            <div class="card-image">
-                <img src="images/compiler.png" alt="DevCompiler Project">
-            </div>
-            <div class="card-content">
-                <h2>DevCompiler Hub</h2>
-                <p>A multi-language browser-based online compiler supporting JavaScript, TypeScript, Python, HTML/CSS, and more.</p>
-            </div>
-            <div class="card-footer">
-                Explore Project <span>&rarr;</span>
-            </div>
-        </a>
+            <!-- Compiler Project -->
+            <a href="compiler/index.html" class="project-card" id="project-compiler">
+                <div class="card-image">
+                    <img src="images/compiler.png" alt="DevCompiler Project">
+                </div>
+                <div class="card-content">
+                    <h2>DevCompiler Hub</h2>
+                    <p>A multi-language browser-based online compiler supporting JavaScript, TypeScript, Python, HTML/CSS, and more.</p>
+                </div>
+                <div class="card-footer">
+                    Explore Project <span>&rarr;</span>
+                </div>
+            </a>
 
-        <!-- Library API Project -->
-        <a href="library-api/index.html" class="project-card" id="project-library-api">
-            <div class="card-image">
-                <img src="images/library.png" alt="Library API Playground">
-            </div>
-            <div class="card-content">
-                <h2>LibraryAPI Hub</h2>
-                <p>An API sandbox featuring 100s of books with advanced filter criteria (author, subject, pages, price, year) for API automation practice.</p>
-            </div>
-            <div class="card-footer">
-                Explore Project <span>&rarr;</span>
-            </div>
-        </a>
-    </main>
+            <!-- Library API Project -->
+            <a href="library-api/index.html" class="project-card" id="project-library-api">
+                <div class="card-image">
+                    <img src="images/library.png" alt="Library API Playground">
+                </div>
+                <div class="card-content">
+                    <h2>LibraryAPI Hub</h2>
+                    <p>An API sandbox featuring 100s of books with advanced filter criteria (author, subject, pages, price, year) for API automation practice.</p>
+                </div>
+                <div class="card-footer">
+                    Explore Project <span>&rarr;</span>
+                </div>
+            </a>
+        </main>
+    </div>
 
-    <footer style="margin-top: 4rem; color: var(--text-muted); font-size: 0.9rem;">
-        &copy; 2026 SoftwareTestingPro. All rights reserved.
-    </footer>
+    <div id="footer-placeholder"></div>
+    <script src="automation/assets/components/components.js"></script>
 </body>
 </html>
 

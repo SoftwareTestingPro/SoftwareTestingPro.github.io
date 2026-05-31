@@ -46,11 +46,13 @@
         }
     </script>
     <!-- Header and Footer CSS -->
-    <link rel="stylesheet" href="/header.css">
-    <link rel="stylesheet" href="/footer.css">
+    <link rel="stylesheet" href="/automation/assets/css/header.css">
+    <link rel="stylesheet" href="/automation/assets/css/footer.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div id="header-placeholder"></div>
+<div class="quiz-page-wrapper">
 <div class="quiz-container">
     <!-- Welcome Content -->
     <div class="welcome-content">
@@ -79,6 +81,7 @@
         <label for="topicSelect">Select Topic:</label>
         <select id="topicSelect" class="topic-dropdown">
         </select>
+
         <button id="startQuiz" class="btn btn-submit" disabled>Start Quiz</button>
     </div>
     <div id="quizContent" style="display: none;">
@@ -182,6 +185,7 @@
 
         <button class="btn btn-submit" onclick="restartQuiz()">Navigate to Quiz Home</button>
     </div>
+</div>
 </div>
 
 <script>
@@ -612,5 +616,7 @@
         document.getElementById('correctStats').textContent = 'Correct: 0/0';
     }
 </script>
+<div id="footer-placeholder"></div>
+<script src="/automation/assets/components/components.js"></script>
 </body>
 </html>
