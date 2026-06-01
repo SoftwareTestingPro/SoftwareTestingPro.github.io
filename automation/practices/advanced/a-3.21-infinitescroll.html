@@ -182,7 +182,9 @@
                         const container = document.createElement('div');
                         container.className = 'image-container';
                         const img = document.createElement('img');
-                        img.dataset.src = `https://picsum.photos/400/300?random=${imageCounter}`;
+                        const localImages = ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg', 'img5.jpg', 'img6.jpg', 'img7.jpg'];
+                        const imageIndex = (imageCounter - 1) % localImages.length;
+                        img.dataset.src = `../../img/${localImages[imageIndex]}`;
                         img.alt = `Image ${imageCounter}`;
                         container.appendChild(img);
                         imageGrid.appendChild(container);

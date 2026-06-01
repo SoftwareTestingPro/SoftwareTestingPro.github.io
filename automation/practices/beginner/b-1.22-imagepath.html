@@ -99,19 +99,21 @@
         const actualUrlDisplay = document.getElementById('actualUrl');
 
         const imageUrls = [
-            'https://picsum.photos/250/250',
-            'https://picsum.photos/250/251',
-            'https://picsum.photos/250/252',
-            'https://picsum.photos/250/253',
-            'https://picsum.photos/250/254'
+            '../../img/img1.jpg',
+            '../../img/img2.jpg',
+            '../../img/img6.jpg',
+            '../../img/img7.jpg',
+            '../../img/img5.jpg'
         ];
 
         function setRandomImage() {
             const randomIndex = Math.floor(Math.random() * imageUrls.length);
             const randomImageUrl = imageUrls[randomIndex];
             imageElement.src = randomImageUrl;
-            imageElement.dataset.src = randomImageUrl;
-            expectedUrlDisplay.textContent = randomImageUrl;
+            // Use the resolved absolute URL for matching to ensure consistency
+            const resolvedUrl = imageElement.src;
+            imageElement.dataset.src = resolvedUrl;
+            expectedUrlDisplay.textContent = resolvedUrl;
         }
 
         function validateInput() {
