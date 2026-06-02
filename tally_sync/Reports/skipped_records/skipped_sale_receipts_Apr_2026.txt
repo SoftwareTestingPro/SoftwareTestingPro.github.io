@@ -1,9 +1,0 @@
-1 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260405-00001 | Reason: Record already exists in Tally
-2 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260407-00002 | Reason: Record already exists in Tally
-3 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260405-00003 | Reason: Record already exists in Tally
-4 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260407-00005 | Reason: Record already exists in Tally
-5 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260407-00006 | Reason: Record already exists in Tally
-6 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260407-00007 | Reason: Record already exists in Tally
-7 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260407-00008 | Reason: Record already exists in Tally
-8 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260407-00009 | Reason: Record already exists in Tally
-9 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260406-00010 | Reason: Invalid GST calculation (Sales Amount is negative: -204.22)

@@ -1,1 +1,0 @@
-1 [29 05 2026 16:23:58] ReceiptNo: TSTAPR-20260405-00004 | Reason: Record already exists in Tally

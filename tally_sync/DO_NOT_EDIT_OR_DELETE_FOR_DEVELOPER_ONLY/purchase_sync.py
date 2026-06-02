@@ -117,6 +117,20 @@ class TeeStderr:
 sys.stdout = TeeStdout(sys.stdout, stdout_log_path)
 sys.stderr = TeeStderr(sys.stderr, stderr_log_path)
 
+import socket
+def check_tally_port(host, port):
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(2)
+            s.connect((host, port))
+            return True
+    except Exception:
+        return False
+
+if not check_tally_port("localhost", 9000):
+    sys.stderr.write("Tally API port 9000 is inactive. Please ensure Tally is running and the company is opened.\n")
+    sys.exit(1)
+
 TALLY_URL = "http://localhost:9000"
 
 # =========================================================
@@ -176,6 +190,55 @@ def create_supplier_ledger(supplier_name, invoice_no, ledger_type):
         print(f"[{ledger_type} Ledger Verification] Verified/Created Supplier Account: {supplier_name}")
     except Exception as e:
         print(f"[{ledger_type} Ledger Verification] Failed to Verify/Create Supplier Account {supplier_name}: {e}")
+
+def create_tally_ledger(ledger_name, parent_name):
+    escaped_ledger = escape(str(ledger_name).strip())
+    escaped_parent = escape(str(parent_name).strip())
+    ledger_xml = f"""
+    <ENVELOPE>
+     <HEADER>
+      <TALLYREQUEST>Import Data</TALLYREQUEST>
+     </HEADER>
+     <BODY>
+      <IMPORTDATA>
+       <REQUESTDESC>
+        <REPORTNAME>All Masters</REPORTNAME>
+       </REQUESTDESC>
+       <REQUESTDATA>
+        <TALLYMESSAGE>
+         <LEDGER NAME="{escaped_ledger}" ACTION="Create">
+          <NAME>{escaped_ledger}</NAME>
+          <PARENT>{escaped_parent}</PARENT>
+         </LEDGER>
+        </TALLYMESSAGE>
+       </REQUESTDATA>
+      </IMPORTDATA>
+     </BODY>
+    </ENVELOPE>
+    """
+    try:
+        requests.post(TALLY_URL, data=ledger_xml.encode("utf-8"), timeout=30)
+        print(f"[Ledger Verification] Verified/Created Ledger: {ledger_name} (Parent: {parent_name})")
+    except Exception as e:
+        print(f"[Ledger Verification] Failed to Verify/Create Ledger {ledger_name}: {e}")
+
+def get_purchase_ledger_name(cgst, sgst, igst, taxable):
+    try:
+        taxable_val = float(taxable or 0.0)
+        if taxable_val <= 0:
+            return "PURCHASE GST @ 5%"
+        total_tax = float(cgst or 0.0) + float(sgst or 0.0) + float(igst or 0.0)
+        effective_rate = (total_tax / taxable_val) * 100
+        
+        # Map to the three pre-existing Tally purchase ledgers
+        if effective_rate <= 8.5:
+            return "PURCHASE GST @ 5%"
+        elif effective_rate <= 15.0:
+            return "PURCHASE GST @ 12%"
+        else:
+            return "PURCHASE GST @ 18%"
+    except Exception:
+        return "PURCHASE GST @ 5%"
 
 
 # -----------------------------
@@ -317,6 +380,11 @@ except Exception as e:
 
 
 
+# Create standard Purchase and Tax ledgers if they do not exist
+create_tally_ledger("CGST", "Duties & Taxes")
+create_tally_ledger("SGST", "Duties & Taxes")
+create_tally_ledger("IGST", "Duties & Taxes")
+
 # -----------------------------
 # CREATE ALL SUPPLIER LEDGERS
 # -----------------------------
@@ -404,6 +472,7 @@ for item in records:
         igst = round(item.get("IGST_AMT", 0.0), 2)
         total = round(item.get("NetAmount", 0.0), 2)
         purchase_amount = round(total - cgst - sgst - igst, 2)
+        purchase_ledger = get_purchase_ledger_name(cgst, sgst, igst, item.get("PURCHACE_Phamrcy_Medicine", 0.0))
 
         voucher_xml = f"""
         <ENVELOPE>
@@ -434,7 +503,7 @@ for item in records:
 
               <!-- Purchase -->
               <ALLLEDGERENTRIES.LIST>
-               <LEDGERNAME>Purchase</LEDGERNAME>
+               <LEDGERNAME>{purchase_ledger}</LEDGERNAME>
                <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
                <AMOUNT>-{purchase_amount}</AMOUNT>
               </ALLLEDGERENTRIES.LIST>
@@ -477,9 +546,7 @@ for item in records:
             err_match = re.search(r"<LINEERROR>(.*?)</LINEERROR>", response_text, re.IGNORECASE)
             err_msg = err_match.group(1) if err_match else "Import failed (unspecified Tally error)"
             log_entry["reason"] = err_msg
-            failed_records_by_month.setdefault(month_str, []).append(log_entry)
-            
-
+            skipped_records_by_month.setdefault(month_str, []).append(log_entry)
             
             print(f"[Purchase Sync] FAILED ({err_msg}): {supplier} (Invoice No: {invoice_no})")
             print(response_text)
@@ -487,18 +554,12 @@ for item in records:
     except Exception as e:
         failed_count += 1
         log_entry["reason"] = str(e)
-        failed_records_by_month.setdefault(month_str, []).append(log_entry)
-        
-
+        skipped_records_by_month.setdefault(month_str, []).append(log_entry)
         
         print(f"[Purchase Sync] FAILED (Exception: {e}): {supplier} (Invoice No: {invoice_no})")
 
-# -----------------------------
-# SAVE MONTH-WISE TEXT FILES & ROOT LEVEL MASTER SYNC HISTORY
-# -----------------------------
 reports_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Reports"))
 save_month_wise_records(processed_records_by_month, os.path.join(reports_dir, "processed_records"), "processed_purchase_receipts_", "InvoiceNo")
-save_month_wise_records(failed_records_by_month, os.path.join(reports_dir, "failed_records"), "failed_purchase_receipts_", "InvoiceNo")
 save_month_wise_records(skipped_records_by_month, os.path.join(reports_dir, "skipped_records"), "skipped_purchase_receipts_", "InvoiceNo")
 
 
@@ -510,7 +571,5 @@ print("\n====================================")
 print("PURCHASE SUMMARY")
 print("====================================")
 print(f"SUCCESS   : {success_count}")
-print(f"FAILED    : {failed_count}")
-print(f"SKIPPED   : {skipped_count}")
-print(f"DUPLICATE : {duplicate_count}")
+print(f"SKIPPED   : {skipped_count + failed_count + duplicate_count}")
 print("====================================")

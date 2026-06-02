@@ -117,6 +117,20 @@ class TeeStderr:
 sys.stdout = TeeStdout(sys.stdout, stdout_log_path)
 sys.stderr = TeeStderr(sys.stderr, stderr_log_path)
 
+import socket
+def check_tally_port(host, port):
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(2)
+            s.connect((host, port))
+            return True
+    except Exception:
+        return False
+
+if not check_tally_port("localhost", 9000):
+    sys.stderr.write("Tally API port 9000 is inactive. Please ensure Tally is running and the company is opened.\n")
+    sys.exit(1)
+
 TALLY_URL = "http://localhost:9000"
 
 # Map operational transaction categories to proper financial ledger accounts
@@ -290,6 +304,65 @@ def check_existing_vouchers_bulk(tally_url, voucher_numbers):
             raise e
     return existing
 
+def fetch_existing_receipts_from_tally(tally_url):
+    xml = """<ENVELOPE>
+     <HEADER>
+      <VERSION>1</VERSION>
+      <TALLYREQUEST>Export</TALLYREQUEST>
+      <TYPE>Collection</TYPE>
+      <ID>CustomNarrationCollection</ID>
+     </HEADER>
+     <BODY>
+      <DESC>
+       <STATICVARIABLES>
+        <SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT>
+       </STATICVARIABLES>
+       <TDL>
+        <TDLMESSAGE>
+         <COLLECTION NAME="CustomNarrationCollection" ISINITIALIZE="Yes">
+          <TYPE>Voucher</TYPE>
+          <FILTER>JournalFilter</FILTER>
+          <FETCH>Narration</FETCH>
+         </COLLECTION>
+         <SYSTEM TYPE="Formulae" NAME="JournalFilter">
+          $VoucherTypeName = "Journal"
+         </SYSTEM>
+        </TDLMESSAGE>
+       </TDL>
+      </DESC>
+     </BODY>
+    </ENVELOPE>"""
+    existing_receipts = set()
+    try:
+        response = requests.post(tally_url, data=xml.encode("utf-8"), timeout=30)
+        if response.status_code == 200:
+            narrations = re.findall(r"<NARRATION[^>]*>(.*?)</NARRATION>", response.text, re.IGNORECASE)
+            for narr in narrations:
+                receipts = re.findall(r"[A-Z0-9-]{6,}", narr)
+                for r in receipts:
+                    if r not in ["DAILY", "AGGREGATED", "JOURNAL", "ENTRY", "RECEIPTS"]:
+                        existing_receipts.add(r)
+    except Exception as e:
+        print(f"Error checking existing receipts in Tally: {e}")
+    return existing_receipts
+
+def load_already_synced_receipts():
+    synced_receipts = set()
+    processed_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Reports", "processed_records"))
+    if os.path.exists(processed_dir):
+        for file in os.listdir(processed_dir):
+            if file.startswith("processed_journals_") and file.endswith(".txt"):
+                try:
+                    with open(os.path.join(processed_dir, file), "r", encoding="utf-8") as f:
+                        for line in f:
+                            match = re.search(r"Receipts:\s*(.*)", line)
+                            if match:
+                                receipts = [r.strip() for r in match.group(1).split(",") if r.strip()]
+                                synced_receipts.update(receipts)
+                except Exception:
+                    pass
+    return synced_receipts
+
 
 
 
@@ -317,6 +390,8 @@ def save_month_wise_records(records_by_month, folder, prefix, identifier_key):
                     timestamp = item.get("timestamp") or datetime.now().strftime("%d %m %Y %H:%M:%S")
                     
                     line = f"{sn} [{timestamp}] {identifier_key}: {ref_no}"
+                    if item.get("receipt_nos"):
+                        line += f" | Receipts: {', '.join(item.get('receipt_nos'))}"
                     if reason:
                         line += f" | Reason: {reason}"
                     f.write(line + "\n")
@@ -343,318 +418,418 @@ if not records:
     print("No records to process. Exiting.")
     exit(0)
 
-# Extract invoice/receipt numbers to verify with Tally (Safely converting to str first)
-incoming_receipt_nos = {str(item.get("ReceiptNo")).strip() for item in records if item.get("ReceiptNo")}
 
-# Fetch existing vouchers for duplicate checking using fast targeted query
+# =========================================================
+# LEDGER CREATION HELPER
+# =========================================================
+
+def create_tally_ledger(ledger_name, parent_name):
+    escaped_ledger = escape(str(ledger_name).strip())
+    escaped_parent = escape(str(parent_name).strip())
+    ledger_xml = f"""
+    <ENVELOPE>
+     <HEADER>
+      <TALLYREQUEST>Import Data</TALLYREQUEST>
+     </HEADER>
+     <BODY>
+      <IMPORTDATA>
+       <REQUESTDESC>
+        <REPORTNAME>All Masters</REPORTNAME>
+       </REQUESTDESC>
+       <REQUESTDATA>
+        <TALLYMESSAGE>
+         <LEDGER NAME="{escaped_ledger}" ACTION="Create">
+          <NAME>{escaped_ledger}</NAME>
+          <PARENT>{escaped_parent}</PARENT>
+         </LEDGER>
+        </TALLYMESSAGE>
+       </REQUESTDATA>
+      </IMPORTDATA>
+     </BODY>
+    </ENVELOPE>
+    """
+    try:
+        response = requests.post(TALLY_URL, data=ledger_xml.encode("utf-8"), timeout=30)
+        print(f"[Ledger Verification] Verified/Created Ledger: {ledger_name} (Parent: {parent_name})")
+    except Exception as e:
+        print(f"[Ledger Verification] Failed to Verify/Create Ledger {ledger_name}: {e}")
+
+# =========================================================
+# LOAD SOURCE DATA
+# =========================================================
+
 try:
-    print(f"Performing targeted duplicate check for {len(incoming_receipt_nos)} incoming records...")
-    existing_vouchers = check_existing_vouchers_bulk(TALLY_URL, incoming_receipt_nos)
+    data = load_source_data(SOURCE)
+    records = data.get("rows", [])
+except Exception as e:
+    print(f"Failed to load sync data: {e}")
+    records = []
+
+if not records:
+    print("No records to process. Exiting.")
+    exit(0)
+
+# Create SALES IMPEREST A/C ledger
+create_tally_ledger("SALES IMPEREST A/C", "Sundry Debtors")
+
+# Dynamic verification/creation of sales/GST ledgers based on GSTPer in incoming data
+created_ledgers = set()
+for item in records:
+    gst_per_val = item.get("GSTPer")
+    if gst_per_val is None:
+        continue
+    try:
+        gst_per = float(gst_per_val)
+    except ValueError:
+        continue
+        
+    if gst_per <= 0:
+        sales_ledger = "SALES GST EXEMPTED"
+        if sales_ledger not in created_ledgers:
+            create_tally_ledger(sales_ledger, "Sales Accounts")
+            created_ledgers.add(sales_ledger)
+    else:
+        sales_ledger = f"SALES GST @ {int(gst_per)}%"
+        gst_ledger = f"GST OUTPUT @ {int(gst_per)}%"
+        if sales_ledger not in created_ledgers:
+            create_tally_ledger(sales_ledger, "Sales Accounts")
+            created_ledgers.add(sales_ledger)
+        if gst_ledger not in created_ledgers:
+            create_tally_ledger(gst_ledger, "Duties & Taxes")
+            created_ledgers.add(gst_ledger)
+
+# Extract unique dates and map them to their formatted Journal voucher number JRN-YYYYMMDD
+records_by_date = {}
+for item in records:
+    sales_date_str = item.get("SalesTranDate")
+    if not sales_date_str:
+        continue
+    sales_date = str(sales_date_str).strip()
+    records_by_date.setdefault(sales_date, []).append(item)
+
+incoming_voucher_nos = {f"JRN-{date}" for date in records_by_date.keys()}
+
+# Fetch existing vouchers for duplicate checking
+try:
+    print(f"Performing targeted duplicate check for {len(incoming_voucher_nos)} aggregated daily journals...")
+    existing_vouchers = check_existing_vouchers_bulk(TALLY_URL, incoming_voucher_nos)
     print(f"Targeted check complete. Found {len(existing_vouchers)} matching records already in Tally.")
 except Exception as e:
     print(f"Tally check failed completely: {e}. Exiting this sync run to prevent invalid syncs.")
     exit(1)
 
-
-# =========================================================
-# CREATE CUSTOMER LEDGERS
-# =========================================================
-
-customers = set()
-for item in records:
-    patient_name = item.get("PatientName")
-    if patient_name is None:
-        continue
-    customer = escape(str(patient_name).strip())
-    if customer not in customers:
-        receipt_no = item.get("ReceiptNo", "N/A")
-        if str(receipt_no).strip() not in existing_vouchers:
-            is_credit_note = (item.get("TransType") == "Pharmacy-Return")
-            ledger_type = "Credit Note" if is_credit_note else "Sales"
-            create_customer_ledger(customer, receipt_no, ledger_type)
-            customers.add(customer)
-
-# =========================================================
-# CREATE SALES/RETURN LEDGERS (DYNAMIC TRANS-TYPES)
-# =========================================================
-
-sales_ledgers = set()
-for item in records:
-    trans_type_val = item.get("TransType")
-    if trans_type_val is None:
-        continue
-    ledger_name = escape(str(get_ledger_name(trans_type_val)).strip())
-    if ledger_name not in sales_ledgers:
-        receipt_no = item.get("ReceiptNo", "N/A")
-        if str(receipt_no).strip() not in existing_vouchers:
-            is_credit_note = (trans_type_val == "Pharmacy-Return")
-            ledger_type = "Credit Note" if is_credit_note else "Sales"
-            create_sales_ledger(ledger_name, receipt_no, ledger_type)
-            sales_ledgers.add(ledger_name)
+# Fetch existing receipts to prevent duplicate syncs
+try:
+    print("Fetching already synced receipt numbers from Tally and local logs...")
+    existing_receipts = fetch_existing_receipts_from_tally(TALLY_URL)
+    existing_receipts.update(load_already_synced_receipts())
+    print(f"Loaded {len(existing_receipts)} unique receipt numbers already in Tally/logs.")
+except Exception as e:
+    print(f"Warning: failed to load existing receipt numbers: {e}")
+    existing_receipts = set()
 
 # =========================================================
 # COUNTERS & MONTHLY STORAGE
 # =========================================================
 
-sales_success = 0
-sales_failed = 0
-sales_skipped = 0
-sales_duplicate = 0
+records_success = 0
+records_skipped = 0
+journal_success = 0
+journal_failed = 0
+journal_skipped = 0
+journal_duplicate = 0
 
-credit_success = 0
-credit_failed = 0
-credit_skipped = 0
-credit_duplicate = 0
-
-processed_sales_by_month = {}
-failed_sales_by_month = {}
-skipped_sales_by_month = {}
-
-processed_credit_by_month = {}
-failed_credit_by_month = {}
-skipped_credit_by_month = {}
-
-
+processed_journals_by_month = {}
+failed_journals_by_month = {}
+skipped_journals_by_month = {}
 
 # =========================================================
-# PROCESS RECORDS
+# PROCESS DAILY AGGREGATIONS
 # =========================================================
 
-for item in records:
-    is_credit_note = (item.get("TransType") == "Pharmacy-Return")
-    sales_date_str = item.get("SalesTranDate")
-
+for sales_date, group_records in sorted(records_by_date.items()):
+    voucher_no = f"JRN-{sales_date}"
+    
     # Determine month for record partitioning
     month_str = "Unknown"
-    if sales_date_str:
-        try:
-            dt = datetime.strptime(str(sales_date_str).strip(), "%Y%m%d")
-            month_str = dt.strftime("%b_%Y")
-        except Exception:
-            pass
+    try:
+        dt = datetime.strptime(sales_date, "%Y%m%d")
+        month_str = dt.strftime("%b_%Y")
+    except Exception:
+        pass
 
-    # SKIP INVALID RECORDS
-    if (
-        item.get("ReceiptNo") is None
-        or item.get("AmountPaid") is None
-        or item.get("PatientName") is None
-    ):
-        missing_fields = []
-        if item.get("ReceiptNo") is None: missing_fields.append("ReceiptNo")
-        if item.get("AmountPaid") is None: missing_fields.append("AmountPaid")
-        if item.get("PatientName") is None: missing_fields.append("PatientName")
-        reason = f"Missing mandatory field(s): {', '.join(missing_fields)}"
-        
+    # Duplicate check
+    if voucher_no in existing_vouchers:
+        print(f"[Journal Sync] DUPLICATE (Reason: Record already exists in Tally): {voucher_no}")
+        records_skipped += len(group_records)
         timestamp = datetime.now().strftime("%d %m %Y %H:%M:%S")
-        log_entry = {"id": item.get("ReceiptNo") or "N/A", "reason": reason, "timestamp": timestamp}
-        
-        if is_credit_note:
-            credit_skipped += 1
-            skipped_credit_by_month.setdefault(month_str, []).append(log_entry)
-            print(f"[Credit Note Sync] SKIPPED (Reason: {reason}): {item.get('PatientName') or 'Unknown'} (Receipt No: {item.get('ReceiptNo') or 'N/A'})")
-        else:
-            sales_skipped += 1
-            skipped_sales_by_month.setdefault(month_str, []).append(log_entry)
-            print(f"[Sales Sync] SKIPPED (Reason: {reason}): {item.get('PatientName') or 'Unknown'} (Receipt No: {item.get('ReceiptNo') or 'N/A'})")
+        skipped_journals_by_month.setdefault(month_str, []).append({
+            "id": voucher_no,
+            "timestamp": timestamp,
+            "reason": "Record already exists in Tally"
+        })
         continue
 
-    try:
-        # SAFE FIELD EXTRACTION
-        receipt_no = escape(str(item.get("ReceiptNo")).strip())
-        sales_date = escape(str(item.get("SalesTranDate")).strip())
-        customer = escape(str(item.get("PatientName")).strip())
-        
-        trans_type = escape(str(item.get("TransType") or "Sales").strip())
-        sales_ledger = escape(str(get_ledger_name(item.get("TransType") or "Sales")).strip())
-        original_narration = escape(str(item.get("Narration") or "").strip())
-        
-        # Combine TransType and original Narration
-        narration = f"TransType: {trans_type}"
-        if original_narration:
-            narration += f" | {original_narration}"
-        
-        total = round(float(item.get("AmountPaid") or 0), 2)
-        cgst = round(float(item.get("CGSTAmt") or 0), 2)
-        sgst = round(float(item.get("SGSTAmt") or 0), 2)
-        igst = round(float(item.get("IGSTAmt") or 0), 2)
+    # Accumulators for this day's entries
+    issues_by_ledger = {}   # ledger_name -> {"sales_amount": 0.0, "gst_amount": 0.0}
+    returns_by_ledger = {}  # ledger_name -> {"sales_amount": 0.0, "gst_amount": 0.0}
+    total_issues_paid = 0.0
+    total_returns_paid = 0.0
+    processed_receipts = []
 
-        # CALCULATE SALES AMOUNT
-        sales_amount = round(abs(total) - abs(cgst) - abs(sgst) - abs(igst), 2)
-
-        timestamp = datetime.now().strftime("%d %m %Y %H:%M:%S")
-        log_entry = {"id": receipt_no, "timestamp": timestamp}
-
-        # INVALID GST VALIDATION
-        if sales_amount < 0:
-            reason = f"Invalid GST calculation (Sales Amount is negative: {sales_amount})"
-            log_entry["reason"] = reason
-            if is_credit_note:
-                credit_skipped += 1
-                skipped_credit_by_month.setdefault(month_str, []).append(log_entry)
-                print(f"[Credit Note Sync] SKIPPED (Reason: {reason}): {customer} (Receipt No: {receipt_no})")
-            else:
-                sales_skipped += 1
-                skipped_sales_by_month.setdefault(month_str, []).append(log_entry)
-                print(f"[Sales Sync] SKIPPED (Reason: {reason}): {customer} (Receipt No: {receipt_no})")
+    valid_record_count = 0
+    for item in group_records:
+        receipt_no = item.get("ReceiptNo")
+        if receipt_no and receipt_no in existing_receipts:
+            reason = f"Already exists in Tally."
+            print(f"[Journal Sync] Record SKIPPED (Reason: {reason}): {item.get('PatientName') or 'Unknown'}")
+            records_skipped += 1
+            timestamp = datetime.now().strftime("%d %m %Y %H:%M:%S")
+            skipped_journals_by_month.setdefault(month_str, []).append({
+                "id": receipt_no,
+                "timestamp": timestamp,
+                "reason": reason
+            })
             continue
 
-        # DUPLICATE CHECK (Safely converting to str)
-        receipt_str = str(receipt_no).strip()
+        if item.get("ReceiptNo") is None or item.get("AmountPaid") is None:
+            reason = f"Missing mandatory field(s): ReceiptNo={item.get('ReceiptNo')}, AmountPaid={item.get('AmountPaid')}"
+            print(f"[Journal Sync] Record SKIPPED (Reason: {reason}): {item.get('PatientName') or 'Unknown'}")
+            records_skipped += 1
+            
+            # Record to skipped logs
+            timestamp = datetime.now().strftime("%d %m %Y %H:%M:%S")
+            skipped_journals_by_month.setdefault(month_str, []).append({
+                "id": item.get('ReceiptNo') or "N/A",
+                "timestamp": timestamp,
+                "reason": reason
+            })
+            continue
         
-        if receipt_str in existing_vouchers:
-            log_entry["reason"] = "Record already exists in Tally"
-            if is_credit_note:
-                credit_duplicate += 1
-                skipped_credit_by_month.setdefault(month_str, []).append(log_entry)
-                print(f"[Credit Note Sync] DUPLICATE (Reason: Record already exists in Tally): {customer} (Receipt No: {receipt_no})")
+        is_return = (item.get("TransType") == "Pharmacy-Return")
+        
+        try:
+            gst_per = float(item.get("GSTPer") or 0.0)
+            total = round(float(item.get("AmountPaid") or 0.0), 2)
+            cgst = round(float(item.get("CGSTAmt") or 0.0), 2)
+            sgst = round(float(item.get("SGSTAmt") or 0.0), 2)
+            igst = round(float(item.get("IGSTAmt") or 0.0), 2)
+            
+            # Calculate taxable sales and GST amount directly from JSON values
+            gst_amount = round(abs(cgst) + abs(sgst) + abs(igst), 2)
+            sales_amount = round(abs(total) - gst_amount, 2)
+            
+            if sales_amount < 0:
+                reason = f"Invalid GST calculation (Sales Amount is negative: {sales_amount})"
+                print(f"[Journal Sync] Record SKIPPED (Reason: {reason}): {item.get('PatientName') or 'Unknown'} (Receipt No: {item.get('ReceiptNo') or 'N/A'})")
+                
+                # Record to skipped logs
+                timestamp = datetime.now().strftime("%d %m %Y %H:%M:%S")
+                skipped_journals_by_month.setdefault(month_str, []).append({
+                    "id": item.get('ReceiptNo') or "N/A",
+                    "timestamp": timestamp,
+                    "reason": reason
+                })
+                records_skipped += 1
+                continue
+                
+            # Determine ledger names
+            if gst_per <= 0:
+                sales_ledger = "SALES GST EXEMPTED"
+                gst_ledger = None
             else:
-                sales_duplicate += 1
-                skipped_sales_by_month.setdefault(month_str, []).append(log_entry)
-                print(f"[Sales Sync] DUPLICATE (Reason: Record already exists in Tally): {customer} (Receipt No: {receipt_no})")
+                sales_ledger = f"SALES GST @ {int(gst_per)}%"
+                gst_ledger = f"GST OUTPUT @ {int(gst_per)}%"
+                
+            if is_return:
+                total_returns_paid += abs(total)
+                r_data = returns_by_ledger.setdefault(sales_ledger, {"sales_amount": 0.0, "gst_amount": 0.0})
+                r_data["sales_amount"] += abs(total)
+                if gst_ledger:
+                    rg_data = returns_by_ledger.setdefault(gst_ledger, {"sales_amount": 0.0, "gst_amount": 0.0})
+                    rg_data["gst_amount"] += gst_amount
+            else:
+                total_issues_paid += abs(total)
+                i_data = issues_by_ledger.setdefault(sales_ledger, {"sales_amount": 0.0, "gst_amount": 0.0})
+                i_data["sales_amount"] += abs(total)
+                if gst_ledger:
+                    ig_data = issues_by_ledger.setdefault(gst_ledger, {"sales_amount": 0.0, "gst_amount": 0.0})
+                    ig_data["gst_amount"] += gst_amount
+                    
+            processed_receipts.append(item.get("ReceiptNo"))
+            valid_record_count += 1
+        except Exception as e:
+            print(f"[Journal Sync] Warning: failed to parse record in date {sales_date}: {e}")
             continue
 
-        # DETERMINE VOUCHER TYPE
-        if is_credit_note:
-            voucher_type = "Credit Note"
-            customer_amount = abs(total)
-            sales_ledger_amount = -abs(sales_amount)
-            cgst_amount = -abs(cgst)
-            sgst_amount = -abs(sgst)
-        else:
-            voucher_type = "Sales"
-            customer_amount = -abs(total)
-            sales_ledger_amount = abs(sales_amount)
-            cgst_amount = abs(cgst)
-            sgst_amount = abs(sgst)
+    if valid_record_count == 0:
+        print(f"[Journal Sync] SKIPPED (Reason: No valid records to aggregate): {voucher_no}")
+        journal_skipped += 1
+        continue
 
-        # GENERATE XML
-        voucher_xml = f"""
-        <ENVELOPE>
-         <HEADER>
-          <TALLYREQUEST>Import Data</TALLYREQUEST>
-         </HEADER>
-         <BODY>
-          <IMPORTDATA>
-           <REQUESTDESC>
-            <REPORTNAME>Vouchers</REPORTNAME>
-           </REQUESTDESC>
-           <REQUESTDATA>
-            <TALLYMESSAGE>
-             <VOUCHER VCHTYPE="{voucher_type}" ACTION="Create">
-              <ISOPTIONAL>No</ISOPTIONAL>
-              <DATE>{sales_date}</DATE>
-              <VOUCHERNUMBER>{receipt_no}</VOUCHERNUMBER>
-              <REFERENCE>{receipt_no}</REFERENCE>
-              <VOUCHERTYPENAME>{voucher_type}</VOUCHERTYPENAME>
-              <PARTYLEDGERNAME>{customer}</PARTYLEDGERNAME>
-              <NARRATION>{narration}</NARRATION>
-              
-              <!-- CUSTOMER -->
+    # Filter, group and sort returns (Debits)
+    sales_returns = []
+    gst_returns = []
+    exempt_returns = []
+    for ledger_name, data in returns_by_ledger.items():
+        val = round(data["sales_amount"] + data["gst_amount"], 2)
+        if val > 0:
+            if ledger_name.startswith("SALES GST @"):
+                sales_returns.append((ledger_name, val))
+            elif ledger_name.startswith("GST OUTPUT @"):
+                gst_returns.append((ledger_name, val))
+            elif ledger_name == "SALES GST EXEMPTED":
+                exempt_returns.append((ledger_name, val))
+
+    def get_gst_rate(item):
+        name = item[0]
+        match = re.search(r"@\s*(\d+)%", name)
+        return int(match.group(1)) if match else 0
+
+    sales_returns.sort(key=get_gst_rate)
+    gst_returns.sort(key=get_gst_rate)
+    ordered_returns = sales_returns + gst_returns + exempt_returns
+
+    # Filter, group and sort issues (Credits)
+    sales_issues = []
+    gst_issues = []
+    exempt_issues = []
+    for ledger_name, data in issues_by_ledger.items():
+        val = round(data["sales_amount"] + data["gst_amount"], 2)
+        if val > 0:
+            if ledger_name.startswith("SALES GST @"):
+                sales_issues.append((ledger_name, val))
+            elif ledger_name.startswith("GST OUTPUT @"):
+                gst_issues.append((ledger_name, val))
+            elif ledger_name == "SALES GST EXEMPTED":
+                exempt_issues.append((ledger_name, val))
+
+    sales_issues.sort(key=get_gst_rate)
+    gst_issues.sort(key=get_gst_rate)
+    ordered_issues = sales_issues + gst_issues + exempt_issues
+
+    # Construct the ledger entries in the exact required sequence
+    ledger_xml_entries = []
+
+    # 1. Debit entries (By) - returns
+    total_debits = 0.0
+    for ledger_name, val in ordered_returns:
+        total_debits += val
+        ledger_xml_entries.append(f"""
               <ALLLEDGERENTRIES.LIST>
-               <LEDGERNAME>{customer}</LEDGERNAME>
+               <LEDGERNAME>{escape(ledger_name)}</LEDGERNAME>
                <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
-               <AMOUNT>{customer_amount}</AMOUNT>
+               <AMOUNT>-{val}</AMOUNT>
               </ALLLEDGERENTRIES.LIST>
-              
-              <!-- SALES / RETURN LEDGER -->
-              <ALLLEDGERENTRIES.LIST>
-               <LEDGERNAME>{sales_ledger}</LEDGERNAME>
-               <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-               <AMOUNT>{sales_ledger_amount}</AMOUNT>
-              </ALLLEDGERENTRIES.LIST>
-              
-              <!-- CGST -->
-              <ALLLEDGERENTRIES.LIST>
-               <LEDGERNAME>CGST</LEDGERNAME>
-               <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-               <AMOUNT>{cgst_amount}</AMOUNT>
-              </ALLLEDGERENTRIES.LIST>
-              
-              <!-- SGST -->
-              <ALLLEDGERENTRIES.LIST>
-               <LEDGERNAME>SGST</LEDGERNAME>
-               <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-               <AMOUNT>{sgst_amount}</AMOUNT>
-              </ALLLEDGERENTRIES.LIST>
-             </VOUCHER>
-            </TALLYMESSAGE>
-           </REQUESTDATA>
-          </IMPORTDATA>
-         </BODY>
-        </ENVELOPE>
-        """
+            """)
 
-        # SEND XML TO TALLY
+    # 2. Credit entries (To) - issues
+    total_credits = 0.0
+    for ledger_name, val in ordered_issues:
+        total_credits += val
+        ledger_xml_entries.append(f"""
+              <ALLLEDGERENTRIES.LIST>
+               <LEDGERNAME>{escape(ledger_name)}</LEDGERNAME>
+               <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+               <AMOUNT>{val}</AMOUNT>
+              </ALLLEDGERENTRIES.LIST>
+            """)
+
+    # 3. SALES IMPEREST A/C entries (Self-balancing) - last
+    if total_credits > 0:
+        # Debit SALES IMPEREST A/C for total issues
+        ledger_xml_entries.append(f"""
+              <ALLLEDGERENTRIES.LIST>
+               <LEDGERNAME>SALES IMPEREST A/C</LEDGERNAME>
+               <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+               <AMOUNT>-{round(total_credits, 2)}</AMOUNT>
+              </ALLLEDGERENTRIES.LIST>
+        """)
+    if total_debits > 0:
+        # Credit SALES IMPEREST A/C for total returns
+        ledger_xml_entries.append(f"""
+              <ALLLEDGERENTRIES.LIST>
+               <LEDGERNAME>SALES IMPEREST A/C</LEDGERNAME>
+               <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+               <AMOUNT>{round(total_debits, 2)}</AMOUNT>
+              </ALLLEDGERENTRIES.LIST>
+        """)
+
+    # Combine ledger list into string
+    ledger_entries_str = "\n".join(ledger_xml_entries)
+
+    # GENERATE JOURNAL VOUCHER XML
+    voucher_xml = f"""
+    <ENVELOPE>
+     <HEADER>
+      <TALLYREQUEST>Import Data</TALLYREQUEST>
+     </HEADER>
+     <BODY>
+      <IMPORTDATA>
+       <REQUESTDESC>
+        <REPORTNAME>Vouchers</REPORTNAME>
+       </REQUESTDESC>
+       <REQUESTDATA>
+        <TALLYMESSAGE>
+         <VOUCHER VCHTYPE="Journal" ACTION="Create">
+          <ISOPTIONAL>No</ISOPTIONAL>
+          <DATE>{sales_date}</DATE>
+          <VOUCHERNUMBER>{voucher_no}</VOUCHERNUMBER>
+          <REFERENCE>{voucher_no}</REFERENCE>
+          <VOUCHERTYPENAME>Journal</VOUCHERTYPENAME>
+          <PARTYLEDGERNAME>SALES IMPEREST A/C</PARTYLEDGERNAME>
+          <NARRATION>Daily Aggregated Journal Entry. Receipts: {', '.join(processed_receipts)}</NARRATION>
+          {ledger_entries_str}
+         </VOUCHER>
+        </TALLYMESSAGE>
+       </REQUESTDATA>
+      </IMPORTDATA>
+     </BODY>
+    </ENVELOPE>
+    """
+
+    # SEND XML TO TALLY
+    timestamp = datetime.now().strftime("%d %m %Y %H:%M:%S")
+    log_entry = {"id": voucher_no, "timestamp": timestamp}
+    
+    try:
         response = requests.post(TALLY_URL, data=voucher_xml.encode("utf-8"), timeout=15)
         response_text = response.text
 
-        exec_timestamp = datetime.now().strftime("%d %m %Y %H:%M:%S")
-        log_entry["timestamp"] = exec_timestamp
-
-        # SUCCESS
         if "<CREATED>1</CREATED>" in response_text:
-            existing_vouchers.add(receipt_str)
-            if is_credit_note:
-                credit_success += 1
-                processed_credit_by_month.setdefault(month_str, []).append(log_entry)
-                print(f"[Credit Note Sync] SUCCESS (Credit Note successfully pushed to Tally): {customer} (Receipt No: {receipt_no})")
-            else:
-                sales_success += 1
-                processed_sales_by_month.setdefault(month_str, []).append(log_entry)
-                print(f"[Sales Sync] SUCCESS (Receipt successfully pushed to Tally): {customer} (Receipt No: {receipt_no})")
+            existing_vouchers.add(voucher_no)
+            journal_success += 1
+            records_success += valid_record_count
+            # Add processed receipt numbers list to the processed log
+            log_entry["receipt_nos"] = processed_receipts
+            processed_journals_by_month.setdefault(month_str, []).append(log_entry)
+            print(f"[Journal Sync] SUCCESS (Journal successfully pushed to Tally): {voucher_no}")
         else:
             err_match = re.search(r"<LINEERROR>(.*?)</LINEERROR>", response_text, re.IGNORECASE)
             err_msg = err_match.group(1) if err_match else "Import failed (unspecified Tally error)"
             log_entry["reason"] = err_msg
-            
-            if is_credit_note:
-                credit_failed += 1
-                failed_credit_by_month.setdefault(month_str, []).append(log_entry)
-                print(f"[Credit Note Sync] FAILED ({err_msg}): {customer} (Receipt No: {receipt_no})")
-            else:
-                sales_failed += 1
-                failed_sales_by_month.setdefault(month_str, []).append(log_entry)
-                print(f"[Sales Sync] FAILED ({err_msg}): {customer} (Receipt No: {receipt_no})")
+            journal_failed += 1
+            records_skipped += valid_record_count
+            skipped_journals_by_month.setdefault(month_str, []).append(log_entry)
+            print(f"[Journal Sync] FAILED ({err_msg}): {voucher_no}")
             print(response_text)
-
     except Exception as e:
         log_entry["reason"] = str(e)
-        if is_credit_note:
-            credit_failed += 1
-            failed_credit_by_month.setdefault(month_str, []).append(log_entry)
-            print(f"[Credit Note Sync] FAILED (Exception: {e}): {customer} (Receipt No: {receipt_no})")
-        else:
-            sales_failed += 1
-            failed_sales_by_month.setdefault(month_str, []).append(log_entry)
-            print(f"[Sales Sync] FAILED (Exception: {e}): {customer} (Receipt No: {receipt_no})")
+        journal_failed += 1
+        records_skipped += valid_record_count
+        skipped_journals_by_month.setdefault(month_str, []).append(log_entry)
+        print(f"[Journal Sync] FAILED (Exception: {e}): {voucher_no}")
 
 reports_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Reports"))
-save_month_wise_records(processed_sales_by_month, os.path.join(reports_dir, "processed_records"), "processed_sale_receipts_", "ReceiptNo")
-save_month_wise_records(failed_sales_by_month, os.path.join(reports_dir, "failed_records"), "failed_sale_receipts_", "ReceiptNo")
-save_month_wise_records(skipped_sales_by_month, os.path.join(reports_dir, "skipped_records"), "skipped_sale_receipts_", "ReceiptNo")
-
-save_month_wise_records(processed_credit_by_month, os.path.join(reports_dir, "processed_records"), "processed_credit_note_receipts_", "ReceiptNo")
-save_month_wise_records(failed_credit_by_month, os.path.join(reports_dir, "failed_records"), "failed_credit_note_receipts_", "ReceiptNo")
-save_month_wise_records(skipped_credit_by_month, os.path.join(reports_dir, "skipped_records"), "skipped_credit_note_receipts_", "ReceiptNo")
-
-
+save_month_wise_records(processed_journals_by_month, os.path.join(reports_dir, "processed_records"), "processed_journals_", "JournalNo")
+save_month_wise_records(skipped_journals_by_month, os.path.join(reports_dir, "skipped_records"), "skipped_journals_", "JournalNo")
 
 # =========================================================
 # FINAL SUMMARY
 # =========================================================
 print("\n====================================")
-print("SALES SUMMARY")
+print("JOURNAL SYNC SUMMARY")
 print("====================================")
-print(f"SUCCESS   : {sales_success}")
-print(f"FAILED    : {sales_failed}")
-print(f"SKIPPED   : {sales_skipped}")
-print(f"DUPLICATE : {sales_duplicate}")
-
-print("\n====================================")
-print("CREDIT NOTE SUMMARY")
-print("====================================")
-print(f"SUCCESS   : {credit_success}")
-print(f"FAILED    : {credit_failed}")
-print(f"SKIPPED   : {credit_skipped}")
-print(f"DUPLICATE : {credit_duplicate}")
+print(f"SUCCESS   : {records_success}")
+print(f"SKIPPED   : {records_skipped}")
 print("====================================")
