@@ -1,3 +1,2 @@
-1 [02 06 2026 17:37:25] InvoiceNo: 118 | Reason: Record already exists in Tally
-2 [02 06 2026 17:37:28] InvoiceNo: 536 | Reason: Record already exists in Tally
-3 [02 06 2026 17:37:29] InvoiceNo: 121 | Reason: Record already exists in Tally
+1 [02 06 2026 18:25:21] InvoiceNo: APM5506XX | Reason: Record already exists in Tally
+2 [02 06 2026 18:25:21] InvoiceNo: A5012XX | Reason: Record already exists in Tally

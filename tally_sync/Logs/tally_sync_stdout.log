@@ -1,76 +1,14 @@
 Loading source data from local file: C:\Users\sushi\Projects\Github\SoftwareTestingPro.github.io\tally_sync\Source_Data\Purchase\tally_Purchase.json
-Performing targeted duplicate check for 39 incoming records...
-Targeted check complete. Found 42 matching records already in Tally.
-[Ledger Verification] Verified/Created Ledger: CGST (Parent: Duties & Taxes)
-[Ledger Verification] Verified/Created Ledger: SGST (Parent: Duties & Taxes)
-[Ledger Verification] Verified/Created Ledger: IGST (Parent: Duties & Taxes)
-[Purchase Ledger Verification] Verified/Created Supplier Account: AP Medical
-[Purchase Ledger Verification] Verified/Created Supplier Account: BHAGAT SINGH AND SONS   (CHEMIST)
-[Purchase Ledger Verification] Verified/Created Supplier Account: MEDISALES DISTRIBUTORS
-[Purchase Ledger Verification] Verified/Created Supplier Account: BHALLA DISTRIBUTORS PVT.LTD
-[Purchase Ledger Verification] Verified/Created Supplier Account: VIJAY AGENCIES
-[Purchase Ledger Verification] Verified/Created Supplier Account: PALAK PHARMA
-[Purchase Ledger Verification] Verified/Created Supplier Account: RAJIV AGENCIES
-[Purchase Ledger Verification] Verified/Created Supplier Account: AMATYA ENTERPRISES
-[Purchase Ledger Verification] Verified/Created Supplier Account: KARAN PHARMA
-[Purchase Ledger Verification] Verified/Created Supplier Account: PALASH  HEALTHCARE
-[Purchase Ledger Verification] Verified/Created Supplier Account: ROYAL SURGICAL AND MEDICALS
-[Purchase Ledger Verification] Verified/Created Supplier Account: D N ENTERPRISES
-[Purchase Ledger Verification] Verified/Created Supplier Account: ANMOL PHARMACEUTICALS
-[Purchase Ledger Verification] Verified/Created Supplier Account: GAURAV MEDICAL STORE
-[Purchase Ledger Verification] Verified/Created Supplier Account: R.K AGENCIES
-[Purchase Ledger Verification] Verified/Created Supplier Account: SINDH MEDICAL STORE
-[Purchase Ledger Verification] Verified/Created Supplier Account: GOLDIN CARE PHARMACEUTICAL PVT LTD
-[Purchase Ledger Verification] Verified/Created Supplier Account: SHREEJI PHARMACEUTICALS
-[Purchase Ledger Verification] Verified/Created Supplier Account: CHINI AGENCIES
-[Purchase Ledger Verification] Verified/Created Supplier Account: YASHI DISTRIBUTORS
-[Purchase Ledger Verification] Verified/Created Supplier Account: VINMED MEDICAL DEVICES
-[Purchase Ledger Verification] Verified/Created Supplier Account: DEV SARGICALS
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): AP Medical (Invoice No: APM0571)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): BHAGAT SINGH AND SONS   (CHEMIST) (Invoice No: A001422)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): MEDISALES DISTRIBUTORS (Invoice No: BMD000641)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): BHALLA DISTRIBUTORS PVT.LTD (Invoice No: AR001348)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): VIJAY AGENCIES (Invoice No: TI-6589)
-[Purchase Sync] DUPLICATE (Reason: Record already exists in Tally): Poorvi Life Sciences (Invoice No: 118)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): PALAK PHARMA (Invoice No: T-0000119)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): RAJIV AGENCIES (Invoice No: CR000236)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): AMATYA ENTERPRISES (Invoice No: AE/879)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): KARAN PHARMA (Invoice No: A000599)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): PALAK PHARMA (Invoice No: T-0000120)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): RAJIV AGENCIES (Invoice No: CR000244)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): PALASH  HEALTHCARE (Invoice No: 26-27/PH/422)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): ROYAL SURGICAL AND MEDICALS (Invoice No: W000961)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): PALASH  HEALTHCARE (Invoice No: 26-27/PH/359)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): ROYAL SURGICAL AND MEDICALS (Invoice No: W000963)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): D N ENTERPRISES (Invoice No: G-000201)
-[Purchase Sync] DUPLICATE (Reason: Record already exists in Tally): Vee Aar Enterprise (Invoice No: 536)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): ANMOL PHARMACEUTICALS (Invoice No: T004668)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): GAURAV MEDICAL STORE (Invoice No: T000329)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): R.K AGENCIES (Invoice No: T000272)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): SINDH MEDICAL STORE (Invoice No: T001541)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): GOLDIN CARE PHARMACEUTICAL PVT LTD (Invoice No: A000175)
-[Purchase Sync] DUPLICATE (Reason: Record already exists in Tally): Poorvi Life Sciences (Invoice No: 121)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): BHALLA DISTRIBUTORS PVT.LTD (Invoice No: AR001401)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): SHREEJI PHARMACEUTICALS (Invoice No: SHRI000592)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): VIJAY AGENCIES (Invoice No: TI-6807)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): ROYAL SURGICAL AND MEDICALS (Invoice No: W000983)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): CHINI AGENCIES (Invoice No: S/635)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): PALAK PHARMA (Invoice No: T-0000121)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): PALAK PHARMA (Invoice No: T-0000123)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): PALAK PHARMA (Invoice No: T-0000124)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): RAJIV AGENCIES (Invoice No: CR000254)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): YASHI DISTRIBUTORS (Invoice No: TI-000443)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): MEDISALES DISTRIBUTORS (Invoice No: BMD000673.)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): CHINI AGENCIES (Invoice No: S/647)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): BHAGAT SINGH AND SONS   (CHEMIST) (Invoice No: A001487)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): VINMED MEDICAL DEVICES (Invoice No: VMD0164)
-[Purchase Sync] SUCCESS (Invoice successfully pushed to Tally): DEV SARGICALS (Invoice No: D/2627/0560)
-Wrote 36 records to C:\Users\sushi\Projects\Github\SoftwareTestingPro.github.io\tally_sync\Reports\processed_records\processed_purchase_receipts_May_2026.txt
-Wrote 3 records to C:\Users\sushi\Projects\Github\SoftwareTestingPro.github.io\tally_sync\Reports\skipped_records\skipped_purchase_receipts_May_2026.txt
+Performing targeted duplicate check for 2 incoming records...
+Targeted check complete. Found 11 matching records already in Tally.
+[Ledger Verification] Verified/Created Ledger: ROUND OFF & SUNDRY BALANCES WRITTEN OFF (Parent: Indirect Expenses)
+[Purchase Sync] DUPLICATE (Reason: Record already exists in Tally): AP Medical (Invoice No: APM5506XX)
+[Purchase Sync] DUPLICATE (Reason: Record already exists in Tally): BHAGAT SINGH AND SONS   (CHEMIST) (Invoice No: A5012XX)
+Wrote 2 records to C:\Users\sushi\Projects\Github\SoftwareTestingPro.github.io\tally_sync\Reports\skipped_records\skipped_purchase_receipts_May_2026.txt
 
 ====================================
 PURCHASE SUMMARY
 ====================================
-SUCCESS   : 36
-SKIPPED   : 3
+SUCCESS   : 0
+SKIPPED   : 2
 ====================================

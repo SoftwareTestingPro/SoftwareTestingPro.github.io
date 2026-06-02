@@ -520,10 +520,10 @@ except Exception as e:
 
 # Fetch existing receipts to prevent duplicate syncs
 try:
-    print("Fetching already synced receipt numbers from Tally and local logs...")
+    print("Fetching already synced receipt numbers from Tally")
     existing_receipts = fetch_existing_receipts_from_tally(TALLY_URL)
     existing_receipts.update(load_already_synced_receipts())
-    print(f"Loaded {len(existing_receipts)} unique receipt numbers already in Tally/logs.")
+    print(f"Loaded {len(existing_receipts)} unique receipt numbers already in Tally")
 except Exception as e:
     print(f"Warning: failed to load existing receipt numbers: {e}")
     existing_receipts = set()
@@ -582,7 +582,7 @@ for sales_date, group_records in sorted(records_by_date.items()):
         receipt_no = item.get("ReceiptNo")
         if receipt_no and receipt_no in existing_receipts:
             reason = f"Already exists in Tally."
-            print(f"[Journal Sync] Record SKIPPED (Reason: {reason}): {item.get('PatientName') or 'Unknown'}")
+            print(f"[Journal Sync] Record SKIPPED (Reason: {reason}): {receipt_no}")
             records_skipped += 1
             timestamp = datetime.now().strftime("%d %m %Y %H:%M:%S")
             skipped_journals_by_month.setdefault(month_str, []).append({
@@ -594,7 +594,7 @@ for sales_date, group_records in sorted(records_by_date.items()):
 
         if item.get("ReceiptNo") is None or item.get("AmountPaid") is None:
             reason = f"Missing mandatory field(s): ReceiptNo={item.get('ReceiptNo')}, AmountPaid={item.get('AmountPaid')}"
-            print(f"[Journal Sync] Record SKIPPED (Reason: {reason}): {item.get('PatientName') or 'Unknown'}")
+            print(f"[Journal Sync] Record SKIPPED (Reason: {reason}): {item.get('ReceiptNo') or 'Unknown'}")
             records_skipped += 1
             
             # Record to skipped logs
@@ -663,8 +663,6 @@ for sales_date, group_records in sorted(records_by_date.items()):
             continue
 
     if valid_record_count == 0:
-        print(f"[Journal Sync] SKIPPED (Reason: No valid records to aggregate): {voucher_no}")
-        journal_skipped += 1
         continue
 
     # Filter, group and sort returns (Debits)
@@ -821,8 +819,8 @@ for sales_date, group_records in sorted(records_by_date.items()):
         print(f"[Journal Sync] FAILED (Exception: {e}): {voucher_no}")
 
 reports_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Reports"))
-save_month_wise_records(processed_journals_by_month, os.path.join(reports_dir, "processed_records"), "processed_journals_", "JournalNo")
-save_month_wise_records(skipped_journals_by_month, os.path.join(reports_dir, "skipped_records"), "skipped_journals_", "JournalNo")
+save_month_wise_records(processed_journals_by_month, os.path.join(reports_dir, "processed_records"), "processed_journals_", "ReceiptNo")
+save_month_wise_records(skipped_journals_by_month, os.path.join(reports_dir, "skipped_records"), "skipped_journals_", "ReceiptNo")
 
 # =========================================================
 # FINAL SUMMARY

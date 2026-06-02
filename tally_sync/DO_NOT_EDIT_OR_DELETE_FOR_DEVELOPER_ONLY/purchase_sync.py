@@ -285,12 +285,12 @@ def check_existing_vouchers(tally_url, voucher_numbers):
     try:
         response = requests.post(tally_url, data=xml.encode("utf-8"), timeout=45)
         if response.status_code == 200:
-            found = set(re.findall(r"<VOUCHERNUMBER>(.*?)</VOUCHERNUMBER>", response.text, re.IGNORECASE))
+            found = set(re.findall(r"<VOUCHERNUMBER[^>]*>(.*?)</VOUCHERNUMBER>", response.text, re.IGNORECASE))
             if not found:
-                found = set(re.findall(r"<VOUCHER_NUMBER>(.*?)</VOUCHER_NUMBER>", response.text, re.IGNORECASE))
+                found = set(re.findall(r"<VOUCHER_NUMBER[^>]*>(.*?)</VOUCHER_NUMBER>", response.text, re.IGNORECASE))
             
             # Also capture reference numbers for duplicate checking
-            references = set(re.findall(r"<REFERENCE>(.*?)</REFERENCE>", response.text, re.IGNORECASE))
+            references = set(re.findall(r"<REFERENCE[^>]*>(.*?)</REFERENCE>", response.text, re.IGNORECASE))
             found.update(references)
             
             return {v.strip() for v in found}
@@ -380,10 +380,8 @@ except Exception as e:
 
 
 
-# Create standard Purchase and Tax ledgers if they do not exist
-create_tally_ledger("CGST", "Duties & Taxes")
-create_tally_ledger("SGST", "Duties & Taxes")
-create_tally_ledger("IGST", "Duties & Taxes")
+# Create standard Round Off ledger if it does not exist
+create_tally_ledger("ROUND OFF & SUNDRY BALANCES WRITTEN OFF", "Indirect Expenses")
 
 # -----------------------------
 # CREATE ALL SUPPLIER LEDGERS
@@ -471,8 +469,38 @@ for item in records:
         sgst = round(item.get("SGT_AMT", 0.0), 2)
         igst = round(item.get("IGST_AMT", 0.0), 2)
         total = round(item.get("NetAmount", 0.0), 2)
-        purchase_amount = round(total - cgst - sgst - igst, 2)
+        
         purchase_ledger = get_purchase_ledger_name(cgst, sgst, igst, item.get("PURCHACE_Phamrcy_Medicine", 0.0))
+        rate_suffix = purchase_ledger.split("@")[-1].strip()
+        gst_input_ledger = f"GST INPUT @ {rate_suffix}"
+        
+        taxable_amount = round(float(item.get("PURCHACE_Phamrcy_Medicine") or 0.0), 2)
+        total_tax_amount = round(cgst + sgst + igst, 2)
+        round_off_amount = round(total - taxable_amount - total_tax_amount, 2)
+
+        # Construct Round Off XML based on sign to prevent double minus signs in XML
+        round_off_xml = ""
+        if round_off_amount != 0.0:
+            if round_off_amount > 0:
+                # Debit round off
+                round_off_xml = f"""
+               <!-- Round Off -->
+               <ALLLEDGERENTRIES.LIST>
+                <LEDGERNAME>ROUND OFF &amp; SUNDRY BALANCES WRITTEN OFF</LEDGERNAME>
+                <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+                <AMOUNT>-{round_off_amount}</AMOUNT>
+               </ALLLEDGERENTRIES.LIST>
+                """
+            else:
+                # Credit round off
+                round_off_xml = f"""
+               <!-- Round Off -->
+               <ALLLEDGERENTRIES.LIST>
+                <LEDGERNAME>ROUND OFF &amp; SUNDRY BALANCES WRITTEN OFF</LEDGERNAME>
+                <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+                <AMOUNT>{abs(round_off_amount)}</AMOUNT>
+               </ALLLEDGERENTRIES.LIST>
+                """
 
         voucher_xml = f"""
         <ENVELOPE>
@@ -501,26 +529,21 @@ for item in records:
                <AMOUNT>{total}</AMOUNT>
               </ALLLEDGERENTRIES.LIST>
 
-              <!-- Purchase -->
-              <ALLLEDGERENTRIES.LIST>
-               <LEDGERNAME>{purchase_ledger}</LEDGERNAME>
-               <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
-               <AMOUNT>-{purchase_amount}</AMOUNT>
-              </ALLLEDGERENTRIES.LIST>
-              
-              <!-- CGST -->
-              <ALLLEDGERENTRIES.LIST>
-               <LEDGERNAME>CGST</LEDGERNAME>
-               <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
-               <AMOUNT>-{cgst}</AMOUNT>
-              </ALLLEDGERENTRIES.LIST>
-              
-              <!-- SGST -->
-              <ALLLEDGERENTRIES.LIST>
-               <LEDGERNAME>SGST</LEDGERNAME>
-               <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
-               <AMOUNT>-{sgst}</AMOUNT>
-              </ALLLEDGERENTRIES.LIST>
+               <!-- Purchase -->
+               <ALLLEDGERENTRIES.LIST>
+                <LEDGERNAME>{purchase_ledger}</LEDGERNAME>
+                <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+                <AMOUNT>-{taxable_amount}</AMOUNT>
+               </ALLLEDGERENTRIES.LIST>
+               
+               <!-- GST Input -->
+               <ALLLEDGERENTRIES.LIST>
+                <LEDGERNAME>{gst_input_ledger}</LEDGERNAME>
+                <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+                <AMOUNT>-{total_tax_amount}</AMOUNT>
+               </ALLLEDGERENTRIES.LIST>
+
+               {round_off_xml}
              </VOUCHER>
             </TALLYMESSAGE>
            </REQUESTDATA>
