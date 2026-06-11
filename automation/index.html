@@ -3,563 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Master test automation with comprehensive practice platform. Learn Selenium, Cypress and Playwright with real-world scenarios.">
-    <meta name="indexnow-key" content="https://SoftwareTestingPro.github.io/indexnow-key.txt">
-    <title>Test Automation Platform - Testing Guide | Software Testing Pro</title>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MCHF9RDWT6"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-MCHF9RDWT6');
-    </script>
-    <!-- End Google Analytics -->
-    <!-- Additional SEO Meta Tags -->
-    <meta name="keywords" content="software testing, automation testing, selenium, cypress, playwright, test automation practice, qa tools, beginner to advanced testing">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://softwaretestingpro.github.io/automation/index.html">
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Test Automation Platform - Testing Guide | Software Testing Pro">
-    <meta property="og:description" content="Master test automation with comprehensive practice platform. Learn Selenium, Cypress and Playwright with real-world scenarios.">
-    <meta property="og:url" content="https://softwaretestingpro.github.io/automation/index.html">
-    <meta property="og:type" content="article">
-    <meta property="og:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
-    <meta property="og:site_name" content="Software Testing Pro">
-    <!-- Twitter Card Tags -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Test Automation Platform - Testing Guide | Software Testing Pro">
-    <meta property="twitter:description" content="Master test automation with comprehensive practice platform. Learn Selenium, Cypress and Playwright with real-world scenarios.">
-    <meta property="twitter:image" content="https://softwaretestingpro.github.io/assets/images/logo.png">
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": "Test Automation Platform - Testing Guide | Software Testing Pro",
-            "description": "Master test automation with comprehensive practice platform. Learn Selenium, Cypress and Playwright with real-world scenarios.",
-            "url": "https://softwaretestingpro.github.io/automation/index.html",
-            "publisher": {
-                "@type": "Organization",
-                "name": "Software Testing Pro"
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <!-- Header and Footer CSS -->
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/css/footer.css">
-    <script src="assets/components/components.js"></script>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>We've Moved! - Software Testing Pro</title>
+    <!-- Automatic redirect after 5 seconds -->
+    <meta http-equiv="refresh" content="5;url=https://automation.futurelab.co.in">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #a855f7;
+            --accent-hover: #c084fc;
+            --accent-glow: rgba(168, 85, 247, 0.4);
+        }
+
         * {
             box-sizing: border-box;
-        }
-
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
-        }
-
-        html, body {
-            height: auto !important;
-            display: block !important;
-            overflow-x: hidden;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none;  /* IE and Edge */
-        }
-
-        html::-webkit-scrollbar, 
-        body::-webkit-scrollbar {
-            display: none; /* Chrome, Safari and Opera */
+            margin: 0;
+            padding: 0;
         }
 
         body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
             min-height: 100vh;
-            display: block !important;
-        }
-
-        main {
-            display: block !important;
-            flex: none !important;
-        }
-
-        .content-wrapper {
-            overflow-x: hidden;
-            width: 100%;
-            max-width: var(--card-max-width);
-            margin: 0 auto;
-            display: block !important;
-        }
-
-        .hero-section {
-            background: linear-gradient(rgba(107, 33, 168, 0.85), rgba(76, 29, 149, 0.95)), url('assets/images/hero-bg.png');
-            background-size: cover;
-            background-position: center;
-            padding: 8rem 2rem;
-            text-align: center;
-            border-radius: 32px;
-            color: white;
-            margin-bottom: 4rem;
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(107, 33, 168, 0.3);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* Decorative background elements */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 30rem;
+            height: 30rem;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.15;
+        }
+        body::before {
+            background: #6366f1;
+            top: -10rem;
+            left: -10rem;
+        }
+        body::after {
+            background: #d946ef;
+            bottom: -10rem;
+            right: -10rem;
+        }
+
+        .container {
             width: 100%;
-            margin-left: 0;
-            margin-right: 0;
+            max-width: 540px;
+            perspective: 1000px;
         }
 
-        .hero-section h1 {
-            font-size: 4rem !important;
-            color: white !important;
-            background: none !important;
-            -webkit-text-fill-color: white !important;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            font-weight: 900 !important;
-            line-height: 1.1;
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                        0 0 50px rgba(168, 85, 247, 0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .hero-section .lead {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 800px;
-            margin: 0 auto 2.5rem;
+        .icon-container {
+            width: 80px;
+            height: 80px;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.5rem;
+            color: var(--accent);
+            box-shadow: 0 8px 20px rgba(168, 85, 247, 0.1);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+            background: linear-gradient(to right, #ffffff, #e2e8f0, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1.05rem;
             line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 2.25rem;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 4rem;
+        .highlight {
+            color: var(--accent-hover);
+            font-weight: 600;
         }
 
-        @media (max-width: 900px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+            color: white;
+            text-decoration: none;
+            padding: 1.125rem 2.25rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px var(--accent-glow);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.5);
+            background: linear-gradient(135deg, #b55fe6 0%, #8b5cf6 100%);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        .countdown-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        #countdown {
+            font-weight: 700;
+            color: var(--accent-hover);
+            display: inline-block;
+            min-width: 12px;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 8px 20px rgba(168, 85, 247, 0.1);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 8px 30px rgba(168, 85, 247, 0.3);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
 
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
+            .card {
+                padding: 2.5rem 1.5rem;
+                border-radius: 24px;
             }
-        }
-
-        .hero-stats {
-            max-width: 900px;
-            margin: 3rem auto !important;
-            gap: 1.5rem;
-            margin-bottom: 3.5rem !important;
-        }
-
-        .stat-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            padding: 2.5rem 1.5rem;
-            border-radius: 24px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        .hero-stats .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-            padding: 1.5rem 1rem;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-10px);
-            background: white;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            border-color: var(--accent);
-        }
-
-        .hero-stats .stat-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: white;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero-stats .stat-number {
-            font-size: 2.5rem;
-            color: white;
-            background: none;
-            -webkit-text-fill-color: white;
-        }
-
-        .stat-label {
-            color: var(--muted);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.85rem;
-        }
-
-        .hero-stats .stat-label {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 3.5rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 5rem;
-        }
-
-        .benefit-card {
-            padding: 2.5rem;
-            background: white;
-            border-radius: 24px;
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .benefit-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--accent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .benefit-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-            border-color: var(--accent);
-        }
-
-        .benefit-card:hover::before {
-            opacity: 1;
-        }
-
-        .benefit-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
-
-        .areas-section {
-            background: #1e1b4b;
-            color: white;
-            padding: 4rem;
-            border-radius: 32px;
-            margin-bottom: 5rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-        }
-
-        .areas-section h3 {
-            color: white !important;
-            margin-bottom: 2.5rem;
-            text-align: center;
-            font-size: 2rem;
-        }
-
-        .areas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .area-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1.5rem;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .area-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--accent);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 24px;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        .feature-card h4 {
-            color: var(--accent);
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .feature-card ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .feature-card li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #f1f5f9;
-            color: var(--muted);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-card li::before {
-            content: "\f061";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            color: var(--accent);
-            font-size: 0.8rem;
-        }
-
-        .feature-card li:last-child {
-            border-bottom: none;
-        }
-
-        .cta-section {
-            background: var(--primary-gradient);
-            padding: 6rem 2rem;
-            border-radius: 32px;
-            text-align: center;
-            color: white;
-            margin: 5rem 0;
-            box-shadow: 0 20px 40px -10px rgba(107, 33, 168, 0.4);
-        }
-
-        .cta-section h2 {
-            color: white !important;
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-        }
-
-        .cta-btn {
-            display: inline-block;
-            background: white;
-            color: var(--accent);
-            padding: 1.25rem 3.5rem;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 1.2rem;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-            margin-top: 2rem;
-        }
-
-        .cta-btn:hover {
-            transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            background: #f8fafc;
-        }
-
-        /* Responsive Fixes */
-        @media (max-width: 768px) {
-            .hero-section { padding: 4rem 1.5rem; }
-            .hero-section h1 { font-size: 2.75rem !important; }
-            .areas-section { padding: 2.5rem 1.5rem; }
-            .cta-section h2 { font-size: 2.25rem; }
+            h1 {
+                font-size: 1.85rem;
+            }
+            p {
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
 <body>
-<div id="header-placeholder"></div>
-<div class="content-wrapper">
-    <main class="card" style="background: transparent; border: none; box-shadow: none; height: auto; max-height: none; overflow: visible;">
-        <div class="card-content">
+    <div class="container">
+        <div class="card">
+            <div class="icon-container">
+                🚀
+            </div>
+            <h1>We've Relocated!</h1>
+            <p>Our automation practice platform has moved to a brand new home at <span class="highlight">automation.futurelab.co.in</span> for a faster, more reliable experience.</p>
             
-            <header class="hero-section">
-                <h1>Master Test Automation</h1>
-                <p class="lead">Accelerate your career with high-fidelity practice scenarios designed for every automation stack. Whether you use <strong>Selenium, Playwright, Cypress, WebdriverIO, TestCafe,</strong> or <strong>Appium</strong>, our platform provides the perfect environment to master the tools and techniques that power the modern software industry.</p>
-                
-                <div class="stats-grid hero-stats">
-                    <div class="stat-card">
-                        <div class="stat-number">100+</div>
-                        <div class="stat-label">Practice Tasks</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">3</div>
-                        <div class="stat-label">Difficulty Levels</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">7</div>
-                        <div class="stat-label">Core Skills</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">8+</div>
-                        <div class="stat-label">Frameworks</div>
-                    </div>
-                </div>
+            <a href="https://automation.futurelab.co.in" class="cta-button" id="redirect-btn">
+                Go to New Website
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
 
-                <a href="instructions.html" class="cta-btn">Start Practicing Now</a>
-            </header>
-
-            <section class="animated-section">
-                <div class="section-header">
-                    <h2>Why Automate?</h2>
-                    <p class="lead">Automation is the heartbeat of high-velocity software development.</p>
-                </div>
-
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <div class="benefit-icon">⚡</div>
-                        <h3>Fast Feedback</h3>
-                        <p>Get instant results from your test suites and enable seamless CI/CD pipelines.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🎯</div>
-                        <h3>Precision</h3>
-                        <p>Eliminate human error and ensure every test is executed with perfect consistency.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">📉</div>
-                        <h3>Cost Control</h3>
-                        <p>Reduce manual overhead and significantly lower the long-term cost of quality assurance.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🛡️</div>
-                        <h3>Regression</h3>
-                        <p>Sleep better knowing your core features are protected by automated safety nets.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="areas-section">
-                <h3>🌐 Automation Everywhere</h3>
-                <div class="areas-grid">
-                    <div class="area-item"><strong>Web Testing:</strong> Mastering DOM interactions and cross-browser flows using Selenium, Cypress, and Playwright.</div>
-                    <div class="area-item"><strong>API Testing:</strong> Validating the backbone of modern microservices with REST Assured and Postman.</div>
-                    <div class="area-item"><strong>Mobile Apps:</strong> Ensuring flawless performance on iOS and Android via Appium.</div>
-                    <div class="area-item"><strong>Performance:</strong> Testing the limits of scale and reliability with JMeter and k6.</div>
-                </div>
-            </section>
-
-            <section class="platform-section">
-                <div class="section-header">
-                    <h2>Your Learning Edge</h2>
-                    <p class="lead">Built by experts to prepare you for the actual challenges of the industry.</p>
-                </div>
-
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h4><i class="fas fa-industry"></i> Industry Scenarios</h4>
-                        <ul>
-                            <li>Real-world complex UI components</li>
-                            <li>Advanced file and data handling</li>
-                            <li>Dynamic content & timing challenges</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4><i class="fas fa-tools"></i> Best Practices</h4>
-                        <ul>
-                            <li>Scalable Page Object Models</li>
-                            <li>Robust wait strategies</li>
-                            <li>Maintainable test architecture</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4><i class="fas fa-rocket"></i> Career Growth</h4>
-                        <ul>
-                            <li>Build a portfolio of completed tasks</li>
-                            <li>Master the most in-demand tools</li>
-                            <li>Prepare for high-level SDET roles</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <div class="cta-section">
-                <h2>Ready to Level Up?</h2>
-                <p class="lead">Join thousands of engineers who are mastering the art of automation on this platform.</p>
-                <a href="instructions.html" class="cta-btn">Get Started Today</a>
+            <div class="countdown-container">
+                <div class="spinner"></div>
+                <span>Redirecting automatically in <span id="countdown">5</span> seconds...</span>
             </div>
         </div>
-    </main>
+    </div>
 
+    <script>
+        const targetUrl = "https://automation.futurelab.co.in";
+        let seconds = 5;
+        const countdownEl = document.getElementById('countdown');
 
+        const interval = setInterval(() => {
+            seconds--;
+            if (countdownEl) {
+                countdownEl.textContent = seconds;
+            }
+            if (seconds <= 0) {
+                clearInterval(interval);
+                window.location.href = targetUrl;
+            }
+        }, 1000);
 
-</div>
-<script>
-    // Add interactive animations
-    document.addEventListener('DOMContentLoaded', function() {
-        // Animate stat cards on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all animated elements
-        document.querySelectorAll('.stat-card, .benefit-card, .area-item, .feature-card, .benefit-item').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Add hover effects for CTA buttons
-        document.querySelectorAll('.cta-primary, .cta-secondary').forEach(btn => {
-            btn.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.05)';
-            });
-            btn.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
-            });
-        });
-    });
-</script>
-<div id="footer-placeholder"></div>
+        // Fallback safety to ensure redirect runs
+        setTimeout(() => {
+            window.location.href = targetUrl;
+        }, 5500);
+    </script>
 </body>
 </html>
-
-
-
