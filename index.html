@@ -94,7 +94,52 @@
     </div>
 
     <div id="footer-placeholder"></div>
+    
+    <!-- Redirection Overlay Modal -->
+    <div id="redirectOverlay" class="redirect-overlay">
+        <div class="redirect-card">
+            <div class="redirect-icon">🚀</div>
+            <h2 class="redirect-title">We Have Moved!</h2>
+            <p class="redirect-message">
+                Happy to inform you that we are now live on our custom domain! Please visit us at our new home. We recommend bookmarking it for quick access.
+            </p>
+            <a href="https://www.futurelab.co.in/#products" class="redirect-link-btn" id="redirectLink">
+                Go to futurelab.co.in <span>&rarr;</span>
+            </a>
+            <div class="bookmark-tip">
+                💡 <strong>Tip:</strong> Press <strong>Ctrl + D</strong> (or <strong>Cmd + D</strong> on Mac) to bookmark the new domain!
+            </div>
+            <div class="redirect-timer">
+                Redirecting automatically in <strong id="countdown">20</strong> seconds...
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="automation/assets/components/components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const countdownEl = document.getElementById('countdown');
+            const targetUrl = 'https://www.futurelab.co.in/#products';
+            let timeLeft = 10;
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                countdownEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    window.location.href = targetUrl;
+                }
+            }, 1000);
+
+            // Stop automatic redirect if user clicks the button manually
+            document.getElementById('redirectLink').addEventListener('click', () => {
+                clearInterval(interval);
+            });
+        });
+    </script>
 </body>
 </html>
 
